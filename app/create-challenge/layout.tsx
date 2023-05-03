@@ -1,4 +1,4 @@
-import { LayoutHooks } from '#/app/create-challenge/_components/router-context-layout';
+// import { LayoutHooks } from '#/app/create-challenge/_components/router-context-layout';
 import React from 'react';
 
 export const metadata = {
@@ -12,8 +12,6 @@ export default async function Layout({
 }) {
   return (
     <div className="space-y-9">
-      <LayoutHooks />
-
       <div>{children}</div>
     </div>
   );

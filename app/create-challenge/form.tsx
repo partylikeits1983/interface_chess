@@ -7,8 +7,11 @@ import {
   Input,
   Button,
   Stack,
+  ChakraProvider,
 } from '@chakra-ui/react';
-import { de } from 'date-fns/locale';
+
+const { ethers } = require('ethers');
+const { CreateWager } = require('ui/wallet-ui/api/form');
 
 interface FormInputs {
   playerAddress: string;
@@ -42,63 +45,81 @@ export default function ChallengeForm() {
     console.log(formInputs);
   };
 
+  const submitWager = async (formInputs: FormInputs): Promise<boolean> => {
+    console.log('submit wager func');
+    console.log(formInputs);
+
+    await CreateWager(formInputs);
+    return true;
+  };
+
   return (
-    <Box mx="auto">
-      <form onSubmit={handleSubmit}>
-        <Stack spacing="6">
-          <FormControl>
-            <FormLabel>Player Address</FormLabel>
-            <Input
-              type="text"
-              name="playerAddress"
-              value={formInputs.playerAddress}
-              onChange={handleInputChange}
-              required
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Wager Token</FormLabel>
-            <Input
-              type="text"
-              name="wagerToken"
-              value={formInputs.wagerToken}
-              onChange={handleInputChange}
-              required
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Wager Amount</FormLabel>
-            <Input
-              type="number"
-              name="wagerAmount"
-              value={formInputs.wagerAmount}
-              onChange={handleInputChange}
-              required
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Time Per Move</FormLabel>
-            <Input
-              type="number"
-              name="timePerMove"
-              value={formInputs.timePerMove}
-              onChange={handleInputChange}
-              required
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Number of Games</FormLabel>
-            <Input
-              type="number"
-              name="numberOfGames"
-              value={formInputs.numberOfGames}
-              onChange={handleInputChange}
-              required
-            />
-          </FormControl>
-          <Button type="submit">Submit</Button>
-        </Stack>
-      </form>
-    </Box>
+    <ChakraProvider>
+      <Box mx="auto">
+        <form onSubmit={handleSubmit}>
+          <Stack spacing="6">
+            <FormControl>
+              <FormLabel>Player Address</FormLabel>
+              <Input
+                type="text"
+                name="playerAddress"
+                value={formInputs.playerAddress}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Wager Token</FormLabel>
+              <Input
+                type="text"
+                name="wagerToken"
+                value={formInputs.wagerToken}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Wager Amount</FormLabel>
+              <Input
+                type="number"
+                name="wagerAmount"
+                value={formInputs.wagerAmount}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Time Per Move</FormLabel>
+              <Input
+                type="number"
+                name="timePerMove"
+                value={formInputs.timePerMove}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Number of Games</FormLabel>
+              <Input
+                type="number"
+                name="numberOfGames"
+                value={formInputs.numberOfGames}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              isLoading={false}
+              loadingText="Submitting Transaction"
+              onClick={() => submitWager(formInputs)}
+            >
+              Create Challenge
+            </Button>
+          </Stack>
+        </form>
+      </Box>
+    </ChakraProvider>
   );
 }

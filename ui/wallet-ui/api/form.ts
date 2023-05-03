@@ -8,7 +8,7 @@ const ChessAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
 const VerificationAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 // -----------------------------------
-const { CreateMatchType } = require('./types');
+import { CreateMatchType } from './types';
 // -----------------------------------
 
 const tokenAddress = '0x8464135c8F25Da09e49BC8782676a84730C318bC';
@@ -83,7 +83,6 @@ export const CheckValidMove = async (moves: string[]) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
-  // const moveVerification = new ethers.Contract(VerificationAddress, moveVerificationABI, signer)
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   const verifier = new ethers.Contract(
     VerificationAddress,
@@ -92,8 +91,6 @@ export const CheckValidMove = async (moves: string[]) => {
   );
 
   try {
-    console.log('attempting to view');
-
     console.log('MOVES LENGTH');
     console.log(moves.length);
 
@@ -102,14 +99,40 @@ export const CheckValidMove = async (moves: string[]) => {
       hexMoves[i] = await chess.moveToHex(moves[i]);
     }
 
-    // console.log(hexMoves);
-
     const tx = await verifier.checkGameFromStart(hexMoves);
+    // alert("SC: VALID MOVE")
 
-    // const tx = await chess.moveToHex(moves[]);
+    console.log('success');
+    return {
+      value: tx,
+      success: true,
+      status: '✅ Check out your transaction on Etherscan',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      // @ts-ignore
+      status: '😥 Something went wrong: ' + error.message,
+    };
+  }
+};
 
-    // console.log(tx);
+export const CreateWager = async (form: CreateMatchType) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
 
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const verifier = new ethers.Contract(
+    VerificationAddress,
+    moveVerificationABI,
+    signer,
+  );
+
+  try {
+    console.log('CREATE WAGER');
+    console.log(form);
+
+    const tx = await chess.createGameWager(form);
     // alert("SC: VALID MOVE")
 
     console.log('success');
