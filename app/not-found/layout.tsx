@@ -1,4 +1,3 @@
-import { ClickCounter } from '#/ui/click-counter';
 import React from 'react';
 
 export const metadata = {
@@ -13,9 +12,7 @@ export default async function Layout({
   return (
     <div className="space-y-9">
       <div className="flex justify-between">
-        <div className="self-start">
-          <ClickCounter />
-        </div>
+        <div className="self-start"></div>
       </div>
 
       <div>{children}</div>

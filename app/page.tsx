@@ -8,6 +8,20 @@ export default function Page() {
         Chess.fish | Chess On The Blockchain
       </h1>
 
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/8/89/Stockfish_icon_%282010-2020%29.png"
+          alt="Stockfish Icon"
+          style={{ maxWidth: '40%', maxHeight: '40%' }}
+        />
+      </div>
+
       <div className="space-y-10 text-white">
         {demos.map((section) => {
           return (

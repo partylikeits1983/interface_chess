@@ -21,12 +21,12 @@ export function GlobalNav() {
           className="group flex w-full items-center gap-x-2.5"
           onClick={close}
         >
-          <div className="h-7 w-7 rounded-full border border-white/30 group-hover:border-white/50">
+          <div className="h-10 w-10 rounded-full group-hover:border-white/50">
             <NextLogo />
           </div>
 
           <h3 className="font-semibold tracking-wide text-gray-400 group-hover:text-gray-50">
-            Blockchain Chess <span className="Work in progress">(Beta)</span>
+            Chess.fish <span className="Work in progress">(Alpha)</span>
           </h3>
         </Link>
       </div>
