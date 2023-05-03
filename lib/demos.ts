@@ -6,21 +6,21 @@ export type Item = {
 
 export const demos: { name: string; items: Item[] }[] = [
   {
-    name: 'EVM CHESS',
+    name: 'Menu',
     items: [
       {
         name: 'Create a Challenge',
-        slug: 'hooks',
+        slug: 'create-challenge',
         description: 'Challenge another player to a chess wager',
       },
       {
         name: 'Play',
-        slug: 'styling',
+        slug: 'game',
         description: 'Play chess on the blockchain',
       },
       {
         name: 'Docs',
-        slug: 'snippets',
+        slug: 'docs',
         description: 'Understand how it',
       },
     ],
