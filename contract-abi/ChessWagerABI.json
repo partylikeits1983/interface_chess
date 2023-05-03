@@ -1,0 +1,483 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "moveVerificationAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "allWagers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "move",
+        "type": "uint16"
+      }
+    ],
+    "name": "convertFromMove",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "fromPos",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "toPos",
+        "type": "uint8"
+      }
+    ],
+    "name": "convertToMove",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "coordinates",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player1",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "wagerToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "wager",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxTimePerMove",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "numberOfGames",
+        "type": "uint256"
+      }
+    ],
+    "name": "createGameWager",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "deployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "gameWagers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "player0",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "player1",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "wagerToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "wager",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxTimePerMove",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "numberOfGames",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "hasPlayerAccepted",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "getAllUserGames",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "gameState",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBoard",
+    "outputs": [
+      {
+        "internalType": "string[64]",
+        "name": "",
+        "type": "string[64]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getGameLength",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getGameStatus",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "piece",
+        "type": "uint8"
+      }
+    ],
+    "name": "getLetter",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getplayerMove",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "coordinate",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "initCoordinates",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "isPlayerWhite",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "move",
+        "type": "string"
+      }
+    ],
+    "name": "moveToHex",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "hexMove",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "payoutWager",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "move",
+        "type": "uint16"
+      }
+    ],
+    "name": "playMove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "move",
+        "type": "uint16"
+      }
+    ],
+    "name": "startGame",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "userGames",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "wagerStatus",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isPlayer0White",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "winsPlayer0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "winsPlayer1",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

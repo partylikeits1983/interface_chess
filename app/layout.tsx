@@ -4,7 +4,7 @@ import Byline from '#/ui/byline';
 import { GlobalNav } from '#/ui/global-nav';
 import { Metadata } from 'next';
 import React from 'react';
-import ConnectWalletButton from '../wallet-ui/connect-wallet-button';
+import ConnectWalletButton from '../ui/wallet-ui/connect-wallet-button';
 
 export const metadata: Metadata = {
   title: {

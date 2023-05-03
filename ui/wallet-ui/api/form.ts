@@ -1,4 +1,15 @@
 const ethers = require('ethers');
+const { parseUnits } = require('ethers/lib/utils');
+
+const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
+const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
+
+const ChessAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+const VerificationAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+
+// -----------------------------------
+const { CreateMatchType } = require('./types');
+// -----------------------------------
 
 const tokenAddress = '0x8464135c8F25Da09e49BC8782676a84730C318bC';
 
@@ -68,23 +79,38 @@ export const approve = async (address: string) => {
   }
 };
 
-export const transfer = async (from: string) => {
+export const CheckValidMove = async (moves: string[]) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
-  console.log(signer);
-
-  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
-
-  const to = '0x3f616e00827cf8be61102d222ef392a3890f5e98';
-
-  console.log('here');
+  // const moveVerification = new ethers.Contract(VerificationAddress, moveVerificationABI, signer)
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const verifier = new ethers.Contract(
+    VerificationAddress,
+    moveVerificationABI,
+    signer,
+  );
 
   try {
-    const tx = await token.transfer(to, 100);
+    console.log('attempting to view');
 
-    await tx.wait();
-    alert('success');
+    console.log('MOVES LENGTH');
+    console.log(moves.length);
+
+    let hexMoves = [];
+    for (let i = 0; i < moves.length; i++) {
+      hexMoves[i] = await chess.moveToHex(moves[i]);
+    }
+
+    // console.log(hexMoves);
+
+    const tx = await verifier.checkGameFromStart(hexMoves);
+
+    // const tx = await chess.moveToHex(moves[]);
+
+    // console.log(tx);
+
+    // alert("SC: VALID MOVE")
 
     console.log('success');
     return {
