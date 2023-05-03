@@ -2,21 +2,6 @@ import '#/styles/globals.css';
 import Byline from '#/ui/byline';
 import { GlobalNav } from '#/ui/global-nav';
 import { Metadata } from 'next';
-
-// import React from 'react';
-
-/* // Wallet Button
-import { ChakraProvider, useDisclosure, Button, Stack } from "@chakra-ui/react";
-import ConnectButton from "../wallet-ui/components/ConnectButton";
-import AccountModal from "../wallet-ui/components/AccountModal";
-import theme from "../wallet-ui/theme";
-import Layout from "../wallet-ui/components/Layout";
-// import "@fontsource/inter";
-import { getBalance, transfer } from "../wallet-ui/api/form"
-import { useMetamask } from "../wallet-ui/components/Metamask";
- */
-
-// import { useClient } from "next/client";
 import React from 'react';
 import ConnectWalletButton from '../wallet-ui/connect-wallet-button';
 

@@ -1,4 +1,5 @@
 import { ExternalLink } from '#/ui/external-link';
+import { AddressBar } from '#/ui/address-bar';
 
 import { Board } from './board';
 
