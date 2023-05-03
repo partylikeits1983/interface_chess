@@ -1,9 +1,13 @@
 import { ExternalLink } from '#/ui/external-link';
 import Link from 'next/link';
 
+export const metadata = {
+  title: 'Docs',
+};
+
 const items = [
   {
-    name: 'Updating searchParams',
+    name: 'Documentation',
     slug: 'search-params',
     description: 'Update searchParams using `useRouter` and `<Link>`',
   },

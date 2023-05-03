@@ -1,4 +1,5 @@
 import '#/styles/globals.css';
+
 import Byline from '#/ui/byline';
 import { GlobalNav } from '#/ui/global-nav';
 import { Metadata } from 'next';
@@ -7,11 +8,10 @@ import ConnectWalletButton from '../wallet-ui/connect-wallet-button';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Next.js App Routerr=',
-    template: '%s | Next.js App Router',
+    default: 'Chess.fish',
+    template: '%s | Chess.fish',
   },
-  description:
-    'A playground to explore new Next.js App Router features such as nested layouts, instant loading states, streaming, and component level data fetching.',
+  description: 'Chess.fish router',
 };
 
 export default function RootLayout({

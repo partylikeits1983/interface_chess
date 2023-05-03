@@ -2,7 +2,7 @@ import { LayoutHooks } from '#/app/create-challenge/_components/router-context-l
 import React from 'react';
 
 export const metadata = {
-  title: 'Hooks',
+  title: 'Create-Challenge',
 };
 
 export default async function Layout({
