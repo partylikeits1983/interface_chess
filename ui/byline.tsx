@@ -15,7 +15,7 @@ export default function Byline({ className }: { className: string }) {
             target="_blank"
             rel="noreferrer"
           >
-            Alexander John Lee
+            partylikeits1983
           </a>
         </div>
       </div>
