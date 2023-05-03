@@ -6,9 +6,29 @@ import { AddressBar } from '#/ui/address-bar';
 export default function Page() {
   return (
     <div className="space-y-8">
-      <h1 className="text-xl font-medium text-gray-300">
+      <h1 className="font-large text-xl text-gray-300">
         Chess.fish | Chess On The Blockchain
       </h1>
+
+      <ul className="font-small text-gray-300">
+        <li>
+          Chess.fish allows chess enthusiasts to challenge other players and
+          wager any amount of ERC20 tokens.
+        </li>
+
+        <br></br>
+
+        <li>
+          Chess.fish uses smart contracts to act as a trusted 3rd party and
+          enforce the wager conditions agreed upon by both players.
+        </li>
+        <br></br>
+
+        <li>
+          Chess.fish offers a new and exciting way to play chess by harnessing
+          the power of the blockchain and smart contracts.
+        </li>
+      </ul>
 
       <div
         style={{
