@@ -11,17 +11,17 @@ export const demos: { name: string; items: Item[] }[] = [
       {
         name: 'Create a Challenge',
         slug: 'create-challenge',
-        description: 'Challenge another player to a chess wager',
+        description: 'Create a crypto chess wager',
       },
       {
         name: 'Play',
         slug: 'game',
-        description: 'Play chess on the blockchain',
+        description: 'Play chess on the blockchain for crypto',
       },
       {
         name: 'Docs',
         slug: 'docs',
-        description: 'Understand how it',
+        description: 'Understand how chess.fish works',
       },
     ],
   },

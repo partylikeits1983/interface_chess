@@ -1,8 +1,24 @@
 import '#/styles/globals.css';
-// import { AddressBar } from '#/ui/address-bar';
 import Byline from '#/ui/byline';
 import { GlobalNav } from '#/ui/global-nav';
 import { Metadata } from 'next';
+
+// import React from 'react';
+
+/* // Wallet Button
+import { ChakraProvider, useDisclosure, Button, Stack } from "@chakra-ui/react";
+import ConnectButton from "../wallet-ui/components/ConnectButton";
+import AccountModal from "../wallet-ui/components/AccountModal";
+import theme from "../wallet-ui/theme";
+import Layout from "../wallet-ui/components/Layout";
+// import "@fontsource/inter";
+import { getBalance, transfer } from "../wallet-ui/api/form"
+import { useMetamask } from "../wallet-ui/components/Metamask";
+ */
+
+// import { useClient } from "next/client";
+import React from 'react';
+import ConnectWalletButton from '../wallet-ui/connect-wallet-button';
 
 export const metadata: Metadata = {
   title: {
@@ -25,8 +41,8 @@ export default function RootLayout({
 
         <div className="lg:pl-72">
           <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:px-8 lg:py-8">
-            <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">
-              <div className="rounded-lg bg-black"></div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <ConnectWalletButton />
             </div>
 
             <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">
