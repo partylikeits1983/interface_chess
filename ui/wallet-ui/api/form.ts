@@ -121,13 +121,10 @@ export const CheckValidMove = async (moves: string[]) => {
 export const CreateWager = async (form: CreateMatchType) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
-
   try {
-    console.log('CREATE WAGER');
-    console.log(form);
-
     const player1 = form.player1.toString();
     const wagerToken = form.wagerToken.toString();
     let wager = ethers.utils.parseEther(form.wagerAmount.toString());
@@ -143,11 +140,11 @@ export const CreateWager = async (form: CreateMatchType) => {
     );
     const receipt = await tx.wait();
 
-    console.log(tx);
-    console.log(receipt);
+    console.log(accounts[0]);
+    const wagers = await chess.getAllUserGames(accounts[0]);
+    const wagerAddress = wagers[wagers.length - 1];
 
-    //console.log(tx);
-    // alert("SC: VALID MOVE")
+    alert('Wager Created: ' + wagerAddress);
 
     console.log('success');
     return {
