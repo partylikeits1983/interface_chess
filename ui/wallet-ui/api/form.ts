@@ -161,6 +161,16 @@ export const CreateWager = async (form: CreateMatchType) => {
   }
 };
 
+interface Card {
+  matchAddress: string;
+  opponentAddress: string;
+  wagerToken: string;
+  wagerAmount: number;
+  timePerMove: number;
+  numberOfGames: number;
+  isPending: boolean;
+}
+
 export const GetAllWagers = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -171,31 +181,27 @@ export const GetAllWagers = async () => {
     console.log('GetAllWagers');
 
     const wagers = await chess.getAllUserGames(accounts[0]);
-    // const wagerAddress = wagers[wagers.length - 1];
 
     const allWagerParams = [];
 
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
-      allWagerParams.push(Object.values(wagerParams));
+
+      const card: Card = {
+        matchAddress: wagers[i],
+        opponentAddress: wagerParams[1],
+        wagerToken: wagerParams[2],
+        wagerAmount: parseInt(wagerParams[3]),
+        timePerMove: parseInt(wagerParams[4]),
+        numberOfGames: parseInt(wagerParams[5]),
+        isPending: wagerParams[6],
+      };
+
+      allWagerParams.push(card);
     }
 
-    console.log(typeof allWagerParams);
-
-    //const arr = [...allWagerParams];
-
-    // console.log(arr[0]);
-
-    // console.log(arr);
-
-    return {
-      allWagerParams,
-    };
+    return allWagerParams;
   } catch (error) {
-    return {
-      success: false,
-      // @ts-ignore
-      status: '😥 Something went wrong: ' + error.message,
-    };
+    console.log(error);
   }
 };
