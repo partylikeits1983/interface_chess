@@ -4,21 +4,22 @@ const { parseUnits } = require('ethers/lib/utils');
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-const ChessAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
-const VerificationAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const ChessAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+const VerificationAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
 
+import { max } from 'date-fns';
 // -----------------------------------
 import { CreateMatchType } from './types';
 // -----------------------------------
 
-const tokenAddress = '0x8464135c8F25Da09e49BC8782676a84730C318bC';
+const tokenAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const ERC20ABI = [
   'function transferFrom(address from, address to, uint value)',
   'function transfer(address to, uint value)',
-  'function approve(address account, uint amount) view returns (bool)',
+  'function approve(address account, uint amount) returns (bool)',
+  'function allowance(address _owner, address _spender) public view returns (uint256 remaining)',
   'function balanceOf(address owner) view returns (uint balance)',
-  'function write(uint val)',
   'event Transfer(address indexed from, address indexed to, address value)',
   'error InsufficientBalance(account owner, uint balance)',
 ];
@@ -52,19 +53,19 @@ export const getBalance = async (address: string) => {
   }
 };
 
-export const approve = async (address: string) => {
+export const Approve = async (tokenAddress: string, amount: number) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
 
   const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
 
   try {
-    const value = await token.approve(address, 100);
-    // const balance = ethers.utils.formatEther(value);
+    const value = await token.approve(ChessAddress, amount);
+    const allowance = await token.allowance(accounts[0], ChessAddress);
 
-    alert('success');
+    alert('success' + allowance);
 
-    console.log('success');
     return {
       value: value,
       success: true,
@@ -122,17 +123,30 @@ export const CreateWager = async (form: CreateMatchType) => {
   const signer = provider.getSigner();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
-  const verifier = new ethers.Contract(
-    VerificationAddress,
-    moveVerificationABI,
-    signer,
-  );
 
   try {
     console.log('CREATE WAGER');
     console.log(form);
 
-    const tx = await chess.createGameWager(form);
+    const player1 = form.player1.toString();
+    const wagerToken = form.wagerToken.toString();
+    let wager = ethers.utils.parseEther(form.wagerAmount.toString());
+    let maxTimePerMove = Number(form.timePerMove);
+    let numberOfGames = Number(form.numberOfGames);
+
+    const tx = await chess.createGameWager(
+      player1,
+      wagerToken,
+      wager,
+      maxTimePerMove,
+      numberOfGames,
+    );
+    const receipt = await tx.wait();
+
+    console.log(tx);
+    console.log(receipt);
+
+    //console.log(tx);
     // alert("SC: VALID MOVE")
 
     console.log('success');

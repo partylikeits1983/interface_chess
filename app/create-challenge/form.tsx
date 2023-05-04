@@ -11,10 +11,10 @@ import {
 } from '@chakra-ui/react';
 
 const { ethers } = require('ethers');
-const { CreateWager } = require('ui/wallet-ui/api/form');
+const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
 
 interface FormInputs {
-  playerAddress: string;
+  player1: string;
   wagerToken: string;
   wagerAmount: number;
   timePerMove: number;
@@ -22,8 +22,23 @@ interface FormInputs {
 }
 
 export default function ChallengeForm() {
+  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
+  const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
+
+  const HandleClickApprove = async () => {
+    setIsLoadingApproval(true);
+    await Approve(formInputs.wagerToken, formInputs.wagerAmount);
+    setIsLoadingApproval(false);
+  };
+
+  const HandleClickCreateWager = async () => {
+    setIsLoadingCreateWager(true);
+    await CreateWager(formInputs);
+    setIsLoadingCreateWager(false);
+  };
+
   const [formInputs, setFormInputs] = useState<FormInputs>({
-    playerAddress: '',
+    player1: '',
     wagerToken: '',
     wagerAmount: 0,
     timePerMove: 0,
@@ -62,8 +77,8 @@ export default function ChallengeForm() {
               <FormLabel>Player Address</FormLabel>
               <Input
                 type="text"
-                name="playerAddress"
-                value={formInputs.playerAddress}
+                name="player1"
+                value={formInputs.player1}
                 onChange={handleInputChange}
                 required
               />
@@ -111,9 +126,18 @@ export default function ChallengeForm() {
             <Button
               colorScheme="teal"
               variant="outline"
-              isLoading={false}
-              loadingText="Submitting Transaction"
-              onClick={() => submitWager(formInputs)}
+              isLoading={isLoadingApproval}
+              loadingText="Submitting Approval Transaction"
+              onClick={() => HandleClickApprove()}
+            >
+              Approve Tokens
+            </Button>
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              isLoading={isLoadingCreateWager}
+              loadingText="Submitting Create Wager Transaction"
+              onClick={() => HandleClickCreateWager()}
             >
               Create Challenge
             </Button>
