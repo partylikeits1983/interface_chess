@@ -205,3 +205,33 @@ export const GetAllWagers = async () => {
     console.log(error);
   }
 };
+
+export const getGameMoves = async () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('get all moves');
+
+    const wagers = await chess.getAllUserGames(accounts[0]);
+
+    const wager = wagers[0];
+    const gameID = 0;
+
+    const hexMoves = await chess.getGameMoves(wager, gameID);
+
+    const algebraeicMoves = [];
+    for (let i = 0; i < hexMoves.length; i++) {
+      const algebraeicMove = await chess.hexToMove(hexMoves[i]);
+      algebraeicMoves.push(algebraeicMove);
+    }
+
+    console.log(algebraeicMoves);
+
+    return algebraeicMoves;
+  } catch (error) {
+    console.log(error);
+  }
+};
