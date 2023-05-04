@@ -1,8 +1,8 @@
 'use client';
 const { ethers } = require('ethers');
-const { getAllWagers } = require('ui/wallet-ui/api/form');
+const { GetAllWagers } = require('ui/wallet-ui/api/form');
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Heading, Text, Stack, ChakraProvider } from '@chakra-ui/react';
 
 interface Card {
@@ -18,8 +18,42 @@ interface Card {
 interface Props {
   cards: Card[];
 }
+const CardList = () => {
+  const [cards, setCards] = useState<Card[]>([]);
 
-const CardList: React.FC<Props> = ({ cards }) => {
+  useEffect(() => {
+    async function fetchCards() {
+      try {
+        const data: any[] = await GetAllWagers();
+
+        console.log(data[0]);
+
+        const cards = Object.values(data).map((input: any[]) => {
+          return {
+            matchAddress: input[0].toString(),
+            opponentAddress: input[1].toString(),
+            wagerToken: input[2].toString(),
+            wagerAmount: parseInt(input[3].toString()),
+            timePerMove: parseInt(input[4].toString()),
+            numberOfGames: parseInt(input[5].toString()),
+            isPending: input[6],
+          };
+        });
+        // console.log(cards);
+
+        if (Array.isArray(data)) {
+          setCards(data);
+        } else {
+          console.error('GetAllWagers returned invalid data:', cards);
+        }
+      } catch (error) {
+        console.error('Error fetching wagers:', error);
+      }
+    }
+
+    fetchCards();
+  }, []);
+
   return (
     <ChakraProvider>
       <Box>
@@ -41,10 +75,10 @@ const CardList: React.FC<Props> = ({ cards }) => {
               </Heading>
               <Text>Oppenent: {card.opponentAddress}</Text>
               <Text>Wager Token: {card.wagerToken}</Text>
-              <Text>Wager Amount: {card.wagerAmount}</Text>
-              <Text>Time Per Move: {card.timePerMove}</Text>
-              <Text>Number of Games: {card.numberOfGames}</Text>
-              <Text>Status: {card.isPending}</Text>
+              <Text>Wager Amount: {card.wagerAmount.toString()}</Text>
+              <Text>Time Per Move: {card.timePerMove.toString()}</Text>
+              <Text>Number of Games: {card.numberOfGames.toString()}</Text>
+              <Text>Status: {card.isPending.toString()}</Text>
             </Box>
           ))}
         </Stack>

@@ -5,5 +5,3 @@ export interface CreateMatchType {
   timePerMove: number;
   numberOfGames: number;
 }
-
-// export default CreateMatchType;

@@ -160,3 +160,42 @@ export const CreateWager = async (form: CreateMatchType) => {
     };
   }
 };
+
+export const GetAllWagers = async () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('GetAllWagers');
+
+    const wagers = await chess.getAllUserGames(accounts[0]);
+    // const wagerAddress = wagers[wagers.length - 1];
+
+    const allWagerParams = [];
+
+    for (let i = 0; i < wagers.length; i++) {
+      const wagerParams = await chess.gameWagers(wagers[i]);
+      allWagerParams.push(Object.values(wagerParams));
+    }
+
+    console.log(typeof allWagerParams);
+
+    //const arr = [...allWagerParams];
+
+    // console.log(arr[0]);
+
+    // console.log(arr);
+
+    return {
+      allWagerParams,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      // @ts-ignore
+      status: '😥 Something went wrong: ' + error.message,
+    };
+  }
+};
