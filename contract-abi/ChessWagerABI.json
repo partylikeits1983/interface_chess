@@ -260,6 +260,37 @@
         "internalType": "address",
         "name": "wagerAddress",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "gameID",
+        "type": "uint256"
+      }
+    ],
+    "name": "getGameMoves",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint16[]",
+            "name": "moves",
+            "type": "uint16[]"
+          }
+        ],
+        "internalType": "struct ChessWager.Game",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
       }
     ],
     "name": "getGameStatus",
@@ -314,6 +345,25 @@
   {
     "inputs": [
       {
+        "internalType": "uint16",
+        "name": "hexMove",
+        "type": "uint16"
+      }
+    ],
+    "name": "hexToMove",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "move",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "coordinate",
         "type": "string"
@@ -325,6 +375,24 @@
       }
     ],
     "name": "initCoordinates",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "coordinate",
+        "type": "string"
+      }
+    ],
+    "name": "initSquareToCoordinates",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -407,6 +475,25 @@
     "name": "playMove",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "squareToCoordinate",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

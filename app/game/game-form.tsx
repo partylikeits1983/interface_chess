@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 import {
-  Select,
+  Input,
   FormControl,
   FormLabel,
   ChakraProvider,
@@ -36,19 +36,6 @@ export function GameForm() {
     <ChakraProvider>
       <FormControl>
         <FormLabel></FormLabel>
-        <Select
-          name="Game"
-          value={formInputs.color}
-          onChange={handleInputChange}
-          required
-        >
-          <option value="">Select game</option>
-          {colors.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Select>
       </FormControl>
     </ChakraProvider>
   );

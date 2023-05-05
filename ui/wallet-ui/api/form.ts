@@ -206,7 +206,7 @@ export const GetAllWagers = async () => {
   }
 };
 
-export const getGameMoves = async () => {
+export const GetGameMoves = async (wagerAddress: string) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -214,13 +214,14 @@ export const getGameMoves = async () => {
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
     console.log('get all moves');
+    console.log(wagerAddress);
 
-    const wagers = await chess.getAllUserGames(accounts[0]);
-
-    const wager = wagers[0];
+    // const wagers = await chess.getAllUserGames(accounts[0]);
+    // const wager = wagers[0];
     const gameID = 0;
 
-    const hexMoves = await chess.getGameMoves(wager, gameID);
+    const data = await chess.getGameMoves(wagerAddress, gameID);
+    const hexMoves = data.moves;
 
     const algebraeicMoves = [];
     for (let i = 0; i < hexMoves.length; i++) {
@@ -228,10 +229,9 @@ export const getGameMoves = async () => {
       algebraeicMoves.push(algebraeicMove);
     }
 
-    console.log(algebraeicMoves);
-
     return algebraeicMoves;
   } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
     console.log(error);
   }
 };

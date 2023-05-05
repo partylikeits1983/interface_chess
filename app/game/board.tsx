@@ -5,20 +5,42 @@ import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 
 const { ethers } = require('ethers');
-const { CheckValidMove } = require('ui/wallet-ui/api/form');
+const { CheckValidMove, GetGameMoves } = require('ui/wallet-ui/api/form');
+
+import { Input, Box, Button, Flex, ChakraProvider } from '@chakra-ui/react';
 
 export const Board = () => {
   const [game, setGame] = useState(new Chess());
   const [moves, setMoves] = useState<string[]>([]);
 
-  useEffect(() => {
-    console.log('Moves updated:', moves);
+  const [wagerAddress, setWagerAddress] = useState('');
 
+  async function handleSubmit(): Promise<void> {
+    const movesArray = await GetGameMoves(wagerAddress);
+
+    const game = new Chess();
+
+    for (let i = 0; i < movesArray.length; i++) {
+      console.log(movesArray[i]);
+      game.move(movesArray[i]);
+    }
+
+    console.log(game.fen());
+    setGame(game);
+
+    console.log(wagerAddress); // Replace with your function logic
+  }
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setWagerAddress(event.target.value);
+  }
+
+  useEffect(() => {
     const callMoveVerification = async () => {
       try {
         let value = await CheckValidMove(moves);
 
-        // setData(data);
+        console.log(value);
       } catch (error) {
         console.error(error);
       }
@@ -65,6 +87,28 @@ export const Board = () => {
     return true;
   };
 
+  const getPosition = async (wagerAddress: string) => {
+    const moves = await GetGameMoves(wagerAddress);
+    console.log(moves);
+  };
+
   //return <Chessboard onPieceDrop={async (sourceSquare, targetSquare) => await onDrop(sourceSquare, targetSquare)} position={game.fen()} />;
-  return <Chessboard onPieceDrop={onDrop} position={game.fen()} />;
+  return (
+    <ChakraProvider>
+      <Chessboard onPieceDrop={onDrop} position={game.fen()} />
+      <Box p={4}></Box>
+
+      <Flex direction="column" alignItems="center">
+        <Input
+          value={wagerAddress}
+          onChange={handleChange}
+          placeholder="input wager address"
+        ></Input>
+        <Box p={2}></Box>
+        <Button colorScheme="green" onClick={handleSubmit}>
+          View Game
+        </Button>
+      </Flex>
+    </ChakraProvider>
+  );
 };
