@@ -1,9 +1,16 @@
 'use client';
 const { ethers } = require('ethers');
-const { GetAllWagers } = require('ui/wallet-ui/api/form');
+const { GetAllWagers, Approve } = require('ui/wallet-ui/api/form');
 
 import React, { useState, useEffect } from 'react';
-import { Box, Heading, Text, Stack, ChakraProvider } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Heading,
+  Text,
+  Stack,
+  ChakraProvider,
+} from '@chakra-ui/react';
 
 interface Card {
   matchAddress: string;
@@ -19,6 +26,17 @@ interface Props {
   cards: Card[];
 }
 const CardList = () => {
+  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
+
+  const HandleClickApprove = async (
+    wagerToken: string,
+    wagerAmount: number,
+  ) => {
+    setIsLoadingApproval(true);
+    await Approve(wagerToken, wagerAmount);
+    setIsLoadingApproval(false);
+  };
+
   const [cards, setCards] = useState<Card[]>([]);
 
   useEffect(() => {
@@ -65,8 +83,21 @@ const CardList = () => {
                 <Text fontSize="sm">Time Per Move: {card.timePerMove}</Text>
                 <Text fontSize="sm">Number of Games: {card.numberOfGames}</Text>
                 <Text fontSize="sm">
-                  Status: {card.isPending ? 'Pending' : 'In Progress'}
+                  Status: {card.isPending ? 'Wager In Progress' : 'Pending'}
                 </Text>
+                {!card.isPending && (
+                  <Button
+                    colorScheme="green"
+                    mt={4}
+                    isLoading={isLoadingApproval}
+                    loadingText="Submitting Approval Transaction"
+                    onClick={() =>
+                      HandleClickApprove(card.wagerToken, card.wagerAmount)
+                    }
+                  >
+                    Accept Wager
+                  </Button>
+                )}
               </Box>
             ))}
           </Stack>

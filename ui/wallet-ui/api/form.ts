@@ -61,7 +61,8 @@ export const Approve = async (tokenAddress: string, amount: number) => {
   const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
 
   try {
-    const value = await token.approve(ChessAddress, amount);
+    // @dev amount.toSting() was a nightmare bug to find...
+    const value = await token.approve(ChessAddress, amount.toString());
     const allowance = await token.allowance(accounts[0], ChessAddress);
 
     alert('success' + allowance);

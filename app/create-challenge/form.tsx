@@ -59,7 +59,7 @@ export default function ChallengeForm() {
     event.preventDefault();
     console.log(formInputs);
   };
-
+  /* 
   const submitWager = async (formInputs: FormInputs): Promise<boolean> => {
     console.log('submit wager func');
     console.log(formInputs);
@@ -67,7 +67,7 @@ export default function ChallengeForm() {
     await CreateWager(formInputs);
     return true;
   };
-
+ */
   return (
     <ChakraProvider>
       <Box mx="auto">
