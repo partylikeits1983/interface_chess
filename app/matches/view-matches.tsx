@@ -34,7 +34,7 @@ const CardList = () => {
   ) => {
     setIsLoadingApproval(true);
     await Approve(wagerToken, wagerAmount);
-    setIsLoadingApproval(false);
+    await setIsLoadingApproval(false);
   };
 
   const [cards, setCards] = useState<Card[]>([]);
