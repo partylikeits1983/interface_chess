@@ -236,3 +236,23 @@ export const GetGameMoves = async (wagerAddress: string) => {
     console.log(error);
   }
 };
+
+export const AcceptWagerConditions = async (wagerAddress: string) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('Accept wager conditions');
+    console.log(wagerAddress);
+
+    const tx = await chess.acceptWager(wagerAddress);
+    await tx.wait();
+
+    return true;
+  } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};

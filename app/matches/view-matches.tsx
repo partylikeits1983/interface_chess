@@ -1,6 +1,10 @@
 'use client';
 const { ethers } = require('ethers');
-const { GetAllWagers, Approve } = require('ui/wallet-ui/api/form');
+const {
+  GetAllWagers,
+  Approve,
+  AcceptWagerConditions,
+} = require('ui/wallet-ui/api/form');
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -29,11 +33,13 @@ const CardList = () => {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
   const HandleClickApprove = async (
+    wagerAddress: string,
     wagerToken: string,
     wagerAmount: number,
   ) => {
     setIsLoadingApproval(true);
     await Approve(wagerToken, wagerAmount);
+    await AcceptWagerConditions(wagerAddress);
     await setIsLoadingApproval(false);
   };
 
@@ -92,7 +98,11 @@ const CardList = () => {
                     isLoading={isLoadingApproval}
                     loadingText="Submitting Approval Transaction"
                     onClick={() =>
-                      HandleClickApprove(card.wagerToken, card.wagerAmount)
+                      HandleClickApprove(
+                        card.matchAddress,
+                        card.wagerToken,
+                        card.wagerAmount,
+                      )
                     }
                   >
                     Accept Wager
