@@ -256,3 +256,26 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
     console.log(error);
   }
 };
+
+export const PlayMove = async (wagerAddress: string, move: string) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('In Play Move');
+    console.log(wagerAddress);
+
+    const hex_move = await chess.moveToHex(move);
+    console.log(hex_move);
+
+    const tx = await chess.playMove(wagerAddress, hex_move);
+    await tx.wait();
+
+    return true;
+  } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
