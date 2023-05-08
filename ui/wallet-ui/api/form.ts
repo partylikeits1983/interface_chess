@@ -279,3 +279,23 @@ export const PlayMove = async (wagerAddress: string, move: string) => {
     console.log(error);
   }
 };
+
+export const IsPlayerWhite = async (wagerAddress: string, move: string) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('In Is Player White');
+    console.log(wagerAddress);
+
+    const isPlayerWhite = await chess.isPlayerWhite(wagerAddress, accounts[0]);
+    console.log(isPlayerWhite);
+
+    return isPlayerWhite;
+  } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};

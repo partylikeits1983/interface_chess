@@ -9,6 +9,7 @@ const {
   CheckValidMove,
   GetGameMoves,
   PlayMove,
+  IsPlayerWhite,
 } = require('ui/wallet-ui/api/form');
 
 import { Input, Box, Button, Flex, ChakraProvider } from '@chakra-ui/react';
@@ -18,6 +19,8 @@ export const Board = () => {
   const [moves, setMoves] = useState<string[]>([]);
   const [move, setMove] = useState('');
   const [wagerAddress, setWagerAddress] = useState('');
+
+  const [isPlayerWhite, setPlayerColor] = useState('white');
 
   // Check valid move with sc
   useEffect(() => {
@@ -30,20 +33,6 @@ export const Board = () => {
     };
     callMoveVerification();
   }, [moves]);
-
-  /*   useEffect(() => {
-    // Submit move to smart contract on piece drop
-    async function handleSubmitMove(move: any): Promise<void> {
-      try {
-        await PlayMove(wagerAddress, move);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    handleSubmitMove(move);
-    
-  }, [move]);
- */
 
   function handleSubmitMove(move: any): void {
     try {
@@ -65,6 +54,12 @@ export const Board = () => {
       game.move(movesArray[i]);
     }
     setGame(game);
+
+    const isPlayerWhite = await IsPlayerWhite(wagerAddress);
+    setPlayerColor(isPlayerWhite);
+
+    console.log('Here');
+    console.log(isPlayerWhite);
   }
 
   // Setting wager address in input box
@@ -121,7 +116,12 @@ export const Board = () => {
   //return <Chessboard onPieceDrop={async (sourceSquare, targetSquare) => await onDrop(sourceSquare, targetSquare)} position={game.fen()} />;
   return (
     <ChakraProvider>
-      <Chessboard onPieceDrop={onDrop} position={game.fen()} />
+      <Chessboard
+        boardOrientation={isPlayerWhite ? 'white' : 'black'}
+        onPieceDrop={onDrop}
+        position={game.fen()}
+      />
+
       <Box p={4}></Box>
 
       <Flex direction="column" alignItems="center">
