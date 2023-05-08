@@ -164,7 +164,8 @@ export const CreateWager = async (form: CreateMatchType) => {
 
 interface Card {
   matchAddress: string;
-  opponentAddress: string;
+  player0Address: string;
+  player1Address: string;
   wagerToken: string;
   wagerAmount: number;
   timePerMove: number;
@@ -188,9 +189,12 @@ export const GetAllWagers = async () => {
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
+      //console.log(wagerParams);
+
       const card: Card = {
         matchAddress: wagers[i],
-        opponentAddress: wagerParams[1],
+        player0Address: wagerParams[0],
+        player1Address: wagerParams[1],
         wagerToken: wagerParams[2],
         wagerAmount: parseInt(wagerParams[3]),
         timePerMove: parseInt(wagerParams[4]),

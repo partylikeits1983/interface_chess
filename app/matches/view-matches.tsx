@@ -18,7 +18,8 @@ import {
 
 interface Card {
   matchAddress: string;
-  opponentAddress: string;
+  player0Address: string;
+  player1Address: string;
   wagerToken: string;
   wagerAmount: number;
   timePerMove: number;
@@ -62,7 +63,6 @@ const CardList = () => {
 
     fetchCards();
   }, []);
-
   return (
     <ChakraProvider>
       <Box>
@@ -70,49 +70,89 @@ const CardList = () => {
           Challenges List
         </Heading>
         {cards.length ? (
-          <Stack spacing={8}>
+          <Stack spacing={4}>
             {cards.map((card, index) => (
               <Box
                 key={index}
-                bg="black"
-                border="1px solid white"
+                borderWidth="1px"
                 borderRadius="md"
-                p={1}
-                color="white"
+                overflow="hidden"
+                p={2}
               >
-                <Heading as="h3" size="md" mb={1}>
-                  Match: {card.matchAddress}
-                </Heading>
-                <Text fontSize="sm">Oppenent: {card.opponentAddress}</Text>
-                <Text fontSize="sm">Wager Token: {card.wagerToken}</Text>
-                <Text fontSize="sm">Wager Amount: {card.wagerAmount}</Text>
-                <Text fontSize="sm">Time Per Move: {card.timePerMove}</Text>
-                <Text fontSize="sm">Number of Games: {card.numberOfGames}</Text>
-                <Text fontSize="sm">
-                  Status: {card.isPending ? 'Wager In Progress' : 'Pending'}
-                </Text>
-                {!card.isPending && (
-                  <Button
-                    colorScheme="green"
-                    mt={4}
-                    isLoading={isLoadingApproval}
-                    loadingText="Submitting Approval Transaction"
-                    onClick={() =>
-                      HandleClickApprove(
-                        card.matchAddress,
-                        card.wagerToken,
-                        card.wagerAmount,
-                      )
-                    }
-                  >
-                    Accept Wager
-                  </Button>
-                )}
+                <Stack spacing={2}>
+                  <Stack spacing={1}>
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      Match Address
+                    </Text>
+                    <Text fontSize="md">{card.matchAddress}</Text>
+                  </Stack>
+                  <Stack spacing={1}>
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      Opponent Address
+                    </Text>
+                    <Text fontSize="md">
+                      {card.isPending
+                        ? card.player1Address
+                        : card.player0Address}
+                    </Text>
+                  </Stack>
+                  <Stack spacing={1}>
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      Wager Token
+                    </Text>
+                    <Text fontSize="md">{card.wagerToken}</Text>
+                  </Stack>
+                  <Stack spacing={1}>
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      Wager Amount
+                    </Text>
+                    <Text fontSize="md">{card.wagerAmount}</Text>
+                  </Stack>
+                  <Stack spacing={1}>
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      Time Per Move
+                    </Text>
+                    <Text fontSize="md">{card.timePerMove}</Text>
+                  </Stack>
+                  <Stack spacing={1}>
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      Number of Games
+                    </Text>
+                    <Text fontSize="md">{card.numberOfGames}</Text>
+                  </Stack>
+                  <Stack spacing={1}>
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      Status
+                    </Text>
+                    <Text fontSize="md">
+                      {card.isPending ? 'Wager In Progress' : 'Pending'}
+                    </Text>
+                  </Stack>
+                  {!card.isPending && (
+                    <Button
+                      colorScheme="green"
+                      size="sm"
+                      isLoading={isLoadingApproval}
+                      loadingText="Submitting Approval Transaction"
+                      onClick={() =>
+                        HandleClickApprove(
+                          card.matchAddress,
+                          card.wagerToken,
+                          card.wagerAmount,
+                        )
+                      }
+                    >
+                      Accept Wager
+                    </Button>
+                  )}
+                </Stack>
               </Box>
             ))}
           </Stack>
         ) : (
-          <Text fontSize="xl">No matches created yet.</Text>
+          <Text fontSize="xl" color="gray.500">
+            No matches created yet.
+          </Text>
         )}
       </Box>
     </ChakraProvider>
