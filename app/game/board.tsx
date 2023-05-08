@@ -10,17 +10,27 @@ const {
   GetGameMoves,
   PlayMove,
   IsPlayerWhite,
+  GetPlayerTurn,
+  GetNumberOfGames,
 } = require('ui/wallet-ui/api/form');
 
-import { Input, Box, Button, Flex, ChakraProvider } from '@chakra-ui/react';
+import {
+  Input,
+  Box,
+  Button,
+  Flex,
+  Text,
+  ChakraProvider,
+} from '@chakra-ui/react';
 
 export const Board = () => {
   const [game, setGame] = useState(new Chess());
   const [moves, setMoves] = useState<string[]>([]);
-  const [move, setMove] = useState('');
-  const [wagerAddress, setWagerAddress] = useState('');
 
+  const [wagerAddress, setWagerAddress] = useState('');
   const [isPlayerWhite, setPlayerColor] = useState('white');
+  const [isPlayerTurn, setPlayerTurn] = useState(false);
+  const [numberOfGames, setNumberOfGames] = useState('');
 
   // Check valid move with sc
   useEffect(() => {
@@ -58,8 +68,12 @@ export const Board = () => {
     const isPlayerWhite = await IsPlayerWhite(wagerAddress);
     setPlayerColor(isPlayerWhite);
 
-    console.log('Here');
-    console.log(isPlayerWhite);
+    const isPlayerTurn = await GetPlayerTurn(wagerAddress);
+    setPlayerTurn(isPlayerTurn);
+
+    const gameNumberData: Array<Number> = await GetNumberOfGames(wagerAddress);
+    const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
+    setNumberOfGames(gameNumber);
   }
 
   // Setting wager address in input box
@@ -113,7 +127,6 @@ export const Board = () => {
     console.log(moves);
   };
 
-  //return <Chessboard onPieceDrop={async (sourceSquare, targetSquare) => await onDrop(sourceSquare, targetSquare)} position={game.fen()} />;
   return (
     <ChakraProvider>
       <Chessboard
@@ -134,6 +147,13 @@ export const Board = () => {
         <Button colorScheme="green" onClick={handleSubmit}>
           View Game
         </Button>
+      </Flex>
+
+      <Flex justify="space-between">
+        <Text>Amount: 100 USDC</Text>
+        <Text>Time Per Move: 2h</Text>
+        <Text>Game: {numberOfGames}</Text>
+        <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
       </Flex>
     </ChakraProvider>
   );

@@ -312,6 +312,21 @@
         "internalType": "uint8",
         "name": "",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
       }
     ],
     "stateMutability": "view",
@@ -344,7 +359,7 @@
         "type": "address"
       }
     ],
-    "name": "getplayerMove",
+    "name": "getPlayerMove",
     "outputs": [
       {
         "internalType": "address",
@@ -486,7 +501,13 @@
       }
     ],
     "name": "playMove",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },

@@ -10,6 +10,7 @@ const VerificationAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
 import { max } from 'date-fns';
 // -----------------------------------
 import { CreateMatchType } from './types';
+import { type } from 'os';
 // -----------------------------------
 
 const tokenAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
@@ -284,7 +285,7 @@ export const PlayMove = async (wagerAddress: string, move: string) => {
   }
 };
 
-export const IsPlayerWhite = async (wagerAddress: string, move: string) => {
+export const IsPlayerWhite = async (wagerAddress: string) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -300,6 +301,57 @@ export const IsPlayerWhite = async (wagerAddress: string, move: string) => {
     return isPlayerWhite;
   } catch (error) {
     alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
+
+export const GetPlayerTurn = async (wagerAddress: string) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('In Get Player Turn');
+    console.log(wagerAddress);
+
+    const playerTurn = await chess.getPlayerMove(wagerAddress);
+
+    let isPlayerTurn;
+    if (Number(playerTurn) == Number(accounts[0])) {
+      isPlayerTurn = true;
+    } else {
+      isPlayerTurn = false;
+    }
+
+    console.log(isPlayerTurn);
+
+    return isPlayerTurn;
+  } catch (error) {
+    alert(`In playerturn : ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
+
+export const GetNumberOfGames = async (wagerAddress: string) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('In Get Player Turn');
+
+    const wagerParams = await chess.gameWagers(wagerAddress);
+    const numberOfGames = parseInt(wagerParams[5]);
+
+    const gameNumber = await chess.getGameLength(wagerAddress);
+
+    const data = [Number(gameNumber) + 1, Number(numberOfGames)];
+
+    return data;
+  } catch (error) {
+    alert(`In playerturn : ${wagerAddress} not found`);
     console.log(error);
   }
 };
