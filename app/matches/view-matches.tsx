@@ -13,8 +13,12 @@ import {
   Heading,
   Text,
   Stack,
+  useClipboard,
+  Flex,
   ChakraProvider,
 } from '@chakra-ui/react';
+
+import { CopyIcon } from '@chakra-ui/icons';
 
 interface Card {
   matchAddress: string;
@@ -30,6 +34,7 @@ interface Card {
 interface Props {
   cards: Card[];
 }
+
 const CardList = () => {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
@@ -60,9 +65,38 @@ const CardList = () => {
         console.error('Error fetching wagers:', error);
       }
     }
-
     fetchCards();
   }, []);
+
+  function formatDuration(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else {
+      return `${minutes}m`;
+    }
+  }
+
+  function formatAddress(address: string): string {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
+      throw new Error('Invalid Ethereum address');
+    }
+
+    return `${address.substr(0, 6)}...${address.substr(-8)}`;
+  }
+
+  async function handleCopyAddress(address: string) {
+    try {
+      await navigator.clipboard.writeText(address);
+      console.log('Address copied to clipboard:', address);
+      // You can add a toast or other visual feedback to let the user know the address was copied.
+    } catch (error) {
+      console.error('Failed to copy address:', error);
+    }
+  }
+
   return (
     <ChakraProvider>
       <Box>
@@ -84,24 +118,56 @@ const CardList = () => {
                     <Text fontSize="sm" fontWeight="bold" color="gray.500">
                       Match Address
                     </Text>
-                    <Text fontSize="md">{card.matchAddress}</Text>
+                    <Flex alignItems="center">
+                      <Text fontSize="md">
+                        {formatAddress(card.matchAddress)}
+                      </Text>
+                      <CopyIcon
+                        ml={2}
+                        cursor="pointer"
+                        onClick={() => handleCopyAddress(card.matchAddress)}
+                      />
+                    </Flex>
                   </Stack>
                   <Stack spacing={1}>
                     <Text fontSize="sm" fontWeight="bold" color="gray.500">
                       Opponent Address
                     </Text>
-                    <Text fontSize="md">
-                      {card.isPending
-                        ? card.player1Address
-                        : card.player0Address}
-                    </Text>
+                    <Flex alignItems="center">
+                      <Text fontSize="md">
+                        {card.isPending
+                          ? formatAddress(card.player1Address)
+                          : formatAddress(card.player0Address)}
+                      </Text>
+                      <CopyIcon
+                        ml={2}
+                        cursor="pointer"
+                        onClick={() =>
+                          handleCopyAddress(
+                            card.isPending
+                              ? card.player1Address
+                              : card.player0Address,
+                          )
+                        }
+                      />
+                    </Flex>
                   </Stack>
                   <Stack spacing={1}>
                     <Text fontSize="sm" fontWeight="bold" color="gray.500">
                       Wager Token
                     </Text>
-                    <Text fontSize="md">{card.wagerToken}</Text>
+                    <Flex alignItems="center">
+                      <Text fontSize="md">
+                        {formatAddress(card.wagerToken)}
+                      </Text>
+                      <CopyIcon
+                        ml={2}
+                        cursor="pointer"
+                        onClick={() => handleCopyAddress(card.wagerToken)}
+                      />
+                    </Flex>
                   </Stack>
+
                   <Stack spacing={1}>
                     <Text fontSize="sm" fontWeight="bold" color="gray.500">
                       Wager Amount
@@ -110,9 +176,11 @@ const CardList = () => {
                   </Stack>
                   <Stack spacing={1}>
                     <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                      Time Per Move
+                      Time Per Player
                     </Text>
-                    <Text fontSize="md">{card.timePerMove}</Text>
+                    <Text fontSize="md">
+                      {formatDuration(Number(card.timePerMove))}
+                    </Text>
                   </Stack>
                   <Stack spacing={1}>
                     <Text fontSize="sm" fontWeight="bold" color="gray.500">
@@ -128,6 +196,7 @@ const CardList = () => {
                       {card.isPending ? 'Wager In Progress' : 'Pending'}
                     </Text>
                   </Stack>
+
                   {!card.isPending && (
                     <Button
                       colorScheme="green"

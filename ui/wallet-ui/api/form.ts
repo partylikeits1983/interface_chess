@@ -4,16 +4,15 @@ const { parseUnits } = require('ethers/lib/utils');
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-const ChessAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
-const VerificationAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+const ChessAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
+const VerificationAddress = '0x0eAD3040254F3aC340F3490DEDc8a6159365E39E';
+const tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
 
 import { max } from 'date-fns';
 // -----------------------------------
 import { CreateMatchType } from './types';
 import { type } from 'os';
 // -----------------------------------
-
-const tokenAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const ERC20ABI = [
   'function transferFrom(address from, address to, uint value)',
@@ -205,6 +204,7 @@ export const GetAllWagers = async () => {
 
       allWagerParams.push(card);
     }
+    console.log(allWagerParams);
 
     return allWagerParams;
   } catch (error) {
