@@ -4,15 +4,11 @@ const { parseUnits } = require('ethers/lib/utils');
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-const ChessAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
-const VerificationAddress = '0x0eAD3040254F3aC340F3490DEDc8a6159365E39E';
-const tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
+let ChessAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
+let VerificationAddress = '0x0eAD3040254F3aC340F3490DEDc8a6159365E39E';
+let tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
 
-import { max } from 'date-fns';
-// -----------------------------------
 import { CreateMatchType } from './types';
-import { type } from 'os';
-// -----------------------------------
 
 const ERC20ABI = [
   'function transferFrom(address from, address to, uint value)',
@@ -24,7 +20,33 @@ const ERC20ABI = [
   'error InsufficientBalance(account owner, uint balance)',
 ];
 
+const updateContractAddresses = async () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const network = await provider.getNetwork();
+  const chainId = network.chainId;
+
+  console.log('update addresses');
+  console.log(chainId);
+
+  // Update the addresses based on the chain id.
+  // This is an example, you need to replace with actual addresses.
+  if (chainId === 31337) {
+    // localhost
+    ChessAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
+    VerificationAddress = '0x0eAD3040254F3aC340F3490DEDc8a6159365E39E';
+    tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
+  } else if (chainId === 80001) {
+    // mumbai Testnet
+    ChessAddress = '0x512945dfCD32C9E51ABcc6DE22752a7dd4266fDd';
+    VerificationAddress = '0xFe3C5F9c8959FaFAEFb5841fc46Ee701d403e34D';
+    tokenAddress = '0xCA7E373c6AE45f82d97F5898DE7ac5e3f97F9200';
+  }
+  // Add more chains if needed.
+};
+
 export const getBalance = async (address: string) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
@@ -54,6 +76,8 @@ export const getBalance = async (address: string) => {
 };
 
 export const Approve = async (tokenAddress: string, amount: number) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -82,6 +106,8 @@ export const Approve = async (tokenAddress: string, amount: number) => {
 };
 
 export const CheckValidMove = async (moves: string[]) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
@@ -120,6 +146,8 @@ export const CheckValidMove = async (moves: string[]) => {
 };
 
 export const CreateWager = async (form: CreateMatchType) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -174,6 +202,8 @@ interface Card {
 }
 
 export const GetAllWagers = async () => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -213,6 +243,8 @@ export const GetAllWagers = async () => {
 };
 
 export const GetGameMoves = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -243,6 +275,8 @@ export const GetGameMoves = async (wagerAddress: string) => {
 };
 
 export const AcceptWagerConditions = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -263,6 +297,8 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 };
 
 export const PlayMove = async (wagerAddress: string, move: string) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -286,6 +322,8 @@ export const PlayMove = async (wagerAddress: string, move: string) => {
 };
 
 export const IsPlayerWhite = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -306,6 +344,8 @@ export const IsPlayerWhite = async (wagerAddress: string) => {
 };
 
 export const GetPlayerTurn = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -334,6 +374,8 @@ export const GetPlayerTurn = async (wagerAddress: string) => {
 };
 
 export const GetNumberOfGames = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
