@@ -123,6 +123,7 @@ function useMetamask() {
     accounts,
     network,
     balance,
+    getBalance,
     connect,
     getAccounts,
     sendTransaction,

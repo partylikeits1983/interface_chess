@@ -11,17 +11,39 @@ type Props = {
 };
 
 export default function ConnectButton({ handleOpenModal }: Props) {
-  const [account, setAccount] = useState('');
-
-  const { connect, getAccounts, accounts, balance } = useMetamask();
+  const [account, setAccount] = useState<string | null>(null);
+  const { connect, getAccounts, accounts, getBalance } = useMetamask();
+  const [formattedBalance, setFormattedBalance] = useState<string>('');
 
   useEffect(() => {
-    if (accounts == undefined) {
+    const savedAccount = localStorage.getItem('account');
+    if (savedAccount) {
+      setAccount(savedAccount);
+    } else if (accounts && accounts.length > 0) {
       setAccount(accounts[0]);
     }
-  });
+  }, [accounts]);
 
-  // @dev this can be optimized..
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (account) {
+        const balance = await getBalance(account);
+        const formattedBalance = parseFloat(formatEther(balance))
+          .toFixed(3)
+          .toString();
+        setFormattedBalance(formattedBalance);
+      }
+    };
+
+    fetchBalance();
+  }, [account, getBalance]);
+
+  useEffect(() => {
+    if (account) {
+      localStorage.setItem('account', account);
+    }
+  }, [account]);
+
   const handleConnectWallet = async () => {
     await connect();
     const accounts = await getAccounts();
@@ -38,9 +60,7 @@ export default function ConnectButton({ handleOpenModal }: Props) {
     >
       <Box px="3">
         <Text color="white" fontSize="md">
-          <span>
-            {parseFloat(formatEther(balance)).toFixed(3).toString()} ETH
-          </span>
+          <span>{formattedBalance} ETH</span>
         </Text>
       </Box>
       <Button
