@@ -21,7 +21,7 @@ export default {
         vercel: {
           pink: '#FF0080',
           blue: '#0070F3',
-          cyan: '#50E3C2',
+          cyan: '#38A169',
           orange: '#F5A623',
           violet: '#7928CA',
         },
@@ -34,10 +34,10 @@ export default {
       keyframes: ({ theme }) => ({
         rerender: {
           '0%': {
-            ['border-color']: theme('colors.vercel.pink'),
+            ['border-color']: theme('colors.vercel.cyan'),
           },
           '40%': {
-            ['border-color']: theme('colors.vercel.pink'),
+            ['border-color']: theme('colors.vercel.cyan'),
           },
         },
         highlight: {
