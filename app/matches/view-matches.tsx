@@ -116,6 +116,32 @@ const CardList = () => {
     }
   }
 
+  function fromScientificNotation(n: string): string {
+    if (!n.includes('e')) {
+      return n;
+    }
+
+    let sign = +n < 0 ? '-' : '',
+      coefficients = n.replace('-', '').split('e'),
+      e = Number(coefficients.pop()),
+      zeros = '',
+      decimalPointIndex = coefficients[0].indexOf('.');
+
+    if (decimalPointIndex !== -1) {
+      let decimalPart = coefficients[0].split('.')[1];
+      coefficients[0] = coefficients[0].substring(0, decimalPointIndex);
+      zeros =
+        decimalPart.length > e
+          ? '.' + decimalPart.substring(0, decimalPart.length - e)
+          : '';
+      e -= decimalPart.length;
+    }
+
+    while (e-- > 0) zeros += '0';
+
+    return sign + coefficients[0] + zeros;
+  }
+
   return (
     <ChakraProvider>
       <Box>
@@ -137,7 +163,11 @@ const CardList = () => {
                       </HStack>
 
                       <HStack spacing="1.5rem">
-                        {card.isInProgress && <Text>In Progress</Text>}
+                        {card.isInProgress ? (
+                          <Text>In Progress</Text>
+                        ) : (
+                          <Text>Pending</Text>
+                        )}
                         <AccordionIcon />
                       </HStack>
                     </Flex>
@@ -167,7 +197,7 @@ const CardList = () => {
                       </Text>
                       <Flex alignItems="center">
                         <Text fontSize="md">
-                          {card.isInProgress
+                          {Number(account) == Number(card.player0Address)
                             ? formatAddress(card.player1Address)
                             : formatAddress(card.player0Address)}
                         </Text>
@@ -205,7 +235,9 @@ const CardList = () => {
                       </Text>
                       <Text fontSize="md">
                         {ethers.utils.formatUnits(
-                          ethers.BigNumber.from(card.wagerAmount.toString()),
+                          ethers.BigNumber.from(
+                            fromScientificNotation(card.wagerAmount.toString()),
+                          ),
                           18,
                         )}
                       </Text>
@@ -229,14 +261,18 @@ const CardList = () => {
                         Status
                       </Text>
                       <Text fontSize="md">
-                        {card.isInProgress ? 'Wager In Progress' : 'Pending'}
+                        {card.isInProgress
+                          ? 'Wager In Progress'
+                          : Number(card.player1Address) === Number(accounts[0])
+                          ? 'Pending approval'
+                          : 'Waiting for opponent to accept wager'}
                       </Text>
                     </Stack>
                     {!card.isInProgress &&
                       Number(card.player1Address) === Number(accounts[0]) && (
                         <Button
                           colorScheme="green"
-                          size="sm"
+                          size="md"
                           isLoading={isLoadingApproval}
                           loadingText="Submitting Approval Transaction"
                           onClick={() =>
