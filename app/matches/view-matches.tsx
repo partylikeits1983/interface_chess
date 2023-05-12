@@ -24,6 +24,7 @@ import {
   Text,
   Flex,
   Button,
+  HStack,
 } from '@chakra-ui/react';
 
 import { CopyIcon } from '@chakra-ui/icons';
@@ -127,14 +128,19 @@ const CardList = () => {
               <AccordionItem key={index}>
                 <h2>
                   <AccordionButton>
-                    <Stack direction="row" spacing="1.5rem" alignItems="center">
-                      <Identicon account={card.matchAddress} />
-                      <Text fontSize="md">{`Address: ${formatAddress(
-                        card.matchAddress,
-                      )}`}</Text>
-                      {card.isInProgress && <span>In Progress</span>}
-                      <AccordionIcon />
-                    </Stack>
+                    <Flex justify="space-between" alignItems="center" w="full">
+                      <HStack spacing="1.5rem">
+                        <Identicon account={card.matchAddress} />
+                        <Text fontSize="md">{`Address: ${formatAddress(
+                          card.matchAddress,
+                        )}`}</Text>
+                      </HStack>
+
+                      <HStack spacing="1.5rem">
+                        {card.isInProgress && <Text>In Progress</Text>}
+                        <AccordionIcon />
+                      </HStack>
+                    </Flex>
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
