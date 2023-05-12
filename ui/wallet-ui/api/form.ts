@@ -4,9 +4,9 @@ const { parseUnits } = require('ethers/lib/utils');
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-let ChessAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
-let VerificationAddress = '0x0eAD3040254F3aC340F3490DEDc8a6159365E39E';
-let tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
+let ChessAddress = '0x512945dfCD32C9E51ABcc6DE22752a7dd4266fDd';
+let VerificationAddress = '0xFe3C5F9c8959FaFAEFb5841fc46Ee701d403e34D';
+let tokenAddress = '0xCA7E373c6AE45f82d97F5898DE7ac5e3f97F9200';
 
 import { CreateMatchType } from './types';
 
@@ -338,49 +338,22 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
   }
 };
 
-export const GetNumberOfOpenWagers = async (): Promise<string[]> => {
-  await updateContractAddresses();
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
-
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
-  try {
-    console.log('Get All wagers');
-
-    let wagerAddresses = [];
-    let value = 0;
-    let errorOccurred = false;
-    while (!errorOccurred) {
-      try {
-        const wagerAddress = await chess.allWagers(value.toString());
-        wagerAddresses.push(wagerAddress);
-        value++;
-      } catch (error) {
-        // console.error('Error:', error);
-        errorOccurred = true;
-      }
-    }
-
-    // console.log(wagerAddresses);
-
-    return wagerAddresses;
-  } catch (error) {
-    alert(`error`);
-    console.log(error);
-    return [];
-  }
-};
-
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
-  await updateContractAddresses();
+  let provider: any; // ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider;
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
+  if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const accounts = await provider.send('eth_requestAccounts', []);
+    await updateContractAddresses();
+  } else {
+    provider = new ethers.providers.JsonRpcProvider(
+      'https://rpc.ankr.com/polygon_mumbai',
+    );
+    await updateContractAddresses();
+  }
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
   try {
     console.log('Get Analytics Data');
 
@@ -396,7 +369,6 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
         errorOccurred = true;
       }
     }
-
     const allWagerParams = [];
     for (let i = 0; i < wagerAddresses.length; i++) {
       const wagerParams = await chess.gameWagers(wagerAddresses[i]);

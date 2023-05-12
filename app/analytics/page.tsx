@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Analytics from './analytics';
 
 export const metadata = {
-  title: 'Docs',
+  title: 'Analytics',
 };
 
 const items = [
