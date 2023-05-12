@@ -1,7 +1,9 @@
 import { demos } from '#/lib/demos';
 import Link from 'next/link';
 
-import { AddressBar } from '#/ui/address-bar';
+import { Analytics } from '@vercel/analytics/react';
+
+// import { AddressBar } from '#/ui/address-bar';
 
 export default function Page() {
   return (
@@ -78,6 +80,7 @@ export default function Page() {
           );
         })}
       </div>
+      <Analytics />
     </div>
   );
 }
