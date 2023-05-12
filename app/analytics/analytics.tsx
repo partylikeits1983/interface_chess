@@ -46,7 +46,7 @@ export default function Analytics() {
 
   return (
     <ChakraProvider>
-      <StatGroup color="white" spacing={4}>
+      <StatGroup color="white">
         <Stat>
           <StatLabel>Total Number of Games Played</StatLabel>
           {loading ? <Spinner /> : <StatNumber>{totalGames}</StatNumber>}
