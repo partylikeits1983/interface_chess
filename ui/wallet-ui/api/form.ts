@@ -373,6 +373,59 @@ export const GetNumberOfOpenWagers = async (): Promise<string[]> => {
   }
 };
 
+export const GetAnalyticsData = async (): Promise<[string[], string]> => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('Get Analytics Data');
+
+    let wagerAddresses = [];
+    let value = 0;
+    let errorOccurred = false;
+    while (!errorOccurred) {
+      try {
+        const wagerAddress = await chess.allWagers(value.toString());
+        wagerAddresses.push(wagerAddress);
+        value++;
+      } catch (error) {
+        errorOccurred = true;
+      }
+    }
+
+    const allWagerParams = [];
+    for (let i = 0; i < wagerAddresses.length; i++) {
+      const wagerParams = await chess.gameWagers(wagerAddresses[i]);
+      const card: Card = {
+        matchAddress: wagerAddresses[i],
+        player0Address: wagerParams[0],
+        player1Address: wagerParams[1],
+        wagerToken: wagerParams[2],
+        wagerAmount: parseInt(wagerParams[3]),
+        timePerMove: parseInt(wagerParams[4]),
+        numberOfGames: parseInt(wagerParams[5]),
+        isInProgress: wagerParams[6],
+      };
+      allWagerParams.push(card);
+    }
+
+    let totalNumberOfGames = 0;
+    for (let i = 0; i < allWagerParams.length; i++) {
+      totalNumberOfGames += allWagerParams[i].numberOfGames;
+    }
+
+    return [wagerAddresses, totalNumberOfGames.toString()];
+  } catch (error) {
+    alert(`error`);
+    console.log(error);
+    return [[], ''];
+  }
+};
+
 export const PlayMove = async (wagerAddress: string, move: string) => {
   await updateContractAddresses();
 

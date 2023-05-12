@@ -1,38 +1,40 @@
 'use client';
 
+import { GetAnalyticsData } from 'ui/wallet-ui/api/form';
 import {
-  Box,
-  Spinner,
-  OrderedList,
-  ListItem,
-  StatLabel,
-  StatArrow,
-  StatNumber,
-  StatHelpText,
-  StatGroup,
-  Stat,
   ChakraProvider,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatGroup,
+  Spinner,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Link,
 } from '@chakra-ui/react';
-
-import { GetNumberOfOpenWagers } from 'ui/wallet-ui/api/form';
-
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import NextLink from 'next/link';
 
 export default function Analytics() {
   const [totalGames, setTotalGames] = useState('');
+  const [totalWagers, setTotalWagers] = useState('');
+  const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Call your async function here to get the total number of games
-        const totalGamesData = await GetNumberOfOpenWagers();
+        const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
-        console.log(totalGamesData.length);
+        setWagerAddresses(fetchedWagerAddresses);
+        setTotalGames(totalGames);
+        setTotalWagers(fetchedWagerAddresses.length.toString());
 
-        setTotalGames(totalGamesData.length.toString());
-
-        // setTotalGames(totalGamesData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching total games:', error);
@@ -44,7 +46,7 @@ export default function Analytics() {
 
   return (
     <ChakraProvider>
-      <StatGroup color="white">
+      <StatGroup color="white" spacing={4}>
         <Stat>
           <StatLabel>Total Number of Games Played</StatLabel>
           {loading ? <Spinner /> : <StatNumber>{totalGames}</StatNumber>}
@@ -52,9 +54,30 @@ export default function Analytics() {
 
         <Stat>
           <StatLabel>Current Number of Wagers</StatLabel>
-          {loading ? <Spinner /> : <StatNumber>{totalGames}</StatNumber>}
+          {loading ? <Spinner /> : <StatNumber>{totalWagers}</StatNumber>}
         </Stat>
       </StatGroup>
+
+      <Table variant="simple" mt={4}>
+        <Thead>
+          <Tr>
+            <Th color="white">#</Th>
+            <Th color="white">Wager Addresses</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {wagerAddresses.map((address, index) => (
+            <Tr key={index}>
+              <Td color="green.500">{index + 1}</Td>
+              <Td>
+                <NextLink href={`/game/${address}`} passHref>
+                  <Link color="green.500">{address}</Link>
+                </NextLink>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </ChakraProvider>
   );
 }
