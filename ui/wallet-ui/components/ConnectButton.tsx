@@ -16,13 +16,11 @@ export default function ConnectButton({ handleOpenModal }: Props) {
   const [formattedBalance, setFormattedBalance] = useState<string>('');
 
   useEffect(() => {
-    const savedAccount = localStorage.getItem('account');
-    if (savedAccount) {
-      setAccount(savedAccount);
-    } else if (accounts && accounts.length > 0) {
-      setAccount(accounts[0]);
+    if (account == undefined) {
+      connect();
     }
-  }, [accounts]);
+    setAccount(accounts[0]);
+  });
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -37,12 +35,6 @@ export default function ConnectButton({ handleOpenModal }: Props) {
 
     fetchBalance();
   }, [account, getBalance]);
-
-  useEffect(() => {
-    if (account) {
-      localStorage.setItem('account', account);
-    }
-  }, [account]);
 
   const handleConnectWallet = async () => {
     await connect();
