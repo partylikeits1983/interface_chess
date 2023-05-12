@@ -67,6 +67,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setNumberOfGames(gameNumber);
 
         setLoading(false);
+      } else {
+        setLoading(false);
       }
     };
 
@@ -97,6 +99,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   // Get Game State after clicking view game button
   async function handleSubmit(): Promise<void> {
+    setLoading(true);
+
     const movesArray = await GetGameMoves(wagerAddress);
     const game = new Chess();
 
@@ -115,6 +119,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     const gameNumberData: Array<Number> = await GetNumberOfGames(wagerAddress);
     const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
     setNumberOfGames(gameNumber);
+
+    setLoading(false);
   }
 
   // Setting wager address in input box

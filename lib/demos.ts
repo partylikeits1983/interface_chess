@@ -9,6 +9,11 @@ export const demos: { name: string; items: Item[] }[] = [
     name: 'Menu',
     items: [
       {
+        name: 'Analytics',
+        slug: 'analytics',
+        description: 'chess.fish analytics',
+      },
+      {
         name: 'Create a Challenge',
         slug: 'create-challenge',
         description: 'Create a crypto chess wager',
