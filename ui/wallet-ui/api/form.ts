@@ -105,6 +105,50 @@ export const Approve = async (tokenAddress: string, amount: number) => {
   }
 };
 
+export const AcceptWagerAndApprove = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+
+  try {
+    const wagerParams = await chess.gameWagers(wagerAddress);
+
+    const card: Card = {
+      matchAddress: wagerAddress,
+      player0Address: wagerParams[0],
+      player1Address: wagerParams[1],
+      wagerToken: wagerParams[2],
+      wagerAmount: parseInt(wagerParams[3]),
+      timePerMove: parseInt(wagerParams[4]),
+      numberOfGames: parseInt(wagerParams[5]),
+      isInProgress: wagerParams[6],
+    };
+
+    const token = new ethers.Contract(card.wagerToken, ERC20ABI, signer);
+
+    const value = await token.approve(ChessAddress, wagerParams[3].toString());
+    const allowance = await token.allowance(accounts[0], ChessAddress);
+
+    alert('success' + allowance);
+
+    return {
+      value: value,
+      success: true,
+      status: '✅ Check out your transaction on Etherscan',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      // @ts-ignore
+      status: '😥 Something went wrong: ' + error.message,
+    };
+  }
+};
+
 export const CheckValidMove = async (moves: string[]) => {
   await updateContractAddresses();
 
@@ -305,9 +349,6 @@ export const PlayMove = async (wagerAddress: string, move: string) => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('In Play Move');
-    console.log(wagerAddress);
-
     const hex_move = await chess.moveToHex(move);
     console.log(hex_move);
 

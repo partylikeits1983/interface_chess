@@ -2,7 +2,7 @@
 const { ethers } = require('ethers');
 const {
   GetAllWagers,
-  Approve,
+  AcceptWagerAndApprove,
   AcceptWagerConditions,
 } = require('ui/wallet-ui/api/form');
 
@@ -63,9 +63,13 @@ const CardList = () => {
     wagerAmount: number,
   ) => {
     setIsLoadingApproval(true);
-    await Approve(wagerToken, wagerAmount);
+    console.log(wagerToken);
+
+    // await Approve(wagerToken, wagerAmount);
+    await AcceptWagerAndApprove(wagerAddress);
     await AcceptWagerConditions(wagerAddress);
-    await setIsLoadingApproval(false);
+
+    setIsLoadingApproval(false);
   };
 
   const [cards, setCards] = useState<Card[]>([]);
