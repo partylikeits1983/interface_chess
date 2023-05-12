@@ -5,6 +5,7 @@ import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 
 const { ethers } = require('ethers');
+
 const {
   CheckValidMove,
   GetGameMoves,
@@ -23,7 +24,11 @@ import {
   ChakraProvider,
 } from '@chakra-ui/react';
 
-export const Board = () => {
+interface BoardProps {
+  wager: string;
+}
+
+export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [game, setGame] = useState(new Chess());
   const [moves, setMoves] = useState<string[]>([]);
 
@@ -31,6 +36,39 @@ export const Board = () => {
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [numberOfGames, setNumberOfGames] = useState('');
+
+  // pass props
+  const [currentWager, setCurrentWager] = useState('');
+
+  useEffect(() => {
+    const myAsyncFunction = async () => {
+      if (wager != '') {
+        console.log(wager);
+
+        // Your async function logic here
+        const movesArray = await GetGameMoves(wager);
+        const game = new Chess();
+
+        for (let i = 0; i < movesArray.length; i++) {
+          console.log(movesArray[i]);
+          game.move(movesArray[i]);
+        }
+        setGame(game);
+
+        const isPlayerWhite = await IsPlayerWhite(wager);
+        setPlayerColor(isPlayerWhite);
+
+        const isPlayerTurn = await GetPlayerTurn(wager);
+        setPlayerTurn(isPlayerTurn);
+
+        const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
+        const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
+        setNumberOfGames(gameNumber);
+      }
+    };
+
+    myAsyncFunction();
+  }, [wager]);
 
   // Check valid move with sc
   useEffect(() => {
@@ -137,17 +175,19 @@ export const Board = () => {
 
       <Box p={4}></Box>
 
-      <Flex direction="column" alignItems="center">
-        <Input
-          value={wagerAddress}
-          onChange={handleChange}
-          placeholder="input wager address"
-        ></Input>
-        <Box p={2}></Box>
-        <Button colorScheme="green" onClick={handleSubmit}>
-          View Game
-        </Button>
-      </Flex>
+      {wager === '' ? (
+        <Flex direction="column" alignItems="center">
+          <Input
+            value={wagerAddress}
+            onChange={handleChange}
+            placeholder="input wager address"
+          />
+          <Box p={2}></Box>
+          <Button colorScheme="green" onClick={handleSubmit}>
+            View Game
+          </Button>
+        </Flex>
+      ) : null}
 
       <Flex justify="space-between">
         <Text>Amount: 100 USDC</Text>
