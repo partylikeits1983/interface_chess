@@ -21,6 +21,8 @@ import {
   Button,
   Flex,
   Text,
+  Spinner,
+  Center,
   ChakraProvider,
 } from '@chakra-ui/react';
 
@@ -37,13 +39,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [numberOfGames, setNumberOfGames] = useState('');
 
-  // pass props
-  const [currentWager, setCurrentWager] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const myAsyncFunction = async () => {
       if (wager != '') {
         console.log(wager);
+
+        const isPlayerTurn = await GetPlayerTurn(wager);
+        setPlayerTurn(isPlayerTurn);
 
         // Your async function logic here
         const movesArray = await GetGameMoves(wager);
@@ -58,12 +62,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
 
-        const isPlayerTurn = await GetPlayerTurn(wager);
-        setPlayerTurn(isPlayerTurn);
-
         const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
         const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
         setNumberOfGames(gameNumber);
+
+        setLoading(false);
       }
     };
 
@@ -167,11 +170,30 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   return (
     <ChakraProvider>
-      <Chessboard
-        boardOrientation={isPlayerWhite ? 'white' : 'black'}
-        onPieceDrop={onDrop}
-        position={game.fen()}
-      />
+      {loading ? (
+        <Box
+          width="500px"
+          height="700px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Center
+            position="absolute"
+            top="40%"
+            left="52%"
+            transform="translate(-50%, -50%)"
+          >
+            <Spinner size="xl" />
+          </Center>
+        </Box>
+      ) : (
+        <Chessboard
+          boardOrientation={isPlayerWhite ? 'white' : 'black'}
+          onPieceDrop={onDrop}
+          position={game.fen()}
+        />
+      )}
 
       <Box p={4}></Box>
 
