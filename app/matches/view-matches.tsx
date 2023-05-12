@@ -6,6 +6,8 @@ const {
   AcceptWagerConditions,
 } = require('ui/wallet-ui/api/form');
 
+import { useMetamask } from 'ui/wallet-ui/components/Metamask';
+
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -28,7 +30,7 @@ interface Card {
   wagerAmount: number;
   timePerMove: number;
   numberOfGames: number;
-  isPending: boolean;
+  isInProgress: boolean;
 }
 
 interface Props {
@@ -36,6 +38,16 @@ interface Props {
 }
 
 const CardList = () => {
+  const [account, setAccount] = useState<string | null>(null);
+  const { connect, accounts } = useMetamask();
+
+  useEffect(() => {
+    if (account == undefined) {
+      connect();
+    }
+    setAccount(accounts[0]);
+  });
+
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
   const HandleClickApprove = async (
@@ -135,7 +147,7 @@ const CardList = () => {
                     </Text>
                     <Flex alignItems="center">
                       <Text fontSize="md">
-                        {card.isPending
+                        {card.isInProgress
                           ? formatAddress(card.player1Address)
                           : formatAddress(card.player0Address)}
                       </Text>
@@ -144,7 +156,7 @@ const CardList = () => {
                         cursor="pointer"
                         onClick={() =>
                           handleCopyAddress(
-                            card.isPending
+                            card.isInProgress
                               ? card.player1Address
                               : card.player0Address,
                           )
@@ -193,27 +205,28 @@ const CardList = () => {
                       Status
                     </Text>
                     <Text fontSize="md">
-                      {card.isPending ? 'Wager In Progress' : 'Pending'}
+                      {card.isInProgress ? 'Wager In Progress' : 'Pending'}
                     </Text>
                   </Stack>
 
-                  {!card.isPending && (
-                    <Button
-                      colorScheme="green"
-                      size="sm"
-                      isLoading={isLoadingApproval}
-                      loadingText="Submitting Approval Transaction"
-                      onClick={() =>
-                        HandleClickApprove(
-                          card.matchAddress,
-                          card.wagerToken,
-                          card.wagerAmount,
-                        )
-                      }
-                    >
-                      Accept Wager
-                    </Button>
-                  )}
+                  {!card.isInProgress &&
+                    Number(card.player1Address) === Number(accounts[0]) && (
+                      <Button
+                        colorScheme="green"
+                        size="sm"
+                        isLoading={isLoadingApproval}
+                        loadingText="Submitting Approval Transaction"
+                        onClick={() =>
+                          HandleClickApprove(
+                            card.matchAddress,
+                            card.wagerToken,
+                            card.wagerAmount,
+                          )
+                        }
+                      >
+                        Accept Wager
+                      </Button>
+                    )}
                 </Stack>
               </Box>
             ))}

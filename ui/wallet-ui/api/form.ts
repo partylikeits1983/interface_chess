@@ -32,8 +32,8 @@ const updateContractAddresses = async () => {
   // This is an example, you need to replace with actual addresses.
   if (chainId === 31337) {
     // localhost
-    ChessAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
-    VerificationAddress = '0x0eAD3040254F3aC340F3490DEDc8a6159365E39E';
+    ChessAddress = '0x9963Aeb98a0d7ffC48F175f305234889E71b7D77';
+    VerificationAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
     tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
   } else if (chainId === 80001) {
     // mumbai Testnet
@@ -198,7 +198,7 @@ interface Card {
   wagerAmount: number;
   timePerMove: number;
   numberOfGames: number;
-  isPending: boolean;
+  isInProgress: boolean;
 }
 
 export const GetAllWagers = async () => {
@@ -229,7 +229,7 @@ export const GetAllWagers = async () => {
         wagerAmount: parseInt(wagerParams[3]),
         timePerMove: parseInt(wagerParams[4]),
         numberOfGames: parseInt(wagerParams[5]),
-        isPending: wagerParams[6],
+        isInProgress: wagerParams[6],
       };
 
       allWagerParams.push(card);
