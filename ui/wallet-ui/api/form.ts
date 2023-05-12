@@ -338,7 +338,7 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
   }
 };
 
-export const GetNumberOfOpenWagers = async (wagerAddress: string) => {
+export const GetNumberOfOpenWagers = async (): Promise<string[]> => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -347,18 +347,29 @@ export const GetNumberOfOpenWagers = async (wagerAddress: string) => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('Accept wager conditions');
-    console.log(wagerAddress);
+    console.log('Get All wagers');
 
-    const tx = await chess.allWagers();
-    await tx.wait();
+    let wagerAddresses = [];
+    let value = 0;
+    let errorOccurred = false;
+    while (!errorOccurred) {
+      try {
+        const wagerAddress = await chess.allWagers(value.toString());
+        wagerAddresses.push(wagerAddress);
+        value++;
+      } catch (error) {
+        // console.error('Error:', error);
+        errorOccurred = true;
+      }
+    }
 
-    console.log();
+    // console.log(wagerAddresses);
 
-    return true;
+    return wagerAddresses;
   } catch (error) {
-    alert(`wager address: ${wagerAddress} not found`);
+    alert(`error`);
     console.log(error);
+    return [];
   }
 };
 

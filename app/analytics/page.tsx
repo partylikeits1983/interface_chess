@@ -1,7 +1,6 @@
 import { ExternalLink } from '#/ui/external-link';
 import Link from 'next/link';
-
-import Docs from './docs';
+import Analytics from './analytics';
 
 export const metadata = {
   title: 'Docs',
@@ -18,8 +17,8 @@ const items = [
 export default function Page() {
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-medium text-gray-300">Coming Soon</h1>
-      <Docs />
+      <h1 className="text-xl font-medium text-gray-300">Analytics</h1>
+      <Analytics />
     </div>
   );
 }
