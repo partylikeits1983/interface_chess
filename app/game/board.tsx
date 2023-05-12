@@ -44,7 +44,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   useEffect(() => {
     const myAsyncFunction = async () => {
       if (wager != '') {
-        console.log(wager);
+        setWagerAddress(wager);
 
         const isPlayerTurn = await GetPlayerTurn(wager);
         setPlayerTurn(isPlayerTurn);
@@ -91,6 +91,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     try {
       // adding await fails to build
       // using useEffect makes everything glitchy
+      console.log('handlesubmit move');
+      console.log(wagerAddress);
       PlayMove(wagerAddress, move);
     } catch (error) {
       console.log(error);
