@@ -298,8 +298,6 @@ export const GetGameMoves = async (wagerAddress: string) => {
     console.log('get all moves');
     console.log(wagerAddress);
 
-    // const wagers = await chess.getAllUserGames(accounts[0]);
-    // const wager = wagers[0];
     const gameID = 0;
 
     const data = await chess.getGameMoves(wagerAddress, gameID);
@@ -332,6 +330,30 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 
     const tx = await chess.acceptWager(wagerAddress);
     await tx.wait();
+
+    return true;
+  } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
+
+export const GetNumberOfOpenWagers = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('Accept wager conditions');
+    console.log(wagerAddress);
+
+    const tx = await chess.allWagers();
+    await tx.wait();
+
+    console.log();
 
     return true;
   } catch (error) {
