@@ -5,6 +5,7 @@ import {
   ChakraProvider,
   Stat,
   StatLabel,
+  Box,
   StatNumber,
   StatGroup,
   Spinner,
