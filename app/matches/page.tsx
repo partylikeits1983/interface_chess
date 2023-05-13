@@ -1,4 +1,4 @@
-import CardList from './view-matches';
+import CardList from './CardList';
 
 export default function Page() {
   return (

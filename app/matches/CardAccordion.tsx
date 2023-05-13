@@ -1,4 +1,7 @@
 import React from 'react';
+
+const { ethers } = require('ethers');
+
 import {
   Accordion,
   AccordionItem,
@@ -206,13 +209,13 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
               <Text fontSize="md">
                 {card.isInProgress
                   ? 'Wager In Progress'
-                  : Number(card.player1Address) === Number(accounts[0])
+                  : Number(card.player1Address) === Number(account)
                   ? 'Pending approval'
                   : 'Waiting for opponent to accept wager'}
               </Text>
             </Stack>
             {!card.isInProgress &&
-              Number(card.player1Address) === Number(accounts[0]) && (
+              Number(card.player1Address) === Number(account) && (
                 <Button
                   colorScheme="green"
                   size="md"

@@ -1,7 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { ChakraProvider, Box, Heading, Text } from '@chakra-ui/react';
 
-const { ethers } = require('ethers');
 const {
   GetAllWagers,
   AcceptWagerAndApprove,
@@ -9,8 +10,6 @@ const {
 } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
-
-import Identicon from 'ui/IdenticonGames';
 
 import CardAccordion from './CardAccordion'; // Import the CardAccordion component
 
@@ -85,9 +84,6 @@ const CardList = () => {
     }
     fetchCards();
   }, []);
-  // ... rest of your useState and useEffect hooks
-
-  // ... rest of your functions
 
   return (
     <ChakraProvider>
