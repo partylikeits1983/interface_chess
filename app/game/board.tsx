@@ -193,6 +193,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             transform="translate(-50%, -50%)"
           >
             <Spinner size="xl" />
+            <Text> Loading Game Data</Text>
           </Center>
         </Box>
       ) : (
