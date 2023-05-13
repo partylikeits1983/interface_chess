@@ -55,7 +55,7 @@ const setupProvider = async () => {
       signer = provider.getSigner();
       accounts = await provider.listAccounts();
       await provider.send('eth_requestAccounts', []);
-      console.log('Web3 provider is set.');
+      console.log('Web3 provider is set');
       isWalletConnected = true;
     } catch (error) {
       console.error('User rejected the connection request.', error);
@@ -74,7 +74,7 @@ const setupProvider = async () => {
     signer = provider;
     accounts = undefined;
     isWalletConnected = false;
-    console.log('JSON-RPC provider is set. Form.ts');
+    console.log('JSON-RPC provider is set - Form.ts');
   }
 
   return { provider, signer, accounts, isWalletConnected };
