@@ -21,7 +21,9 @@ const ERC20ABI = [
 ];
 
 const updateContractAddresses = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  let { provider } = await setupProvider();
+
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
   const network = await provider.getNetwork();
   const chainId = network.chainId;
 
@@ -45,27 +47,37 @@ const updateContractAddresses = async () => {
 };
 
 const setupProvider = async () => {
-  let provider;
+  let provider, signer, accounts, isWalletConnected;
 
   if (window.ethereum) {
     try {
       provider = new ethers.providers.Web3Provider(window.ethereum);
+      signer = provider.getSigner();
+      accounts = await provider.listAccounts();
       await provider.send('eth_requestAccounts', []);
       console.log('Web3 provider is set.');
+      isWalletConnected = true;
     } catch (error) {
       console.error('User rejected the connection request.', error);
       provider = null; // reset provider to null
+      signer = null;
+      accounts = null;
+      isWalletConnected = false;
     }
   }
+
   // If provider is not set (either window.ethereum is not available or user rejected the connection)
   // then use the custom JSON-RPC provider
   if (!provider) {
     const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
     provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
+    signer = provider;
+    accounts = undefined;
+    isWalletConnected = false;
     console.log('JSON-RPC provider is set. Form.ts');
   }
 
-  return provider;
+  return { provider, signer, accounts, isWalletConnected };
 };
 
 export const getBalance = async (address: string) => {
@@ -311,17 +323,12 @@ export const GetAllWagers = async () => {
 };
 
 export const GetGameMoves = async (wagerAddress: string) => {
+  let { provider } = await setupProvider();
   await updateContractAddresses();
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('get all moves');
-    console.log(wagerAddress);
-
     const gameID = 0;
 
     const data = await chess.getGameMoves(wagerAddress, gameID);
@@ -335,7 +342,7 @@ export const GetGameMoves = async (wagerAddress: string) => {
 
     return algebraeicMoves;
   } catch (error) {
-    alert(`wager address: ${wagerAddress} not found`);
+    alert(`Get game moves: ${wagerAddress} not found`);
     console.log(error);
   }
 };
@@ -433,63 +440,71 @@ export const PlayMove = async (wagerAddress: string, move: string) => {
 };
 
 export const IsPlayerWhite = async (wagerAddress: string) => {
+  let { signer, accounts, isWalletConnected } = await setupProvider();
+
   await updateContractAddresses();
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
+  if (isWalletConnected) {
+    const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+    try {
+      console.log('In Is Player White');
+      console.log(wagerAddress);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
-  try {
-    console.log('In Is Player White');
-    console.log(wagerAddress);
+      const isPlayerWhite = await chess.isPlayerWhite(
+        wagerAddress,
+        accounts[0],
+      );
+      console.log(isPlayerWhite);
 
-    const isPlayerWhite = await chess.isPlayerWhite(wagerAddress, accounts[0]);
-    console.log(isPlayerWhite);
-
-    return isPlayerWhite;
-  } catch (error) {
-    alert(`wager address: ${wagerAddress} not found`);
-    console.log(error);
+      return isPlayerWhite;
+    } catch (error) {
+      alert(`wager address: ${wagerAddress} not found`);
+      console.log(error);
+    }
+  } else {
+    return false;
   }
 };
 
 export const GetPlayerTurn = async (wagerAddress: string) => {
+  let { signer, accounts, isWalletConnected } = await setupProvider();
+
   await updateContractAddresses();
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
-
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
-  try {
-    console.log('In Get Player Turn');
-    console.log(wagerAddress);
 
-    const playerTurn = await chess.getPlayerMove(wagerAddress);
+  if (isWalletConnected) {
+    try {
+      console.log('In Get Player Turn');
+      console.log(wagerAddress);
 
-    let isPlayerTurn;
-    if (Number(playerTurn) == Number(accounts[0])) {
-      isPlayerTurn = true;
-    } else {
-      isPlayerTurn = false;
+      const playerTurn = await chess.getPlayerMove(wagerAddress);
+
+      let isPlayerTurn;
+      if (Number(playerTurn) == Number(accounts[0])) {
+        isPlayerTurn = true;
+      } else {
+        isPlayerTurn = false;
+      }
+
+      console.log(isPlayerTurn);
+
+      return isPlayerTurn;
+    } catch (error) {
+      alert(`In playerturn : ${wagerAddress} not found`);
+      console.log(error);
     }
-
-    console.log(isPlayerTurn);
-
-    return isPlayerTurn;
-  } catch (error) {
-    alert(`In playerturn : ${wagerAddress} not found`);
-    console.log(error);
+  } else {
+    return false;
   }
 };
 
 export const GetNumberOfGames = async (wagerAddress: string) => {
-  await updateContractAddresses();
+  let { signer } = await setupProvider();
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
+  console.log('GET NUMBER OF GAMES');
+
+  await updateContractAddresses();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
