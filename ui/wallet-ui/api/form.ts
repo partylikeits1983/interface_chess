@@ -44,6 +44,30 @@ const updateContractAddresses = async () => {
   // Add more chains if needed.
 };
 
+const setupProvider = async () => {
+  let provider;
+
+  if (window.ethereum) {
+    try {
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send('eth_requestAccounts', []);
+      console.log('Web3 provider is set.');
+    } catch (error) {
+      console.error('User rejected the connection request.', error);
+      provider = null; // reset provider to null
+    }
+  }
+  // If provider is not set (either window.ethereum is not available or user rejected the connection)
+  // then use the custom JSON-RPC provider
+  if (!provider) {
+    const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
+    provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
+    console.log('JSON-RPC provider is set.');
+  }
+
+  return provider;
+};
+
 export const getBalance = async (address: string) => {
   await updateContractAddresses();
 
@@ -339,18 +363,7 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 };
 
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
-  let provider: any; // ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider;
-
-  if (typeof window.ethereum !== 'undefined') {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const accounts = await provider.send('eth_requestAccounts', []);
-    await updateContractAddresses();
-  } else {
-    provider = new ethers.providers.JsonRpcProvider(
-      'https://rpc.ankr.com/polygon_mumbai',
-    );
-  }
+  let provider = await setupProvider();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 

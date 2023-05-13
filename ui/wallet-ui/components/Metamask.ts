@@ -29,7 +29,9 @@ interface ProviderRpcError extends Error {
 }
 
 function useMetamask() {
-  const [provider, setProvider] = useState<Web3Provider | null>(null);
+  const [provider, setProvider] = useState<
+    ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider | null
+  >(null);
   // Signer | Provider | undefined
   const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
 
@@ -37,31 +39,62 @@ function useMetamask() {
   const [balance, setBalance] = useState<ethers.ethers.BigNumberish>('');
   const [network, setNetwork] = useState<Network | null>(null);
 
-  /*   const setupProvider = () => {
-    if (!window.ethereum) throw Error('Could not find Metamask extension');
-    if (provider) return provider;
-
-    const newProvider = new Web3Provider(window.ethereum);
-    listenToEvents(newProvider);
-    setProvider(newProvider);
-
-    return newProvider;
-  }; */
-
-  const setupProvider = () => {
+  const setupProvider = async () => {
     let provider;
 
     if (window.ethereum) {
-      provider = new ethers.providers.Web3Provider(window.ethereum);
-      listenToEvents(provider);
-      setProvider(provider);
-    } else {
-      // Custom JSON-RPC endpoint URL
+      try {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send('eth_requestAccounts', []);
+        listenToEvents(provider);
+        console.log('Web3 provider is set.');
+      } catch (error) {
+        console.error('User rejected the connection request.', error);
+        provider = null; // reset provider to null
+      }
+    }
+    // If provider is not set (either window.ethereum is not available or user rejected the connection)
+    // then use the custom JSON-RPC provider
+    if (!provider) {
       const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
       provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
+      console.log('JSON-RPC provider is set.');
     }
 
+    setProvider(provider);
+
     return provider;
+  };
+
+  const connect = async () => {
+    const provider = await setupProvider();
+
+    if (provider instanceof ethers.providers.Web3Provider) {
+      const accounts = await provider.listAccounts();
+      const network = await provider.getNetwork();
+      const signer = provider.getSigner();
+      const balance = await provider.getBalance(accounts[0]);
+
+      setNetwork(network);
+      setAccounts(accounts);
+      setSigner(signer);
+      setBalance(balance);
+    } else {
+      console.log('Connect a MetaMask Wallet');
+    }
+  };
+
+  const getAccounts = async () => {
+    const provider = await setupProvider();
+    const accounts = provider.listAccounts ? await provider.listAccounts() : [];
+    setAccounts(accounts);
+    return accounts;
+  };
+
+  const getBalance = async (account: string) => {
+    const provider = await setupProvider();
+    const balance = await provider.getBalance(account);
+    return balance;
   };
 
   const listenToEvents = (provider: Web3Provider) => {
@@ -85,44 +118,13 @@ function useMetamask() {
     );
   };
 
-  const connect = async () => {
-    const provider = setupProvider();
-
-    if (provider instanceof ethers.providers.Web3Provider) {
-      const accounts: string[] = await provider.send('eth_requestAccounts', []);
-      const network: Network = await provider.getNetwork();
-      const signer: JsonRpcSigner = provider.getSigner();
-      const balance = await provider.getBalance(accounts[0]);
-
-      setNetwork(network);
-      setAccounts(accounts);
-      setSigner(signer);
-      setBalance(balance);
-    } else {
-      console.log('Connect a MetaMask Wallet');
-    }
-  };
-
   const deactivate = async () => {
     setNetwork(null);
     setAccounts([]);
     setSigner(null);
   };
 
-  const getAccounts = async () => {
-    const provider = setupProvider();
-    const accounts: string[] = await provider.send('eth_accounts', []);
-    setAccounts(accounts);
-    return accounts;
-  };
-
-  const getBalance = async (account: string) => {
-    const provider = setupProvider();
-    const balance = provider.getBalance(account);
-    return balance;
-  };
-
-  const sendTransaction = async (
+  /*   const sendTransaction = async (
     from: string,
     to: string,
     valueInEther: string,
@@ -138,16 +140,18 @@ function useMetamask() {
     const transactionHash = await provider.send('eth_sendTransaction', params);
     return transactionHash;
   };
-
+ */
   return {
+    provider,
     signer,
     accounts,
     network,
     balance,
     getBalance,
     connect,
+    setupProvider,
     getAccounts,
-    sendTransaction,
+    // sendTransaction,
     deactivate,
   };
 }

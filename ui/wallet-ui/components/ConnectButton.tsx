@@ -15,15 +15,16 @@ export default function ConnectButton({ handleOpenModal }: Props) {
   const { connect, getAccounts, accounts, getBalance } = useMetamask();
   const [formattedBalance, setFormattedBalance] = useState<string>('');
 
+  // Update account state when accounts changes
   useEffect(() => {
-    if (account == undefined) {
-      connect();
+    if (accounts[0] && accounts[0] !== account) {
+      setAccount(accounts[0]);
     }
-    setAccount(accounts[0]);
-  });
+  }, [accounts, account]);
 
   useEffect(() => {
     const fetchBalance = async () => {
+      console.log('fetchBalance called with account: ', account); // Add this line
       if (account) {
         const balance = await getBalance(account);
         const formattedBalance = parseFloat(formatEther(balance))
@@ -33,13 +34,18 @@ export default function ConnectButton({ handleOpenModal }: Props) {
       }
     };
 
-    fetchBalance();
-  }, [account, getBalance]);
+    if (account) {
+      fetchBalance();
+    }
+  }, [account]);
 
   const handleConnectWallet = async () => {
-    await connect();
-    const accounts = await getAccounts();
-    setAccount(accounts[0]);
+    // Check if wallet is already connected
+    if (!account) {
+      await connect();
+      const accounts = await getAccounts();
+      setAccount(accounts[0]);
+    }
   };
 
   return account ? (
