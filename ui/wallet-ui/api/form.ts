@@ -27,7 +27,7 @@ const updateContractAddresses = async () => {
   const network = await provider.getNetwork();
   const chainId = network.chainId;
 
-  console.log('update addresses');
+  console.log('Chain ID');
   console.log(chainId);
 
   // Update the addresses based on the chain id.
@@ -292,17 +292,19 @@ export const GetAllWagers = async () => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('GetAllWagers');
-
     const wagers = await chess.getAllUserGames(accounts[0]);
 
     const allWagerParams = [];
-
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
-      //console.log(wagerParams);
-      const isPlayerTurn = await chess.isPlayerTurn(accounts[0]);
+      let isPlayerTurn;
+      const playerToMove = await chess.getPlayerMove(accounts[0]);
+      if (Number(accounts[0]) == Number(playerToMove)) {
+        isPlayerTurn = true;
+      } else {
+        isPlayerTurn = false;
+      }
 
       const card: Card = {
         matchAddress: wagers[i],
