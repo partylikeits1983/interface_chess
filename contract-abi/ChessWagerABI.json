@@ -5,10 +5,28 @@
         "internalType": "address",
         "name": "moveVerificationAddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_ChessFishToken",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "ChessFishToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [
@@ -37,6 +55,30 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "checkTimeRemaining",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
       }
     ],
     "stateMutability": "view",
@@ -128,7 +170,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "maxTimePerMove",
+        "name": "timeLimit",
         "type": "uint256"
       },
       {
@@ -193,11 +235,6 @@
       },
       {
         "internalType": "uint256",
-        "name": "maxTimePerMove",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "numberOfGames",
         "type": "uint256"
       },
@@ -205,6 +242,26 @@
         "internalType": "bool",
         "name": "hasPlayerAccepted",
         "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeLimit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeLastMove",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timePlayer0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timePlayer1",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -528,6 +585,25 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "updateWagerStateTime",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

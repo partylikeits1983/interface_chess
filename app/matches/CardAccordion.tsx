@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
   Flex,
+  Box,
   Button,
   HStack,
 } from '@chakra-ui/react';
@@ -23,9 +24,12 @@ interface Card {
   player1Address: string;
   wagerToken: string;
   wagerAmount: number;
-  timePerMove: number;
   numberOfGames: number;
   isInProgress: boolean;
+  timeLimit: number;
+  timeLastMove: number;
+  timePlayer0: number;
+  timePlayer1: number;
   isPlayerTurn: boolean;
 }
 
@@ -126,7 +130,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
         </h2>
         <AccordionPanel pb={4}>
           <Stack spacing={2}>
-            <Stack spacing={1}>
+            <Stack spacing={0}>
               <Text fontSize="sm" fontWeight="bold" color="gray.500">
                 Match Address
               </Text>
@@ -140,7 +144,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
               </Flex>
             </Stack>
 
-            <Stack spacing={1}>
+            <Stack spacing={0}>
               <Text fontSize="sm" fontWeight="bold" color="gray.500">
                 Opponent Address
               </Text>
@@ -163,7 +167,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                 />
               </Flex>
             </Stack>
-            <Stack spacing={1}>
+            <Stack spacing={0}>
               <Text fontSize="sm" fontWeight="bold" color="gray.500">
                 Wager Token
               </Text>
@@ -176,7 +180,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                 />
               </Flex>
             </Stack>
-            <Stack spacing={1}>
+            <Stack spacing={0}>
               <Text fontSize="sm" fontWeight="bold" color="gray.500">
                 Wager Amount
               </Text>
@@ -189,21 +193,21 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                 )}
               </Text>
             </Stack>
-            <Stack spacing={1}>
+            <Stack spacing={0}>
               <Text fontSize="sm" fontWeight="bold" color="gray.500">
                 Time Per Player
               </Text>
               <Text fontSize="md">
-                {formatDuration(Number(card.timePerMove))}
+                {formatDuration(Number(card.timeLimit))}
               </Text>
             </Stack>
-            <Stack spacing={1}>
+            <Stack spacing={0}>
               <Text fontSize="sm" fontWeight="bold" color="gray.500">
                 Number of Games
               </Text>
               <Text fontSize="md">{card.numberOfGames}</Text>
             </Stack>
-            <Stack spacing={1}>
+            <Stack spacing={0}>
               <Text fontSize="sm" fontWeight="bold" color="gray.500">
                 Status
               </Text>
@@ -213,27 +217,31 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                     ? 'Your turn'
                     : 'Waiting for opponent to move'
                   : Number(card.player1Address) === Number(account)
-                  ? 'Pending approval'
+                  ? 'Pending Your Approval'
                   : 'Waiting for opponent to accept wager'}
               </Text>
+              <Text>{card.isPlayerTurn}</Text>
             </Stack>
             {!card.isInProgress &&
               Number(card.player1Address) === Number(account) && (
-                <Button
-                  colorScheme="green"
-                  size="md"
-                  isLoading={isLoadingApproval}
-                  loadingText="Submitting Approval Transaction"
-                  onClick={() =>
-                    HandleClickApprove(
-                      card.matchAddress,
-                      card.wagerToken,
-                      card.wagerAmount,
-                    )
-                  }
-                >
-                  Accept Wager
-                </Button>
+                <>
+                  <Box marginTop={8} />
+                  <Button
+                    colorScheme="green"
+                    size="md"
+                    isLoading={isLoadingApproval}
+                    loadingText="Submitting Approval Transaction"
+                    onClick={() =>
+                      HandleClickApprove(
+                        card.matchAddress,
+                        card.wagerToken,
+                        card.wagerAmount,
+                      )
+                    }
+                  >
+                    Accept Wager
+                  </Button>
+                </>
               )}
           </Stack>
         </AccordionPanel>

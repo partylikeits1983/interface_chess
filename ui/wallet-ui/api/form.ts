@@ -4,9 +4,9 @@ const { parseUnits } = require('ethers/lib/utils');
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-let ChessAddress = '0x512945dfCD32C9E51ABcc6DE22752a7dd4266fDd';
-let VerificationAddress = '0xFe3C5F9c8959FaFAEFb5841fc46Ee701d403e34D';
-let tokenAddress = '0xCA7E373c6AE45f82d97F5898DE7ac5e3f97F9200';
+let ChessAddress = '0x9C3Ac20FD69f8b77f2149Bc995cd11fFbF11aEb2';
+let VerificationAddress = '0x7C5e40305Da9E01b20B6b81CdC2A64D75dBef0a6';
+let tokenAddress = '0xbda02eD28ECb4c5ff9831c2cb2d49A644A6Ddf32';
 
 import { CreateMatchType } from './types';
 
@@ -39,9 +39,9 @@ const updateContractAddresses = async () => {
     tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
   } else if (chainId === 80001) {
     // mumbai Testnet
-    ChessAddress = '0x512945dfCD32C9E51ABcc6DE22752a7dd4266fDd';
-    VerificationAddress = '0xFe3C5F9c8959FaFAEFb5841fc46Ee701d403e34D';
-    tokenAddress = '0xCA7E373c6AE45f82d97F5898DE7ac5e3f97F9200';
+    ChessAddress = '0x9C3Ac20FD69f8b77f2149Bc995cd11fFbF11aEb2';
+    VerificationAddress = '0x7C5e40305Da9E01b20B6b81CdC2A64D75dBef0a6';
+    tokenAddress = '0xbda02eD28ECb4c5ff9831c2cb2d49A644A6Ddf32';
   }
   // Add more chains if needed.
 };
@@ -159,9 +159,12 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
       player1Address: wagerParams[1],
       wagerToken: wagerParams[2],
       wagerAmount: parseInt(wagerParams[3]),
-      timePerMove: parseInt(wagerParams[4]),
-      numberOfGames: parseInt(wagerParams[5]),
-      isInProgress: wagerParams[6],
+      numberOfGames: parseInt(wagerParams[4]),
+      isInProgress: wagerParams[5],
+      timeLimit: parseInt(wagerParams[6]),
+      timeLastMove: parseInt(wagerParams[7]),
+      timePlayer0: parseInt(wagerParams[8]),
+      timePlayer1: parseInt(wagerParams[9]),
       isPlayerTurn: false,
     };
 
@@ -277,9 +280,12 @@ interface Card {
   player1Address: string;
   wagerToken: string;
   wagerAmount: number;
-  timePerMove: number;
   numberOfGames: number;
   isInProgress: boolean;
+  timeLimit: number;
+  timeLastMove: number;
+  timePlayer0: number;
+  timePlayer1: number;
   isPlayerTurn: boolean;
 }
 
@@ -298,8 +304,12 @@ export const GetAllWagers = async () => {
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
+      console.log(wagerParams);
+
       let isPlayerTurn;
-      const playerToMove = await chess.getPlayerMove(accounts[0]);
+      const playerToMove = await chess.getPlayerMove(wagers[i]);
+      console.log('HERE');
+      console.log(playerToMove);
       if (Number(accounts[0]) == Number(playerToMove)) {
         isPlayerTurn = true;
       } else {
@@ -312,9 +322,12 @@ export const GetAllWagers = async () => {
         player1Address: wagerParams[1],
         wagerToken: wagerParams[2],
         wagerAmount: parseInt(wagerParams[3]),
-        timePerMove: parseInt(wagerParams[4]),
-        numberOfGames: parseInt(wagerParams[5]),
-        isInProgress: wagerParams[6],
+        numberOfGames: parseInt(wagerParams[4]),
+        isInProgress: wagerParams[5],
+        timeLimit: parseInt(wagerParams[6]),
+        timeLastMove: parseInt(wagerParams[7]),
+        timePlayer0: parseInt(wagerParams[8]),
+        timePlayer1: parseInt(wagerParams[9]),
         isPlayerTurn: isPlayerTurn,
       };
 
@@ -403,9 +416,12 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
         player1Address: wagerParams[1],
         wagerToken: wagerParams[2],
         wagerAmount: parseInt(wagerParams[3]),
-        timePerMove: parseInt(wagerParams[4]),
-        numberOfGames: parseInt(wagerParams[5]),
-        isInProgress: wagerParams[6],
+        numberOfGames: parseInt(wagerParams[4]),
+        isInProgress: wagerParams[5],
+        timeLimit: parseInt(wagerParams[6]),
+        timeLastMove: parseInt(wagerParams[7]),
+        timePlayer0: parseInt(wagerParams[8]),
+        timePlayer1: parseInt(wagerParams[9]),
         isPlayerTurn: false,
       };
       allWagerParams.push(card);

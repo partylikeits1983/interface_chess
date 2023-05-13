@@ -20,9 +20,12 @@ interface Card {
   player1Address: string;
   wagerToken: string;
   wagerAmount: number;
-  timePerMove: number;
   numberOfGames: number;
   isInProgress: boolean;
+  timeLimit: number;
+  timeLastMove: number;
+  timePlayer0: number;
+  timePlayer1: number;
   isPlayerTurn: boolean;
 }
 
