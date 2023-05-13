@@ -58,7 +58,7 @@ function useMetamask() {
     if (!provider) {
       const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
       provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
-      console.log('JSON-RPC provider is set.');
+      console.log('JSON-RPC provider is set. metamask');
     }
 
     setProvider(provider);
@@ -79,8 +79,11 @@ function useMetamask() {
       setAccounts(accounts);
       setSigner(signer);
       setBalance(balance);
+
+      return true;
     } else {
       console.log('Connect a MetaMask Wallet');
+      return false;
     }
   };
 

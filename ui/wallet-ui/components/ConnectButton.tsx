@@ -24,7 +24,6 @@ export default function ConnectButton({ handleOpenModal }: Props) {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      console.log('fetchBalance called with account: ', account); // Add this line
       if (account) {
         const balance = await getBalance(account);
         const formattedBalance = parseFloat(formatEther(balance))

@@ -62,7 +62,7 @@ const setupProvider = async () => {
   if (!provider) {
     const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
     provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
-    console.log('JSON-RPC provider is set.');
+    console.log('JSON-RPC provider is set. Form.ts');
   }
 
   return provider;

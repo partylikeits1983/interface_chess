@@ -49,11 +49,21 @@ const CardList = () => {
   const { connect, accounts } = useMetamask();
 
   useEffect(() => {
-    if (account == undefined) {
-      connect();
-    }
+    const handleConnect = async () => {
+      if (account === undefined) {
+        const isConnected = await connect();
+        if (!isConnected) {
+          setAccount('');
+        }
+      }
+    };
+
+    handleConnect();
+  }, [account, connect]);
+
+  useEffect(() => {
     setAccount(accounts[0]);
-  });
+  }, [accounts]);
 
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
