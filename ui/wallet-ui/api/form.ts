@@ -534,7 +534,7 @@ export const GetNumberOfGames = async (wagerAddress: string) => {
     console.log('In Get Player Turn');
 
     const wagerParams = await chess.gameWagers(wagerAddress);
-    const numberOfGames = parseInt(wagerParams[5]);
+    const numberOfGames = parseInt(wagerParams[4]);
 
     const gameNumber = await chess.getGameLength(wagerAddress);
 

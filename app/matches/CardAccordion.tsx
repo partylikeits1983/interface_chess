@@ -220,7 +220,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                   ? 'Pending Your Approval'
                   : 'Waiting for opponent to accept wager'}
               </Text>
-              <Text>{card.isPlayerTurn}</Text>
+              <Text>{card.timePlayer0}</Text>
             </Stack>
             {!card.isInProgress &&
               Number(card.player1Address) === Number(account) && (
