@@ -59,26 +59,28 @@ export default function Analytics() {
         </Stat>
       </StatGroup>
 
-      <Table variant="simple" mt={4}>
-        <Thead>
-          <Tr>
-            <Th color="white">#</Th>
-            <Th color="white">Wager Addresses</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {wagerAddresses.map((address, index) => (
-            <Tr key={index}>
-              <Td color="green.500">{index + 1}</Td>
-              <Td>
-                <NextLink href={`/game/${address}`} passHref>
-                  <Link color="green.500">{address}</Link>
-                </NextLink>
-              </Td>
+      <Box overflowX="auto" maxWidth="100%">
+        <Table variant="simple" mt={4} size="sm">
+          <Thead>
+            <Tr>
+              <Th color="white">#</Th>
+              <Th color="white">Wager Addresses</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {wagerAddresses.map((address, index) => (
+              <Tr key={index}>
+                <Td color="green.500">{index + 1}</Td>
+                <Td>
+                  <NextLink href={`/game/${address}`} passHref>
+                    <Link color="green.500">{address}</Link>
+                  </NextLink>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
     </ChakraProvider>
   );
 }
