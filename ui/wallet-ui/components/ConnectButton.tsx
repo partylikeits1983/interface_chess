@@ -55,9 +55,11 @@ export default function ConnectButton({ handleOpenModal }: Props) {
     if (!account) {
       await connect();
       const accounts = await getAccounts();
-      setAccount(accounts[0]);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('account', accounts[0]); // set account in local storage
+      if (accounts.length > 0) {
+        setAccount(accounts[0]);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('account', accounts[0]); // set account in local storage
+        }
       }
     }
   };
