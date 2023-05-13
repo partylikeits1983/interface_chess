@@ -11,14 +11,26 @@ type Props = {
 };
 
 export default function ConnectButton({ handleOpenModal }: Props) {
-  const [account, setAccount] = useState<string | null>(null);
   const { connect, getAccounts, accounts, getBalance } = useMetamask();
+  const [account, setAccount] = useState<string | null>(null);
   const [formattedBalance, setFormattedBalance] = useState<string>('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const cachedAccount = localStorage.getItem('account');
+      if (cachedAccount) {
+        setAccount(cachedAccount);
+      }
+    }
+  }, []);
 
   // Update account state when accounts changes
   useEffect(() => {
     if (accounts[0] && accounts[0] !== account) {
       setAccount(accounts[0]);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('account', accounts[0]); // update account in local storage
+      }
     }
   }, [accounts, account]);
 
@@ -44,6 +56,9 @@ export default function ConnectButton({ handleOpenModal }: Props) {
       await connect();
       const accounts = await getAccounts();
       setAccount(accounts[0]);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('account', accounts[0]); // set account in local storage
+      }
     }
   };
 
