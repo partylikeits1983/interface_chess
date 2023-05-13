@@ -341,7 +341,7 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
   let provider: any; // ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider;
 
-  if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
+  if (typeof window.ethereum !== 'undefined') {
     provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const accounts = await provider.send('eth_requestAccounts', []);
@@ -350,13 +350,11 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
     provider = new ethers.providers.JsonRpcProvider(
       'https://rpc.ankr.com/polygon_mumbai',
     );
-    await updateContractAddresses();
   }
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
-  try {
-    console.log('Get Analytics Data');
 
+  try {
     let wagerAddresses = [];
     let value = 0;
     let errorOccurred = false;
@@ -369,6 +367,7 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
         errorOccurred = true;
       }
     }
+
     const allWagerParams = [];
     for (let i = 0; i < wagerAddresses.length; i++) {
       const wagerParams = await chess.gameWagers(wagerAddresses[i]);

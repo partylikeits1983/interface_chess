@@ -37,7 +37,7 @@ function useMetamask() {
   const [balance, setBalance] = useState<ethers.ethers.BigNumberish>('');
   const [network, setNetwork] = useState<Network | null>(null);
 
-  const setupProvider = () => {
+  /*   const setupProvider = () => {
     if (!window.ethereum) throw Error('Could not find Metamask extension');
     if (provider) return provider;
 
@@ -46,6 +46,22 @@ function useMetamask() {
     setProvider(newProvider);
 
     return newProvider;
+  }; */
+
+  const setupProvider = () => {
+    let provider;
+
+    if (window.ethereum) {
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      listenToEvents(provider);
+      setProvider(provider);
+    } else {
+      // Custom JSON-RPC endpoint URL
+      const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
+      provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
+    }
+
+    return provider;
   };
 
   const listenToEvents = (provider: Web3Provider) => {
@@ -71,15 +87,20 @@ function useMetamask() {
 
   const connect = async () => {
     const provider = setupProvider();
-    const accounts: string[] = await provider.send('eth_requestAccounts', []);
-    const network: Network = await provider.getNetwork();
-    const signer: JsonRpcSigner = provider.getSigner();
-    const balance = await provider.getBalance(accounts[0]);
 
-    setNetwork(network);
-    setAccounts(accounts);
-    setSigner(signer);
-    setBalance(balance);
+    if (provider instanceof ethers.providers.Web3Provider) {
+      const accounts: string[] = await provider.send('eth_requestAccounts', []);
+      const network: Network = await provider.getNetwork();
+      const signer: JsonRpcSigner = provider.getSigner();
+      const balance = await provider.getBalance(accounts[0]);
+
+      setNetwork(network);
+      setAccounts(accounts);
+      setSigner(signer);
+      setBalance(balance);
+    } else {
+      console.log('Connect a MetaMask Wallet');
+    }
   };
 
   const deactivate = async () => {
