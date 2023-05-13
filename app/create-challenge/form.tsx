@@ -7,6 +7,7 @@ import {
   Input,
   Button,
   Stack,
+  HStack,
   ChakraProvider,
 } from '@chakra-ui/react';
 
@@ -59,20 +60,12 @@ export default function ChallengeForm() {
     event.preventDefault();
     console.log(formInputs);
   };
-  /* 
-  const submitWager = async (formInputs: FormInputs): Promise<boolean> => {
-    console.log('submit wager func');
-    console.log(formInputs);
 
-    await CreateWager(formInputs);
-    return true;
-  };
- */
   return (
     <ChakraProvider>
       <Box mx="auto">
         <form onSubmit={handleSubmit}>
-          <Stack spacing="6">
+          <Stack spacing="4">
             <FormControl>
               <FormLabel>Player Address</FormLabel>
               <Input
@@ -123,24 +116,28 @@ export default function ChallengeForm() {
                 required
               />
             </FormControl>
-            <Button
-              colorScheme="teal"
-              variant="outline"
-              isLoading={isLoadingApproval}
-              loadingText="Submitting Approval Transaction"
-              onClick={() => HandleClickApprove()}
-            >
-              Approve Tokens
-            </Button>
-            <Button
-              colorScheme="teal"
-              variant="outline"
-              isLoading={isLoadingCreateWager}
-              loadingText="Submitting Create Wager Transaction"
-              onClick={() => HandleClickCreateWager()}
-            >
-              Create Challenge
-            </Button>
+            <HStack spacing="4">
+              <Button
+                flex="1"
+                colorScheme="teal"
+                variant="outline"
+                isLoading={isLoadingApproval}
+                loadingText="Submitting Approval Transaction"
+                onClick={() => HandleClickApprove()}
+              >
+                Approve Tokens
+              </Button>
+              <Button
+                flex="1"
+                colorScheme="teal"
+                variant="outline"
+                isLoading={isLoadingCreateWager}
+                loadingText="Submitting Create Wager Transaction"
+                onClick={() => HandleClickCreateWager()}
+              >
+                Create Challenge
+              </Button>
+            </HStack>
           </Stack>
         </form>
       </Box>

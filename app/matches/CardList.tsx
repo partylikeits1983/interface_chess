@@ -7,6 +7,7 @@ const {
   GetAllWagers,
   AcceptWagerAndApprove,
   AcceptWagerConditions,
+  GetPlayerTurn,
 } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
@@ -22,6 +23,7 @@ interface Card {
   timePerMove: number;
   numberOfGames: number;
   isInProgress: boolean;
+  isPlayerTurn: boolean;
 }
 
 interface Props {

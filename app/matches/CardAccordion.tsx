@@ -26,6 +26,7 @@ interface Card {
   timePerMove: number;
   numberOfGames: number;
   isInProgress: boolean;
+  isPlayerTurn: boolean;
 }
 
 interface Props {
@@ -208,7 +209,9 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
               </Text>
               <Text fontSize="md">
                 {card.isInProgress
-                  ? 'Wager In Progress'
+                  ? card.isPlayerTurn
+                    ? 'Your turn'
+                    : 'Waiting for opponent to move'
                   : Number(card.player1Address) === Number(account)
                   ? 'Pending approval'
                   : 'Waiting for opponent to accept wager'}

@@ -162,6 +162,7 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
       timePerMove: parseInt(wagerParams[4]),
       numberOfGames: parseInt(wagerParams[5]),
       isInProgress: wagerParams[6],
+      isPlayerTurn: false,
     };
 
     const token = new ethers.Contract(card.wagerToken, ERC20ABI, signer);
@@ -279,6 +280,7 @@ interface Card {
   timePerMove: number;
   numberOfGames: number;
   isInProgress: boolean;
+  isPlayerTurn: boolean;
 }
 
 export const GetAllWagers = async () => {
@@ -300,6 +302,7 @@ export const GetAllWagers = async () => {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
       //console.log(wagerParams);
+      const isPlayerTurn = await chess.isPlayerTurn(accounts[0]);
 
       const card: Card = {
         matchAddress: wagers[i],
@@ -310,6 +313,7 @@ export const GetAllWagers = async () => {
         timePerMove: parseInt(wagerParams[4]),
         numberOfGames: parseInt(wagerParams[5]),
         isInProgress: wagerParams[6],
+        isPlayerTurn: isPlayerTurn,
       };
 
       allWagerParams.push(card);
@@ -400,6 +404,7 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
         timePerMove: parseInt(wagerParams[4]),
         numberOfGames: parseInt(wagerParams[5]),
         isInProgress: wagerParams[6],
+        isPlayerTurn: false,
       };
       allWagerParams.push(card);
     }
