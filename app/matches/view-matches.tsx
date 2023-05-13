@@ -116,7 +116,6 @@ const CardList = () => {
     if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
       throw new Error('Invalid Ethereum address');
     }
-
     return `${address.substr(0, 6)}...${address.substr(-8)}`;
   }
 
@@ -134,7 +133,6 @@ const CardList = () => {
     if (!n.includes('e')) {
       return n;
     }
-
     let sign = +n < 0 ? '-' : '',
       coefficients = n.replace('-', '').split('e'),
       e = Number(coefficients.pop()),
