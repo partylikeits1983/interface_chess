@@ -191,9 +191,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             top="40%"
             left="52%"
             transform="translate(-50%, -50%)"
+            flexDirection="column" // added this line
           >
             <Spinner size="xl" />
-            <Text> Loading Game Data</Text>
+            <Text mt={4}> Loading Game Data</Text>
           </Center>
         </Box>
       ) : (
