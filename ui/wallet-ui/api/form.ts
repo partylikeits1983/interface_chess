@@ -370,7 +370,7 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 };
 
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
-  let provider = await setupProvider();
+  let { provider } = await setupProvider();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
