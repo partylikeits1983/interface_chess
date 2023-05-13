@@ -171,11 +171,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   };
 
-  /*   const getPosition = async (wagerAddress: string) => {
-    const moves = await GetGameMoves(wagerAddress);
-    console.log(moves);
-  };
- */
   return (
     <ChakraProvider>
       {loading ? (
