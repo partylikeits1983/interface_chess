@@ -35,18 +35,27 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
         <Button
           onClick={() => console.log('Button 1 clicked')}
           style={{ width: '200px' }}
+          colorScheme="teal"
+          variant="outline"
+          size="md"
         >
           Button 1
         </Button>
         <Button
           onClick={() => console.log('Button 2 clicked')}
           style={{ width: '200px' }}
+          colorScheme="teal"
+          variant="outline"
+          size="md"
         >
           Button 2
         </Button>
         <Button
           onClick={() => console.log('Button 3 clicked')}
           style={{ width: '200px' }}
+          colorScheme="teal"
+          variant="outline"
+          size="md"
         >
           Button 3
         </Button>
