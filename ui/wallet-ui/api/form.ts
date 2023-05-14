@@ -462,6 +462,42 @@ export const PlayMove = async (wagerAddress: string, move: string) => {
   }
 };
 
+export const PayoutWager = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    await chess.payoutWager(wagerAddress);
+
+    return true;
+  } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
+
+export const CancelWager = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    await chess.cancelWager(wagerAddress);
+
+    return true;
+  } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
+
 export const IsPlayerWhite = async (wagerAddress: string) => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 
