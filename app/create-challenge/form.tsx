@@ -8,6 +8,7 @@ import {
   Button,
   Stack,
   HStack,
+  VStack,
   ChakraProvider,
 } from '@chakra-ui/react';
 
@@ -74,6 +75,7 @@ export default function ChallengeForm() {
                 value={formInputs.player1}
                 onChange={handleInputChange}
                 required
+                width="100%"
               />
             </FormControl>
             <FormControl>
@@ -84,6 +86,7 @@ export default function ChallengeForm() {
                 value={formInputs.wagerToken}
                 onChange={handleInputChange}
                 required
+                width="100%"
               />
             </FormControl>
             <FormControl>
@@ -94,16 +97,18 @@ export default function ChallengeForm() {
                 value={formInputs.wagerAmount}
                 onChange={handleInputChange}
                 required
+                width="100%"
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Time Per Move</FormLabel>
+              <FormLabel>Time Limit</FormLabel>
               <Input
                 type="number"
                 name="timePerMove"
                 value={formInputs.timePerMove}
                 onChange={handleInputChange}
                 required
+                width="100%"
               />
             </FormControl>
             <FormControl>
@@ -114,6 +119,7 @@ export default function ChallengeForm() {
                 value={formInputs.numberOfGames}
                 onChange={handleInputChange}
                 required
+                width="100%"
               />
             </FormControl>
             <HStack spacing="4">
@@ -121,8 +127,9 @@ export default function ChallengeForm() {
                 flex="1"
                 colorScheme="teal"
                 variant="outline"
+                size="lg"
                 isLoading={isLoadingApproval}
-                loadingText="Submitting Approval Transaction"
+                loadingText="Submitting Transaction"
                 onClick={() => HandleClickApprove()}
               >
                 Approve Tokens
@@ -131,8 +138,9 @@ export default function ChallengeForm() {
                 flex="1"
                 colorScheme="teal"
                 variant="outline"
+                size="lg"
                 isLoading={isLoadingCreateWager}
-                loadingText="Submitting Create Wager Transaction"
+                loadingText="Submitting Transaction"
                 onClick={() => HandleClickCreateWager()}
               >
                 Create Challenge

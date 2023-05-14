@@ -52,6 +52,9 @@ dependencies:
   clsx:
     specifier: 1.2.1
     version: 1.2.1
+  cm-chessboard:
+    specifier: 7.4.2
+    version: 7.4.2
   date-fns:
     specifier: 2.29.3
     version: 2.29.3
@@ -7686,6 +7689,13 @@ packages:
         integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==,
       }
     engines: { node: '>=6' }
+    dev: false
+
+  /cm-chessboard@7.4.2:
+    resolution:
+      {
+        integrity: sha512-g2aI68qUx7FqWqUp2LUNDrC9+f1lfimfAFOQa7IIKbRO86OBhZxlkW2uMsedhBTnAEINWYG0GVjcbiuqBF5z3w==,
+      }
     dev: false
 
   /color-convert@1.9.3:
