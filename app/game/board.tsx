@@ -16,6 +16,7 @@ const {
   GetPlayerTurn,
   GetNumberOfGames,
   GetWagerData,
+  GetTimeRemaining,
 } = require('ui/wallet-ui/api/form');
 
 import {
@@ -43,6 +44,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [numberOfGames, setNumberOfGames] = useState('');
   const [timeLimit, setTimeLimit] = useState(0);
   const [wagerAmount, setWagerAmount] = useState('');
+
+  const [timePlayer0, setTimePlayer0] = useState(0);
+  const [timePlayer1, setTimePlayer1] = useState(0);
+  const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
 
   const [matchData, setMatchData] = useState<Card>();
 
@@ -79,18 +84,52 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const matchData = await GetWagerData(wager);
         setTimeLimit(matchData.timeLimit);
 
-        console.log(matchData.wagerAmount);
+        // console.log(matchData.wagerAmount);
 
         setWagerAmount(
           ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
         );
+
+        console.log('HERER');
+        const [timePlayer0, timePlayer1, isPlayer0Turn] =
+          await GetTimeRemaining(wager);
+
+        console.log(timePlayer0);
+        console.log(timePlayer1);
+        console.log(isPlayer0Turn);
+
+        setTimePlayer0(timePlayer0);
+        setTimePlayer1(timePlayer1);
+
+        setIsPlayer0Turn(isPlayer0Turn);
       } else {
         setLoading(false);
       }
     };
-
     myAsyncFunction();
   }, [wager]);
+
+  /* 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+  
+    if (isPlayer0Turn) {
+      timer = setInterval(() => {
+        setTimePlayer0((prevTime) => prevTime - 1);
+      }, 1000);
+      console.log(timePlayer0);
+    } else {
+      timer = setInterval(() => {
+        setTimePlayer1((prevTime) => prevTime - 1);
+      }, 1000);
+      console.log(timePlayer1);
+    }
+  
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+ */
 
   function numberToString(num: number): string {
     return num.toLocaleString('fullwide', { useGrouping: false });
