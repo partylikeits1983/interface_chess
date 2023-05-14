@@ -94,17 +94,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
         );
 
-        console.log('HERER');
         const [timePlayer0, timePlayer1, isPlayer0Turn] =
           await GetTimeRemaining(wager);
 
-        console.log(timePlayer0);
-        console.log(timePlayer1);
-        console.log(isPlayer0Turn);
-
         setTimePlayer0(timePlayer0);
         setTimePlayer1(timePlayer1);
-
         setIsPlayer0Turn(isPlayer0Turn);
 
         const isPlayer0White = await IsPlayerAddressWhite(
@@ -112,8 +106,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           matchData.player0Address,
         );
 
-        console.log('IS PLAYER WHIT');
-        console.log(isPlayer0White);
         setIsPlayer0White(isPlayer0White);
       } else {
         setLoading(false);
@@ -128,16 +120,12 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     if (isPlayer0Turn) {
       timer = setInterval(() => {
         setTimePlayer0((prevTime) => {
-          // console.log('Player0');
-          console.log(prevTime - 1); // Log the updated time here
           return prevTime - 1;
         });
       }, 1000);
     } else {
       timer = setInterval(() => {
         setTimePlayer1((prevTime) => {
-          // console.log('Player 1');
-          console.log(prevTime - 1); // Log the updated time here
           return prevTime - 1;
         });
       }, 1000);
