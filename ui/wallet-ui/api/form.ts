@@ -440,6 +440,35 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
   }
 };
 
+export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
+  let { provider } = await setupProvider();
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  try {
+    const wagerParams = await chess.gameWagers(wagerAddress);
+    const card: Card = {
+      matchAddress: wagerAddress,
+      player0Address: wagerParams[0],
+      player1Address: wagerParams[1],
+      wagerToken: wagerParams[2],
+      wagerAmount: parseInt(wagerParams[3]),
+      numberOfGames: parseInt(wagerParams[4]),
+      isInProgress: wagerParams[5],
+      timeLimit: parseInt(wagerParams[6]),
+      timeLastMove: parseInt(wagerParams[7]),
+      timePlayer0: parseInt(wagerParams[8]),
+      timePlayer1: parseInt(wagerParams[9]),
+      isPlayerTurn: false,
+    };
+
+    return card;
+  } catch (error) {
+    alert(`Error fetching wager data: ${error}`);
+    console.log(error);
+    throw error; // Throw the error so that the caller can handle it
+  }
+};
+
 export const PlayMove = async (wagerAddress: string, move: string) => {
   await updateContractAddresses();
 

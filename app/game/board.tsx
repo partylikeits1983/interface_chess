@@ -6,6 +6,8 @@ import { Chessboard } from 'react-chessboard';
 
 const { ethers } = require('ethers');
 
+import { Card } from 'app/types';
+
 const {
   CheckValidMove,
   GetGameMoves,
@@ -13,6 +15,7 @@ const {
   IsPlayerWhite,
   GetPlayerTurn,
   GetNumberOfGames,
+  GetWagerData,
 } = require('ui/wallet-ui/api/form');
 
 import {
@@ -38,6 +41,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [numberOfGames, setNumberOfGames] = useState('');
+  const [timeLimit, setTimeLimit] = useState(0);
+  const [wagerAmount, setWagerAmount] = useState('');
+
+  const [matchData, setMatchData] = useState<Card>();
 
   const [loading, setLoading] = useState(true);
 
@@ -67,6 +74,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setNumberOfGames(gameNumber);
 
         setLoading(false);
+
+        const matchData = await GetWagerData(wager);
+        setTimeLimit(matchData.timeLimit);
+
+        console.log(typeof matchData.wagerAmount);
+
+        setWagerAmount(
+          ethers.utils.formatUnits(matchData.wagerAmount.toString(), 18),
+        );
       } else {
         setLoading(false);
       }
@@ -171,6 +187,22 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   };
 
+  function formatSecondsToTime(secondsString: string): string {
+    const seconds = parseInt(secondsString, 10);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(
+      remainingSeconds,
+    )}`;
+    return formattedTime;
+  }
+
+  function padZero(value: number): string {
+    return value.toString().padStart(2, '0');
+  }
+
   return (
     <ChakraProvider>
       {loading ? (
@@ -217,8 +249,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       ) : null}
 
       <Flex justify="space-between">
-        <Text>Amount: 100 USDC</Text>
-        <Text>Time Per Move: 2h</Text>
+        <Text>Amount: {wagerAmount} DAI</Text>
+        <Text>Time Limit: {formatSecondsToTime(timeLimit)}</Text>
         <Text>Game: {numberOfGames}</Text>
         <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
       </Flex>

@@ -20,7 +20,7 @@ import { CopyIcon } from '@chakra-ui/icons';
 
 import SidePanel from './sidePanel';
 
-import { Card } from './types';
+import { Card } from '../types';
 
 interface Props {
   cards: Card[];

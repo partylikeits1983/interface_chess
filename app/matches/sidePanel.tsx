@@ -3,7 +3,7 @@ import { Chessboard } from 'react-chessboard';
 
 import Link from 'next/link';
 
-import { Card } from './types';
+import { Card } from '../types';
 import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
