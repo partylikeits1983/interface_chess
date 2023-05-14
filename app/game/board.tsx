@@ -35,6 +35,8 @@ interface BoardProps {
   wager: string;
 }
 
+import GameInfo from './game-info';
+
 export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [game, setGame] = useState(new Chess());
   const [moves, setMoves] = useState<string[]>([]);
@@ -246,22 +248,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   };
 
-  function formatSecondsToTime(secondsString: string): string {
-    const seconds = parseInt(secondsString, 10);
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-
-    const formattedTime = `${padZero(hours)} hours ${padZero(
-      minutes,
-    )} minutes ${padZero(remainingSeconds)} seconds`;
-    return formattedTime;
-  }
-
-  function padZero(value: number): string {
-    return value.toString().padStart(2, '0');
-  }
-
   return (
     <ChakraProvider>
       {loading ? (
@@ -307,44 +293,16 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         </Flex>
       ) : null}
 
-      <div>
-        {wager !== '' && (
-          <div>
-            <Flex justify="space-between">
-              <Text>Amount: {wagerAmount} DAI</Text>
-              <Text>
-                Time Limit: {formatSecondsToTime(timeLimit.toString())}
-              </Text>
-              <Text>Game: {numberOfGames}</Text>
-              <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
-            </Flex>
-
-            {isPlayer0White ? (
-              <>
-                <Text>
-                  Time Remaining White:{' '}
-                  {formatSecondsToTime(timePlayer0.toString())}
-                </Text>
-                <Text>
-                  Time Remaining Black:{' '}
-                  {formatSecondsToTime(timePlayer1.toString())}
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text>
-                  Time Remaining White:{' '}
-                  {formatSecondsToTime(timePlayer1.toString())}
-                </Text>
-                <Text>
-                  Time Remaining Black:{' '}
-                  {formatSecondsToTime(timePlayer0.toString())}
-                </Text>
-              </>
-            )}
-          </div>
-        )}
-      </div>
+      <GameInfo
+        wager={wager}
+        wagerAmount={wagerAmount}
+        numberOfGames={numberOfGames}
+        timeLimit={timeLimit}
+        timePlayer0={timePlayer0}
+        timePlayer1={timePlayer1}
+        isPlayerTurn={isPlayerTurn}
+        isPlayer0White={isPlayer0White}
+      ></GameInfo>
     </ChakraProvider>
   );
 };
