@@ -4,9 +4,9 @@ const { parseUnits } = require('ethers/lib/utils');
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-let ChessAddress = '0x49C006B271d6D8C9AD7FcE4c2B49C62C7f340d9D';
-let VerificationAddress = '0xc73CBE95860787c7A2a42CC4DE737DDf1b4AAacd';
-let tokenAddress = '0x4a61e8a356B8303CF5c69752A290dA4F6a1B5EE1';
+let ChessAddress = '0x90971b93dd9Cb57B7D5a7B91DdC1D0697cF1F170';
+let VerificationAddress = '0xE551a5976Bd0528127c36132fB792746F3D610ba';
+let tokenAddress = '0x6135BB350c6e98B150c8f7f11f26465412F16A1B';
 
 import { CreateMatchType } from './types';
 
@@ -36,12 +36,12 @@ const updateContractAddresses = async () => {
     // localhost
     ChessAddress = '0x9963Aeb98a0d7ffC48F175f305234889E71b7D77';
     VerificationAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
-    tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
+    tokenAddress = '0x6135BB350c6e98B150c8f7f11f26465412F16A1B';
   } else if (chainId === 80001) {
     // mumbai Testnet
-    ChessAddress = '0x49C006B271d6D8C9AD7FcE4c2B49C62C7f340d9D';
-    VerificationAddress = '0xc73CBE95860787c7A2a42CC4DE737DDf1b4AAacd';
-    tokenAddress = '0x4a61e8a356B8303CF5c69752A290dA4F6a1B5EE1';
+    ChessAddress = '0x90971b93dd9Cb57B7D5a7B91DdC1D0697cF1F170';
+    VerificationAddress = '0xE551a5976Bd0528127c36132fB792746F3D610ba';
+    tokenAddress = '0x6135BB350c6e98B150c8f7f11f26465412F16A1B';
   }
   // Add more chains if needed.
 };
@@ -292,6 +292,8 @@ export const GetAllWagers = async () => {
   try {
     const wagers = await chess.getAllUserGames(accounts[0]);
 
+    console.log('HERE');
+
     const allWagerParams = [];
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
@@ -303,6 +305,7 @@ export const GetAllWagers = async () => {
       } else {
         isPlayerTurn = false;
       }
+      console.log(wagerParams);
 
       const card: Card = {
         matchAddress: wagers[i],

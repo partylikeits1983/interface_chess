@@ -96,7 +96,7 @@ const CardList = () => {
         <Heading as="h2" size="lg" mb={4}>
           Current Matches
         </Heading>
-        {false ? (
+        {cards.length ? (
           cards.map((card, index) => (
             <CardAccordion
               key={index}
