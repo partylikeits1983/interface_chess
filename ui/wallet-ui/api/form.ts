@@ -575,6 +575,32 @@ export const IsPlayerWhite = async (wagerAddress: string) => {
   }
 };
 
+export const IsPlayerAddressWhite = async (
+  wagerAddress: string,
+  playerAddress: string,
+) => {
+  let { signer } = await setupProvider();
+
+  await updateContractAddresses();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log('In Is Player White');
+    console.log(wagerAddress);
+
+    const isPlayerWhite = await chess.isPlayerWhite(
+      wagerAddress,
+      playerAddress,
+    );
+    console.log(isPlayerWhite);
+
+    return isPlayerWhite;
+  } catch (error) {
+    alert(`wager address: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
+
 export const GetPlayerTurn = async (wagerAddress: string) => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 

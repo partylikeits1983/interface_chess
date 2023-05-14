@@ -17,6 +17,7 @@ const {
   GetNumberOfGames,
   GetWagerData,
   GetTimeRemaining,
+  IsPlayerAddressWhite,
 } = require('ui/wallet-ui/api/form');
 
 import {
@@ -48,6 +49,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [timePlayer0, setTimePlayer0] = useState(0);
   const [timePlayer1, setTimePlayer1] = useState(0);
   const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
+  const [isPlayer0White, setIsPlayer0White] = useState(false);
 
   const [matchData, setMatchData] = useState<Card>();
 
@@ -102,6 +104,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setTimePlayer1(timePlayer1);
 
         setIsPlayer0Turn(isPlayer0Turn);
+
+        const isPlayer0White = await IsPlayerAddressWhite(
+          wager,
+          matchData.player0Address,
+        );
+
+        console.log('IS PLAYER WHIT');
+        console.log(isPlayer0White);
+        setIsPlayer0White(isPlayer0White);
       } else {
         setLoading(false);
       }
@@ -241,9 +252,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
 
-    const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(
-      remainingSeconds,
-    )}`;
+    const formattedTime = `${padZero(hours)} hours ${padZero(
+      minutes,
+    )} minutes ${padZero(remainingSeconds)} seconds`;
     return formattedTime;
   }
 
@@ -298,15 +309,41 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
       <div>
         {wager !== '' && (
-          <Flex justify="space-between">
-            <Text>Amount: {wagerAmount} DAI</Text>
-            <Text>Time Limit: {formatSecondsToTime(timeLimit.toString())}</Text>
-            <Text>Game: {numberOfGames}</Text>
-            <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
-          </Flex>
+          <div>
+            <Flex justify="space-between">
+              <Text>Amount: {wagerAmount} DAI</Text>
+              <Text>
+                Time Limit: {formatSecondsToTime(timeLimit.toString())}
+              </Text>
+              <Text>Game: {numberOfGames}</Text>
+              <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
+            </Flex>
+
+            {isPlayer0White ? (
+              <>
+                <Text>
+                  Time Remaining White:{' '}
+                  {formatSecondsToTime(timePlayer0.toString())}
+                </Text>
+                <Text>
+                  Time Remaining Black:{' '}
+                  {formatSecondsToTime(timePlayer1.toString())}
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text>
+                  Time Remaining White:{' '}
+                  {formatSecondsToTime(timePlayer1.toString())}
+                </Text>
+                <Text>
+                  Time Remaining Black:{' '}
+                  {formatSecondsToTime(timePlayer0.toString())}
+                </Text>
+              </>
+            )}
+          </div>
         )}
-        <Text>Time Player 0: {timePlayer0}</Text>
-        <Text>Time Player 1: {timePlayer1}</Text>
       </div>
     </ChakraProvider>
   );
