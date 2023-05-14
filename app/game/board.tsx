@@ -51,6 +51,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   useEffect(() => {
     const myAsyncFunction = async () => {
       if (wager != '') {
+        console.log('HERERER');
+
         setWagerAddress(wager);
 
         const isPlayerTurn = await GetPlayerTurn(wager);
@@ -77,8 +79,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const matchData = await GetWagerData(wager);
         setTimeLimit(matchData.timeLimit);
 
+        console.log(matchData.wagerAmount);
+
         setWagerAmount(
-          ethers.utils.formatUnits(matchData.wagerAmount.toString(), 18),
+          ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
         );
       } else {
         setLoading(false);
@@ -87,6 +91,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     myAsyncFunction();
   }, [wager]);
+
+  function numberToString(num: number): string {
+    return num.toLocaleString('fullwide', { useGrouping: false });
+  }
 
   // Check valid move with sc
   useEffect(() => {
@@ -246,7 +254,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       ) : null}
 
       <div>
-        {wagerAmount !== '' && (
+        {wager !== '' && (
           <Flex justify="space-between">
             <Text>Amount: {wagerAmount} DAI</Text>
             <Text>Time Limit: {formatSecondsToTime(timeLimit.toString())}</Text>
