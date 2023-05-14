@@ -333,7 +333,7 @@ export const GetAllWagers = async () => {
 
       allWagerParams.push(card);
     }
-    console.log(allWagerParams);
+    // console.log(allWagerParams);
 
     return allWagerParams;
   } catch (error) {
