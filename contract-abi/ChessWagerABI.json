@@ -468,35 +468,17 @@
   {
     "inputs": [
       {
-        "internalType": "string",
+        "internalType": "string[64]",
         "name": "coordinate",
-        "type": "string"
+        "type": "string[64]"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint256[64]",
         "name": "value",
-        "type": "uint256"
+        "type": "uint256[64]"
       }
     ],
     "name": "initCoordinates",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "coordinate",
-        "type": "string"
-      }
-    ],
-    "name": "initSquareToCoordinates",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

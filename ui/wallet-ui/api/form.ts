@@ -356,6 +356,24 @@ export const GetGameMoves = async (wagerAddress: string) => {
   }
 };
 
+export const GetTimeRemaining = async (wagerAddress: string) => {
+  let { provider } = await setupProvider();
+  await updateContractAddresses();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  try {
+    const timeRemaining = await chess.checkTimeRemaining(wagerAddress);
+
+    console.log(timeRemaining);
+
+    return [timeRemaining[0], timeRemaining[1]];
+  } catch (error) {
+    alert(`Get game moves: ${wagerAddress} not found`);
+    console.log(error);
+  }
+};
+
 export const AcceptWagerConditions = async (wagerAddress: string) => {
   await updateContractAddresses();
 
