@@ -61,7 +61,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const game = new Chess();
 
         for (let i = 0; i < movesArray.length; i++) {
-          console.log(movesArray[i]);
           game.move(movesArray[i]);
         }
         setGame(game);
@@ -77,8 +76,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
         const matchData = await GetWagerData(wager);
         setTimeLimit(matchData.timeLimit);
-
-        console.log(typeof matchData.wagerAmount);
 
         setWagerAmount(
           ethers.utils.formatUnits(matchData.wagerAmount.toString(), 18),
@@ -248,12 +245,16 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         </Flex>
       ) : null}
 
-      <Flex justify="space-between">
-        <Text>Amount: {wagerAmount} DAI</Text>
-        <Text>Time Limit: {formatSecondsToTime(timeLimit)}</Text>
-        <Text>Game: {numberOfGames}</Text>
-        <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
-      </Flex>
+      <div>
+        {wagerAmount !== '' && (
+          <Flex justify="space-between">
+            <Text>Amount: {wagerAmount} DAI</Text>
+            <Text>Time Limit: {formatSecondsToTime(timeLimit.toString())}</Text>
+            <Text>Game: {numberOfGames}</Text>
+            <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
+          </Flex>
+        )}
+      </div>
     </ChakraProvider>
   );
 };

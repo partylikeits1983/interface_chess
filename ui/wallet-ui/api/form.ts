@@ -94,9 +94,6 @@ export const getBalance = async (address: string) => {
 
     alert('balance: ' + balance);
 
-    console.log(balance);
-
-    console.log('success');
     return {
       value: balance,
       success: true,
@@ -203,9 +200,6 @@ export const CheckValidMove = async (moves: string[]) => {
   );
 
   try {
-    console.log('MOVES LENGTH');
-    console.log(moves.length);
-
     let hexMoves = [];
     for (let i = 0; i < moves.length; i++) {
       hexMoves[i] = await chess.moveToHex(moves[i]);
@@ -214,7 +208,6 @@ export const CheckValidMove = async (moves: string[]) => {
     const tx = await verifier.checkGameFromStart(hexMoves);
     // alert("SC: VALID MOVE")
 
-    console.log('success');
     return {
       value: tx,
       success: true,
@@ -253,7 +246,6 @@ export const CreateWager = async (form: CreateMatchType) => {
     );
     const receipt = await tx.wait();
 
-    console.log(accounts[0]);
     const wagers = await chess.getAllUserGames(accounts[0]);
     const wagerAddress = wagers[wagers.length - 1];
 
@@ -304,12 +296,8 @@ export const GetAllWagers = async () => {
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
-      console.log(wagerParams);
-
       let isPlayerTurn;
       const playerToMove = await chess.getPlayerMove(wagers[i]);
-      console.log('HERE');
-      console.log(playerToMove);
       if (Number(accounts[0]) == Number(playerToMove)) {
         isPlayerTurn = true;
       } else {
@@ -333,7 +321,6 @@ export const GetAllWagers = async () => {
 
       allWagerParams.push(card);
     }
-    // console.log(allWagerParams);
 
     return allWagerParams;
   } catch (error) {
@@ -590,14 +577,10 @@ export const GetPlayerTurn = async (wagerAddress: string) => {
 export const GetNumberOfGames = async (wagerAddress: string) => {
   let { signer } = await setupProvider();
 
-  console.log('GET NUMBER OF GAMES');
-
   await updateContractAddresses();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('In Get Player Turn');
-
     const wagerParams = await chess.gameWagers(wagerAddress);
     const numberOfGames = parseInt(wagerParams[4]);
 

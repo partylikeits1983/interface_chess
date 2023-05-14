@@ -96,7 +96,7 @@ const CardList = () => {
         <Heading as="h2" size="lg" mb={4}>
           Current Matches
         </Heading>
-        {cards.length ? (
+        {false ? (
           cards.map((card, index) => (
             <CardAccordion
               key={index}
@@ -109,7 +109,7 @@ const CardList = () => {
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">
-            No matches created yet.
+            You haven&apos;t created any matches yet.
           </Text>
         )}
       </Box>

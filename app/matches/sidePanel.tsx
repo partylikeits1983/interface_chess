@@ -61,8 +61,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
         const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
         setNumberOfGames(gameNumber);
 
-        console.log(game.fen());
-
         setIsChessboardLoading(false);
       } else {
         setIsChessboardLoading(false);
