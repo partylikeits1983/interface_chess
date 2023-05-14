@@ -115,7 +115,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     if (isPlayer0Turn) {
       timer = setInterval(() => {
         setTimePlayer0((prevTime) => {
-          console.log('Player0');
+          // console.log('Player0');
           console.log(prevTime - 1); // Log the updated time here
           return prevTime - 1;
         });
@@ -123,7 +123,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     } else {
       timer = setInterval(() => {
         setTimePlayer1((prevTime) => {
-          console.log('Player 1');
+          // console.log('Player 1');
           console.log(prevTime - 1); // Log the updated time here
           return prevTime - 1;
         });
