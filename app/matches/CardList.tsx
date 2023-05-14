@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider, Box, Heading, Text } from '@chakra-ui/react';
+import { ChakraProvider, Box, Heading, Text, Skeleton } from '@chakra-ui/react';
 
 const {
   GetAllWagers,
@@ -36,6 +36,8 @@ interface Props {
 const CardList = () => {
   const [account, setAccount] = useState<string | null>(null);
   const { connect, accounts } = useMetamask();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleConnect = async () => {
@@ -76,6 +78,7 @@ const CardList = () => {
   useEffect(() => {
     async function fetchCards() {
       try {
+        setIsLoading(true);
         const data = await GetAllWagers();
 
         if (Array.isArray(data)) {
@@ -83,6 +86,7 @@ const CardList = () => {
         } else {
           console.error('GetAllWagers returned invalid data:', cards);
         }
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching wagers:', error);
       }
@@ -94,9 +98,18 @@ const CardList = () => {
     <ChakraProvider>
       <Box>
         <Heading as="h2" size="lg" mb={4}>
-          Current Matches
+          Your Current Matches
         </Heading>
-        {cards.length ? (
+        {isLoading ? (
+          <Skeleton
+            height="150px"
+            mb={4}
+            startColor="gray.100"
+            endColor="green.200"
+          >
+            Loading...
+          </Skeleton>
+        ) : cards.length ? (
           cards.map((card, index) => (
             <CardAccordion
               key={index}
