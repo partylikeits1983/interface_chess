@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 
+import Link from 'next/link';
+
 import { Card } from './types';
 import { Button, Stack } from '@chakra-ui/react';
 
@@ -32,15 +34,16 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
         </div>
       )}
       <Stack spacing={4} mt={8}>
-        <Button
-          onClick={() => console.log('Button 1 clicked')}
-          style={{ width: '200px' }}
-          colorScheme="teal"
-          variant="outline"
-          size="md"
-        >
-          Button 1
-        </Button>
+        <Link href={`/game/${matchAddress}`}>
+          <Button
+            style={{ width: '200px' }}
+            colorScheme="teal"
+            variant="outline"
+            size="md"
+          >
+            Go to Match
+          </Button>
+        </Link>
         <Button
           onClick={() => console.log('Button 2 clicked')}
           style={{ width: '200px' }}
@@ -48,7 +51,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
           variant="outline"
           size="md"
         >
-          Button 2
+          Cancel Wager
         </Button>
         <Button
           onClick={() => console.log('Button 3 clicked')}
@@ -57,7 +60,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
           variant="outline"
           size="md"
         >
-          Button 3
+          Payout Wager
         </Button>
       </Stack>
     </div>
