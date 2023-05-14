@@ -4,9 +4,9 @@ const { parseUnits } = require('ethers/lib/utils');
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-let ChessAddress = '0x9C3Ac20FD69f8b77f2149Bc995cd11fFbF11aEb2';
-let VerificationAddress = '0x7C5e40305Da9E01b20B6b81CdC2A64D75dBef0a6';
-let tokenAddress = '0xbda02eD28ECb4c5ff9831c2cb2d49A644A6Ddf32';
+let ChessAddress = '0x49C006B271d6D8C9AD7FcE4c2B49C62C7f340d9D';
+let VerificationAddress = '0xc73CBE95860787c7A2a42CC4DE737DDf1b4AAacd';
+let tokenAddress = '0x4a61e8a356B8303CF5c69752A290dA4F6a1B5EE1';
 
 import { CreateMatchType } from './types';
 
@@ -39,9 +39,9 @@ const updateContractAddresses = async () => {
     tokenAddress = '0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17';
   } else if (chainId === 80001) {
     // mumbai Testnet
-    ChessAddress = '0x9C3Ac20FD69f8b77f2149Bc995cd11fFbF11aEb2';
-    VerificationAddress = '0x7C5e40305Da9E01b20B6b81CdC2A64D75dBef0a6';
-    tokenAddress = '0xbda02eD28ECb4c5ff9831c2cb2d49A644A6Ddf32';
+    ChessAddress = '0x49C006B271d6D8C9AD7FcE4c2B49C62C7f340d9D';
+    VerificationAddress = '0xc73CBE95860787c7A2a42CC4DE737DDf1b4AAacd';
+    tokenAddress = '0x4a61e8a356B8303CF5c69752A290dA4F6a1B5EE1';
   }
   // Add more chains if needed.
 };

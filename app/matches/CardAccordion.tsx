@@ -18,20 +18,9 @@ import {
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
-  numberOfGames: number;
-  isInProgress: boolean;
-  timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
-}
+import SidePanel from './sidePanel';
+
+import { Card } from './types';
 
 interface Props {
   cards: Card[];
@@ -129,121 +118,126 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
           </AccordionButton>
         </h2>
         <AccordionPanel pb={4}>
-          <Stack spacing={2}>
-            <Stack spacing={0}>
-              <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                Match Address
-              </Text>
-              <Flex alignItems="center">
-                <Text fontSize="md">{formatAddress(card.matchAddress)}</Text>
-                <CopyIcon
-                  ml={2}
-                  cursor="pointer"
-                  onClick={() => handleCopyAddress(card.matchAddress)}
-                />
-              </Flex>
-            </Stack>
-
-            <Stack spacing={0}>
-              <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                Opponent Address
-              </Text>
-              <Flex alignItems="center">
-                <Text fontSize="md">
-                  {Number(account) == Number(card.player0Address)
-                    ? formatAddress(card.player1Address)
-                    : formatAddress(card.player0Address)}
+          <Flex justify="space-between" direction="row">
+            <Stack spacing={2}>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Match Address
                 </Text>
-                <CopyIcon
-                  ml={2}
-                  cursor="pointer"
-                  onClick={() =>
-                    handleCopyAddress(
-                      card.isInProgress
-                        ? card.player1Address
-                        : card.player0Address,
-                    )
-                  }
-                />
-              </Flex>
-            </Stack>
-            <Stack spacing={0}>
-              <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                Wager Token
-              </Text>
-              <Flex alignItems="center">
-                <Text fontSize="md">{formatAddress(card.wagerToken)}</Text>
-                <CopyIcon
-                  ml={2}
-                  cursor="pointer"
-                  onClick={() => handleCopyAddress(card.wagerToken)}
-                />
-              </Flex>
-            </Stack>
-            <Stack spacing={0}>
-              <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                Wager Amount
-              </Text>
-              <Text fontSize="md">
-                {ethers.utils.formatUnits(
-                  ethers.BigNumber.from(
-                    fromScientificNotation(card.wagerAmount.toString()),
-                  ),
-                  18,
-                )}
-              </Text>
-            </Stack>
-            <Stack spacing={0}>
-              <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                Time Per Player
-              </Text>
-              <Text fontSize="md">
-                {formatDuration(Number(card.timeLimit))}
-              </Text>
-            </Stack>
-            <Stack spacing={0}>
-              <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                Number of Games
-              </Text>
-              <Text fontSize="md">{card.numberOfGames}</Text>
-            </Stack>
-            <Stack spacing={0}>
-              <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                Status
-              </Text>
-              <Text fontSize="md">
-                {card.isInProgress
-                  ? card.isPlayerTurn
-                    ? 'Your turn'
-                    : 'Waiting for opponent to move'
-                  : Number(card.player1Address) === Number(account)
-                  ? 'Pending Your Approval'
-                  : 'Waiting for opponent to accept wager'}
-              </Text>
-              <Text>{card.timePlayer0}</Text>
-            </Stack>
-            {!card.isInProgress &&
-              Number(card.player1Address) === Number(account) && (
-                <>
-                  <Box marginTop={8} />
-                  <Button
-                    colorScheme="green"
-                    size="md"
-                    isLoading={isLoadingApproval}
-                    loadingText="Submitting Approval Transaction"
+                <Flex alignItems="center">
+                  <Text fontSize="md">{formatAddress(card.matchAddress)}</Text>
+                  <CopyIcon
+                    ml={2}
+                    cursor="pointer"
+                    onClick={() => handleCopyAddress(card.matchAddress)}
+                  />
+                </Flex>
+              </Stack>
+
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Opponent Address
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {Number(account) == Number(card.player0Address)
+                      ? formatAddress(card.player1Address)
+                      : formatAddress(card.player0Address)}
+                  </Text>
+                  <CopyIcon
+                    ml={2}
+                    cursor="pointer"
                     onClick={() =>
-                      HandleClickApprove(
-                        card.matchAddress,
-                        card.wagerToken,
-                        card.wagerAmount,
+                      handleCopyAddress(
+                        card.isInProgress
+                          ? card.player1Address
+                          : card.player0Address,
                       )
                     }
-                  >
-                    Accept Wager
-                  </Button>
-                </>
-              )}
-          </Stack>
+                  />
+                </Flex>
+              </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Wager Token
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">{formatAddress(card.wagerToken)}</Text>
+                  <CopyIcon
+                    ml={2}
+                    cursor="pointer"
+                    onClick={() => handleCopyAddress(card.wagerToken)}
+                  />
+                </Flex>
+              </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Wager Amount
+                </Text>
+                <Text fontSize="md">
+                  {ethers.utils.formatUnits(
+                    ethers.BigNumber.from(
+                      fromScientificNotation(card.wagerAmount.toString()),
+                    ),
+                    18,
+                  )}
+                </Text>
+              </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Time Per Player
+                </Text>
+                <Text fontSize="md">
+                  {formatDuration(Number(card.timeLimit))}
+                </Text>
+              </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Number of Games
+                </Text>
+                <Text fontSize="md">{card.numberOfGames}</Text>
+              </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Status
+                </Text>
+                <Text fontSize="md">
+                  {card.isInProgress
+                    ? card.isPlayerTurn
+                      ? 'Your turn'
+                      : 'Waiting for opponent to move'
+                    : Number(card.player1Address) === Number(account)
+                    ? 'Pending Your Approval'
+                    : 'Waiting for opponent to accept wager'}
+                </Text>
+              </Stack>
+              {!card.isInProgress &&
+                Number(card.player1Address) === Number(account) && (
+                  <>
+                    <Box marginTop={8} />
+                    <Button
+                      colorScheme="green"
+                      size="md"
+                      isLoading={isLoadingApproval}
+                      loadingText="Submitting Approval Transaction"
+                      onClick={() =>
+                        HandleClickApprove(
+                          card.matchAddress,
+                          card.wagerToken,
+                          card.wagerAmount,
+                        )
+                      }
+                    >
+                      Accept Wager
+                    </Button>
+                  </>
+                )}
+            </Stack>
+
+            <Box width="50%">
+              <SidePanel card={card}></SidePanel>
+            </Box>
+          </Flex>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>

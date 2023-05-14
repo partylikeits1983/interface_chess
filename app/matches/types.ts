@@ -1,9 +1,14 @@
 export interface Card {
   matchAddress: string;
-  opponentAddress: string;
+  player0Address: string;
+  player1Address: string;
   wagerToken: string;
   wagerAmount: number;
-  timePerMove: number;
   numberOfGames: number;
-  isPending: boolean;
+  isInProgress: boolean;
+  timeLimit: number;
+  timeLastMove: number;
+  timePlayer0: number;
+  timePlayer1: number;
+  isPlayerTurn: boolean;
 }
