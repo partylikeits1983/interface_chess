@@ -109,27 +109,31 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     myAsyncFunction();
   }, [wager]);
 
-  /* 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-  
+
     if (isPlayer0Turn) {
       timer = setInterval(() => {
-        setTimePlayer0((prevTime) => prevTime - 1);
+        setTimePlayer0((prevTime) => {
+          console.log('Player0');
+          console.log(prevTime - 1); // Log the updated time here
+          return prevTime - 1;
+        });
       }, 1000);
-      console.log(timePlayer0);
     } else {
       timer = setInterval(() => {
-        setTimePlayer1((prevTime) => prevTime - 1);
+        setTimePlayer1((prevTime) => {
+          console.log('Player 1');
+          console.log(prevTime - 1); // Log the updated time here
+          return prevTime - 1;
+        });
       }, 1000);
-      console.log(timePlayer1);
     }
-  
+
     return () => {
       clearInterval(timer);
     };
-  }, []);
- */
+  }, [isPlayer0Turn, timePlayer0, timePlayer1]);
 
   function numberToString(num: number): string {
     return num.toLocaleString('fullwide', { useGrouping: false });
@@ -301,6 +305,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
           </Flex>
         )}
+        <Text>Time Player 0: {timePlayer0}</Text>
+        <Text>Time Player 1: {timePlayer1}</Text>
       </div>
     </ChakraProvider>
   );
