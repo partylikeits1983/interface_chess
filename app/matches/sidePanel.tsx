@@ -142,8 +142,15 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
         <Button
           onClick={handleSubmitPayoutWager}
           style={{ width: '200px' }}
-          colorScheme="teal"
+          // colorScheme="teal"
           variant="outline"
+          color="#94febf" // Set the desired text color
+          // backgroundColor="#94febf" // Set the desired background color
+
+          _hover={{
+            color: '#000000', // Set the text color on hover
+            backgroundColor: '#62ffa2', // Set the background color on hover
+          }}
           size="md"
         >
           Payout Wager

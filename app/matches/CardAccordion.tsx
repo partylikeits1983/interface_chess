@@ -215,9 +215,16 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                 Number(card.player1Address) === Number(account) && (
                   <>
                     <Box marginTop={8} />
+
                     <Button
-                      colorScheme="green"
-                      size="md"
+                      color="#000000" // Set the desired text color
+                      backgroundColor="#94febf" // Set the desired background color
+                      variant="solid"
+                      _hover={{
+                        color: '#000000', // Set the text color on hover
+                        backgroundColor: '#62ffa2', // Set the background color on hover
+                      }}
+                      size="lg"
                       isLoading={isLoadingApproval}
                       loadingText="Submitting Approval Transaction"
                       onClick={() =>
