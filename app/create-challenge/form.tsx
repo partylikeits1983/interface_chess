@@ -15,10 +15,15 @@ import {
   SliderFilledTrack,
   SliderThumb,
   Flex,
+  FormHelperText,
 } from '@chakra-ui/react';
 
-import Select, { StylesConfig } from 'react-select';
-import OptionTypeBase from 'react-select';
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList,
+} from '@choc-ui/chakra-autocomplete';
 
 const { ethers } = require('ethers');
 const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
@@ -87,162 +92,13 @@ export default function ChallengeForm() {
     return `${days} days ${hours} hours ${minutes} minutes`;
   };
 
-  const options = [
-    {
-      value: 'USDC',
-      label: (
-        <Flex align="center">
-          <div>USDC </div>
-          <img
-            src="favicon.ico"
-            height="30px"
-            width="30px"
-            style={{ marginLeft: 'auto' }}
-          />
-        </Flex>
-      ),
-    },
-    {
-      value: 'DAI',
-      label: (
-        <Flex align="center">
-          <div>DAI </div>
-          <img
-            src="favicon.ico"
-            height="30px"
-            width="30px"
-            style={{ marginLeft: 'auto' }}
-          />
-        </Flex>
-      ),
-    },
-    {
-      value: 'WETH',
-      label: (
-        <Flex align="center">
-          <div>WETH </div>
-          <img
-            src="favicon.ico"
-            height="30px"
-            width="30px"
-            style={{ marginLeft: 'auto' }}
-          />
-        </Flex>
-      ),
-    },
-    {
-      value: 'WBTC',
-      label: (
-        <Flex align="center">
-          <div>WBTC </div>
-          <img
-            src="favicon.ico"
-            height="30px"
-            width="30px"
-            style={{ marginLeft: 'auto' }}
-          />
-        </Flex>
-      ),
-    },
-    {
-      value: 'WMATIC',
-      label: (
-        <Flex align="center">
-          <div>WMATIC </div>
-          <img
-            src="favicon.ico"
-            height="30px"
-            width="30px"
-            style={{ marginLeft: 'auto' }}
-          />
-        </Flex>
-      ),
-    },
-    {
-      value: 'USDT',
-      label: (
-        <Flex align="center">
-          <div>USDT </div>
-          <img
-            src="favicon.ico"
-            height="30px"
-            width="30px"
-            style={{ marginLeft: 'auto' }}
-          />
-        </Flex>
-      ),
-    },
-    {
-      value: 'UNI',
-      label: (
-        <Flex align="center">
-          <div>UNI </div>
-          <img
-            src="favicon.ico"
-            height="30px"
-            width="30px"
-            style={{ marginLeft: 'auto' }}
-          />
-        </Flex>
-      ),
-    },
+  const tokens = [
+    { token: 'WETH', address: '0x12345678' },
+    { token: 'USDC', address: '0x23456789' },
+    { token: 'WMATIC', address: '0x34567890' },
+    { token: 'WBTC', address: '0x45678901' },
+    { token: 'UNI', address: '0x56789012' },
   ];
-
-  interface OptionType {
-    label: string;
-    value: string;
-  }
-
-  const customStyles: StylesConfig<OptionTypeBase, false> = {
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: 'black',
-      borderColor: 'white',
-      outline: state.isFocused ? 'none' : provided.outline,
-      boxShadow: state.isFocused ? 'none' : provided.boxShadow,
-      '&:hover': {
-        borderColor: 'white',
-      },
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: 'white',
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected
-        ? '#3F5F4C'
-        : state.isFocused
-        ? '#446652'
-        : 'gray',
-      color: 'white',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: 'transparent',
-      borderColor: 'white',
-      padding: 0,
-    }),
-    menuList: (provided) => ({
-      ...provided,
-      '::-webkit-scrollbar': {
-        width: '0px',
-      },
-      '::-webkit-scrollbar-track': {
-        background: '#888',
-      },
-      '::-webkit-scrollbar-thumb': {
-        background: '#888',
-      },
-      '::-webkit-scrollbar-thumb:hover': {
-        background: '#555',
-      },
-    }),
-    input: (provided) => ({
-      ...provided,
-      color: 'white',
-    }),
-  };
 
   return (
     <ChakraProvider>
@@ -261,7 +117,27 @@ export default function ChallengeForm() {
               />
             </FormControl>
 
-            <Select options={options} styles={customStyles} isSearchable />
+            <FormControl w="100%">
+              <FormLabel>Select Token</FormLabel>
+              <AutoComplete openOnFocus>
+                <AutoCompleteInput variant="filled" />
+                <AutoCompleteList color="black">
+                  {tokens.map(({ token, address }, cid) => (
+                    <AutoCompleteItem
+                      color="black"
+                      key={`option-${cid}`}
+                      value={address}
+                      textTransform="capitalize"
+                    >
+                      {token}
+                    </AutoCompleteItem>
+                  ))}
+                </AutoCompleteList>
+              </AutoComplete>
+              <FormHelperText>
+                Select Token or Paste Custom Address
+              </FormHelperText>
+            </FormControl>
 
             <FormControl>
               <FormLabel>Wager Token</FormLabel>
