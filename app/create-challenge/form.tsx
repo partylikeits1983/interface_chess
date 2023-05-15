@@ -14,8 +14,9 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  useDisclosure,
 } from '@chakra-ui/react';
+
+import Select from 'react-select';
 
 const { ethers } = require('ethers');
 const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
@@ -31,8 +32,6 @@ interface FormInputs {
 export default function ChallengeForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
@@ -85,6 +84,21 @@ export default function ChallengeForm() {
 
     return `${days} days ${hours} hours ${minutes} minutes`;
   };
+
+  const options = [
+    {
+      value: 'chocolate',
+      label: (
+        <div>
+          <img src="favicon.ico" height="30px" width="30px" />
+          Chocolate{' '}
+        </div>
+      ),
+    },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+  ];
+
   return (
     <ChakraProvider>
       <Box mx="auto">
@@ -100,6 +114,10 @@ export default function ChallengeForm() {
                 required
                 width="100%"
               />
+            </FormControl>
+
+            <FormControl>
+              <Select options={options} isSearchable />
             </FormControl>
 
             <FormControl>
