@@ -136,7 +136,8 @@ export default function ChallengeForm() {
               </Button>
               <Button
                 flex="1"
-                colorScheme="teal"
+                color="#94febf" // Set the desired text color
+                // backgroundColor="transparent" // Set the desired background color
                 variant="outline"
                 size="lg"
                 isLoading={isLoadingCreateWager}
