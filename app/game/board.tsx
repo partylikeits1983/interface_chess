@@ -275,7 +275,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             placeholder="input wager address"
           />
           <Box p={2}></Box>
-          <Button colorScheme="green" onClick={handleSubmit}>
+          <Button
+            color="black"
+            backgroundColor="#94febf"
+            onClick={handleSubmit}
+            _hover={{
+              color: '#000000', // Set the text color on hover
+              backgroundColor: '#62ffa2', // Set the background color on hover
+            }}
+          >
             View Game
           </Button>
         </Flex>

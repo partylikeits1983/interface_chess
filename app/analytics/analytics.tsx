@@ -70,10 +70,10 @@ export default function Analytics() {
           <Tbody>
             {wagerAddresses.map((address, index) => (
               <Tr key={index}>
-                <Td color="green.500">{index + 1}</Td>
+                <Td color="green.400">{index + 1}</Td>
                 <Td>
                   <NextLink href={`/game/${address}`} passHref>
-                    <Link color="green.500">{address}</Link>
+                    <Link color="green.400">{address}</Link>
                   </NextLink>
                 </Td>
               </Tr>
