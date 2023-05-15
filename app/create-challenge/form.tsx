@@ -10,6 +10,11 @@ import {
   HStack,
   VStack,
   ChakraProvider,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  useDisclosure,
 } from '@chakra-ui/react';
 
 const { ethers } = require('ethers');
@@ -26,6 +31,8 @@ interface FormInputs {
 export default function ChallengeForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
@@ -62,6 +69,22 @@ export default function ChallengeForm() {
     console.log(formInputs);
   };
 
+  const handleSliderChange = (value: number) => {
+    setFormInputs((prevInputs) => ({
+      ...prevInputs,
+      timePerMove: value,
+    }));
+  };
+
+  const convertSecondsToTime = (seconds: number): string => {
+    const days = Math.floor(seconds / 86400);
+    seconds %= 86400;
+    const hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    const minutes = Math.floor(seconds / 60);
+
+    return `${days} days ${hours} hours ${minutes} minutes`;
+  };
   return (
     <ChakraProvider>
       <Box mx="auto">
@@ -78,6 +101,7 @@ export default function ChallengeForm() {
                 width="100%"
               />
             </FormControl>
+
             <FormControl>
               <FormLabel>Wager Token</FormLabel>
               <Input
@@ -102,14 +126,20 @@ export default function ChallengeForm() {
             </FormControl>
             <FormControl>
               <FormLabel>Time Limit</FormLabel>
-              <Input
-                type="number"
-                name="timePerMove"
+              <Slider
+                min={0}
+                max={604800}
+                step={1}
                 value={formInputs.timePerMove}
-                onChange={handleInputChange}
-                required
-                width="100%"
-              />
+                onChange={handleSliderChange}
+                defaultValue={formInputs.timePerMove}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+              <p>{convertSecondsToTime(formInputs.timePerMove)}</p>
             </FormControl>
             <FormControl>
               <FormLabel>Number of Games</FormLabel>
@@ -153,7 +183,7 @@ export default function ChallengeForm() {
                   backgroundColor: '#62ffa2', // Set the background color on hover
                 }}
               >
-                Create Challenge
+                Create Wager
               </Button>
             </HStack>
           </Stack>
