@@ -125,24 +125,33 @@ export default function ChallengeForm() {
             <HStack spacing="4">
               <Button
                 flex="1"
-                colorScheme="teal"
-                variant="outline"
+                color="#000000" // Set the desired text color
+                backgroundColor="#94febf" // Set the desired background color
+                variant="solid"
                 size="lg"
                 isLoading={isLoadingApproval}
                 loadingText="Submitting Transaction"
                 onClick={() => HandleClickApprove()}
+                _hover={{
+                  color: '#000000', // Set the text color on hover
+                  backgroundColor: '#62ffa2', // Set the background color on hover
+                }}
               >
                 Approve Tokens
               </Button>
               <Button
                 flex="1"
-                color="#94febf" // Set the desired text color
-                // backgroundColor="transparent" // Set the desired background color
-                variant="outline"
+                color="#000000" // Set the desired text color
+                backgroundColor="#94febf" // Set the desired background color
+                variant="solid"
                 size="lg"
                 isLoading={isLoadingCreateWager}
                 loadingText="Submitting Transaction"
                 onClick={() => HandleClickCreateWager()}
+                _hover={{
+                  color: '#000000', // Set the text color on hover
+                  backgroundColor: '#62ffa2', // Set the background color on hover
+                }}
               >
                 Create Challenge
               </Button>
