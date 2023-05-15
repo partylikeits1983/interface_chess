@@ -14,16 +14,9 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  Flex,
-  FormHelperText,
+  VStack,
+  Select,
 } from '@chakra-ui/react';
-
-import {
-  AutoComplete,
-  AutoCompleteInput,
-  AutoCompleteItem,
-  AutoCompleteList,
-} from '@choc-ui/chakra-autocomplete';
 
 const { ethers } = require('ethers');
 const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
@@ -93,34 +86,6 @@ export default function ChallengeForm() {
     return `${days} days ${hours} hours ${minutes} minutes`;
   };
 
-  const tokens = [
-    {
-      token: 'WETH',
-      address: '0x12345678',
-      image: 'https://bit.ly/dan-abramov',
-    },
-    {
-      token: 'USDC',
-      address: '0x23456789',
-      image: 'https://bit.ly/dan-abramov',
-    },
-    {
-      token: 'WMATIC',
-      address: '0x34567890',
-      image: 'https://bit.ly/dan-abramov',
-    },
-    {
-      token: 'WBTC',
-      address: '0x45678901',
-      image: 'https://bit.ly/dan-abramov',
-    },
-    {
-      token: 'UNI',
-      address: '0x56789012',
-      image: 'https://bit.ly/dan-abramov',
-    },
-  ];
-
   return (
     <ChakraProvider>
       <Box mx="auto">
@@ -136,35 +101,6 @@ export default function ChallengeForm() {
                 required
                 width="100%"
               />
-            </FormControl>
-
-            <FormControl w="100%">
-              <FormLabel>Select Token</FormLabel>
-              <AutoComplete openOnFocus>
-                <AutoCompleteInput
-                  variant="filled"
-                  bg="black"
-                  color="white"
-                  _focus={{ borderColor: 'white', outline: 'none' }}
-                />
-                <AutoCompleteList bg="gray.800">
-                  {tokens.map(({ token, address, image }, cid) => (
-                    <AutoCompleteItem
-                      key={`option-${cid}`}
-                      value={address}
-                      onChange={handleInputChange}
-                      textTransform="capitalize"
-                      color="black"
-                    >
-                      <Avatar size="sm" name={token} src={image} />
-                      {token}
-                    </AutoCompleteItem>
-                  ))}
-                </AutoCompleteList>
-              </AutoComplete>
-              <FormHelperText>
-                Select Token or Paste Custom Address
-              </FormHelperText>
             </FormControl>
 
             <FormControl>
