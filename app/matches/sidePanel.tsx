@@ -122,9 +122,16 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
       <Stack spacing={4} mt={8}>
         <Link href={`/game/${card.matchAddress}`}>
           <Button
-            style={{ width: '200px' }}
-            colorScheme="teal"
+            style={{ width: '250px' }}
+            // colorScheme="teal"
             variant="outline"
+            color="#fffff" // Set the desired text color
+            // backgroundColor="#94febf" // Set the desired background color
+
+            _hover={{
+              color: '#000000', // Set the text color on hover
+              backgroundColor: '#62ffa2', // Set the background color on hover
+            }}
             size="md"
           >
             Go to Match
@@ -132,19 +139,26 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
         </Link>
         <Button
           onClick={handleSubmitCancelWager}
-          style={{ width: '200px' }}
-          colorScheme="teal"
+          style={{ width: '250px' }}
+          // colorScheme="teal"
           variant="outline"
+          color="#fffff" // Set the desired text color
+          // backgroundColor="#94febf" // Set the desired background color
+
+          _hover={{
+            color: '#000000', // Set the text color on hover
+            backgroundColor: '#62ffa2', // Set the background color on hover
+          }}
           size="md"
         >
           Cancel Wager
         </Button>
         <Button
           onClick={handleSubmitPayoutWager}
-          style={{ width: '200px' }}
+          style={{ width: '250px' }}
           // colorScheme="teal"
           variant="outline"
-          color="#94febf" // Set the desired text color
+          color="#fffff" // Set the desired text color
           // backgroundColor="#94febf" // Set the desired background color
 
           _hover={{
