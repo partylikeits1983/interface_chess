@@ -14,9 +14,11 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  Flex,
 } from '@chakra-ui/react';
 
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
+import OptionTypeBase from 'react-select';
 
 const { ethers } = require('ethers');
 const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
@@ -87,17 +89,160 @@ export default function ChallengeForm() {
 
   const options = [
     {
-      value: 'chocolate',
+      value: 'USDC',
       label: (
-        <div>
-          <img src="favicon.ico" height="30px" width="30px" />
-          Chocolate{' '}
-        </div>
+        <Flex align="center">
+          <div>USDC </div>
+          <img
+            src="favicon.ico"
+            height="30px"
+            width="30px"
+            style={{ marginLeft: 'auto' }}
+          />
+        </Flex>
       ),
     },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
+    {
+      value: 'DAI',
+      label: (
+        <Flex align="center">
+          <div>DAI </div>
+          <img
+            src="favicon.ico"
+            height="30px"
+            width="30px"
+            style={{ marginLeft: 'auto' }}
+          />
+        </Flex>
+      ),
+    },
+    {
+      value: 'WETH',
+      label: (
+        <Flex align="center">
+          <div>WETH </div>
+          <img
+            src="favicon.ico"
+            height="30px"
+            width="30px"
+            style={{ marginLeft: 'auto' }}
+          />
+        </Flex>
+      ),
+    },
+    {
+      value: 'WBTC',
+      label: (
+        <Flex align="center">
+          <div>WBTC </div>
+          <img
+            src="favicon.ico"
+            height="30px"
+            width="30px"
+            style={{ marginLeft: 'auto' }}
+          />
+        </Flex>
+      ),
+    },
+    {
+      value: 'WMATIC',
+      label: (
+        <Flex align="center">
+          <div>WMATIC </div>
+          <img
+            src="favicon.ico"
+            height="30px"
+            width="30px"
+            style={{ marginLeft: 'auto' }}
+          />
+        </Flex>
+      ),
+    },
+    {
+      value: 'USDT',
+      label: (
+        <Flex align="center">
+          <div>USDT </div>
+          <img
+            src="favicon.ico"
+            height="30px"
+            width="30px"
+            style={{ marginLeft: 'auto' }}
+          />
+        </Flex>
+      ),
+    },
+    {
+      value: 'UNI',
+      label: (
+        <Flex align="center">
+          <div>UNI </div>
+          <img
+            src="favicon.ico"
+            height="30px"
+            width="30px"
+            style={{ marginLeft: 'auto' }}
+          />
+        </Flex>
+      ),
+    },
   ];
+
+  interface OptionType {
+    label: string;
+    value: string;
+  }
+
+  const customStyles: StylesConfig<OptionTypeBase, false> = {
+    control: (provided, state) => ({
+      ...provided,
+      backgroundColor: 'black',
+      borderColor: 'white',
+      outline: state.isFocused ? 'none' : provided.outline,
+      boxShadow: state.isFocused ? 'none' : provided.boxShadow,
+      '&:hover': {
+        borderColor: 'white',
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: 'white',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? '#3F5F4C'
+        : state.isFocused
+        ? '#446652'
+        : 'gray',
+      color: 'white',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: 'transparent',
+      borderColor: 'white',
+      padding: 0,
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      '::-webkit-scrollbar': {
+        width: '0px',
+      },
+      '::-webkit-scrollbar-track': {
+        background: '#888',
+      },
+      '::-webkit-scrollbar-thumb': {
+        background: '#888',
+      },
+      '::-webkit-scrollbar-thumb:hover': {
+        background: '#555',
+      },
+    }),
+    input: (provided) => ({
+      ...provided,
+      color: 'white',
+    }),
+  };
 
   return (
     <ChakraProvider>
@@ -116,9 +261,7 @@ export default function ChallengeForm() {
               />
             </FormControl>
 
-            <FormControl>
-              <Select options={options} isSearchable />
-            </FormControl>
+            <Select options={options} styles={customStyles} isSearchable />
 
             <FormControl>
               <FormLabel>Wager Token</FormLabel>
