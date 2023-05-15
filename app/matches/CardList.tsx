@@ -90,7 +90,7 @@ const CardList = () => {
         const data = await GetAllWagers();
 
         if (Array.isArray(data)) {
-          setCards(data);
+          setCards(data.reverse()); // reverse to show newest first
         } else {
           console.error('GetAllWagers returned invalid data:', cards);
         }

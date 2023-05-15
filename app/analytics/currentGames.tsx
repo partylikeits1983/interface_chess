@@ -41,7 +41,6 @@ const CurrentGames = () => {
         // Call your async function here to get the total number of games
         const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
-        setWagerAddresses(fetchedWagerAddresses);
         setTotalGames(totalGames);
         setTotalWagers(fetchedWagerAddresses.length.toString());
 
@@ -55,7 +54,8 @@ const CurrentGames = () => {
           }
           GamesFen.push(game.fen());
         }
-        setGames(GamesFen);
+        setGames(GamesFen.reverse()); // reverse to show newest first
+        setWagerAddresses(fetchedWagerAddresses.reverse()); // same here
 
         setLoading(false);
       } catch (error) {
