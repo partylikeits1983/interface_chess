@@ -122,8 +122,23 @@ export default function ChallengeForm() {
                 onChange={handleInputChange}
                 required
                 width="100%"
+                min={0}
               />
             </FormControl>
+
+            <FormControl>
+              <FormLabel>Number of Games</FormLabel>
+              <Input
+                type="number"
+                name="numberOfGames"
+                value={formInputs.numberOfGames}
+                onChange={handleInputChange}
+                required
+                width="100%"
+                min={0}
+              />
+            </FormControl>
+
             <FormControl>
               <FormLabel>Time Limit</FormLabel>
               <Slider
@@ -134,24 +149,14 @@ export default function ChallengeForm() {
                 onChange={handleSliderChange}
                 defaultValue={formInputs.timePerMove}
               >
-                <SliderTrack>
-                  <SliderFilledTrack />
+                <SliderTrack bg="#e2e8f0">
+                  <SliderFilledTrack bg="#94febf" />
                 </SliderTrack>
                 <SliderThumb />
               </Slider>
               <p>{convertSecondsToTime(formInputs.timePerMove)}</p>
             </FormControl>
-            <FormControl>
-              <FormLabel>Number of Games</FormLabel>
-              <Input
-                type="number"
-                name="numberOfGames"
-                value={formInputs.numberOfGames}
-                onChange={handleInputChange}
-                required
-                width="100%"
-              />
-            </FormControl>
+
             <HStack spacing="4">
               <Button
                 flex="1"
