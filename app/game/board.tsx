@@ -53,15 +53,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
-  const [matchData, setMatchData] = useState<Card>();
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const myAsyncFunction = async () => {
       if (wager != '') {
-        console.log('HERERER');
-
         setWagerAddress(wager);
 
         const isPlayerTurn = await GetPlayerTurn(wager);

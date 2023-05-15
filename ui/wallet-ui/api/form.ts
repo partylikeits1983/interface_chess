@@ -331,7 +331,7 @@ export const GetAllWagers = async () => {
   }
 };
 
-export const GetGameMoves = async (wagerAddress: string) => {
+export const GetGameMoves = async (wagerAddress: string): Promise<string[]> => {
   let { provider } = await setupProvider();
   await updateContractAddresses();
 
@@ -353,6 +353,7 @@ export const GetGameMoves = async (wagerAddress: string) => {
   } catch (error) {
     alert(`Get game moves: ${wagerAddress} not found`);
     console.log(error);
+    return [];
   }
 };
 

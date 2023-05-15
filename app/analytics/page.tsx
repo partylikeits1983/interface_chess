@@ -1,6 +1,8 @@
 import { ExternalLink } from '#/ui/external-link';
 import Link from 'next/link';
-import Analytics from './analytics';
+
+import PageData from './pageData';
+import { Stack, Divider, Heading, ChakraProvider } from '@chakra-ui/react';
 
 export const metadata = {
   title: 'Analytics',
@@ -18,7 +20,7 @@ export default function Page() {
   return (
     <div className="space-y-6">
       <h1 className="text-xl font-medium text-gray-300">Analytics</h1>
-      <Analytics />
+      <PageData></PageData>
     </div>
   );
 }
