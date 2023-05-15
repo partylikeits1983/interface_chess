@@ -108,7 +108,7 @@ const CardList = () => {
         <Heading as="h2" size="lg" mb={4}>
           Your Current Matches
         </Heading>
-        {true ? (
+        {isLoading ? (
           <Flex justify="center">
             <Spinner size="lg" />
           </Flex>
