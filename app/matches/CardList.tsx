@@ -1,7 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider, Box, Heading, Text, Skeleton } from '@chakra-ui/react';
+import {
+  ChakraProvider,
+  Box,
+  Heading,
+  Text,
+  Skeleton,
+  Spinner,
+  Flex,
+} from '@chakra-ui/react';
 
 const {
   GetAllWagers,
@@ -100,15 +108,10 @@ const CardList = () => {
         <Heading as="h2" size="lg" mb={4}>
           Your Current Matches
         </Heading>
-        {isLoading ? (
-          <Skeleton
-            height="150px"
-            mb={4}
-            startColor="gray.100"
-            endColor="green.200"
-          >
-            Loading...
-          </Skeleton>
+        {true ? (
+          <Flex justify="center">
+            <Spinner size="lg" />
+          </Flex>
         ) : cards.length ? (
           cards.map((card, index) => (
             <CardAccordion
