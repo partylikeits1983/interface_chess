@@ -19,7 +19,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import { GetWagersFenDB } from 'ui/wallet-ui/api/db-api';
+import { GetWagersDB, GetWagersFenDB } from 'ui/wallet-ui/api/db-api';
 // import { GetAnalyticsData, GetGameMoves } from 'ui/wallet-ui/api/form';
 
 const CurrentGames = () => {
@@ -78,10 +78,17 @@ const CurrentGames = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await GetWagersFenDB(
-          'https://chess-fish-game-db.vercel.app/getwagers',
-        ); // Assuming the 'url' variable is defined
-        setGames(data.reverse());
+        const addresses = await GetWagersDB(
+          'https://chess-fish-game-db.vercel.app/wageraddresses',
+        );
+
+        const fendata = await GetWagersFenDB(
+          'https://chess-fish-game-db.vercel.app/getwagersfen',
+        );
+
+        setWagerAddresses(addresses.reverse());
+
+        setGames(fendata.reverse());
         setLoading(false);
       } catch (error) {
         console.error(error);
