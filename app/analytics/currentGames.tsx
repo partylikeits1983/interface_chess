@@ -87,8 +87,8 @@ const CurrentGames = () => {
         );
 
         setWagerAddresses(addresses.reverse());
-
         setGames(fendata.reverse());
+
         setLoading(false);
       } catch (error) {
         console.error(error);
