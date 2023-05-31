@@ -1,6 +1,8 @@
 'use client';
 
 import { GetAnalyticsData } from 'ui/wallet-ui/api/form';
+import { GetWagersDB } from 'ui/wallet-ui/api/db-api';
+
 import {
   ChakraProvider,
   Stat,
@@ -30,11 +32,17 @@ export default function Analytics() {
     const fetchData = async () => {
       try {
         // Call your async function here to get the total number of games
-        const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
+        // const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
-        setWagerAddresses(fetchedWagerAddresses);
-        setTotalGames(totalGames);
-        setTotalWagers(fetchedWagerAddresses.length.toString());
+        const wagerAddresses = await GetWagersDB(
+          'https://chess-fish-game-db.vercel.app/wageraddresses',
+        );
+
+        // console.log(wagerAddresses)
+
+        setWagerAddresses(wagerAddresses);
+        setTotalGames(wagerAddresses.length.toString());
+        setTotalWagers(wagerAddresses.length.toString());
 
         setLoading(false);
       } catch (error) {
