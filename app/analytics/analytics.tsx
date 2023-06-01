@@ -31,12 +31,8 @@ export default function Analytics() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Call your async function here to get the total number of games
-        // const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
-
+        // trying to ping the GCP API
         const wagerAddresses = await GetWagersDB();
-
-        // console.log(wagerAddresses)
 
         setWagerAddresses(wagerAddresses);
         setTotalGames(wagerAddresses.length.toString());
@@ -44,6 +40,19 @@ export default function Analytics() {
 
         setLoading(false);
       } catch (error) {
+        try {
+          // if GCP api is down, calling contract directly (slower)
+          const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
+
+          setWagerAddresses(fetchedWagerAddresses);
+          setTotalGames(totalGames);
+          setTotalWagers(fetchedWagerAddresses.length.toString());
+
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+        }
+
         console.error('Error fetching total games:', error);
       }
     };

@@ -35,6 +35,7 @@ const CurrentGames = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // trying to ping GCP chess fish api
         const addresses = await GetWagersDB();
         const fendata = await GetWagersFenDB();
 
@@ -44,8 +45,8 @@ const CurrentGames = () => {
         setLoading(false);
       } catch (error) {
         try {
-          console.log('Getting all games');
-          // Call your async function here to get the total number of games
+          // if the GCP api is down => then try to use RPC link
+          console.log('Getting all games via RPC-LINK');
           const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
           setTotalGames(totalGames);
@@ -72,6 +73,7 @@ const CurrentGames = () => {
         console.error(error);
       }
     };
+    fetchData();
   }, []);
 
   const router = useRouter();
