@@ -78,13 +78,9 @@ const CurrentGames = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const addresses = await GetWagersDB(
-          'https://chess-fish-game-db.vercel.app/wageraddresses',
-        );
+        const addresses = await GetWagersDB();
 
-        const fendata = await GetWagersFenDB(
-          'https://chess-fish-game-db.vercel.app/getwagersfen',
-        );
+        const fendata = await GetWagersFenDB();
 
         setWagerAddresses(addresses.reverse());
         setGames(fendata.reverse());

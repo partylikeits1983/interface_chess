@@ -34,9 +34,7 @@ export default function Analytics() {
         // Call your async function here to get the total number of games
         // const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
-        const wagerAddresses = await GetWagersDB(
-          'https://chess-fish-game-db.vercel.app/wageraddresses',
-        );
+        const wagerAddresses = await GetWagersDB();
 
         // console.log(wagerAddresses)
 
