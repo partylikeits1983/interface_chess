@@ -1,0 +1,20 @@
+[
+  {
+    "network": "maticmum",
+    "chainID": 80001,
+    "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
+    "token": "0xfAe18a218f20352261507aBac4534D7355bb0d7f",
+    "chessToken": "0x14249dFBb6eE916BDa3d5Ae94922167dc538DDCb",
+    "moveVerification": "0x681f40B5496Bf0C4cD633a726C06E244043A4e7C",
+    "chess": "0xd63fd99D1224c3bD0ee13d82293114e6aC00F8C8"
+  },
+  {
+    "network": "unknown",
+    "chainID": 31337,
+    "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
+    "token": "0x48c5Db1F6d9e39bED6613Bd9242FA68ED4A5D18f",
+    "chessToken": "0x72296780d0e3390F9f4BEE9aef49541e2786707E",
+    "moveVerification": "0x32c87ee7759591fe29325425180B16Dc3eECcf57",
+    "chess": "0x02aa6490A3e19bf5F32110B947006Db1437e9C5F"
+  }
+]

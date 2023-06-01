@@ -1,14 +1,27 @@
 const ethers = require('ethers');
 const { parseUnits } = require('ethers/lib/utils');
+import { CreateMatchType } from './types';
 
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
-let ChessAddress = '0x90971b93dd9Cb57B7D5a7B91DdC1D0697cF1F170';
-let VerificationAddress = '0xE551a5976Bd0528127c36132fB792746F3D610ba';
-let tokenAddress = '0x6135BB350c6e98B150c8f7f11f26465412F16A1B';
+interface ContractAddress {
+  network: string;
+  chainID: number;
+  owner: string;
+  token: string;
+  chessToken: string;
+  moveVerification: string;
+  chess: string;
+}
 
-import { CreateMatchType } from './types';
+const data: ContractAddress = require('./contractAddresses.json');
+const jsonString = JSON.stringify(data); // Convert the object to JSON string
+const addresses = JSON.parse(jsonString); // Parse the JSON string
+
+let ChessAddress = addresses[0].chess;
+let VerificationAddress = addresses[0].moveVerification;
+let tokenAddress = addresses[0].token;
 
 const ERC20ABI = [
   'function transferFrom(address from, address to, uint value)',
@@ -20,7 +33,7 @@ const ERC20ABI = [
   'error InsufficientBalance(account owner, uint balance)',
 ];
 
-const updateContractAddresses = async () => {
+const updateContractAddresses = async (): Promise<void> => {
   let { provider } = await setupProvider();
 
   // const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -30,18 +43,23 @@ const updateContractAddresses = async () => {
   console.log('Chain ID');
   console.log(chainId);
 
-  // Update the addresses based on the chain id.
-  // This is an example, you need to replace with actual addresses.
-  if (chainId === 31337) {
-    // localhost
-    ChessAddress = '0x9963Aeb98a0d7ffC48F175f305234889E71b7D77';
-    VerificationAddress = '0x029C1A99D6ae043FbE0D8BF021135D67c3443642';
-    tokenAddress = '0x6135BB350c6e98B150c8f7f11f26465412F16A1B';
-  } else if (chainId === 80001) {
-    // mumbai Testnet
-    ChessAddress = '0x90971b93dd9Cb57B7D5a7B91DdC1D0697cF1F170';
-    VerificationAddress = '0xE551a5976Bd0528127c36132fB792746F3D610ba';
-    tokenAddress = '0x6135BB350c6e98B150c8f7f11f26465412F16A1B';
+  const data: ContractAddress[] = require('./contractAddresses.json');
+  const addresses: ContractAddress[] = JSON.parse(JSON.stringify(data));
+
+  // Find the matching chain ID in the array of objects
+  const matchingChain = addresses.find(
+    (address) => address.chainID === chainId,
+  );
+
+  if (matchingChain) {
+    const { chess, moveVerification, token } = matchingChain;
+
+    // Update the addresses based on the matching chain ID
+    ChessAddress = chess;
+    VerificationAddress = moveVerification;
+    tokenAddress = token;
+
+    console.log(ChessAddress, VerificationAddress, tokenAddress);
   }
   // Add more chains if needed.
 };
