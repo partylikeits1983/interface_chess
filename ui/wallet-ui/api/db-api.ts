@@ -1,4 +1,4 @@
-const apiURL = 'http://34.159.207.87:4000';
+const apiURL = 'api.chess.fish';
 const getWagersFenMethod = '/wagersfen';
 const getWagersMethod = '/wageraddresses';
 
