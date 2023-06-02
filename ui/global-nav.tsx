@@ -26,7 +26,7 @@ export function GlobalNav() {
           </div>
 
           <h3 className="font-semibold tracking-wide text-gray-400 group-hover:text-gray-50">
-            Chess.fish <span className="Work in progress">(Alpha)</span>
+            Chess.fish <span className="Work in progress"></span>
           </h3>
         </Link>
       </div>

@@ -23,7 +23,7 @@ export async function GetWagersFenDB(): Promise<string[]> {
       );
     }
   } catch (error) {
-    throw new Error(`Error fetching wagers: ${error}`);
+    throw new Error(`Error fetching wagers fen: ${error}`);
   }
 }
 
@@ -31,6 +31,7 @@ export async function GetWagersDB(): Promise<string[]> {
   const url = apiURL + getWagersMethod;
   try {
     const response = await fetch(url, { mode: 'cors' });
+    console.log('HERE!');
     if (!response.ok) {
       throw new Error(`Request failed with status code ${response.status}`);
     }
@@ -49,6 +50,6 @@ export async function GetWagersDB(): Promise<string[]> {
       );
     }
   } catch (error) {
-    throw new Error(`Error fetching wagers: ${error}`);
+    throw new Error(`Error fetching wagers data: ${error}`);
   }
 }
