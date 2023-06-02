@@ -470,7 +470,7 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
 
     return [wagerAddresses, totalNumberOfGames.toString()];
   } catch (error) {
-    alert(`Analytics function: error`);
+    alert(`Analytics function : error`);
     console.log(error);
     return [[], ''];
   }
