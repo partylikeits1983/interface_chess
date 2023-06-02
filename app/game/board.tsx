@@ -7,6 +7,7 @@ import { Chessboard } from 'react-chessboard';
 const { ethers } = require('ethers');
 
 import { Card } from 'app/types';
+import { useRouter } from 'next/navigation';
 
 const {
   CheckValidMove,
@@ -27,6 +28,7 @@ import {
   Flex,
   Text,
   Spinner,
+  Skeleton,
   Center,
   ChakraProvider,
 } from '@chakra-ui/react';
@@ -53,7 +55,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
+
+  const [wager1, setWager] = useState('');
 
   useEffect(() => {
     const myAsyncFunction = async () => {
@@ -79,12 +83,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
         setNumberOfGames(gameNumber);
 
-        setLoading(false);
-
         const matchData = await GetWagerData(wager);
         setTimeLimit(matchData.timeLimit);
-
-        // console.log(matchData.wagerAmount);
 
         setWagerAmount(
           ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
@@ -103,6 +103,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         );
 
         setIsPlayer0White(isPlayer0White);
+
+        setLoading(false);
       } else {
         setLoading(false);
       }
@@ -159,10 +161,12 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       console.log(error);
     }
   }
-
+  /* 
   // Get Game State after clicking view game button
   async function handleSubmit(): Promise<void> {
     setLoading(true);
+
+    setWager(wagerAddress)
 
     const movesArray = await GetGameMoves(wagerAddress);
     const game = new Chess();
@@ -185,6 +189,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     setLoading(false);
   }
+ */
+
+  const router = useRouter();
+  const handleBoardClick =
+    (address: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault(); // This may be optional, depending on your needs
+      console.log(address);
+      router.push(`/game/${address}`);
+    };
 
   // Setting wager address in input box
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -234,7 +247,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   return (
     <ChakraProvider>
-      {loading ? (
+      {isLoading ? (
         <Box
           width="500px"
           height="700px"
@@ -274,7 +287,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           <Button
             color="black"
             backgroundColor="#94febf"
-            onClick={handleSubmit}
+            onClick={handleBoardClick(wagerAddress)}
             _hover={{
               color: '#000000', // Set the text color on hover
               backgroundColor: '#62ffa2', // Set the background color on hover
@@ -285,16 +298,24 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         </Flex>
       ) : null}
 
-      <GameInfo
-        wager={wager}
-        wagerAmount={wagerAmount}
-        numberOfGames={numberOfGames}
-        timeLimit={timeLimit}
-        timePlayer0={timePlayer0}
-        timePlayer1={timePlayer1}
-        isPlayerTurn={isPlayerTurn}
-        isPlayer0White={isPlayer0White}
-      ></GameInfo>
+      {isLoading ? (
+        // Grey UI skeleton
+        <>
+          <Skeleton height="50px" startColor="gray.800" endColor="gray.700" />
+        </>
+      ) : (
+        // GameInfo component
+        <GameInfo
+          wager={wager}
+          wagerAmount={wagerAmount}
+          numberOfGames={numberOfGames}
+          timeLimit={timeLimit}
+          timePlayer0={timePlayer0}
+          timePlayer1={timePlayer1}
+          isPlayerTurn={isPlayerTurn}
+          isPlayer0White={isPlayer0White}
+        />
+      )}
     </ChakraProvider>
   );
 };

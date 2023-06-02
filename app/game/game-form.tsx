@@ -9,6 +9,8 @@ import {
   ChakraProvider,
 } from '@chakra-ui/react';
 
+import GameInfo from './game-info';
+
 interface FormInputs {
   color: string;
 }
