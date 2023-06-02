@@ -35,6 +35,11 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
     const value = event.target.value;
     setInputValue(value);
 
+    if (!value) {
+      // if input value is empty, clear selected option
+      setSelectedOption(null);
+    }
+
     setFilteredOptions(
       options.filter((option) =>
         option.label.toLowerCase().startsWith(value.toLowerCase()),
@@ -76,15 +81,20 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
           placeholder="Type to search..."
         />
         <InputRightElement>
-          {selectedOption?.image && (
-            <Image
-              src={selectedOption.image}
-              alt={selectedOption.label}
-              boxSize="20px"
-              mr={2}
-            />
-          )}
-          <ChevronDownIcon color="gray.400" />
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            {selectedOption?.image && (
+              <Image
+                src={selectedOption.image}
+                alt={selectedOption.label}
+                boxSize="20px"
+              />
+            )}
+            <ChevronDownIcon color="gray.400" boxSize={5} mr={2} />
+          </Box>
         </InputRightElement>
       </InputGroup>
       {showOptions && (
