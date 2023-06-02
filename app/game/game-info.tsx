@@ -11,7 +11,17 @@ interface GameInfoProps {
   isPlayer0White: boolean;
 }
 
-import { Flex, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  Text,
+  Box,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+} from '@chakra-ui/react';
 
 const GameInfo: React.FC<GameInfoProps> = ({
   wager,
@@ -43,12 +53,24 @@ const GameInfo: React.FC<GameInfoProps> = ({
     <div>
       {wager !== '' && (
         <div>
-          <Flex justify="space-between">
-            <Text>Amount: {wagerAmount} DAI</Text>
-            <Text>Time Limit: {formatSecondsToTime(timeLimit.toString())}</Text>
-            <Text>Game: {numberOfGames}</Text>
-            <Text>Your Turn: {isPlayerTurn ? 'True' : 'False'}</Text>
-          </Flex>
+          <Table size="md">
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Time Limit</th>
+                <th>Game</th>
+                <th>Your Turn</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{wagerAmount} DAI</td>
+                <td>{formatSecondsToTime(timeLimit.toString())}</td>
+                <td>{numberOfGames}</td>
+                <td>{isPlayerTurn ? 'True' : 'False'}</td>
+              </tr>
+            </tbody>
+          </Table>
 
           {isPlayer0White ? (
             <>
