@@ -7,7 +7,11 @@ import {
   Heading,
   Text,
   Skeleton,
+  Switch,
   Spinner,
+  FormControl,
+  FormLabel,
+  Select,
   Flex,
 } from '@chakra-ui/react';
 
@@ -21,6 +25,7 @@ const {
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
 import CardAccordion from './CardAccordion'; // Import the CardAccordion component
+import CardFilterControls from './CardFilterControls';
 
 interface Card {
   matchAddress: string;
@@ -102,18 +107,46 @@ const CardList = () => {
     fetchCards();
   }, []);
 
+  const [sortValue, setSortValue] = useState('');
+  const [filterValue, setFilterValue] = useState(false);
+
+  const sortedCards = [...cards].sort((a, b) => {
+    switch (sortValue) {
+      case 'isPending':
+        return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;
+      case 'wagerAmountAsc':
+        return a.wagerAmount - b.wagerAmount;
+      case 'wagerAmountDesc':
+        return b.wagerAmount - a.wagerAmount;
+      default:
+        return 0;
+    }
+  });
+
+  const filteredAndSortedCards = sortedCards.filter(
+    (card) =>
+      !filterValue ||
+      (card.isInProgress && Number(card.player1Address) === Number(account)),
+  );
+
   return (
     <ChakraProvider>
       <Box>
         <Heading as="h2" size="lg" mb={4}>
           Your Current Matches
         </Heading>
+        <CardFilterControls
+          sortValue={sortValue}
+          setSortValue={setSortValue}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+        />
         {isLoading ? (
           <Flex justify="center">
             <Spinner size="lg" />
           </Flex>
-        ) : cards.length ? (
-          cards.map((card, index) => (
+        ) : filteredAndSortedCards.length ? (
+          filteredAndSortedCards.map((card, index) => (
             <CardAccordion
               key={index}
               card={card}
