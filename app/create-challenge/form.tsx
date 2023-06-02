@@ -21,6 +21,8 @@ import {
 const { ethers } = require('ethers');
 const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
 
+import Autocomplete from './autocomplete';
+
 interface FormInputs {
   player1: string;
   wagerToken: string;
@@ -86,11 +88,26 @@ export default function ChallengeForm() {
     return `${days} days ${hours} hours ${minutes} minutes`;
   };
 
+  const options = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
+
   return (
     <ChakraProvider>
       <Box mx="auto">
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
+            <FormControl>
+              <FormLabel>Wager Token</FormLabel>
+              <Autocomplete
+                options={options}
+                onChange={(value: string) =>
+                  setFormInputs((prevInputs) => ({
+                    ...prevInputs,
+                    wagerToken: value,
+                  }))
+                }
+              />
+            </FormControl>
+
             <FormControl>
               <FormLabel>Player Address</FormLabel>
               <Input
@@ -103,17 +120,6 @@ export default function ChallengeForm() {
               />
             </FormControl>
 
-            <FormControl>
-              <FormLabel>Wager Token</FormLabel>
-              <Input
-                type="text"
-                name="wagerToken"
-                value={formInputs.wagerToken}
-                onChange={handleInputChange}
-                required
-                width="100%"
-              />
-            </FormControl>
             <FormControl>
               <FormLabel>Wager Amount</FormLabel>
               <Input
