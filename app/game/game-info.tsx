@@ -21,6 +21,7 @@ import {
   Tr,
   Th,
   Td,
+  Progress,
 } from '@chakra-ui/react';
 
 const GameInfo: React.FC<GameInfoProps> = ({
@@ -78,10 +79,18 @@ const GameInfo: React.FC<GameInfoProps> = ({
                 Time Remaining White:{' '}
                 {formatSecondsToTime(timePlayer0.toString())}
               </Text>
+              <Progress
+                colorScheme="green"
+                value={(timePlayer0 / timeLimit) * 100}
+              />
               <Text>
                 Time Remaining Black:{' '}
                 {formatSecondsToTime(timePlayer1.toString())}
               </Text>
+              <Progress
+                colorScheme="green"
+                value={(timePlayer1 / timeLimit) * 100}
+              />
             </>
           ) : (
             <>
@@ -89,10 +98,18 @@ const GameInfo: React.FC<GameInfoProps> = ({
                 Time Remaining White:{' '}
                 {formatSecondsToTime(timePlayer1.toString())}
               </Text>
+              <Progress
+                colorScheme="green"
+                value={(timePlayer1 / timeLimit) * 100}
+              />
               <Text>
                 Time Remaining Black:{' '}
                 {formatSecondsToTime(timePlayer0.toString())}
               </Text>
+              <Progress
+                colorScheme="green"
+                value={(timePlayer0 / timeLimit) * 100}
+              />
             </>
           )}
         </div>
