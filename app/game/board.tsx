@@ -6,7 +6,7 @@ import { Chessboard } from 'react-chessboard';
 
 const { ethers } = require('ethers');
 
-import { Card } from 'app/types';
+// import { Card } from 'app/types';
 import { useRouter } from 'next/navigation';
 
 const {
@@ -60,7 +60,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [wager1, setWager] = useState('');
 
   useEffect(() => {
-    const myAsyncFunction = async () => {
+    const asyncSetWagerAddress = async () => {
       if (wager != '') {
         setWagerAddress(wager);
 
@@ -70,7 +70,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         // Your async function logic here
         const movesArray = await GetGameMoves(wager);
         const game = new Chess();
-
         for (let i = 0; i < movesArray.length; i++) {
           game.move(movesArray[i]);
         }
@@ -84,7 +83,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setNumberOfGames(gameNumber);
 
         const matchData = await GetWagerData(wager);
-        setTimeLimit(matchData.timeLimit);
 
         setWagerAmount(
           ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
@@ -93,6 +91,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const [timePlayer0, timePlayer1, isPlayer0Turn] =
           await GetTimeRemaining(wager);
 
+        setTimeLimit(matchData.timeLimit);
         setTimePlayer0(timePlayer0);
         setTimePlayer1(timePlayer1);
         setIsPlayer0Turn(isPlayer0Turn);
@@ -109,7 +108,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setLoading(false);
       }
     };
-    myAsyncFunction();
+    asyncSetWagerAddress();
   }, [wager]);
 
   useEffect(() => {
@@ -134,9 +133,19 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     };
   }, [isPlayer0Turn, timePlayer0, timePlayer1]);
 
+  const router = useRouter();
+  const handleBoardClick =
+    (address: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault(); // This may be optional, depending on your needs
+      console.log(address);
+      router.push(`/game/${address}`);
+    };
+
   function numberToString(num: number): string {
     return num.toLocaleString('fullwide', { useGrouping: false });
   }
+
+  /// Chess Move logic
 
   // Check valid move with sc
   useEffect(() => {
@@ -161,43 +170,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       console.log(error);
     }
   }
-  /* 
-  // Get Game State after clicking view game button
-  async function handleSubmit(): Promise<void> {
-    setLoading(true);
-
-    setWager(wagerAddress)
-
-    const movesArray = await GetGameMoves(wagerAddress);
-    const game = new Chess();
-
-    for (let i = 0; i < movesArray.length; i++) {
-      console.log(movesArray[i]);
-      game.move(movesArray[i]);
-    }
-    setGame(game);
-
-    const isPlayerWhite = await IsPlayerWhite(wagerAddress);
-    setPlayerColor(isPlayerWhite);
-
-    const isPlayerTurn = await GetPlayerTurn(wagerAddress);
-    setPlayerTurn(isPlayerTurn);
-
-    const gameNumberData: Array<Number> = await GetNumberOfGames(wagerAddress);
-    const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
-    setNumberOfGames(gameNumber);
-
-    setLoading(false);
-  }
- */
-
-  const router = useRouter();
-  const handleBoardClick =
-    (address: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault(); // This may be optional, depending on your needs
-      console.log(address);
-      router.push(`/game/${address}`);
-    };
 
   // Setting wager address in input box
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -245,6 +217,82 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   };
 
+  const [rightClickedSquares, setRightClickedSquares] = useState({});
+  const [moveFrom, setMoveFrom] = useState('');
+
+  const onSquareClick = (square: any): void => {
+    // Make a move
+
+    setRightClickedSquares({});
+
+    function resetFirstMove(square: any) {
+      const hasOptions = getMoveOptions(square);
+      if (hasOptions) setMoveFrom(square);
+    }
+
+    // from square
+    if (!moveFrom) {
+      resetFirstMove(square);
+      return;
+    }
+
+    console.log(square);
+    /*     
+    const move = makeAMove({
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: 'q',
+    });
+
+    // Move string
+    const moveString: string = sourceSquare + targetSquare;
+
+    console.log(moveString);
+ */
+    /*     // Reset moveFrom
+    setMoveFrom(move ? '' : square);
+
+    // Submit move to smart contract
+    handleSubmitMove(moveString);
+
+    // Set new move options
+    if (!move) {
+      getMoveOptions(square);
+    } else {
+      setOptionSquares({});
+    } */
+  };
+
+  const [optionSquares, setOptionSquares] = useState({});
+
+  function getMoveOptions(square: any) {
+    const moves = game.moves({
+      square,
+      verbose: true,
+    });
+    if (moves.length === 0) {
+      return false;
+    }
+
+    const newSquares: any = {};
+    moves.map((move) => {
+      newSquares[move.to] = {
+        background:
+          game.get(move.to) &&
+          game.get(move.to).color !== game.get(square).color
+            ? 'radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)'
+            : 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',
+        borderRadius: '50%',
+      };
+      return move;
+    });
+    newSquares[square] = {
+      background: 'rgba(255, 255, 0, 0.4)',
+    };
+    setOptionSquares(newSquares);
+    return true;
+  }
+
   return (
     <ChakraProvider>
       {isLoading ? (
@@ -269,6 +317,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       ) : (
         <Chessboard
           boardOrientation={isPlayerWhite ? 'white' : 'black'}
+          arePiecesDraggable={true}
+          onSquareClick={onSquareClick}
           onPieceDrop={onDrop}
           position={game.fen()}
         />
