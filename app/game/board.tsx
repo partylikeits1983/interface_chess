@@ -217,8 +217,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   };
 
+  // CLICK TO MOVE
+
   const [rightClickedSquares, setRightClickedSquares] = useState({});
   const [moveFrom, setMoveFrom] = useState('');
+  const [moveSquares, setMoveSquares] = useState({});
 
   const onSquareClick = (square: any): void => {
     // Make a move
@@ -227,6 +230,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     function resetFirstMove(square: any) {
       const hasOptions = getMoveOptions(square);
+
       if (hasOptions) setMoveFrom(square);
     }
 
@@ -237,30 +241,28 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     }
 
     console.log(square);
-    /*     
-    const move = makeAMove({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: 'q',
+
+    // attempt to make move
+    const gameMoves = game.fen();
+    const gameCopy = new Chess();
+    gameCopy.load(gameMoves);
+
+    const move = gameCopy.move({
+      from: moveFrom,
+      to: square,
+      promotion: 'q', // always promote to a queen for example simplicity
     });
+    setGame(gameCopy);
 
-    // Move string
-    const moveString: string = sourceSquare + targetSquare;
+    // if invalid, setMoveFrom and getMoveOptions
+    if (move === null) {
+      resetFirstMove(square);
+      return;
+    }
 
-    console.log(moveString);
- */
-    /*     // Reset moveFrom
-    setMoveFrom(move ? '' : square);
-
-    // Submit move to smart contract
-    handleSubmitMove(moveString);
-
-    // Set new move options
-    if (!move) {
-      getMoveOptions(square);
-    } else {
-      setOptionSquares({});
-    } */
+    // setTimeout(makeRandomMove, 300);
+    setMoveFrom('');
+    setOptionSquares({});
   };
 
   const [optionSquares, setOptionSquares] = useState({});
@@ -290,6 +292,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       background: 'rgba(255, 255, 0, 0.4)',
     };
     setOptionSquares(newSquares);
+
     return true;
   }
 
@@ -319,8 +322,14 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           boardOrientation={isPlayerWhite ? 'white' : 'black'}
           arePiecesDraggable={true}
           onSquareClick={onSquareClick}
+          animationDuration={100}
           onPieceDrop={onDrop}
           position={game.fen()}
+          customSquareStyles={{
+            ...moveSquares,
+            ...optionSquares,
+            ...rightClickedSquares,
+          }}
         />
       )}
 
