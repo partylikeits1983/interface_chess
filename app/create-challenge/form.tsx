@@ -88,7 +88,21 @@ export default function ChallengeForm() {
     return `${days} days ${hours} hours ${minutes} minutes`;
   };
 
-  const options = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry'];
+  const options = [
+    {
+      label: 'Apple',
+      image:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1280px-Bitcoin.svg.png',
+    },
+    {
+      label: 'Banana',
+      image:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1280px-Bitcoin.svg.png',
+    },
+    { label: 'Cherry', image: 'public/btc.png' },
+    { label: 'Durian', image: 'path/to/durian.png' },
+    { label: 'Elderberry', image: 'path/to/elderberry.png' },
+  ];
 
   return (
     <ChakraProvider>
