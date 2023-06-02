@@ -16,6 +16,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 interface Option {
   label: string;
   image: string;
+  address: string;
 }
 
 interface AutocompleteProps {
@@ -32,6 +33,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setInputValue(value);
+
     // Do not trigger onChange here, as the value is not yet selected
     setFilteredOptions(
       options.filter((option) =>
@@ -44,7 +46,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
   const handleOptionClick = (option: Option) => {
     setInputValue(option.label);
     setShowOptions(false);
-    onChange(option.label); // Pass the selected option to the parent component
+    onChange(option.address); // Pass the selected option to the parent component
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -78,6 +80,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
       </InputGroup>
       {showOptions && (
         <Box
+          ref={dropdownRef}
           position="absolute"
           width="100%"
           zIndex={1}
@@ -85,7 +88,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
           borderRadius="md"
           mt={2}
           boxShadow="sm"
-          bg="white"
+          bg="gray.800"
         >
           <List spacing={0} pl={0}>
             {filteredOptions.map((option, index) => (
@@ -94,7 +97,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
                 pl={0}
                 py={0}
                 cursor="pointer"
-                _hover={{ bg: 'gray.100' }}
+                _hover={{ bg: 'gray.700' }}
                 onClick={() => handleOptionClick(option)}
               >
                 <Box maxHeight="100px" overflow="auto">
