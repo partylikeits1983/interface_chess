@@ -15,10 +15,11 @@ import { GetAnalyticsData, GetGameMoves } from 'ui/wallet-ui/api/form';
 const CurrentGames = () => {
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
   const [Games, setGames] = useState<string[]>([]);
-  const [isLoading, setLoading] = useState(true);
 
-  const [game, setGame] = useState(new Chess());
-  const [moves, setMoves] = useState<string[]>([]);
+  //const [isLoading, setLoading] = useState(true);
+  // const [game, setGame] = useState(new Chess());
+  // const [moves, setMoves] = useState<string[]>([]);
+
   const [totalGames, setTotalGames] = useState('');
   const [totalWagers, setTotalWagers] = useState('');
 
@@ -74,7 +75,7 @@ const CurrentGames = () => {
 
   return (
     <Flex wrap="wrap" justifyContent="center">
-      {Games.map((fen, index) => (
+      {Games.slice(0, 9).map((fen, index) => (
         <Flex key={index} m={15} direction="column" align="center">
           <Box
             as="button"
