@@ -7,17 +7,7 @@ import { Chessboard } from 'react-chessboard';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import {
-  Input,
-  Box,
-  Button,
-  Flex,
-  Text,
-  Spinner,
-  Center,
-  ChakraProvider,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Flex, Skeleton } from '@chakra-ui/react';
 
 import { GetWagersDB, GetWagersFenDB } from 'ui/wallet-ui/api/db-api';
 import { GetAnalyticsData, GetGameMoves } from 'ui/wallet-ui/api/form';
@@ -25,7 +15,7 @@ import { GetAnalyticsData, GetGameMoves } from 'ui/wallet-ui/api/form';
 const CurrentGames = () => {
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
   const [Games, setGames] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
 
   const [game, setGame] = useState(new Chess());
   const [moves, setMoves] = useState<string[]>([]);
@@ -84,22 +74,31 @@ const CurrentGames = () => {
 
   return (
     <Flex wrap="wrap" justifyContent="center">
-      {Games.map((fen, index) => (
-        <Flex key={index} m={15} direction="column" align="center">
-          <Box
-            as="button"
-            onClick={() => handleBoardClick(wagerAddresses[index])}
-            _hover={{ transform: 'scale(1.02)' }}
-            transition="0.15s"
-          >
-            <Chessboard
-              arePiecesDraggable={false}
-              position={fen}
-              boardWidth={250} // 100% to fill the box
-            />
-          </Box>
-        </Flex>
-      ))}
+      {true ? (
+        // Show skeleton
+
+        <Skeleton height="50px" startColor="gray.800" endColor="gray.700" />
+      ) : (
+        // Render the Chessboards
+        <>
+          {Games.map((fen, index) => (
+            <Flex key={index} m={15} direction="column" align="center">
+              <Box
+                as="button"
+                onClick={() => handleBoardClick(wagerAddresses[index])}
+                _hover={{ transform: 'scale(1.02)' }}
+                transition="0.15s"
+              >
+                <Chessboard
+                  arePiecesDraggable={false}
+                  position={fen}
+                  boardWidth={250} // 100% to fill the box
+                />
+              </Box>
+            </Flex>
+          ))}
+        </>
+      )}
     </Flex>
   );
 };

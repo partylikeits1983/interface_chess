@@ -1,12 +1,12 @@
 'use client';
 
+const { ethers } = require('ethers');
+
 import { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
+import GameInfo from './game-info';
 
-const { ethers } = require('ethers');
-
-// import { Card } from 'app/types';
 import { useRouter } from 'next/navigation';
 
 const {
@@ -37,8 +37,6 @@ interface BoardProps {
   wager: string;
 }
 
-import GameInfo from './game-info';
-
 export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [game, setGame] = useState(new Chess());
   const [moves, setMoves] = useState<string[]>([]);
@@ -57,8 +55,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   const [isLoading, setLoading] = useState(true);
 
-  const [wager1, setWager] = useState('');
-
   useEffect(() => {
     const asyncSetWagerAddress = async () => {
       if (wager != '') {
@@ -67,7 +63,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const isPlayerTurn = await GetPlayerTurn(wager);
         setPlayerTurn(isPlayerTurn);
 
-        // Your async function logic here
         const movesArray = await GetGameMoves(wager);
         const game = new Chess();
         for (let i = 0; i < movesArray.length; i++) {
@@ -100,7 +95,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           wager,
           matchData.player0Address,
         );
-
         setIsPlayer0White(isPlayer0White);
 
         setLoading(false);
@@ -146,7 +140,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   }
 
   /// Chess Move logic
-
   // Check valid move with sc
   useEffect(() => {
     const callMoveVerification = async () => {
@@ -180,7 +173,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const makeAMove = (move: any) => {
     const gameMoves = game.fen();
     const gameCopy = new Chess();
-
     gameCopy.load(gameMoves);
 
     let result;
@@ -218,14 +210,12 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   };
 
   // CLICK TO MOVE
-
   const [rightClickedSquares, setRightClickedSquares] = useState({});
   const [moveFrom, setMoveFrom] = useState('');
   const [moveSquares, setMoveSquares] = useState({});
 
   const onSquareClick = (square: any): void => {
     // Make a move
-
     setRightClickedSquares({});
 
     function resetFirstMove(square: any) {
@@ -240,8 +230,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       return;
     }
 
-    console.log(square);
-
     // attempt to make move
     const gameMoves = game.fen();
     const gameCopy = new Chess();
@@ -254,13 +242,16 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     });
     setGame(gameCopy);
 
+    // calling smart contract to send tx
+    const moveString = moveFrom + square;
+    handleSubmitMove(moveString);
+
     // if invalid, setMoveFrom and getMoveOptions
     if (move === null) {
       resetFirstMove(square);
       return;
     }
 
-    // setTimeout(makeRandomMove, 300);
     setMoveFrom('');
     setOptionSquares({});
   };
@@ -332,7 +323,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           }}
         />
       )}
-
       <Box p={4}></Box>
 
       {wager === '' ? (
@@ -357,7 +347,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         </Flex>
       ) : null}
 
-      {isLoading ? (
+      {isLoading && wager !== '' ? (
         // Grey UI skeleton
         <>
           <Skeleton height="50px" startColor="gray.800" endColor="gray.700" />
