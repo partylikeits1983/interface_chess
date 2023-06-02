@@ -83,31 +83,33 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
           zIndex={1}
           borderWidth="1px"
           borderRadius="md"
-          mt={0}
+          mt={2}
           boxShadow="sm"
           bg="white"
         >
-          <List spacing={0}>
+          <List spacing={0} pl={0}>
             {filteredOptions.map((option, index) => (
               <ListItem
                 key={index}
-                pl={2}
-                py={2}
+                pl={0}
+                py={0}
                 cursor="pointer"
                 _hover={{ bg: 'gray.100' }}
                 onClick={() => handleOptionClick(option)}
               >
-                <Flex align="center" justify="space-between">
-                  <Box>{option.label}</Box>
-                  {option.image && (
-                    <Image
-                      src={option.image}
-                      alt={option.label}
-                      boxSize="20px"
-                      mr={2}
-                    />
-                  )}
-                </Flex>
+                <Box maxHeight="100px" overflow="auto">
+                  <Flex align="center" justify="space-between" p={4}>
+                    <Box pl={0}>{option.label}</Box>
+                    {option.image && (
+                      <Image
+                        src={option.image}
+                        alt={option.label}
+                        boxSize="20px"
+                        mr={2}
+                      />
+                    )}
+                  </Flex>
+                </Box>
               </ListItem>
             ))}
           </List>
