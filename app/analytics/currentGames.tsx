@@ -32,7 +32,7 @@ const CurrentGames = () => {
         setWagerAddresses(addresses.reverse());
         setGames(fendata.reverse());
 
-        setLoading(false);
+        // setLoading(false);
       } catch (error) {
         try {
           // if the GCP api is down => then try to use RPC link
@@ -55,7 +55,7 @@ const CurrentGames = () => {
           setGames(GamesFen.reverse()); // reverse to show newest first
           setWagerAddresses(fetchedWagerAddresses.reverse()); // same here
 
-          setLoading(false);
+          // setLoading(false);
         } catch {
           console.error(error);
         }
@@ -74,31 +74,22 @@ const CurrentGames = () => {
 
   return (
     <Flex wrap="wrap" justifyContent="center">
-      {true ? (
-        // Show skeleton
-
-        <Skeleton height="50px" startColor="gray.800" endColor="gray.700" />
-      ) : (
-        // Render the Chessboards
-        <>
-          {Games.map((fen, index) => (
-            <Flex key={index} m={15} direction="column" align="center">
-              <Box
-                as="button"
-                onClick={() => handleBoardClick(wagerAddresses[index])}
-                _hover={{ transform: 'scale(1.02)' }}
-                transition="0.15s"
-              >
-                <Chessboard
-                  arePiecesDraggable={false}
-                  position={fen}
-                  boardWidth={250} // 100% to fill the box
-                />
-              </Box>
-            </Flex>
-          ))}
-        </>
-      )}
+      {Games.map((fen, index) => (
+        <Flex key={index} m={15} direction="column" align="center">
+          <Box
+            as="button"
+            onClick={() => handleBoardClick(wagerAddresses[index])}
+            _hover={{ transform: 'scale(1.02)' }}
+            transition="0.15s"
+          >
+            <Chessboard
+              arePiecesDraggable={false}
+              position={fen}
+              boardWidth={250} // 100% to fill the box
+            />
+          </Box>
+        </Flex>
+      ))}
     </Flex>
   );
 };
