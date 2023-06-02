@@ -11,28 +11,6 @@ export default function Page() {
       <h1 className="font-large text-xl text-gray-300">
         Chess.fish | Play Chess On The Blockchain
       </h1>
-
-      <ul className="font-small text-gray-300">
-        <li>
-          Chess.fish is a smart contract based project allows chess enthusiasts
-          to challenge other players to wager any amount of ERC20 tokens.
-        </li>
-
-        <br></br>
-
-        <li>
-          By using smart contracts, Chess.fish can act as a trusted 3rd party
-          that autonomously enforces the wager conditions agreed upon by both
-          players.
-        </li>
-        <br></br>
-
-        <li>
-          Chess.fish offers a new way to play chess by harnessing the power of
-          the blockchain and smart contracts.
-        </li>
-      </ul>
-
       <div
         style={{
           display: 'flex',
