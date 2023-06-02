@@ -77,38 +77,46 @@ const GameInfo: React.FC<GameInfoProps> = ({
             <>
               <Text>
                 Time Remaining White:{' '}
-                {formatSecondsToTime(timePlayer0.toString())}
+                {formatSecondsToTime(
+                  timePlayer0 > 0 ? timePlayer0.toString() : '0',
+                )}
               </Text>
               <Progress
                 colorScheme="green"
-                value={(timePlayer0 / timeLimit) * 100}
+                value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}
               />
               <Text>
                 Time Remaining Black:{' '}
-                {formatSecondsToTime(timePlayer1.toString())}
+                {formatSecondsToTime(
+                  timePlayer1 > 0 ? timePlayer1.toString() : '0',
+                )}
               </Text>
               <Progress
                 colorScheme="green"
-                value={(timePlayer1 / timeLimit) * 100}
+                value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
               />
             </>
           ) : (
             <>
               <Text>
                 Time Remaining White:{' '}
-                {formatSecondsToTime(timePlayer1.toString())}
+                {formatSecondsToTime(
+                  timePlayer1 > 0 ? timePlayer1.toString() : '0',
+                )}
               </Text>
               <Progress
                 colorScheme="green"
-                value={(timePlayer1 / timeLimit) * 100}
+                value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
               />
               <Text>
                 Time Remaining Black:{' '}
-                {formatSecondsToTime(timePlayer0.toString())}
+                {formatSecondsToTime(
+                  timePlayer0 > 0 ? timePlayer0.toString() : '0',
+                )}
               </Text>
               <Progress
                 colorScheme="green"
-                value={(timePlayer0 / timeLimit) * 100}
+                value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}
               />
             </>
           )}
