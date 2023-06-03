@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 
 import { ethers } from 'ethers';
+
+const NETWORK_NAMES: { [key: string]: string } = {
+  0x1: 'Mainnet',
+  0x89: 'Polygon',
+  0x38: 'BSC',
+  0x13881: 'Mumbai',
+  0x2a: 'Kovan',
+};
 
 export default function NetworkButton(): JSX.Element {
   const [selectedNetwork, setSelectedNetwork] =
     useState<string>('Select Network');
 
   const handleNetworkChange = async (network: string): Promise<void> => {
-    setSelectedNetwork(network);
-
     // Define chainId based on selected network
     let chainId: string;
     switch (network) {
@@ -53,6 +59,19 @@ export default function NetworkButton(): JSX.Element {
       console.log('Please install MetaMask!');
     }
   };
+
+  useEffect(() => {
+    if (typeof window.ethereum !== 'undefined') {
+      const getConnectedNetwork = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const network = await provider.getNetwork();
+
+        setSelectedNetwork(NETWORK_NAMES[network.chainId]);
+      };
+
+      getConnectedNetwork();
+    }
+  }, []);
 
   return (
     <div style={{ position: 'relative', zIndex: 100 }}>
