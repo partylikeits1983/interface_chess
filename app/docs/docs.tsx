@@ -40,14 +40,19 @@ export default function Docs() {
             style={loaded ? {} : { filter: 'blur(8px)' }}
           />
         </Box>
-        <Link
-          href="https://docs.chess.fish"
-          isExternal
-          color="green.500"
-          fontWeight="bold"
-        >
-          Go to docs.chess.fish
-        </Link>
+        <Box style={{ color: 'white' }}>
+          Go to{' '}
+          <Link
+            href="https://docs.chess.fish"
+            isExternal
+            color="green.500"
+            fontWeight="bold"
+          >
+            <a href="https://docs.chess.fish" style={{ color: 'green.500' }}>
+              docs.chess.fish
+            </a>
+          </Link>
+        </Box>
         <Box mt={2}>
           <span style={{ color: 'white' }}>
             to explore the chess.fish documentation
