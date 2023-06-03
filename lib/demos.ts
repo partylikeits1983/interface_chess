@@ -25,12 +25,12 @@ export const demos: { name: string; items: Item[] }[] = [
       },
 
       {
-        name: 'Matches',
+        name: 'Your Matches',
         slug: 'matches',
         description: 'Play chess on the blockchain for crypto',
       },
       {
-        name: 'Play',
+        name: 'Game Viewer',
         slug: 'game',
         description: 'Play chess on the blockchain for crypto',
       },
