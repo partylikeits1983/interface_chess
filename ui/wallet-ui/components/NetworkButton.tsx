@@ -97,12 +97,14 @@ export default function NetworkButton(): JSX.Element {
         </MenuButton>
         <MenuList>
           <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
-            Mainnet
+            Mainnet (coming soon)
           </MenuItem>
           <MenuItem onClick={() => handleNetworkChange('Polygon')}>
-            Polygon
+            Polygon (coming soon)
           </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('BSC')}>BSC</MenuItem>
+          <MenuItem onClick={() => handleNetworkChange('BSC')}>
+            BSC (coming soon)
+          </MenuItem>
           <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
             Mumbai Testnet
           </MenuItem>
