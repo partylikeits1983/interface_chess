@@ -55,6 +55,9 @@ interface BoardProps {
 
 export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [game, setGame] = useState(new Chess());
+  const [gameFEN, setGameFEN] = useState(
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
+  );
   const [moves, setMoves] = useState<string[]>([]);
 
   const [wagerAddress, setWagerAddress] = useState('');
@@ -85,6 +88,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           game.move(movesArray[i]);
         }
         setGame(game);
+        setGameFEN(game.fen());
 
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
@@ -178,15 +182,17 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     callMoveVerification();
   }, [moves]);
 
-  function handleSubmitMove(move: any): void {
+  async function handleSubmitMove(move: any): Promise<boolean> {
     try {
       // adding await fails to build
       // using useEffect makes everything glitchy
       // console.log('handlesubmit move');
       // console.log(wagerAddress);
-      PlayMove(wagerAddress, move);
+      let success = await PlayMove(wagerAddress, move);
+      return success;
     } catch (error) {
       console.log(error);
+      return false;
     }
   }
 
@@ -206,6 +212,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       setGame(gameCopy);
       let MoveString = move.from + move.to;
       setMoves([...moves, MoveString]);
+      setGameFEN(gameCopy.fen());
     } catch {
       result = null;
       console.log('invalid move');
@@ -216,7 +223,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return result; // null if the move was illegal, the move object if the move was legal
   };
 
-  const onDrop = (sourceSquare: any, targetSquare: any): boolean => {
+  const onDrop = (sourceSquare: any, targetSquare: any) => {
     setRightClickedSquares({});
     setMoveFrom('');
     setOptionSquares({});
@@ -232,6 +239,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     // submit move to smart contract
     handleSubmitMove(moveString);
+
+    setPlayerTurn(false);
 
     // illegal move
     if (move === null) return false;
@@ -310,10 +319,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       promotion: 'q', // always promote to a queen for example simplicity
     });
     setGame(gameCopy);
-
-    // calling smart contract to send tx
-    const moveString = moveFrom + square;
-    handleSubmitMove(moveString);
+    setGameFEN(gameCopy.fen());
 
     // if invalid, setMoveFrom and getMoveOptions
     if (move === null) {
@@ -321,6 +327,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       return;
     }
 
+    // calling smart contract to send tx
+    const moveString = moveFrom + square;
+    handleSubmitMove(moveString);
+
+    setPlayerTurn(false);
     setMoveFrom('');
     setOptionSquares({});
     setPotentialMoves([]);
@@ -357,19 +368,21 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
+  // MOVE LISTENER
   useEffect(() => {
     const interval = setInterval(async () => {
-      const isPlayerTurn = await GetPlayerTurn(wagerAddress);
+      const isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
 
-      if (isPlayerTurn) {
+      if (isPlayerTurnSC === true && isPlayerTurn === false) {
         const movesArray = await GetGameMoves(wager);
         const currentGame = new Chess();
         for (let i = 0; i < movesArray.length; i++) {
           currentGame.move(movesArray[i]);
         }
         setGame(currentGame);
+        setGameFEN(currentGame.fen());
       }
-    }, 10000); // 5 seconds
+    }, 6000); // 6 seconds
 
     return () => clearInterval(interval); // Clean up on unmount
   }, [wager, wagerAddress]);
@@ -402,7 +415,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           onSquareClick={onSquareClick}
           animationDuration={70}
           onPieceDrop={onDrop}
-          position={game.fen()}
+          position={gameFEN}
           customSquareStyles={{
             ...moveSquares,
             ...optionSquares,

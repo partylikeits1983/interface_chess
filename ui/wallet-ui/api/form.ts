@@ -574,7 +574,10 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   }
 };
 
-export const PlayMove = async (wagerAddress: string, move: string) => {
+export const PlayMove = async (
+  wagerAddress: string,
+  move: string,
+): Promise<Boolean> => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -594,6 +597,7 @@ export const PlayMove = async (wagerAddress: string, move: string) => {
     // alert(`wager address: ${wagerAddress} not found`);
     console.log('Invalid Wager Address');
     console.log(error);
+    return false;
   }
 };
 
