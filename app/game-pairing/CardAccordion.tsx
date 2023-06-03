@@ -56,6 +56,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
       throw new Error('Invalid Ethereum address');
     }
     return `${address.substr(0, 6)}...${address.substr(-8)}`;
+    return address;
   }
 
   async function handleCopyAddress(address: string) {

@@ -6,12 +6,18 @@ import {
   Box,
   Heading,
   Text,
+  Skeleton,
+  Switch,
   Spinner,
+  FormControl,
+  FormLabel,
+  Select,
   Flex,
 } from '@chakra-ui/react';
 
 const {
   GetAllWagers,
+  GetAllWagersForPairing,
   AcceptWagerAndApprove,
   AcceptWagerConditions,
   GetPlayerTurn,
@@ -46,8 +52,8 @@ const CardList = () => {
   const { connect, accounts } = useMetamask();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [cards, setCards] = useState<Card[]>([]);
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
+  const [cards, setCards] = useState<Card[]>([]);
 
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
@@ -69,25 +75,6 @@ const CardList = () => {
     setAccount(accounts[0]);
   }, [accounts]);
 
-  useEffect(() => {
-    async function fetchCards() {
-      try {
-        setIsLoading(true);
-        const data = await GetAllWagers();
-
-        if (Array.isArray(data)) {
-          setCards(data.reverse()); // reverse to show newest first
-        } else {
-          console.error('GetAllWagers returned invalid data:', cards);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching wagers:', error);
-      }
-    }
-    fetchCards();
-  }, []);
-
   const HandleClickApprove = async (
     wagerAddress: string,
     wagerToken: string,
@@ -102,6 +89,26 @@ const CardList = () => {
 
     setIsLoadingApproval(false);
   };
+
+  useEffect(() => {
+    async function fetchCards() {
+      try {
+        setIsLoading(true);
+
+        const data = await GetAllWagersForPairing();
+
+        if (Array.isArray(data)) {
+          setCards(data.reverse()); // reverse to show newest first
+        } else {
+          console.error('GetAllWagers returned invalid data:', cards);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching wagers:', error);
+      }
+    }
+    fetchCards();
+  }, []);
 
   const sortedCards = [...cards].sort((a, b) => {
     switch (sortValue) {
