@@ -51,8 +51,8 @@ const CardList = () => {
   const { connect, accounts } = useMetamask();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
+  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
@@ -131,7 +131,7 @@ const CardList = () => {
     <ChakraProvider>
       <Box>
         <Heading as="h2" size="lg" mb={4}>
-          Your Current Matches
+          Pairing Room
         </Heading>
         <CardFilterControls
           sortValue={sortValue}

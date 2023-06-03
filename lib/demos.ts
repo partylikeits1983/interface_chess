@@ -19,6 +19,12 @@ export const demos: { name: string; items: Item[] }[] = [
         description: 'Create a crypto chess wager',
       },
       {
+        name: 'Pairing Room',
+        slug: 'game-pairing',
+        description: 'Find a chess wager',
+      },
+
+      {
         name: 'Matches',
         slug: 'matches',
         description: 'Play chess on the blockchain for crypto',
