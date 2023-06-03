@@ -13,17 +13,17 @@ export default function NetworkButton(): JSX.Element {
     // Define chainId based on selected network
     let chainId: string;
     switch (network) {
-      case 'mainnet':
-        chainId = '1';
+      case 'Mainnet':
+        chainId = '0x1';
         break;
-      case 'ropsten':
-        chainId = '80001';
+      case 'Polygon':
+        chainId = '0x89';
         break;
-      case 'rinkeby':
-        chainId = '0x4';
+      case 'BSC':
+        chainId = '0x38';
         break;
-      case 'goerli':
-        chainId = '0x5';
+      case 'Mumbai':
+        chainId = '0x13881';
         break;
       case 'kovan':
         chainId = '0x2a';
@@ -80,17 +80,12 @@ export default function NetworkButton(): JSX.Element {
           <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
             Mainnet
           </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('Ropsten')}>
-            Ropsten
+          <MenuItem onClick={() => handleNetworkChange('Polygon')}>
+            Polygon
           </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('Kovan')}>
-            Kovan
-          </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('Rinkeby')}>
-            Rinkeby
-          </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('Goerli')}>
-            Goerli
+          <MenuItem onClick={() => handleNetworkChange('BSC')}>BSC</MenuItem>
+          <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
+            Mumbai Testnet
           </MenuItem>
         </MenuList>
       </Menu>
