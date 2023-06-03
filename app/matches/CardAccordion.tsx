@@ -18,6 +18,8 @@ import {
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
+import copyIconFeedback from 'ui/copyIconFeedback';
+
 import SidePanel from './sidePanel';
 
 import { Card } from '../types';
@@ -61,10 +63,9 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
   async function handleCopyAddress(address: string) {
     try {
       await navigator.clipboard.writeText(address);
-      console.log('Address copied to clipboard:', address);
-      // You can add a toast or other visual feedback to let the user know the address was copied.
+      copyIconFeedback('Address copied to clipboard');
     } catch (error) {
-      console.error('Failed to copy address:', error);
+      copyIconFeedback('Failed to copy address');
     }
   }
 

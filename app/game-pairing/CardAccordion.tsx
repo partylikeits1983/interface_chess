@@ -15,6 +15,9 @@ import {
   Button,
   HStack,
 } from '@chakra-ui/react';
+
+import copyIconFeedback from 'ui/copyIconFeedback';
+
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
@@ -62,10 +65,9 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
   async function handleCopyAddress(address: string) {
     try {
       await navigator.clipboard.writeText(address);
-      console.log('Address copied to clipboard:', address);
-      // You can add a toast or other visual feedback to let the user know the address was copied.
+      copyIconFeedback('Address copied to clipboard');
     } catch (error) {
-      console.error('Failed to copy address:', error);
+      copyIconFeedback('Failed to copy address');
     }
   }
 
@@ -102,17 +104,13 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
             <Flex justify="space-between" alignItems="center" w="full">
               <HStack spacing="1.5rem">
                 <Identicon account={card.matchAddress} />
-                <Text fontSize="md">{`Address: ${formatAddress(
+                <Text fontSize="md">{`Wager Address: ${formatAddress(
                   card.matchAddress,
                 )}`}</Text>
               </HStack>
 
               <HStack spacing="1.5rem">
-                {card.isInProgress ? (
-                  <Text>In Progress</Text>
-                ) : (
-                  <Text>Pending</Text>
-                )}
+                <Text></Text>
                 <AccordionIcon />
               </HStack>
             </Flex>
@@ -141,20 +139,12 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                 </Text>
                 <Flex alignItems="center">
                   <Text fontSize="md">
-                    {Number(account) == Number(card.player0Address)
-                      ? formatAddress(card.player1Address)
-                      : formatAddress(card.player0Address)}
+                    {formatAddress(card.player0Address)}
                   </Text>
                   <CopyIcon
                     ml={2}
                     cursor="pointer"
-                    onClick={() =>
-                      handleCopyAddress(
-                        card.isInProgress
-                          ? card.player1Address
-                          : card.player0Address,
-                      )
-                    }
+                    onClick={() => handleCopyAddress(card.player0Address)}
                   />
                 </Flex>
               </Stack>
