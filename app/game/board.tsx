@@ -357,7 +357,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           boardOrientation={isPlayerWhite ? 'white' : 'black'}
           arePiecesDraggable={true}
           onSquareClick={onSquareClick}
-          animationDuration={100}
+          animationDuration={70}
           onPieceDrop={onDrop}
           position={game.fen()}
           customSquareStyles={{

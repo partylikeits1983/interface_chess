@@ -19,5 +19,5 @@ export default function copyFeedback(message: string) {
     setTimeout(() => {
       document.body.removeChild(toast);
     }, 500);
-  }, 3000);
+  }, 1000);
 }
