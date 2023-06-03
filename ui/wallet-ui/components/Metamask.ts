@@ -8,6 +8,8 @@ import {
 
 import { useState } from 'react';
 
+import detectEthereumProvider from '@metamask/detect-provider';
+
 declare global {
   interface Window {
     ethereum: ExternalProvider;
@@ -40,28 +42,37 @@ function useMetamask() {
   const [network, setNetwork] = useState<Network | null>(null);
 
   const setupProvider = async () => {
-    let provider;
+    let provider, signer, accounts, isWalletConnected;
+    const detectedProvider = await detectEthereumProvider();
 
-    if (window.ethereum) {
+    if (detectedProvider && detectedProvider.isMetaMask) {
       try {
+        window.ethereum = detectedProvider;
         provider = new ethers.providers.Web3Provider(window.ethereum);
+        signer = provider.getSigner();
+        accounts = await provider.listAccounts();
         await provider.send('eth_requestAccounts', []);
-        listenToEvents(provider);
-        console.log('Web3 provider is set.');
+        console.log('Web3 provider is set');
+        isWalletConnected = true;
       } catch (error) {
         console.error('User rejected the connection request.', error);
         provider = null; // reset provider to null
+        signer = null;
+        accounts = null;
+        isWalletConnected = false;
       }
     }
+
     // If provider is not set (either window.ethereum is not available or user rejected the connection)
     // then use the custom JSON-RPC provider
     if (!provider) {
       const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
       provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
-      console.log('JSON-RPC provider is set. metamask');
+      signer = provider;
+      accounts = undefined;
+      isWalletConnected = false;
+      console.log('JSON-RPC provider is set - Form.ts');
     }
-
-    setProvider(provider);
 
     return provider;
   };
