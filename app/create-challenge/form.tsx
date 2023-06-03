@@ -114,13 +114,16 @@ export default function ChallengeForm() {
             </FormControl>
 
             <FormControl>
-              <FormLabel>Player Address</FormLabel>
-              <Tooltip
-                label="Enter the address of the player"
-                aria-label="Player Address Tooltip"
-              >
-                <InfoOutlineIcon />
-              </Tooltip>
+              <FormLabel>
+                Player Address{' '}
+                <Tooltip
+                  label="Enter the address of the player or type 'anonymous pairing'"
+                  aria-label="Player Address Tooltip"
+                  placement="right"
+                >
+                  <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+                </Tooltip>
+              </FormLabel>
               <AutocompletePlayer
                 options={pairingOptions}
                 onChange={(value: string) =>
