@@ -81,11 +81,15 @@ const updateContractAddresses = async (): Promise<void> => {
   // Add more chains if needed.
 };
 
+import detectEthereumProvider from '@metamask/detect-provider';
+
 const setupProvider = async () => {
   let provider, signer, accounts, isWalletConnected;
+  const detectedProvider = await detectEthereumProvider();
 
-  if (window.ethereum) {
+  if (detectedProvider && detectedProvider.isMetaMask) {
     try {
+      window.ethereum = detectedProvider;
       provider = new ethers.providers.Web3Provider(window.ethereum);
       signer = provider.getSigner();
       accounts = await provider.listAccounts();
