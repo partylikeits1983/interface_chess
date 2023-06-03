@@ -7,6 +7,8 @@ const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.j
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
+import detectEthereumProvider from '@metamask/detect-provider';
+
 interface ContractAddress {
   network: string;
   chainID: number;
@@ -80,8 +82,6 @@ const updateContractAddresses = async (): Promise<void> => {
   }
   // Add more chains if needed.
 };
-
-import detectEthereumProvider from '@metamask/detect-provider';
 
 const setupProvider = async () => {
   let provider, signer, accounts, isWalletConnected;
