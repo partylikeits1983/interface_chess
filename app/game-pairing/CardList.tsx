@@ -118,6 +118,10 @@ const CardList = () => {
         return a.wagerAmount - b.wagerAmount;
       case 'wagerAmountDesc':
         return b.wagerAmount - a.wagerAmount;
+      case 'gamesAmountAsc':
+        return a.numberOfGames - b.numberOfGames;
+      case 'gamesAmountDesc':
+        return b.numberOfGames - a.numberOfGames;
       default:
         return 0;
     }
