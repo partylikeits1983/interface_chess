@@ -78,7 +78,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
           type="text"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Type to search..."
+          placeholder="Type to search token..."
         />
         <InputRightElement>
           <Box

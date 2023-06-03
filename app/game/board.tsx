@@ -156,8 +156,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     try {
       // adding await fails to build
       // using useEffect makes everything glitchy
-      console.log('handlesubmit move');
-      console.log(wagerAddress);
+      // console.log('handlesubmit move');
+      // console.log(wagerAddress);
       PlayMove(wagerAddress, move);
     } catch (error) {
       console.log(error);
@@ -169,7 +169,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     setWagerAddress(event.target.value);
   }
 
-  // make move on board and verify with chess.js
   const makeAMove = (move: any) => {
     const gameMoves = game.fen();
     const gameCopy = new Chess();
@@ -192,6 +191,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   };
 
   const onDrop = (sourceSquare: any, targetSquare: any): boolean => {
+    setRightClickedSquares({});
+    setMoveFrom('');
+    setOptionSquares({});
+    setPotentialMoves([]);
+
     const move = makeAMove({
       from: sourceSquare,
       to: targetSquare,
@@ -210,23 +214,62 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   };
 
   // CLICK TO MOVE
+  const [optionSquares, setOptionSquares] = useState({});
+  const [potentialMoves, setPotentialMoves] = useState<Move[]>([]);
   const [rightClickedSquares, setRightClickedSquares] = useState({});
   const [moveFrom, setMoveFrom] = useState('');
   const [moveSquares, setMoveSquares] = useState({});
 
+  interface Move {
+    color: string;
+    piece: string;
+    from: string;
+    to: string;
+    san: string;
+    flags: string;
+    lan: string;
+    before: string;
+    after: string;
+  }
+
+  function moveExists(
+    potentialMoves: Move[],
+    from: string,
+    to: string,
+  ): boolean {
+    return (
+      potentialMoves.find((move) => move.from === from && move.to === to) !==
+      undefined
+    );
+  }
+
   const onSquareClick = (square: any): void => {
     // Make a move
     setRightClickedSquares({});
+    setMoveFrom('');
+    setOptionSquares({});
+    setPotentialMoves([]);
 
     function resetFirstMove(square: any) {
       const hasOptions = getMoveOptions(square);
-
       if (hasOptions) setMoveFrom(square);
     }
 
     // from square
     if (!moveFrom) {
       resetFirstMove(square);
+      return;
+    }
+
+    // prevent error when clicking twice on same square
+    if (moveFrom === square) {
+      return;
+    }
+
+    if (!moveExists(potentialMoves, moveFrom, square)) {
+      console.log("move doesn't exist");
+      console.log(potentialMoves);
+
       return;
     }
 
@@ -254,9 +297,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     setMoveFrom('');
     setOptionSquares({});
+    setPotentialMoves([]);
   };
-
-  const [optionSquares, setOptionSquares] = useState({});
 
   function getMoveOptions(square: any) {
     const moves = game.moves({
@@ -282,7 +324,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     newSquares[square] = {
       background: 'rgba(255, 255, 0, 0.4)',
     };
+
     setOptionSquares(newSquares);
+    setPotentialMoves(moves);
 
     return true;
   }
