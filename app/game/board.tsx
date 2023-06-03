@@ -32,6 +32,7 @@ import {
   Center,
   ChakraProvider,
 } from '@chakra-ui/react';
+import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
 interface BoardProps {
   wager: string;
@@ -128,11 +129,36 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   }, [isPlayer0Turn, timePlayer0, timePlayer1]);
 
   const router = useRouter();
+
+  interface Card {
+    matchAddress: string;
+    player0Address: string;
+    player1Address: string;
+    wagerToken: string;
+    wagerAmount: number;
+    numberOfGames: number;
+    isInProgress: boolean;
+    timeLimit: number;
+    timeLastMove: number;
+    timePlayer0: number;
+    timePlayer1: number;
+    isPlayerTurn: boolean;
+  }
+
   const handleBoardClick =
-    (address: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault(); // This may be optional, depending on your needs
-      console.log(address);
-      router.push(`/game/${address}`);
+    (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
+      // check if wager exists....
+      const wager: Card = await GetWagerData(address);
+
+      // check if wager is not empty and not null
+      if (wager && Object.keys(wager).length !== 0) {
+        alert(wager.matchAddress);
+        e.preventDefault(); // This may be optional, depending on your needs
+        console.log(address);
+        router.push(`/game/${address}`);
+      } else {
+        alertWarningFeedback('Wager address not found');
+      }
     };
 
   function numberToString(num: number): string {

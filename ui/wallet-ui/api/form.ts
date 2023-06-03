@@ -5,6 +5,8 @@ import { CreateMatchType } from './types';
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
+import alertWarningFeedback from '#/ui/alertWarningFeedback';
+
 interface ContractAddress {
   network: string;
   chainID: number;
@@ -13,6 +15,21 @@ interface ContractAddress {
   chessToken: string;
   moveVerification: string;
   chess: string;
+}
+
+interface Card {
+  matchAddress: string;
+  player0Address: string;
+  player1Address: string;
+  wagerToken: string;
+  wagerAmount: number;
+  numberOfGames: number;
+  isInProgress: boolean;
+  timeLimit: number;
+  timeLastMove: number;
+  timePlayer0: number;
+  timePlayer1: number;
+  isPlayerTurn: boolean;
 }
 
 const data: ContractAddress = require('./contractAddresses.json');
@@ -281,21 +298,6 @@ export const CreateWager = async (form: CreateMatchType) => {
   }
 };
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
-  numberOfGames: number;
-  isInProgress: boolean;
-  timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
-}
-
 export const GetAllWagers = async () => {
   await updateContractAddresses();
 
@@ -538,6 +540,7 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
 
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
+
     const card: Card = {
       matchAddress: wagerAddress,
       player0Address: wagerParams[0],
@@ -555,9 +558,15 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
 
     return card;
   } catch (error) {
-    alert(`Error fetching wager data: ${error}`);
+    // alert(`Error fetching wager data: ${error}`);
     console.log(error);
-    throw error; // Throw the error so that the caller can handle it
+
+    alertWarningFeedback('Wager address not found');
+
+    const card = {} as Card;
+    return card;
+
+    // throw error; // Throw the error so that the caller can handle it
   }
 };
 
@@ -642,6 +651,8 @@ export const IsPlayerWhite = async (wagerAddress: string) => {
       // alert(`wager address: ${wagerAddress} not found`);
       console.log('isPlayerWhite function: invalid address');
       console.log(error);
+
+      alertWarningFeedback('Wager address not found');
     }
   } else {
     return false;
