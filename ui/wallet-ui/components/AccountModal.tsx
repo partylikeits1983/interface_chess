@@ -14,6 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { ExternalLinkIcon, CopyIcon } from '@chakra-ui/icons';
 
+import copyIconFeedback from 'ui/copyIconFeedback';
+
 import Identicon from './Identicon';
 import { useMetamask } from './Metamask';
 
@@ -45,6 +47,7 @@ export default function AccountModal({ isOpen, onClose }: Props) {
   function copyAddress() {
     const copyText = account;
     navigator.clipboard.writeText(copyText);
+    copyIconFeedback('Address copied');
   }
 
   return (
@@ -137,7 +140,7 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 fontSize="sm"
                 display="flex"
                 alignItems="center"
-                href={`https://ropsten.etherscan.io/address/${account}`}
+                href={`https://polygonscan.com/address/${account}`}
                 isExternal
                 color="gray.400"
                 ml={6}
