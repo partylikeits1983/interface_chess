@@ -74,7 +74,7 @@ export default function NetworkButton(): JSX.Element {
   }, []);
 
   return (
-    <div style={{ position: 'relative', zIndex: 100 }}>
+    <>
       <Menu>
         <MenuButton
           as={Button}
@@ -95,21 +95,23 @@ export default function NetworkButton(): JSX.Element {
         >
           {selectedNetwork}
         </MenuButton>
-        <MenuList>
-          <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
-            Mainnet (coming soon)
-          </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('Polygon')}>
-            Polygon (coming soon)
-          </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('BSC')}>
-            BSC (coming soon)
-          </MenuItem>
-          <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
-            Mumbai Testnet
-          </MenuItem>
-        </MenuList>
+        <div style={{ position: 'relative', zIndex: 100 }}>
+          <MenuList>
+            <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
+              Mainnet (coming soon)
+            </MenuItem>
+            <MenuItem onClick={() => handleNetworkChange('Polygon')}>
+              Polygon (coming soon)
+            </MenuItem>
+            <MenuItem onClick={() => handleNetworkChange('BSC')}>
+              BSC (coming soon)
+            </MenuItem>
+            <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
+              Mumbai Testnet
+            </MenuItem>
+          </MenuList>
+        </div>
       </Menu>
-    </div>
+    </>
   );
 }
