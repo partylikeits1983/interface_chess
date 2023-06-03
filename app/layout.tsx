@@ -30,8 +30,8 @@ export default function RootLayout({
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <div style={{ marginRight: '10px' }}>
                 <SelectNetworkButton />
-                <ConnectWalletButton />
               </div>
+              <ConnectWalletButton />
             </div>
 
             <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">
