@@ -34,6 +34,21 @@ import {
 } from '@chakra-ui/react';
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
+interface Card {
+  matchAddress: string;
+  player0Address: string;
+  player1Address: string;
+  wagerToken: string;
+  wagerAmount: number;
+  numberOfGames: number;
+  isInProgress: boolean;
+  timeLimit: number;
+  timeLastMove: number;
+  timePlayer0: number;
+  timePlayer1: number;
+  isPlayerTurn: boolean;
+}
+
 interface BoardProps {
   wager: string;
 }
@@ -129,21 +144,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   }, [isPlayer0Turn, timePlayer0, timePlayer1]);
 
   const router = useRouter();
-
-  interface Card {
-    matchAddress: string;
-    player0Address: string;
-    player1Address: string;
-    wagerToken: string;
-    wagerAmount: number;
-    numberOfGames: number;
-    isInProgress: boolean;
-    timeLimit: number;
-    timeLastMove: number;
-    timePlayer0: number;
-    timePlayer1: number;
-    isPlayerTurn: boolean;
-  }
 
   const handleBoardClick =
     (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -356,6 +356,23 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     return true;
   }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const isPlayerTurn = await GetPlayerTurn(wagerAddress);
+
+      if (isPlayerTurn) {
+        const movesArray = await GetGameMoves(wager);
+        const currentGame = new Chess();
+        for (let i = 0; i < movesArray.length; i++) {
+          currentGame.move(movesArray[i]);
+        }
+        setGame(currentGame);
+      }
+    }, 10000); // 5 seconds
+
+    return () => clearInterval(interval); // Clean up on unmount
+  }, [wager, wagerAddress]);
 
   return (
     <ChakraProvider>

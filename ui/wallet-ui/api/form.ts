@@ -690,7 +690,7 @@ export const IsPlayerAddressWhite = async (
   }
 };
 
-export const GetPlayerTurn = async (wagerAddress: string) => {
+export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 
   await updateContractAddresses();
@@ -718,6 +718,7 @@ export const GetPlayerTurn = async (wagerAddress: string) => {
       // alert(`In playerturn : ${wagerAddress} not found`);
       console.log('in player turn function: invalid address');
       console.log(error);
+      return false;
     }
   } else {
     return false;

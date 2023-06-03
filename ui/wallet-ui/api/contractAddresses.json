@@ -3,10 +3,10 @@
     "network": "maticmum",
     "chainID": 80001,
     "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
-    "token": "0x61C5Fc774656E7fC6A6B613AA9215822480DE93c",
-    "chessToken": "0xd2532437b4561F1C68f678fdC2534247f611cc26",
-    "moveVerification": "0x4B0fAB823850f2B52b2D000A675b4741dA3472e4",
-    "chess": "0x71c3eB7577F43Dc027E8847191069567467605C5"
+    "token": "0x4DAFb2d6e67e2cF02aA5B0bE35e724FCDAb48eA3",
+    "chessToken": "0xa13E0EE73c4d6753d85d3e18ce18F4f1465Ae019",
+    "moveVerification": "0x489EB799dAF86bc82738e6C206Bff3794Be3d1D8",
+    "chess": "0xb3F17ec462c109648eFc0fA4BD98728dc30521a4"
   },
   {
     "network": "unknown",
