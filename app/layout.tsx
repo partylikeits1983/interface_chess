@@ -5,6 +5,7 @@ import { GlobalNav } from '#/ui/global-nav';
 import { Metadata } from 'next';
 import React from 'react';
 import ConnectWalletButton from '../ui/wallet-ui/connect-wallet-button';
+import SelectNetworkButton from 'ui/wallet-ui/select-network-button';
 
 export const metadata: Metadata = {
   title: {
@@ -27,7 +28,10 @@ export default function RootLayout({
         <div className="lg:pl-72">
           <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:px-8 lg:py-8">
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ConnectWalletButton />
+              <div style={{ marginRight: '10px' }}>
+                <SelectNetworkButton />
+                <ConnectWalletButton />
+              </div>
             </div>
 
             <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">
