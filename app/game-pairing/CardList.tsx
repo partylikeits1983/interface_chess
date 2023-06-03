@@ -113,7 +113,12 @@ const CardList = () => {
   const sortedCards = [...cards].sort((a, b) => {
     switch (sortValue) {
       case 'isPending':
-        return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;
+        // If filterValue is true, then we don't want to show cards with wagerAmount of 0
+        if (filterValue && (a.wagerAmount === 0 || b.wagerAmount === 0)) {
+          return a.wagerAmount === b.wagerAmount ? 0 : a.wagerAmount ? -1 : 1;
+        } else {
+          return a.wagerAmount === b.wagerAmount ? 0 : a.wagerAmount ? 1 : -1;
+        }
       case 'wagerAmountAsc':
         return a.wagerAmount - b.wagerAmount;
       case 'wagerAmountDesc':
@@ -128,9 +133,7 @@ const CardList = () => {
   });
 
   const filteredAndSortedCards = sortedCards.filter(
-    (card) =>
-      !filterValue ||
-      (card.isInProgress && Number(card.player1Address) === Number(account)),
+    (card) => !filterValue || card.wagerAmount !== Number(0),
   );
 
   return (

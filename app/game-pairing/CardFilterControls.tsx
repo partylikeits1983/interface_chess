@@ -49,7 +49,7 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
       </Flex>
       <Flex width="50%" justifyContent="flex-end">
         <label htmlFor="hide-games" style={{ marginRight: '10px' }}>
-          Hide Pending
+          Hide amount zero wagers
         </label>
         <Switch
           id="hide-games"
