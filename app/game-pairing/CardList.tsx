@@ -6,12 +6,7 @@ import {
   Box,
   Heading,
   Text,
-  Skeleton,
-  Switch,
   Spinner,
-  FormControl,
-  FormLabel,
-  Select,
   Flex,
 } from '@chakra-ui/react';
 
@@ -74,21 +69,6 @@ const CardList = () => {
     setAccount(accounts[0]);
   }, [accounts]);
 
-  const HandleClickApprove = async (
-    wagerAddress: string,
-    wagerToken: string,
-    wagerAmount: number,
-  ) => {
-    setIsLoadingApproval(true);
-    console.log(wagerToken);
-
-    // await Approve(wagerToken, wagerAmount);
-    await AcceptWagerAndApprove(wagerAddress);
-    await AcceptWagerConditions(wagerAddress);
-
-    setIsLoadingApproval(false);
-  };
-
   useEffect(() => {
     async function fetchCards() {
       try {
@@ -107,6 +87,21 @@ const CardList = () => {
     }
     fetchCards();
   }, []);
+
+  const HandleClickApprove = async (
+    wagerAddress: string,
+    wagerToken: string,
+    wagerAmount: number,
+  ) => {
+    setIsLoadingApproval(true);
+    console.log(wagerToken);
+
+    // await Approve(wagerToken, wagerAmount);
+    await AcceptWagerAndApprove(wagerAddress);
+    await AcceptWagerConditions(wagerAddress);
+
+    setIsLoadingApproval(false);
+  };
 
   const sortedCards = [...cards].sort((a, b) => {
     switch (sortValue) {

@@ -24,7 +24,10 @@ interface AutocompleteProps {
   onChange: (address: string) => void;
 }
 
-const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
+const AutocompletePlayer: React.FC<AutocompleteProps> = ({
+  options,
+  onChange,
+}) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
@@ -33,7 +36,11 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+
+    console.log(value);
+
     setInputValue(value);
+    onChange(value);
 
     if (!value) {
       // if input value is empty, clear selected option
@@ -49,6 +56,8 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
   };
 
   const handleOptionClick = (option: Option) => {
+    console.log(option);
+
     setInputValue(option.label);
     setSelectedOption(option);
     setShowOptions(false);
@@ -143,4 +152,4 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ options, onChange }) => {
   );
 };
 
-export default Autocomplete;
+export default AutocompletePlayer;

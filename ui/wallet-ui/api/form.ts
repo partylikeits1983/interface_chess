@@ -346,6 +346,69 @@ export const GetAllWagers = async () => {
   }
 };
 
+/* 
+
+export const GetAllWagersForPairing = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    const totalWagerCount = Number(await chess.getAllWagersCount());
+
+    console.log(totalWagerCount);
+
+
+    const wagerAddresses = [];
+    for (let i=0; i< totalWagerCount; i++) {
+      const wagerAddress = await 
+
+    }
+
+    const allWagerParams = [];
+    for (let i = 0; i < totalWagerCount; i++) {
+      const wagerParams = await chess.gameWagers(wagers[i]);
+
+      let isPlayerTurn;
+      const playerToMove = await chess.getPlayerMove(wagers[i]);
+      if (Number(accounts[0]) == Number(playerToMove)) {
+        isPlayerTurn = true;
+      } else {
+        isPlayerTurn = false;
+      }
+      console.log(wagerParams);
+
+      const card: Card = {
+        matchAddress: wagers[i],
+        player0Address: wagerParams[0],
+        player1Address: wagerParams[1],
+        wagerToken: wagerParams[2],
+        wagerAmount: parseInt(wagerParams[3]),
+        numberOfGames: parseInt(wagerParams[4]),
+        isInProgress: wagerParams[5],
+        timeLimit: parseInt(wagerParams[6]),
+        timeLastMove: parseInt(wagerParams[7]),
+        timePlayer0: parseInt(wagerParams[8]),
+        timePlayer1: parseInt(wagerParams[9]),
+        isPlayerTurn: isPlayerTurn,
+      };
+
+      allWagerParams.push(card);
+    }
+
+    return allWagerParams;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+ */
+
 export const GetGameMoves = async (wagerAddress: string): Promise<string[]> => {
   let { provider } = await setupProvider();
   await updateContractAddresses();

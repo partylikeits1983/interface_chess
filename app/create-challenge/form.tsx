@@ -21,8 +21,11 @@ import {
 const { ethers } = require('ethers');
 const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
 
-import options from './autocompleteOptions';
-import Autocomplete from './autocomplete';
+import tokenOptions from './autocomplete-token-options';
+import AutocompleteToken from './autocomplete-token';
+
+import AutocompletePlayer from './autocomplete-player';
+import pairingOptions from './autocomplete-player-options';
 
 interface FormInputs {
   player1: string;
@@ -43,6 +46,7 @@ export default function ChallengeForm() {
   };
 
   const HandleClickCreateWager = async () => {
+    console.log(formInputs);
     setIsLoadingCreateWager(true);
     await CreateWager(formInputs);
     setIsLoadingCreateWager(false);
@@ -96,8 +100,8 @@ export default function ChallengeForm() {
           <Stack spacing="4">
             <FormControl>
               <FormLabel>Wager Token</FormLabel>
-              <Autocomplete
-                options={options}
+              <AutocompleteToken
+                options={tokenOptions}
                 onChange={(value: string) =>
                   setFormInputs((prevInputs) => ({
                     ...prevInputs,
@@ -109,13 +113,14 @@ export default function ChallengeForm() {
 
             <FormControl>
               <FormLabel>Player Address</FormLabel>
-              <Input
-                type="text"
-                name="player1"
-                value={formInputs.player1}
-                onChange={handleInputChange}
-                required
-                width="100%"
+              <AutocompleteToken
+                options={pairingOptions}
+                onChange={(value: string) =>
+                  setFormInputs((prevInputs) => ({
+                    ...prevInputs,
+                    player1: value,
+                  }))
+                }
               />
             </FormControl>
 
