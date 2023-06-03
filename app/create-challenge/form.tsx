@@ -15,8 +15,10 @@ import {
   SliderFilledTrack,
   SliderThumb,
   VStack,
-  Select,
+  Tooltip,
 } from '@chakra-ui/react';
+
+import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const { ethers } = require('ethers');
 const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
@@ -113,7 +115,13 @@ export default function ChallengeForm() {
 
             <FormControl>
               <FormLabel>Player Address</FormLabel>
-              <AutocompleteToken
+              <Tooltip
+                label="Enter the address of the player"
+                aria-label="Player Address Tooltip"
+              >
+                <InfoOutlineIcon />
+              </Tooltip>
+              <AutocompletePlayer
                 options={pairingOptions}
                 onChange={(value: string) =>
                   setFormInputs((prevInputs) => ({
