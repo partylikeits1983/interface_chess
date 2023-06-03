@@ -165,7 +165,7 @@ const CardList = () => {
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">
-            You haven&apos;t created any matches yet.
+            No matches in pool.
           </Text>
         )}
       </Box>

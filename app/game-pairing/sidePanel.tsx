@@ -19,9 +19,15 @@ const {
 
 interface CardSidePanelProps {
   card: Card; // Your Card type here
+  account: string | null;
+  HandleClickApprove: Function;
 }
 
-const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
+const SidePanel: FC<CardSidePanelProps> = ({
+  card,
+  account,
+  HandleClickApprove,
+}) => {
   const { matchAddress, player0Address, player1Address, wagerToken } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
@@ -120,14 +126,39 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
         )}
       </Box>
       <Stack spacing={4} mt={8}>
+        {!card.isInProgress &&
+          Number(card.player0Address) !== Number(account) && (
+            <>
+              <Button
+                color="#000000" // Set the desired text color
+                backgroundColor="#94febf" // Set the desired background color
+                variant="solid"
+                _hover={{
+                  color: '#000000', // Set the text color on hover
+                  backgroundColor: '#62ffa2', // Set the background color on hover
+                }}
+                size="md"
+                // isLoading={isLoadingApproval}
+                loadingText="Submitting Approval Transaction"
+                onClick={() =>
+                  HandleClickApprove(
+                    card.matchAddress,
+                    card.wagerToken,
+                    card.wagerAmount,
+                  )
+                }
+              >
+                Accept Wager
+              </Button>
+            </>
+          )}
+
         <Link href={`/game/${card.matchAddress}`}>
           <Button
             style={{ width: '250px' }}
-            // colorScheme="teal"
-            variant="outline"
-            color="#fffff" // Set the desired text color
-            // backgroundColor="#94febf" // Set the desired background color
-
+            color="#000000" // Set the desired text color
+            backgroundColor="#94febf" // Set the desired background color
+            variant="solid"
             _hover={{
               color: '#000000', // Set the text color on hover
               backgroundColor: '#62ffa2', // Set the background color on hover
@@ -137,38 +168,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
             Go to Match
           </Button>
         </Link>
-        <Button
-          onClick={handleSubmitCancelWager}
-          style={{ width: '250px' }}
-          // colorScheme="teal"
-          variant="outline"
-          color="#fffff" // Set the desired text color
-          // backgroundColor="#94febf" // Set the desired background color
-
-          _hover={{
-            color: '#000000', // Set the text color on hover
-            backgroundColor: '#62ffa2', // Set the background color on hover
-          }}
-          size="md"
-        >
-          Cancel Wager
-        </Button>
-        <Button
-          onClick={handleSubmitPayoutWager}
-          style={{ width: '250px' }}
-          // colorScheme="teal"
-          variant="outline"
-          color="#fffff" // Set the desired text color
-          // backgroundColor="#94febf" // Set the desired background color
-
-          _hover={{
-            color: '#000000', // Set the text color on hover
-            backgroundColor: '#62ffa2', // Set the background color on hover
-          }}
-          size="md"
-        >
-          Payout Wager
-        </Button>
       </Stack>
     </div>
   );

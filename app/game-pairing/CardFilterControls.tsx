@@ -33,17 +33,17 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
           color="white"
           width="100%"
         >
-          <option style={{ color: 'black' }} value="gamesAmountAsc">
-            Number of Games (least first)
-          </option>
           <option style={{ color: 'black' }} value="gamesAmountDesc">
             Number of Games (most first)
           </option>
-          <option style={{ color: 'black' }} value="wagerAmountAsc">
-            Wager Amount (lowest first)
+          <option style={{ color: 'black' }} value="gamesAmountAsc">
+            Number of Games (least first)
           </option>
           <option style={{ color: 'black' }} value="wagerAmountDesc">
             Wager Amount (highest first)
+          </option>
+          <option style={{ color: 'black' }} value="wagerAmountAsc">
+            Wager Amount (least first)
           </option>
         </Select>
       </Flex>

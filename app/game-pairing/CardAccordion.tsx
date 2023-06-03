@@ -24,6 +24,7 @@ import { CopyIcon } from '@chakra-ui/icons';
 import SidePanel from './sidePanel';
 
 import { Card } from '../types';
+import { handleClientScriptLoad } from 'next/script';
 
 interface Props {
   cards: Card[];
@@ -110,7 +111,11 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
               </HStack>
 
               <HStack spacing="1.5rem">
-                <Text></Text>
+                <Text fontSize="md">
+                  {Number(account) == Number(card.player0Address)
+                    ? 'Your Wager'
+                    : ''}
+                </Text>
                 <AccordionIcon />
               </HStack>
             </Flex>
@@ -193,47 +198,19 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                   Status
                 </Text>
                 <Text fontSize="md">
-                  {card.isInProgress
-                    ? card.isPlayerTurn
-                      ? 'Your turn'
-                      : 'Waiting for opponent to move'
-                    : Number(card.player1Address) === Number(account)
-                    ? 'Pending Your Approval'
-                    : 'Waiting for opponent to accept wager'}
+                  {Number(card.player1Address) === Number(account)
+                    ? 'Waiting to find opponent'
+                    : 'Waiting to find opponent'}
                 </Text>
               </Stack>
-              {!card.isInProgress &&
-                Number(card.player1Address) === Number(account) && (
-                  <>
-                    <Box marginTop={8} />
-
-                    <Button
-                      color="#000000" // Set the desired text color
-                      backgroundColor="#94febf" // Set the desired background color
-                      variant="solid"
-                      _hover={{
-                        color: '#000000', // Set the text color on hover
-                        backgroundColor: '#62ffa2', // Set the background color on hover
-                      }}
-                      size="lg"
-                      isLoading={isLoadingApproval}
-                      loadingText="Submitting Approval Transaction"
-                      onClick={() =>
-                        HandleClickApprove(
-                          card.matchAddress,
-                          card.wagerToken,
-                          card.wagerAmount,
-                        )
-                      }
-                    >
-                      Accept Wager
-                    </Button>
-                  </>
-                )}
             </Stack>
 
             <Box width="50%">
-              <SidePanel card={card}></SidePanel>
+              <SidePanel
+                card={card}
+                account={account}
+                HandleClickApprove={HandleClickApprove}
+              ></SidePanel>
             </Box>
           </Flex>
         </AccordionPanel>
