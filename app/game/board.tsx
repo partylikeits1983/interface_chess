@@ -55,6 +55,7 @@ interface BoardProps {
 
 export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [game, setGame] = useState(new Chess());
+  const [localGame, setLocalGame] = useState(new Chess());
   const [gameFEN, setGameFEN] = useState(
     'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
   );
@@ -76,11 +77,14 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   useEffect(() => {
     const asyncSetWagerAddress = async () => {
+      console.log('USE EFFECT HERE');
       if (wager != '') {
         setWagerAddress(wager);
 
-        const isPlayerTurn = await GetPlayerTurn(wager);
-        setPlayerTurn(isPlayerTurn);
+        console.log('USEEFFECT HERERERERER');
+
+        const _isPlayerTurn = await GetPlayerTurn(wager);
+        setPlayerTurn(_isPlayerTurn);
 
         const movesArray = await GetGameMoves(wager);
         const game = new Chess();
@@ -89,6 +93,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         }
         setGame(game);
         setGameFEN(game.fen());
+        setLocalGame(game);
 
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
@@ -124,7 +129,23 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     };
     asyncSetWagerAddress();
   }, [wager]);
+  /* 
+  useEffect(() => {
+    (async () => {
+      const _isPlayerTurn: boolean = await GetPlayerTurn(wager);
+      setPlayerTurn(_isPlayerTurn);
+    })();
+  
+    // If isPlayerTurn has a dependency on something else,
+    // add it to the dependency array below
+  }, []); // Empty array means this runs once on mount
+  
+  useEffect(() => {
+    console.log("IsPlayerTurn");
+    console.log(isPlayerTurn);
+  }, [isPlayerTurn]); // This runs every time isPlayerTurn changes
 
+ */
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -213,6 +234,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       let MoveString = move.from + move.to;
       setMoves([...moves, MoveString]);
       setGameFEN(gameCopy.fen());
+      setLocalGame(gameCopy);
+
+      console.log('HERE IN MAKE A MOVE');
     } catch {
       result = null;
       console.log('invalid move');
@@ -320,6 +344,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     });
     setGame(gameCopy);
     setGameFEN(gameCopy.fen());
+    setLocalGame(gameCopy);
 
     // if invalid, setMoveFrom and getMoveOptions
     if (move === null) {
@@ -368,10 +393,14 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
-  // MOVE LISTENER
+  // NEEDS WORK
   useEffect(() => {
     const interval = setInterval(async () => {
       const isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
+
+      console.log('MOVE LISTENER');
+      console.log(isPlayerTurnSC);
+      console.log(isPlayerTurn);
 
       if (isPlayerTurnSC === true && isPlayerTurn === false) {
         const movesArray = await GetGameMoves(wager);
@@ -379,13 +408,17 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         for (let i = 0; i < movesArray.length; i++) {
           currentGame.move(movesArray[i]);
         }
-        setGame(currentGame);
-        setGameFEN(currentGame.fen());
+        // Only update game state if the moves on-chain match with local state
+        if (localGame.fen() === currentGame.fen()) {
+          setGame(currentGame);
+          setGameFEN(currentGame.fen());
+          setPlayerTurn(isPlayerTurnSC);
+        }
       }
     }, 6000); // 6 seconds
 
     return () => clearInterval(interval); // Clean up on unmount
-  }, [wager, wagerAddress]);
+  }, [wager, wagerAddress, localGame, isPlayerTurn]);
 
   return (
     <ChakraProvider>
