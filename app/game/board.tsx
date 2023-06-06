@@ -207,6 +207,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   async function handleSubmitMove(move: any): Promise<boolean> {
     try {
+      const moveSound = new Audio('/sounds/Move.mp3');
+      moveSound.load();
+      moveSound.play();
+
       let success = await PlayMove(wagerAddress, move);
 
       setPlayerTurnSC(false);
@@ -394,6 +398,57 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
+      if (isMounted) {
+        const moveSound = new Audio('/sounds/Move.mp3');
+        moveSound.load();
+        moveSound.play();
+
+        setGame(currentGame);
+        setGameFEN(currentGame.fen());
+        setPlayerTurn(_isPlayerTurnSC);
+        setPlayerTurnSC(_isPlayerTurnSC);
+      }
+    };
+
+    const interval = setInterval(() => {
+      (async () => {
+        try {
+          const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
+
+          if (_isPlayerTurnSC !== isPlayerTurn) {
+            const movesArray = await GetGameMoves(wager);
+            const currentGame = new Chess();
+
+            for (let i = 0; i < movesArray.length; i++) {
+              currentGame.move(movesArray[i]);
+            }
+
+            // Only update game state if the moves on-chain match with local state
+            if (
+              localGame.fen() === currentGame.fen() ||
+              _isPlayerTurnSC !== isPlayerTurnSC
+            ) {
+              updateState(_isPlayerTurnSC, currentGame);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+      isMounted = false;
+    };
+  }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC]); // Add moveSound to dependencies array
+
+  /* 
+  // Un-optimized working code that I wrote... above is the chatgpt edited code
   // NEEDS WORK
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -424,11 +479,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           setPlayerTurnSC(_isPlayerTurnSC);
         }
       }
-    }, 2000); // 6 seconds
+    }, 5000); // 6 seconds
 
     return () => clearInterval(interval); // Clean up on unmount
   }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC]);
-
+ */
   return (
     <ChakraProvider>
       {isLoading ? (
