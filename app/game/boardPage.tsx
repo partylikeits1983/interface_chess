@@ -78,6 +78,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   const [isLoading, setLoading] = useState(true);
 
+  const router = useRouter();
+
   const handleBoardClick =
     (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
       // check if wager exists....
@@ -102,6 +104,29 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setWagerAddress(event.target.value);
   }
+
+  // update time
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isPlayer0Turn) {
+      timer = setInterval(() => {
+        setTimePlayer0((prevTime) => {
+          return prevTime - 1;
+        });
+      }, 1000);
+    } else {
+      timer = setInterval(() => {
+        setTimePlayer1((prevTime) => {
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isPlayer0Turn, timePlayer0, timePlayer1]);
 
   // Initialize board
   useEffect(() => {
@@ -156,31 +181,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     };
     asyncSetWagerAddress();
   }, [wager]);
-
-  // update time
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    if (isPlayer0Turn) {
-      timer = setInterval(() => {
-        setTimePlayer0((prevTime) => {
-          return prevTime - 1;
-        });
-      }, 1000);
-    } else {
-      timer = setInterval(() => {
-        setTimePlayer1((prevTime) => {
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [isPlayer0Turn, timePlayer0, timePlayer1]);
-
-  const router = useRouter();
 
   /// Chess Move logic
   // Check valid move with sc
@@ -383,6 +383,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
+  // MOVE LISTENER
   useEffect(() => {
     let isMounted = true;
 
