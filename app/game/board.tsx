@@ -64,7 +64,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [wagerAddress, setWagerAddress] = useState('');
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [isPlayerTurn, setPlayerTurn] = useState(false);
-  const [isPlayerTurnSC_OLD, setPlayerTurnSC_OLD] = useState(false);
+  const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
   // const [isPlayerTurnSC_NEW, setPlayerTurnSC_NEW] = useState(false);
 
   const [numberOfGames, setNumberOfGames] = useState('');
@@ -86,7 +86,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
         const _isPlayerTurn = await GetPlayerTurn(wager);
         setPlayerTurn(_isPlayerTurn);
-        setPlayerTurnSC_OLD(_isPlayerTurn);
+        setPlayerTurnSC(_isPlayerTurn);
 
         const movesArray = await GetGameMoves(wager);
         const game = new Chess();
@@ -209,7 +209,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     try {
       let success = await PlayMove(wagerAddress, move);
 
-      setPlayerTurnSC_OLD(false);
+      setPlayerTurnSC(false);
 
       return success;
     } catch (error) {
@@ -400,10 +400,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
 
       console.log('MOVE LISTENER');
-      console.log('isPlayerTurnSC:', isPlayerTurnSC_OLD);
-      console.log('_isPlayerTurnSC:', _isPlayerTurnSC);
-      console.log('isPlayerTurn', isPlayerTurn);
-      // setPlayerTurnSC_NEW(_isPlayerTurnSC);
 
       if (_isPlayerTurnSC !== isPlayerTurn) {
         const movesArray = await GetGameMoves(wager);
@@ -417,21 +413,21 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           setGame(currentGame);
           setGameFEN(currentGame.fen());
           setPlayerTurn(_isPlayerTurnSC);
-          setPlayerTurnSC_OLD(_isPlayerTurnSC);
+          setPlayerTurnSC(_isPlayerTurnSC);
         }
 
-        if (_isPlayerTurnSC !== isPlayerTurnSC_OLD) {
+        if (_isPlayerTurnSC !== isPlayerTurnSC) {
           console.log('_isPlayerTurnSC !== isPlayerTurnSC');
           setGame(currentGame);
           setGameFEN(currentGame.fen());
           setPlayerTurn(_isPlayerTurnSC);
-          setPlayerTurnSC_OLD(_isPlayerTurnSC);
+          setPlayerTurnSC(_isPlayerTurnSC);
         }
       }
     }, 2000); // 6 seconds
 
     return () => clearInterval(interval); // Clean up on unmount
-  }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC_OLD]);
+  }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC]);
 
   return (
     <ChakraProvider>
