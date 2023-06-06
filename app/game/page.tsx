@@ -1,4 +1,4 @@
-import { Board } from './board';
+import { Board } from './boardPage';
 import { GameForm } from './game-form';
 import { StatusBar } from './status-bar';
 

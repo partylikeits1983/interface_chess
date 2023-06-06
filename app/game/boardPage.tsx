@@ -78,9 +78,34 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   const [isLoading, setLoading] = useState(true);
 
+  const handleBoardClick =
+    (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
+      // check if wager exists....
+      const wager: Card = await GetWagerData(address);
+
+      // check if wager is not empty and not null
+      if (wager && Object.keys(wager).length !== 0) {
+        alert(wager.matchAddress);
+        e.preventDefault(); // This may be optional, depending on your needs
+        console.log(address);
+        router.push(`/game/${address}`);
+      } else {
+        alertWarningFeedback('Wager address not found');
+      }
+    };
+
+  function numberToString(num: number): string {
+    return num.toLocaleString('fullwide', { useGrouping: false });
+  }
+
+  // Setting wager address in input box
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setWagerAddress(event.target.value);
+  }
+
+  // Initialize board
   useEffect(() => {
     const asyncSetWagerAddress = async () => {
-      console.log('Initialize');
       if (wager != '') {
         setWagerAddress(wager);
 
@@ -131,23 +156,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     };
     asyncSetWagerAddress();
   }, [wager]);
-  /* 
-  useEffect(() => {
-    (async () => {
-      const _isPlayerTurn: boolean = await GetPlayerTurn(wager);
-      setPlayerTurn(_isPlayerTurn);
-    })();
-  
-    // If isPlayerTurn has a dependency on something else,
-    // add it to the dependency array below
-  }, []); // Empty array means this runs once on mount
-  
-  useEffect(() => {
-    console.log("IsPlayerTurn");
-    console.log(isPlayerTurn);
-  }, [isPlayerTurn]); // This runs every time isPlayerTurn changes
 
- */
+  // update time
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -171,26 +181,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   }, [isPlayer0Turn, timePlayer0, timePlayer1]);
 
   const router = useRouter();
-
-  const handleBoardClick =
-    (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
-      // check if wager exists....
-      const wager: Card = await GetWagerData(address);
-
-      // check if wager is not empty and not null
-      if (wager && Object.keys(wager).length !== 0) {
-        alert(wager.matchAddress);
-        e.preventDefault(); // This may be optional, depending on your needs
-        console.log(address);
-        router.push(`/game/${address}`);
-      } else {
-        alertWarningFeedback('Wager address not found');
-      }
-    };
-
-  function numberToString(num: number): string {
-    return num.toLocaleString('fullwide', { useGrouping: false });
-  }
 
   /// Chess Move logic
   // Check valid move with sc
@@ -220,11 +210,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       console.log(error);
       return false;
     }
-  }
-
-  // Setting wager address in input box
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    setWagerAddress(event.target.value);
   }
 
   const makeAMove = (move: any) => {
@@ -447,43 +432,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     };
   }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC]); // Add moveSound to dependencies array
 
-  /* 
-  // Un-optimized working code that I wrote... above is the chatgpt edited code
-  // NEEDS WORK
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
-
-      console.log('MOVE LISTENER');
-
-      if (_isPlayerTurnSC !== isPlayerTurn) {
-        const movesArray = await GetGameMoves(wager);
-        const currentGame = new Chess();
-        for (let i = 0; i < movesArray.length; i++) {
-          currentGame.move(movesArray[i]);
-        }
-        // Only update game state if the moves on-chain match with local state
-        if (localGame.fen() === currentGame.fen()) {
-          console.log('localGame.fen() === currentGame.fen()');
-          setGame(currentGame);
-          setGameFEN(currentGame.fen());
-          setPlayerTurn(_isPlayerTurnSC);
-          setPlayerTurnSC(_isPlayerTurnSC);
-        }
-
-        if (_isPlayerTurnSC !== isPlayerTurnSC) {
-          console.log('_isPlayerTurnSC !== isPlayerTurnSC');
-          setGame(currentGame);
-          setGameFEN(currentGame.fen());
-          setPlayerTurn(_isPlayerTurnSC);
-          setPlayerTurnSC(_isPlayerTurnSC);
-        }
-      }
-    }, 5000); // 6 seconds
-
-    return () => clearInterval(interval); // Clean up on unmount
-  }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC]);
- */
   return (
     <ChakraProvider>
       {isLoading ? (
