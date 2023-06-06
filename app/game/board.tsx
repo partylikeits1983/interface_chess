@@ -80,7 +80,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   useEffect(() => {
     const asyncSetWagerAddress = async () => {
-      console.log('USE EFFECT HERE');
+      console.log('Initialize');
       if (wager != '') {
         setWagerAddress(wager);
 
