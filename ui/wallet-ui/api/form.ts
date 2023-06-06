@@ -302,7 +302,7 @@ export const CreateWager = async (form: CreateMatchType) => {
   }
 };
 
-export const GetAllWagers = async () => {
+export const GetAllWagers = async (): Promise<Card[]> => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -313,7 +313,7 @@ export const GetAllWagers = async () => {
   try {
     const wagers = await chess.getAllUserGames(accounts[0]);
 
-    console.log('HERE');
+    console.log('GetAllWagers');
 
     const allWagerParams = [];
     for (let i = 0; i < wagers.length; i++) {
@@ -349,6 +349,9 @@ export const GetAllWagers = async () => {
     return allWagerParams;
   } catch (error) {
     console.log(error);
+
+    const card = {} as Card;
+    return [card];
   }
 };
 

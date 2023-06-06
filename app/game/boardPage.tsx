@@ -92,7 +92,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         console.log(address);
         router.push(`/game/${address}`);
       } else {
-        alertWarningFeedback('Wager address not found');
+        alertWarningFeedback('ROUTER: Wager address not found');
       }
     };
 
