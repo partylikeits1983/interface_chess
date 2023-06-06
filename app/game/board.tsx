@@ -205,10 +205,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     callMoveVerification();
   }, [moves]);
 
-  useEffect(() => {
-    alert(isPlayerTurnSC_OLD);
-  }, [isPlayerTurnSC_OLD]); // This will run whenever isPlayerTurnSC_OLD changes
-
   async function handleSubmitMove(move: any): Promise<boolean> {
     try {
       let success = await PlayMove(wagerAddress, move);
@@ -435,7 +431,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     }, 2000); // 6 seconds
 
     return () => clearInterval(interval); // Clean up on unmount
-  }, [wager, wagerAddress, localGame, isPlayerTurn]);
+  }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC_OLD]);
 
   return (
     <ChakraProvider>
