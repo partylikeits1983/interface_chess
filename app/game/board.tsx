@@ -64,6 +64,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [wagerAddress, setWagerAddress] = useState('');
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [isPlayerTurn, setPlayerTurn] = useState(false);
+  const [isPlayerTurnSC_OLD, setPlayerTurnSC_OLD] = useState(false);
+  // const [isPlayerTurnSC_NEW, setPlayerTurnSC_NEW] = useState(false);
+
   const [numberOfGames, setNumberOfGames] = useState('');
   const [timeLimit, setTimeLimit] = useState(0);
   const [wagerAmount, setWagerAmount] = useState('');
@@ -81,10 +84,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       if (wager != '') {
         setWagerAddress(wager);
 
-        console.log('USEEFFECT HERERERERER');
-
         const _isPlayerTurn = await GetPlayerTurn(wager);
         setPlayerTurn(_isPlayerTurn);
+        setPlayerTurnSC_OLD(_isPlayerTurn);
 
         const movesArray = await GetGameMoves(wager);
         const game = new Chess();
@@ -203,13 +205,16 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     callMoveVerification();
   }, [moves]);
 
+  useEffect(() => {
+    alert(isPlayerTurnSC_OLD);
+  }, [isPlayerTurnSC_OLD]); // This will run whenever isPlayerTurnSC_OLD changes
+
   async function handleSubmitMove(move: any): Promise<boolean> {
     try {
-      // adding await fails to build
-      // using useEffect makes everything glitchy
-      // console.log('handlesubmit move');
-      // console.log(wagerAddress);
       let success = await PlayMove(wagerAddress, move);
+
+      setPlayerTurnSC_OLD(false);
+
       return success;
     } catch (error) {
       console.log(error);
@@ -396,13 +401,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   // NEEDS WORK
   useEffect(() => {
     const interval = setInterval(async () => {
-      const isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
+      const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
 
       console.log('MOVE LISTENER');
-      console.log(isPlayerTurnSC);
-      console.log(isPlayerTurn);
+      console.log('isPlayerTurnSC:', isPlayerTurnSC_OLD);
+      console.log('_isPlayerTurnSC:', _isPlayerTurnSC);
+      console.log('isPlayerTurn', isPlayerTurn);
+      // setPlayerTurnSC_NEW(_isPlayerTurnSC);
 
-      if (isPlayerTurnSC === true && isPlayerTurn === false) {
+      if (_isPlayerTurnSC !== isPlayerTurn) {
         const movesArray = await GetGameMoves(wager);
         const currentGame = new Chess();
         for (let i = 0; i < movesArray.length; i++) {
@@ -410,12 +417,22 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         }
         // Only update game state if the moves on-chain match with local state
         if (localGame.fen() === currentGame.fen()) {
+          console.log('localGame.fen() === currentGame.fen()');
           setGame(currentGame);
           setGameFEN(currentGame.fen());
-          setPlayerTurn(isPlayerTurnSC);
+          setPlayerTurn(_isPlayerTurnSC);
+          setPlayerTurnSC_OLD(_isPlayerTurnSC);
+        }
+
+        if (_isPlayerTurnSC !== isPlayerTurnSC_OLD) {
+          console.log('_isPlayerTurnSC !== isPlayerTurnSC');
+          setGame(currentGame);
+          setGameFEN(currentGame.fen());
+          setPlayerTurn(_isPlayerTurnSC);
+          setPlayerTurnSC_OLD(_isPlayerTurnSC);
         }
       }
-    }, 6000); // 6 seconds
+    }, 2000); // 6 seconds
 
     return () => clearInterval(interval); // Clean up on unmount
   }, [wager, wagerAddress, localGame, isPlayerTurn]);
