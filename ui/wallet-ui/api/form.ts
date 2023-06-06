@@ -548,6 +548,9 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
 
+    console.log('WAGER PARAMS');
+    console.log(wagerParams);
+
     const card: Card = {
       matchAddress: wagerAddress,
       player0Address: wagerParams[0],
@@ -598,7 +601,8 @@ export const PlayMove = async (
     return true;
   } catch (error) {
     // alert(`wager address: ${wagerAddress} not found`);
-    console.log('Invalid Wager Address');
+    console.log(`playMove: invalid address ${wagerAddress}`);
+
     console.log(error);
     return false;
   }
@@ -640,7 +644,7 @@ export const CancelWager = async (wagerAddress: string) => {
   }
 };
 
-export const IsPlayerWhite = async (wagerAddress: string) => {
+export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 
   await updateContractAddresses();
@@ -660,10 +664,11 @@ export const IsPlayerWhite = async (wagerAddress: string) => {
       return isPlayerWhite;
     } catch (error) {
       // alert(`wager address: ${wagerAddress} not found`);
-      console.log('isPlayerWhite function: invalid address');
+      console.log(`isPlayerWhite invalid address ${wagerAddress}`);
       console.log(error);
 
       alertWarningFeedback('Wager address not found');
+      return false;
     }
   } else {
     return false;
@@ -673,7 +678,7 @@ export const IsPlayerWhite = async (wagerAddress: string) => {
 export const IsPlayerAddressWhite = async (
   wagerAddress: string,
   playerAddress: string,
-) => {
+): Promise<boolean> => {
   let { signer } = await setupProvider();
 
   await updateContractAddresses();
@@ -692,8 +697,11 @@ export const IsPlayerAddressWhite = async (
     return isPlayerWhite;
   } catch (error) {
     // alert(`wager address: ${wagerAddress} not found`);
-    console.log('isPlayerAddressWhite function: invalid address');
+    console.log(
+      `isPlayerAddressWhite function: invalid address ${wagerAddress}`,
+    );
     console.log(error);
+    return false;
   }
 };
 
@@ -723,7 +731,7 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
       return isPlayerTurn;
     } catch (error) {
       // alert(`In playerturn : ${wagerAddress} not found`);
-      console.log('in player turn function: invalid address');
+      console.log(`in player turn function: invalid address ${wagerAddress}`);
       console.log(error);
       return false;
     }
@@ -732,7 +740,9 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
   }
 };
 
-export const GetNumberOfGames = async (wagerAddress: string) => {
+export const GetNumberOfGames = async (
+  wagerAddress: string,
+): Promise<number[]> => {
   let { signer } = await setupProvider();
 
   await updateContractAddresses();
@@ -749,7 +759,8 @@ export const GetNumberOfGames = async (wagerAddress: string) => {
     return data;
   } catch (error) {
     // alert(`In playerturn : ${wagerAddress} not found`);
-    console.log('getNumberOfGames function: invalid address');
+    console.log(`getNumberOfGames function: invalid address ${wagerAddress}`);
     console.log(error);
+    return [];
   }
 };

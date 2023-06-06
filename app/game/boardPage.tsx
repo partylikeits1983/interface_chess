@@ -105,29 +105,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     setWagerAddress(event.target.value);
   }
 
-  // update time
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    if (isPlayer0Turn) {
-      timer = setInterval(() => {
-        setTimePlayer0((prevTime) => {
-          return prevTime - 1;
-        });
-      }, 1000);
-    } else {
-      timer = setInterval(() => {
-        setTimePlayer1((prevTime) => {
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [isPlayer0Turn, timePlayer0, timePlayer1]);
-
   // Initialize board
   useEffect(() => {
     const asyncSetWagerAddress = async () => {
@@ -383,6 +360,26 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
+  // update time
+  useEffect(() => {
+    // define timer here
+    let timer: NodeJS.Timeout;
+
+    // determine whose turn it is and decrement the appropriate timer
+    timer = setInterval(() => {
+      if (isPlayer0Turn) {
+        setTimePlayer0((prevTime) => prevTime - 1);
+      } else {
+        setTimePlayer1((prevTime) => prevTime - 1);
+      }
+    }, 1000);
+
+    // return a cleanup function to clearInterval when isPlayer0Turn changes
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isPlayer0Turn]); // Removed timePlayer0 and timePlayer1 from dependencies
+
   // MOVE LISTENER
   useEffect(() => {
     let isMounted = true;
@@ -397,6 +394,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setGameFEN(currentGame.fen());
         setPlayerTurn(_isPlayerTurnSC);
         setPlayerTurnSC(_isPlayerTurnSC);
+
+        // for timer func
+        setIsPlayer0Turn(!isPlayer0Turn);
       }
     };
 
