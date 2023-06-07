@@ -31,6 +31,7 @@ import {
   Text,
   Spinner,
   Skeleton,
+  Spacer,
   Center,
   ChakraProvider,
 } from '@chakra-ui/react';
@@ -502,15 +503,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         </>
       ) : (
         <>
-          <GameTimer
-            wager={wager}
-            timeLimit={timeLimit}
-            timePlayer0={timePlayer0}
-            timePlayer1={timePlayer1}
-            isPlayerTurn={isPlayerTurn}
-            isPlayer0White={isPlayer0White}
-          />
-
           <GameInfo
             wager={wager}
             wagerAmount={wagerAmount}
@@ -521,8 +513,22 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             isPlayerTurn={isPlayerTurn}
             isPlayer0White={isPlayer0White}
           />
+          <Flex direction={{ base: 'column', md: 'row' }} alignItems="center">
+            <Flex width="100%">
+              <GameTimer
+                wager={wager}
+                timeLimit={timeLimit}
+                timePlayer0={timePlayer0}
+                timePlayer1={timePlayer1}
+                isPlayerTurn={isPlayerTurn}
+                isPlayer0White={isPlayer0White}
+              />
+            </Flex>
 
-          <ScoreBoard wager={wager} numberOfGames={numberOfGames} />
+            <Spacer />
+
+            <ScoreBoard wager={wager} numberOfGames={numberOfGames} />
+          </Flex>
         </>
       )}
     </ChakraProvider>

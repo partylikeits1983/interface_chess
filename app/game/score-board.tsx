@@ -4,8 +4,6 @@ import { GetWagerPlayers, GetWagerStatus } from '#/ui/wallet-ui/api/form';
 
 interface ScoreBoardProps {
   wager: string;
-  addressPlayer0: string;
-  addressPlayer1: string;
   numberOfGames: string;
 }
 
@@ -40,32 +38,24 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, numberOfGames }) => {
   return (
     <div>
       {wager !== '' && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          fontSize="md"
-          mt={4}
-        >
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>User Address</Th>
-                <Th>Wins</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>{player0Address}</Td>
-                <Td>{winsPlayer0}</Td>
-              </Tr>
-              <Tr>
-                <Td>{player1Address}</Td>
-                <Td>{winsPlayer1}</Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </Box>
+        <Table>
+          <thead>
+            <tr>
+              <th>User Address</th>
+              <th>Wins</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{player0Address}</td>
+              <td>{winsPlayer0}</td>
+            </tr>
+            <tr>
+              <td>{player1Address}</td>
+              <td>{winsPlayer1}</td>
+            </tr>
+          </tbody>
+        </Table>
       )}
     </div>
   );

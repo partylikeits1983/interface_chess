@@ -11,18 +11,7 @@ interface GameInfoProps {
   isPlayer0White: boolean;
 }
 
-import {
-  Flex,
-  Text,
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Progress,
-} from '@chakra-ui/react';
+import { Table } from '@chakra-ui/react';
 
 const GameInfo: React.FC<GameInfoProps> = ({
   wager,
@@ -51,7 +40,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
     <div>
       {wager !== '' && (
         <div>
-          <Table size="md">
+          <Table size="xl">
             <thead>
               <tr>
                 <th>Amount</th>

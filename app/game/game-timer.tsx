@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface GameInfoProps {
+interface GameTimerProps {
   wager: string;
   timeLimit: number;
   timePlayer0: number;
@@ -11,7 +11,7 @@ interface GameInfoProps {
 
 import { Text, Progress } from '@chakra-ui/react';
 
-const GameTimer: React.FC<GameInfoProps> = ({
+const GameTimer: React.FC<GameTimerProps> = ({
   wager,
   timeLimit,
   timePlayer0,
@@ -41,23 +41,25 @@ const GameTimer: React.FC<GameInfoProps> = ({
           {isPlayer0White ? (
             <>
               <Text>
-                Time Remaining White:{' '}
+                Time White:{' '}
                 {formatSecondsToTime(
                   timePlayer0 > 0 ? timePlayer0.toString() : '0',
                 )}
               </Text>
               <Progress
                 colorScheme="green"
+                bg="gray"
                 value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}
               />
               <Text>
-                Time Remaining Black:{' '}
+                Time Black:{' '}
                 {formatSecondsToTime(
                   timePlayer1 > 0 ? timePlayer1.toString() : '0',
                 )}
               </Text>
               <Progress
                 colorScheme="green"
+                bg="gray"
                 value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
               />
             </>
@@ -71,6 +73,7 @@ const GameTimer: React.FC<GameInfoProps> = ({
               </Text>
               <Progress
                 colorScheme="green"
+                bg="gray"
                 value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
               />
               <Text>
@@ -81,6 +84,7 @@ const GameTimer: React.FC<GameInfoProps> = ({
               </Text>
               <Progress
                 colorScheme="green"
+                bg="gray"
                 value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}
               />
             </>
@@ -90,5 +94,4 @@ const GameTimer: React.FC<GameInfoProps> = ({
     </div>
   );
 };
-
 export default GameTimer;
