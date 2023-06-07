@@ -59,6 +59,8 @@ interface BoardProps {
 }
 
 export const Board: React.FC<BoardProps> = ({ wager }) => {
+  const [gameID, setGameID] = useState(0);
+
   const [game, setGame] = useState(new Chess());
   const [localGame, setLocalGame] = useState(new Chess());
   const [gameFEN, setGameFEN] = useState(
@@ -72,7 +74,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
   // const [isPlayerTurnSC_NEW, setPlayerTurnSC_NEW] = useState(false);
 
-  const [numberOfGames, setNumberOfGames] = useState('');
+  const [numberOfGames, setNumberOfGames] = useState(0);
+  const [numberOfGamesInfo, setNumberOfGamesInfo] = useState('');
   const [timeLimit, setTimeLimit] = useState(0);
   const [wagerAmount, setWagerAmount] = useState('');
 
@@ -101,23 +104,49 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       }
     };
 
+  // Setting wager address in input box
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    setWagerAddress(event.target.value);
+  }
+
   const handleBack = () => {
-    // handle back button click
     console.log('backwards');
+    setGameID((prevGameID) => {
+      const newGameID = prevGameID > 0 ? prevGameID - 1 : prevGameID;
+      const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
+      setNumberOfGamesInfo(gameNumberInfo);
+      return newGameID;
+    });
   };
 
   const handleForward = () => {
     console.log('forwards');
+    setGameID((prevGameID) => {
+      const newGameID =
+        prevGameID < numberOfGames - 1 ? prevGameID + 1 : prevGameID;
+      const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
+      setNumberOfGamesInfo(gameNumberInfo);
+      return newGameID;
+    });
   };
 
   function numberToString(num: number): string {
     return num.toLocaleString('fullwide', { useGrouping: false });
   }
 
-  // Setting wager address in input box
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    setWagerAddress(event.target.value);
-  }
+  // Initialize board
+  useEffect(() => {
+    const asyncSetWagerAddress = async () => {
+      if (wager != '') {
+        const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
+        const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
+        setGameID(Number(gameNumberData[1]));
+        setNumberOfGames(Number(gameNumberData[1]));
+        setNumberOfGamesInfo(gameNumber);
+      }
+    };
+    asyncSetWagerAddress();
+  }, [wager]);
 
   // Initialize board
   useEffect(() => {
@@ -129,7 +158,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setPlayerTurn(_isPlayerTurn);
         setPlayerTurnSC(_isPlayerTurn);
 
-        const movesArray = await GetGameMoves(wager);
+        const movesArray = await GetGameMoves(wager, gameID);
         const game = new Chess();
         for (let i = 0; i < movesArray.length; i++) {
           game.move(movesArray[i]);
@@ -141,9 +170,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
 
-        const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
+        /*         const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
         const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
-        setNumberOfGames(gameNumber);
+        setGameID(Number(gameNumberData[1])); */
 
         const matchData = await GetWagerData(wager);
 
@@ -171,7 +200,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       }
     };
     asyncSetWagerAddress();
-  }, [wager]);
+  }, [wager, gameID]);
 
   /// Chess Move logic
   // Check valid move with sc
@@ -531,7 +560,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           <GameInfo
             wager={wager}
             wagerAmount={wagerAmount}
-            numberOfGames={numberOfGames}
+            numberOfGames={numberOfGamesInfo}
             timeLimit={timeLimit}
             timePlayer0={timePlayer0}
             timePlayer1={timePlayer1}
@@ -552,7 +581,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
             <Spacer />
 
-            <ScoreBoard wager={wager} numberOfGames={numberOfGames} />
+            <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
           </Flex>
         </>
       )}

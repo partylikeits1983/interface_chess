@@ -16,22 +16,22 @@ const ForwardBackButtons: FC<ForwardBackButtonsProps> = ({
       <Button
         leftIcon={<ChevronLeftIcon />}
         onClick={onBack}
-        backgroundColor="#94febf"
+        backgroundColor="#1A202C"
         size="sm"
         mr={2}
         _hover={{
           color: '#000000', // Set the text color on hover
-          backgroundColor: '#62ffa2', // Set the background color on hover
+          backgroundColor: '#2D3748', // Set the background color on hover
         }}
       />
       <Button
         rightIcon={<ChevronRightIcon />}
         onClick={onForward}
-        backgroundColor="#94febf"
+        backgroundColor="#1A202C"
         size="sm"
         _hover={{
           color: '#000000', // Set the text color on hover
-          backgroundColor: '#62ffa2', // Set the background color on hover
+          backgroundColor: '#2D3748', // Set the background color on hover
         }}
       />
     </div>

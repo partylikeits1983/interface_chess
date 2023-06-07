@@ -488,14 +488,17 @@ function hexToMove(hexMove: number): string {
   return fromCoord + toCoord;
 }
 
-export const GetGameMoves = async (wagerAddress: string): Promise<string[]> => {
+export const GetGameMoves = async (
+  wagerAddress: string,
+  gameID: number,
+): Promise<string[]> => {
   let { provider } = await setupProvider();
   await updateContractAddresses();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    const gameID = 0;
+    // const gameID = 0;
 
     const data = await chess.getGameMoves(wagerAddress, gameID);
     const hexMoves = data.moves;
