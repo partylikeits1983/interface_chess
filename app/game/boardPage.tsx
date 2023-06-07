@@ -123,6 +123,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const handleForward = () => {
     console.log('forwards');
 
+    opponentMoveNotification('Your Turn to Move');
+
     setGameID((prevGameID) => {
       const newGameID =
         prevGameID < numberOfGames - 1 ? prevGameID + 1 : prevGameID;

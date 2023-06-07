@@ -6,7 +6,7 @@ export default function opponentMoveNotification(message: string) {
   toast.style.right = '20px';
   toast.style.backgroundColor = 'green';
   toast.style.color = '#fff';
-  toast.style.padding = '10px 20px';
+  toast.style.padding = '5px 30px 10px 20px'; // Increase the left padding to create more distance
   toast.style.borderRadius = '4px';
   toast.style.zIndex = '9999';
   toast.style.opacity = '1';
@@ -16,8 +16,8 @@ export default function opponentMoveNotification(message: string) {
   dismissButton.innerHTML =
     '<span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1" style="width: 24px; height: 24px;"><path d="M6 18L18 6M6 6l12 12"></path></svg></span>';
   dismissButton.style.position = 'absolute';
-  dismissButton.style.top = '5px';
-  dismissButton.style.right = '5px';
+  dismissButton.style.top = '1px';
+  dismissButton.style.right = '-3px'; // Increase the right positioning to create more space between the text and the button
   dismissButton.style.backgroundColor = 'transparent';
   dismissButton.style.color = '#fff';
   dismissButton.style.border = 'none';
@@ -25,7 +25,6 @@ export default function opponentMoveNotification(message: string) {
   dismissButton.style.fontSize = '16px';
   dismissButton.style.fontWeight = 'bold';
   dismissButton.style.padding = '0';
-  dismissButton.style.marginLeft = '10px'; // Add a margin to the left of the button to separate it from the text.
   dismissButton.style.width = '30px'; // Increase the button width to accommodate the larger SVG
   dismissButton.style.height = '30px'; // Increase the button height to accommodate the larger SVG
 
