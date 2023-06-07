@@ -2,12 +2,12 @@ import React, { FC, useEffect, useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { Card } from '../types';
 import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
-import { match } from 'assert';
 
 const {
   GetGameMoves,
@@ -34,6 +34,8 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
   const [numberOfGames, setNumberOfGames] = useState('');
 
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
 
   useEffect(() => {
     const getGameMoves = async () => {
@@ -133,6 +135,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
               backgroundColor: '#62ffa2', // Set the background color on hover
             }}
             size="md"
+            onClick={() => router.push(`/game/${card.matchAddress}`)}
           >
             Go to Match
           </Button>

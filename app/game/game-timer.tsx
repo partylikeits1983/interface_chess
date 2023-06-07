@@ -66,7 +66,7 @@ const GameTimer: React.FC<GameTimerProps> = ({
           ) : (
             <>
               <Text>
-                Time Remaining White:{' '}
+                Time White:{' '}
                 {formatSecondsToTime(
                   timePlayer1 > 0 ? timePlayer1.toString() : '0',
                 )}
@@ -77,7 +77,7 @@ const GameTimer: React.FC<GameTimerProps> = ({
                 value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
               />
               <Text>
-                Time Remaining Black:{' '}
+                Time Black:{' '}
                 {formatSecondsToTime(
                   timePlayer0 > 0 ? timePlayer0.toString() : '0',
                 )}
