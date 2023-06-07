@@ -84,6 +84,9 @@ export default {
           },
         },
       }),
+      width: {
+        custom: '265px',
+      },
     },
   },
   plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],

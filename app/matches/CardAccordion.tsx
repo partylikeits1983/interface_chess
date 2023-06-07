@@ -14,6 +14,7 @@ import {
   Box,
   Button,
   HStack,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
@@ -119,8 +120,17 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
           </AccordionButton>
         </h2>
         <AccordionPanel pb={4}>
-          <Flex justify="space-between" direction="row">
-            <Stack spacing={2}>
+          <Flex
+            direction={useBreakpointValue({ base: 'column', md: 'row' })}
+            alignItems={useBreakpointValue({
+              base: 'stretch',
+              md: 'flex-start',
+            })}
+          >
+            <Stack
+              spacing={2}
+              width={useBreakpointValue({ base: '100%', md: '50%' })}
+            >
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
                   Match Address
@@ -242,7 +252,11 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                 )}
             </Stack>
 
-            <Box width="50%">
+            <Box
+              width={useBreakpointValue({ base: '100%', md: '50%' })}
+              marginBottom={useBreakpointValue({ base: 4, md: 0 })}
+              order={useBreakpointValue({ base: 2, md: 1 })}
+            >
               <SidePanel card={card}></SidePanel>
             </Box>
           </Flex>
