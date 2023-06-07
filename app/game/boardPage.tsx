@@ -5,9 +5,11 @@ const { ethers } = require('ethers');
 import { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
+
 import GameInfo from './game-info';
 import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
+import ForwardBackButtons from './forward-back-buttons';
 
 import { useRouter } from 'next/navigation';
 
@@ -98,6 +100,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         alertWarningFeedback('ROUTER: Wager address not found');
       }
     };
+
+  const handleBack = () => {
+    // handle back button click
+    console.log('backwards');
+  };
+
+  const handleForward = () => {
+    console.log('forwards');
+  };
 
   function numberToString(num: number): string {
     return num.toLocaleString('fullwide', { useGrouping: false });
@@ -458,19 +469,33 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           </Center>
         </Box>
       ) : (
-        <Chessboard
-          boardOrientation={isPlayerWhite ? 'white' : 'black'}
-          arePiecesDraggable={true}
-          onSquareClick={onSquareClick}
-          animationDuration={70}
-          onPieceDrop={onDrop}
-          position={gameFEN}
-          customSquareStyles={{
-            ...moveSquares,
-            ...optionSquares,
-            ...rightClickedSquares,
-          }}
-        />
+        <>
+          <Box position="relative" mt={5}>
+            {' '}
+            {/* Adjust the number as needed */}
+            <Chessboard
+              boardOrientation={isPlayerWhite ? 'white' : 'black'}
+              arePiecesDraggable={true}
+              onSquareClick={onSquareClick}
+              animationDuration={70}
+              onPieceDrop={onDrop}
+              position={gameFEN}
+              customSquareStyles={{
+                ...moveSquares,
+                ...optionSquares,
+                ...rightClickedSquares,
+              }}
+            />
+            <Box position="absolute" top="-12" right="0">
+              {' '}
+              {/* Change top to "0" again */}
+              <ForwardBackButtons
+                onBack={handleBack}
+                onForward={handleForward}
+              />
+            </Box>
+          </Box>
+        </>
       )}
       <Box p={4}></Box>
 
