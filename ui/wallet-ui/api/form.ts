@@ -6,6 +6,7 @@ const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
+import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 import detectEthereumProvider from '@metamask/detect-provider';
 
@@ -59,8 +60,8 @@ const updateContractAddresses = async (): Promise<void> => {
   const network = await provider.getNetwork();
   const chainId = network.chainId;
 
-  console.log('Chain ID');
-  console.log(chainId);
+  /*   console.log('Chain ID');
+  console.log(chainId); */
 
   const data: ContractAddress[] = require('./contractAddresses.json');
   const addresses: ContractAddress[] = JSON.parse(JSON.stringify(data));
@@ -78,7 +79,7 @@ const updateContractAddresses = async (): Promise<void> => {
     VerificationAddress = moveVerification;
     tokenAddress = token;
 
-    console.log(ChessAddress, VerificationAddress, tokenAddress);
+    // console.log(ChessAddress, VerificationAddress, tokenAddress);
   }
   // Add more chains if needed.
 };
@@ -285,9 +286,8 @@ export const CreateWager = async (form: CreateMatchType) => {
     const wagers = await chess.getAllUserGames(accounts[0]);
     const wagerAddress = wagers[wagers.length - 1];
 
-    alert('Wager Created: ' + wagerAddress);
+    alertSuccessFeedback('Wager Created: ' + wagerAddress);
 
-    console.log('success');
     return {
       value: tx,
       success: true,
@@ -326,7 +326,6 @@ export const GetAllWagers = async (): Promise<Card[]> => {
       } else {
         isPlayerTurn = false;
       }
-      console.log(wagerParams);
 
       const card: Card = {
         matchAddress: wagers[i],
@@ -364,13 +363,9 @@ export const GetAllWagersForPairing = async () => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    const totalWagerCount = Number(await chess.getAllWagersCount());
-
-    console.log(totalWagerCount);
+    // const totalWagerCount = Number(await chess.getAllWagersCount());
 
     const wagers = await chess.getAllWagerAddresses();
-
-    console.log(wagers);
 
     const pairingRoomWagers = [];
 
@@ -402,7 +397,6 @@ export const GetAllWagersForPairing = async () => {
     }
 
     console.log('Pairing room wagers');
-    console.log(pairingRoomWagers);
 
     return pairingRoomWagers;
   } catch (error) {
@@ -599,7 +593,6 @@ export const GetTimeRemaining = async (wagerAddress: string) => {
   try {
     console.log('TIME REMAINING');
     const timeRemaining = await chess.checkTimeRemaining(wagerAddress);
-    console.log(timeRemaining);
 
     const playerToMove = await chess.getPlayerMove(wagerAddress);
     const wagerData = await chess.gameWagers(wagerAddress);
@@ -702,7 +695,6 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
     const wagerParams = await chess.gameWagers(wagerAddress);
 
     console.log('WAGER PARAMS');
-    console.log(wagerParams);
 
     const card: Card = {
       matchAddress: wagerAddress,
@@ -746,7 +738,6 @@ export const PlayMove = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
     const hex_move = await chess.moveToHex(move);
-    console.log(hex_move);
 
     const tx = await chess.playMove(wagerAddress, hex_move);
     await tx.wait();
@@ -812,7 +803,6 @@ export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
         wagerAddress,
         accounts[0],
       );
-      console.log(isPlayerWhite);
 
       return isPlayerWhite;
     } catch (error) {
@@ -845,7 +835,6 @@ export const IsPlayerAddressWhite = async (
       wagerAddress,
       playerAddress,
     );
-    console.log(isPlayerWhite);
 
     return isPlayerWhite;
   } catch (error) {
@@ -878,8 +867,6 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
       } else {
         isPlayerTurn = false;
       }
-
-      console.log(isPlayerTurn);
 
       return isPlayerTurn;
     } catch (error) {
