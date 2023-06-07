@@ -95,7 +95,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
       // check if wager is not empty and not null
       if (wager && Object.keys(wager).length !== 0) {
-        alert(wager.matchAddress);
+        alertWarningFeedback(`Getting wager data: ${wager.matchAddress}`);
         e.preventDefault(); // This may be optional, depending on your needs
         console.log(address);
         router.push(`/game/${address}`);
@@ -121,6 +121,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   const handleForward = () => {
     console.log('forwards');
+
     setGameID((prevGameID) => {
       const newGameID =
         prevGameID < numberOfGames - 1 ? prevGameID + 1 : prevGameID;
@@ -140,9 +141,63 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       if (wager != '') {
         const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
         const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
-        setGameID(Number(gameNumberData[1]));
+
+        setGameID(Number(gameNumberData[0]) - 1);
         setNumberOfGames(Number(gameNumberData[1]));
         setNumberOfGamesInfo(gameNumber);
+      }
+    };
+    asyncSetWagerAddress();
+  }, [wager]);
+
+  // Initialize board
+  useEffect(() => {
+    const asyncSetWagerAddress = async () => {
+      if (wager != '') {
+        setWagerAddress(wager);
+
+        const _isPlayerTurn = await GetPlayerTurn(wager);
+        setPlayerTurn(_isPlayerTurn);
+        setPlayerTurnSC(_isPlayerTurn);
+
+        const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
+        setGameID(Number(gameNumberData[0]) - 1);
+
+        const movesArray = await GetGameMoves(wager, gameID);
+        const game = new Chess();
+        for (let i = 0; i < movesArray.length; i++) {
+          game.move(movesArray[i]);
+        }
+        setGame(game);
+        setGameFEN(game.fen());
+        setLocalGame(game);
+
+        const isPlayerWhite = await IsPlayerWhite(wager);
+        setPlayerColor(isPlayerWhite);
+
+        const matchData = await GetWagerData(wager);
+
+        setWagerAmount(
+          ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
+        );
+
+        const [timePlayer0, timePlayer1, isPlayer0Turn] =
+          await GetTimeRemaining(wager);
+
+        setTimeLimit(matchData.timeLimit);
+        setTimePlayer0(timePlayer0);
+        setTimePlayer1(timePlayer1);
+        setIsPlayer0Turn(isPlayer0Turn);
+
+        const isPlayer0White = await IsPlayerAddressWhite(
+          wager,
+          matchData.player0Address,
+        );
+        setIsPlayer0White(isPlayer0White);
+
+        setLoading(false);
+      } else {
+        setLoading(false);
       }
     };
     asyncSetWagerAddress();
@@ -169,10 +224,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
-
-        /*         const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
-        const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
-        setGameID(Number(gameNumberData[1])); */
 
         const matchData = await GetWagerData(wager);
 

@@ -499,6 +499,7 @@ export const GetGameMoves = async (
 
   try {
     // const gameID = 0;
+    // alert(gameID)
 
     const data = await chess.getGameMoves(wagerAddress, gameID);
     const hexMoves = data.moves;
@@ -507,13 +508,12 @@ export const GetGameMoves = async (
     for (let i = 0; i < hexMoves.length; i++) {
       const algebraeicMove = hexToMove(hexMoves[i]);
       /*       
-    const algebraeicMoveSC = await chess.hexToMove(hexMoves[i]);
-    if (algebraeicMoveSC != algebraeicMove) {
-        
-        console.log("SC:", algebraeicMoveSC);
-        console.log("TS:", algebraeicMove);
-      }
- */
+      const algebraeicMoveSC = await chess.hexToMove(hexMoves[i]);
+      if (algebraeicMoveSC != algebraeicMove) {
+          console.log("SC:", algebraeicMoveSC);
+          console.log("TS:", algebraeicMove);
+        }
+      */
       algebraeicMoves.push(algebraeicMove);
     }
 
