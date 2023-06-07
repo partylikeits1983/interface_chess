@@ -907,7 +907,7 @@ export const GetNumberOfGames = async (
 
     const gameNumber = await chess.getGameLength(wagerAddress);
 
-    const data = [Number(gameNumber) + 1, Number(numberOfGames)];
+    const data = [Number(gameNumber), Number(numberOfGames)];
 
     return data;
   } catch (error) {

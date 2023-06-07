@@ -40,10 +40,16 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
       if (card.matchAddress != '') {
         setIsChessboardLoading(true);
 
-        console.log(card.matchAddress);
-        console.log(card.player0Address);
+        const gameNumberData: Array<Number> = await GetNumberOfGames(
+          card.matchAddress,
+        );
+        const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
+        setNumberOfGames(gameNumber);
 
-        const movesArray = await GetGameMoves(card.matchAddress);
+        const movesArray = await GetGameMoves(
+          card.matchAddress,
+          gameNumberData[0],
+        );
         const game = new Chess();
 
         for (let i = 0; i < movesArray.length; i++) {
@@ -54,12 +60,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
 
         const isPlayerWhite = await IsPlayerWhite(card.matchAddress);
         setPlayerColor(isPlayerWhite);
-
-        const gameNumberData: Array<Number> = await GetNumberOfGames(
-          card.matchAddress,
-        );
-        const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
-        setNumberOfGames(gameNumber);
 
         setIsChessboardLoading(false);
       } else {

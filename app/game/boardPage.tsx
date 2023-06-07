@@ -140,9 +140,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     const asyncSetWagerAddress = async () => {
       if (wager != '') {
         const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
-        const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
+        const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
+          gameNumberData[1]
+        }`;
 
-        setGameID(Number(gameNumberData[0]) - 1);
+        setGameID(Number(gameNumberData[0]));
         setNumberOfGames(Number(gameNumberData[1]));
         setNumberOfGamesInfo(gameNumber);
       }
@@ -161,9 +163,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setPlayerTurnSC(_isPlayerTurn);
 
         const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
-        setGameID(Number(gameNumberData[0]) - 1);
+        setGameID(Number(gameNumberData[0]));
 
-        const movesArray = await GetGameMoves(wager, gameID);
+        const movesArray = await GetGameMoves(wager, gameNumberData[0]);
         const game = new Chess();
         for (let i = 0; i < movesArray.length; i++) {
           game.move(movesArray[i]);
@@ -251,7 +253,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       }
     };
     asyncSetWagerAddress();
-  }, [wager, gameID]);
+  }, [gameID]);
 
   /// Chess Move logic
   // Check valid move with sc

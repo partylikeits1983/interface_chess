@@ -10,7 +10,11 @@ import { useRouter } from 'next/navigation';
 import { Box, Flex, Skeleton } from '@chakra-ui/react';
 
 import { GetWagersDB, GetWagersFenDB } from 'ui/wallet-ui/api/db-api';
-import { GetAnalyticsData, GetGameMoves } from 'ui/wallet-ui/api/form';
+import {
+  GetAnalyticsData,
+  GetGameMoves,
+  GetNumberOfGames,
+} from 'ui/wallet-ui/api/form';
 
 const CurrentGames = () => {
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
@@ -45,7 +49,14 @@ const CurrentGames = () => {
 
           let GamesFen: string[] = [];
           for (let i = 0; i < fetchedWagerAddresses.length; i++) {
-            const movesArray = await GetGameMoves(fetchedWagerAddresses[i]);
+            const gameNumberData: Array<Number> = await GetNumberOfGames(
+              fetchedWagerAddresses[i],
+            );
+
+            const movesArray = await GetGameMoves(
+              fetchedWagerAddresses[i],
+              Number(gameNumberData[0]),
+            );
             const game = new Chess();
 
             for (let i = 0; i < movesArray.length; i++) {
