@@ -163,9 +163,7 @@ export default function AccountModal({ isOpen, onClose }: Props) {
           borderBottomRightRadius="3xl"
           p={6}
         >
-          <Text color="white" fontWeight="medium" fontSize="md">
-            Your transactions willl appear here...
-          </Text>
+          <Text color="white" fontWeight="medium" fontSize="md"></Text>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -26,13 +26,11 @@ export default function ConnectButton({ handleOpenModal }: Props) {
 
   // Update account state when accounts changes
   useEffect(() => {
-    if (accounts[0] && accounts[0] !== account) {
-      setAccount(accounts[0]);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('account', accounts[0]); // update account in local storage
-      }
+    if (account == undefined) {
+      connect();
     }
-  }, [accounts, account]);
+    setAccount(accounts[0]);
+  });
 
   useEffect(() => {
     const fetchBalance = async () => {
