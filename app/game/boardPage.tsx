@@ -10,6 +10,7 @@ import GameInfo from './game-info';
 import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
 import ForwardBackButtons from './forward-back-buttons';
+import opponentMoveNotification from 'ui/opponentMoveNotification';
 
 import { useRouter } from 'next/navigation';
 
@@ -268,11 +269,20 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     callMoveVerification();
   }, [moves]);
 
-  async function handleSubmitMove(move: any): Promise<boolean> {
+  async function handleSubmitMove(
+    move: string,
+    wasCaptured: boolean,
+  ): Promise<boolean> {
     try {
-      const moveSound = new Audio('/sounds/Move.mp3');
-      moveSound.load();
-      moveSound.play();
+      if (wasCaptured) {
+        const moveSound = new Audio('/sounds/Capture.mp3');
+        moveSound.load();
+        moveSound.play();
+      } else {
+        const moveSound = new Audio('/sounds/Move.mp3');
+        moveSound.load();
+        moveSound.play();
+      }
 
       let success = await PlayMove(wagerAddress, move);
 
@@ -291,7 +301,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     setOptionSquares({});
     setPotentialMoves([]);
 
-    const move = makeAMove({
+    const [move, wasCaptured] = makeAMove({
       from: sourceSquare,
       to: targetSquare,
       promotion: 'q', // always promote to a queen for example simplicity
@@ -300,7 +310,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     const moveString = sourceSquare + targetSquare;
 
     // submit move to smart contract
-    handleSubmitMove(moveString);
+    handleSubmitMove(moveString, wasCaptured);
 
     setPlayerTurn(false);
 
@@ -340,12 +350,13 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     );
   }
 
-  const makeAMove = (move: any) => {
+  const makeAMove = (move: any): [Move | null, boolean] => {
     const gameMoves = game.fen();
     const gameCopy = new Chess();
     gameCopy.load(gameMoves);
 
     let result;
+    let wasCaptured = false;
     try {
       result = gameCopy.move(move);
       setGame(gameCopy);
@@ -354,15 +365,19 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       setGameFEN(gameCopy.fen());
       setLocalGame(gameCopy);
 
+      if (result && result.captured) {
+        wasCaptured = true;
+      }
+
       console.log('HERE IN MAKE A MOVE');
     } catch {
       result = null;
-      console.log('invalid move');
+      console.log('Invalid move');
     }
 
     console.log(gameCopy.ascii());
 
-    return result; // null if the move was illegal, the move object if the move was legal
+    return [result, wasCaptured]; // null if the move was illegal, the move object if the move was legal
   };
 
   const onSquareClick = (square: any): void => {
@@ -400,14 +415,20 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     const gameCopy = new Chess();
     gameCopy.load(gameMoves);
 
-    const move = gameCopy.move({
+    const [move, wasCaptured] = makeAMove({
+      from: moveFrom,
+      to: square,
+      promotion: 'q', // always promote to a queen for example simplicity
+    });
+
+    /*     const move = gameCopy.move({
       from: moveFrom,
       to: square,
       promotion: 'q', // always promote to a queen for example simplicity
     });
     setGame(gameCopy);
     setGameFEN(gameCopy.fen());
-    setLocalGame(gameCopy);
+    setLocalGame(gameCopy); */
 
     // if invalid, setMoveFrom and getMoveOptions
     if (move === null) {
@@ -417,7 +438,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     // calling smart contract to send tx
     const moveString = moveFrom + square;
-    handleSubmitMove(moveString);
+    handleSubmitMove(moveString, wasCaptured);
 
     setPlayerTurn(false);
     setMoveFrom('');
@@ -482,9 +503,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
       if (isMounted) {
-        const moveSound = new Audio('/sounds/Move.mp3');
+        const moveSound = new Audio('/sounds/OpponentMove2.mp3');
         moveSound.load();
         moveSound.play();
+
+        opponentMoveNotification('Your Turn to Move');
 
         setGame(currentGame);
         setGameFEN(currentGame.fen());
