@@ -20,10 +20,6 @@ const CurrentGames = () => {
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
   const [Games, setGames] = useState<string[]>([]);
 
-  //const [isLoading, setLoading] = useState(true);
-  // const [game, setGame] = useState(new Chess());
-  // const [moves, setMoves] = useState<string[]>([]);
-
   const [totalGames, setTotalGames] = useState('');
   const [totalWagers, setTotalWagers] = useState('');
 

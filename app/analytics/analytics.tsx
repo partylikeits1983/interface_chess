@@ -21,12 +21,15 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Analytics() {
   const [totalGames, setTotalGames] = useState('');
   const [totalWagers, setTotalWagers] = useState('');
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,24 +79,27 @@ export default function Analytics() {
 
       <Box overflowX="auto" maxWidth="100%">
         <Table variant="simple" mt={4} size="sm">
-          <Thead>
+          <thead>
             <Tr>
               <Th color="white">#</Th>
               <Th color="white">Wager Addresses</Th>
             </Tr>
-          </Thead>
-          <Tbody>
+          </thead>
+          <tbody>
             {wagerAddresses.map((address, index) => (
               <Tr key={index}>
                 <Td color="green.400">{index + 1}</Td>
                 <Td>
-                  <NextLink href={`/game/${address}`} passHref>
-                    <Link color="green.400">{address}</Link>
-                  </NextLink>
+                  <Link
+                    color="green.400"
+                    onClick={() => router.push(`/game/${address}`)}
+                  >
+                    {address}
+                  </Link>
                 </Td>
               </Tr>
             ))}
-          </Tbody>
+          </tbody>
         </Table>
       </Box>
     </ChakraProvider>
