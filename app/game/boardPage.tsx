@@ -502,7 +502,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
 
           if (_isPlayerTurnSC !== isPlayerTurn) {
-            const movesArray = await GetGameMoves(wager);
+            const movesArray = await GetGameMoves(wager, gameID);
             const currentGame = new Chess();
 
             for (let i = 0; i < movesArray.length; i++) {
