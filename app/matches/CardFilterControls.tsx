@@ -34,7 +34,7 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
           width="100%"
         >
           <option style={{ color: 'black' }} value="isPending">
-            Pending First
+            In Progress First
           </option>
           <option style={{ color: 'black' }} value="wagerAmountAsc">
             Wager Amount (lowest first)

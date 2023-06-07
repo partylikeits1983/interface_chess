@@ -122,9 +122,7 @@ const CardList = () => {
   });
 
   const filteredAndSortedCards = sortedCards.filter(
-    (card) =>
-      !filterValue ||
-      (card.isInProgress && Number(card.player1Address) === Number(account)),
+    (card) => !filterValue || card.isInProgress,
   );
 
   return (
