@@ -285,31 +285,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     }
   }
 
-  const makeAMove = (move: any) => {
-    const gameMoves = game.fen();
-    const gameCopy = new Chess();
-    gameCopy.load(gameMoves);
-
-    let result;
-    try {
-      result = gameCopy.move(move);
-      setGame(gameCopy);
-      let MoveString = move.from + move.to;
-      setMoves([...moves, MoveString]);
-      setGameFEN(gameCopy.fen());
-      setLocalGame(gameCopy);
-
-      console.log('HERE IN MAKE A MOVE');
-    } catch {
-      result = null;
-      console.log('invalid move');
-    }
-
-    console.log(gameCopy.ascii());
-
-    return result; // null if the move was illegal, the move object if the move was legal
-  };
-
   const onDrop = (sourceSquare: any, targetSquare: any) => {
     setRightClickedSquares({});
     setMoveFrom('');
@@ -364,6 +339,31 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       undefined
     );
   }
+
+  const makeAMove = (move: any) => {
+    const gameMoves = game.fen();
+    const gameCopy = new Chess();
+    gameCopy.load(gameMoves);
+
+    let result;
+    try {
+      result = gameCopy.move(move);
+      setGame(gameCopy);
+      let MoveString = move.from + move.to;
+      setMoves([...moves, MoveString]);
+      setGameFEN(gameCopy.fen());
+      setLocalGame(gameCopy);
+
+      console.log('HERE IN MAKE A MOVE');
+    } catch {
+      result = null;
+      console.log('invalid move');
+    }
+
+    console.log(gameCopy.ascii());
+
+    return result; // null if the move was illegal, the move object if the move was legal
+  };
 
   const onSquareClick = (square: any): void => {
     // Make a move
