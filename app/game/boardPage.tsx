@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
 import GameInfo from './game-info';
+import GameTimer from './game-timer';
+import ScoreBoard from './score-board';
 
 import { useRouter } from 'next/navigation';
 
@@ -499,17 +501,29 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           <Skeleton height="50px" startColor="gray.800" endColor="gray.700" />
         </>
       ) : (
-        // GameInfo component
-        <GameInfo
-          wager={wager}
-          wagerAmount={wagerAmount}
-          numberOfGames={numberOfGames}
-          timeLimit={timeLimit}
-          timePlayer0={timePlayer0}
-          timePlayer1={timePlayer1}
-          isPlayerTurn={isPlayerTurn}
-          isPlayer0White={isPlayer0White}
-        />
+        <>
+          <GameTimer
+            wager={wager}
+            timeLimit={timeLimit}
+            timePlayer0={timePlayer0}
+            timePlayer1={timePlayer1}
+            isPlayerTurn={isPlayerTurn}
+            isPlayer0White={isPlayer0White}
+          />
+
+          <GameInfo
+            wager={wager}
+            wagerAmount={wagerAmount}
+            numberOfGames={numberOfGames}
+            timeLimit={timeLimit}
+            timePlayer0={timePlayer0}
+            timePlayer1={timePlayer1}
+            isPlayerTurn={isPlayerTurn}
+            isPlayer0White={isPlayer0White}
+          />
+
+          <ScoreBoard wager={wager} numberOfGames={numberOfGames} />
+        </>
       )}
     </ChakraProvider>
   );

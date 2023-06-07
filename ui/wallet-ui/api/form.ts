@@ -522,6 +522,71 @@ export const GetGameMoves = async (wagerAddress: string): Promise<string[]> => {
   }
 };
 
+interface WagerStatus {
+  isPlayerWhite: boolean;
+  winsPlayer0: number;
+  winsPlayer1: number;
+}
+
+export const GetWagerStatus = async (
+  wagerAddress: string,
+): Promise<[number, number]> => {
+  let { provider } = await setupProvider();
+  await updateContractAddresses();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  try {
+    console.log('GET WAGER STATUS !!!!!!');
+    const wagerStatusData = await chess.wagerStatus(wagerAddress);
+
+    const wagerStatus: WagerStatus = {
+      isPlayerWhite: wagerStatusData[0],
+      winsPlayer0: wagerStatusData[1],
+      winsPlayer1: wagerStatusData[2],
+    };
+
+    return [Number(wagerStatus.winsPlayer0), Number(wagerStatus.winsPlayer1)];
+  } catch (error) {
+    // alert(`Get game moves: ${wagerAddress} not found`);
+    console.log(error);
+    return [0, 0];
+  }
+};
+
+interface WagerPlayerAddresses {
+  player0Address: string;
+  player1Address: string;
+}
+
+export const GetWagerPlayers = async (
+  wagerAddress: string,
+): Promise<[string, string]> => {
+  let { provider } = await setupProvider();
+  await updateContractAddresses();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  try {
+    console.log('GET WAGER PLAYER ADDRESS !!!!!!');
+    const wagerPlayerData = await chess.gameWagers(wagerAddress);
+
+    const wagerStatus: WagerPlayerAddresses = {
+      player0Address: wagerPlayerData[0],
+      player1Address: wagerPlayerData[1],
+    };
+
+    return [
+      String(wagerStatus.player0Address),
+      String(wagerStatus.player1Address),
+    ];
+  } catch (error) {
+    // alert(`Get game moves: ${wagerAddress} not found`);
+    console.log(error);
+    return ['player not found', 'player not found'];
+  }
+};
+
 export const GetTimeRemaining = async (wagerAddress: string) => {
   let { provider } = await setupProvider();
   await updateContractAddresses();
