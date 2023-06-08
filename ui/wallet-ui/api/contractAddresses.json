@@ -10,7 +10,7 @@
     "chess": "0xCF41D5649e29153fd13fC0e34345108490083Ff0"
   },
   {
-    "network": "unknown",
+    "network": "localhost",
     "chainID": 31337,
     "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
     "token": "0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17",
@@ -18,5 +18,15 @@
     "chessNFT": "0x029C1A99D6ae043FbE0D8BF021135D67c3443642",
     "moveVerification": "0x9963Aeb98a0d7ffC48F175f305234889E71b7D77",
     "chess": "0xECd78C20F29B29199ed5e6dB101A3816d39F963e"
+  },
+  {
+    "network": "celoTestnet",
+    "chainID": 44787,
+    "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
+    "token": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
+    "chessToken": "0x4E99e3cFbC863A45467470c5b68DE00fC3231FA1",
+    "chessNFT": "0x2943844bA64f81Ba7bB9627fC9Dcd1612875a760",
+    "moveVerification": "0x62F1FB988ad470E1Ce7E9C6E97826301f6bF1FF7",
+    "chess": "0xBE0Ff2991f8f56fee4Cc662759630CF380D22D32"
   }
 ]

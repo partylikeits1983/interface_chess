@@ -9,6 +9,7 @@ const NETWORK_NAMES: { [key: string]: string } = {
   0x38: 'BSC',
   0x13881: 'Mumbai',
   0x2a: 'Kovan',
+  0xaef3: 'Celo Testnet',
 };
 
 export default function NetworkButton(): JSX.Element {
@@ -33,6 +34,9 @@ export default function NetworkButton(): JSX.Element {
         break;
       case 'kovan':
         chainId = '0x2a';
+        break;
+      case 'Celo Testnet':
+        chainId = '0xaef3';
         break;
       // add more cases if you have other networks
       default:
@@ -108,6 +112,9 @@ export default function NetworkButton(): JSX.Element {
             </MenuItem>
             <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
               Mumbai Testnet
+            </MenuItem>
+            <MenuItem onClick={() => handleNetworkChange('CeloTestnet')}>
+              Celo Testnet
             </MenuItem>
           </MenuList>
         </div>

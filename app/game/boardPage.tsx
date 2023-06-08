@@ -526,6 +526,13 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         try {
           const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
 
+          const [timePlayer0, timePlayer1, isPlayer0Turn] =
+            await GetTimeRemaining(wager);
+
+          setTimePlayer0(timePlayer0);
+          setTimePlayer1(timePlayer1);
+          setIsPlayer0Turn(isPlayer0Turn);
+
           if (_isPlayerTurnSC !== isPlayerTurn) {
             const movesArray = await GetGameMoves(wager, gameID);
             const currentGame = new Chess();
