@@ -186,7 +186,6 @@ export default function ChallengeForm() {
                 backgroundColor="#94febf" // Set the desired background color
                 variant="solid"
                 size="lg"
-                isLoading={isLoadingApproval}
                 loadingText="Submitting Transaction"
                 onClick={() => HandleClickApprove()}
                 _hover={{
@@ -195,6 +194,18 @@ export default function ChallengeForm() {
                 }}
               >
                 Approve Tokens
+                <div>
+                  {isLoadingApproval && (
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                      ml={2} // Set the desired margin-left value
+                    />
+                  )}
+                </div>
               </Button>
               <Button
                 flex="1"
@@ -212,7 +223,7 @@ export default function ChallengeForm() {
               >
                 Create Wager
                 <div>
-                  {true && (
+                  {isLoadingCreateWager && (
                     <Spinner
                       thickness="2px"
                       speed="0.85s"
