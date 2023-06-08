@@ -172,7 +172,16 @@ export default function ChallengeForm() {
             </FormControl>
 
             <FormControl>
-              <FormLabel>Time Limit</FormLabel>
+              <FormLabel>
+                Time Limit{' '}
+                <Tooltip
+                  label="Note: the time limit is the limit for all games, i.e. the timer does not reset after each game"
+                  aria-label="Number of games tooltip"
+                  placement="right"
+                >
+                  <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+                </Tooltip>
+              </FormLabel>
               <Slider
                 min={0}
                 max={604800}
