@@ -328,6 +328,25 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </>
         )}
       </Stack>
+      {isPendingApproval && (
+        <Box
+          marginTop="50px"
+          border="1px solid"
+          borderColor="gray.300"
+          borderRadius="md"
+          padding="4"
+        >
+          <p style={{ marginTop: '10px' }}>
+            <strong>
+              When accepting a wager, two transactions will occur:
+            </strong>
+          </p>
+          <ul>
+            <li>1) Approve Tokens Transaction</li>
+            <li>2) Accept Wager Transaction</li>
+          </ul>
+        </Box>
+      )}
     </div>
   );
 };
