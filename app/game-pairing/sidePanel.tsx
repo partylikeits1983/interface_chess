@@ -207,6 +207,18 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
             Go to Match
           </Button>
         </Link>
+
+        {true && (
+          <div style={{ marginTop: '20px' }}>
+            <p style={{ marginTop: '10px' }}>
+              <strong>When accepting a wager, two transactions occur:</strong>
+            </p>
+            <ul>
+              <li>1) Approve Tokens Transaction</li>
+              <li>2) Accept Wager Transaction</li>
+            </ul>
+          </div>
+        )}
       </Stack>
     </div>
   );
