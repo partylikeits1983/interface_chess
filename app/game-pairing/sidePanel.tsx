@@ -121,10 +121,10 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
       <Box width="300px" height="300px" position="relative">
         {isChessboardLoading ? (
           <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
+            thickness="2px"
+            speed="0.85s"
+            emptyColor="black"
+            color="green.500"
             size="xl"
             position="absolute"
             top="50%"
