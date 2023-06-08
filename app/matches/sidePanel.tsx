@@ -15,13 +15,16 @@ const {
   IsPlayerWhite,
   PayoutWager,
   CancelWager,
+  AcceptWagerAndApprove,
+  AcceptWagerConditions,
 } = require('ui/wallet-ui/api/form');
 
 interface CardSidePanelProps {
   card: Card; // Your Card type here
+  isPendingApproval: boolean;
 }
 
-const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
+const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const { matchAddress, player0Address, player1Address, wagerToken } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
@@ -35,6 +38,8 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
 
   const [isLoadingGoToMatch, setLoadingGoToMatch] = useState(false);
 
+  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
+
   const [isLoadingCancelWager, setLoadingCancelWager] = useState(false);
   const [isLoadingPayoutWager, setLoadingPayoutWager] = useState(false);
 
@@ -43,6 +48,20 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
   const handleGoToMatch = (matchAddress: string) => {
     setLoadingGoToMatch(true);
     router.push(`/game/${matchAddress}`);
+  };
+
+  const handleClickApprove = async (
+    wagerAddress: string,
+    wagerToken: string,
+    wagerAmount: number,
+  ) => {
+    setIsLoadingApproval(true);
+    console.log(wagerToken);
+
+    await AcceptWagerAndApprove(wagerAddress);
+    await AcceptWagerConditions(wagerAddress);
+
+    setIsLoadingApproval(false);
   };
 
   useEffect(() => {

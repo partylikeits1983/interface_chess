@@ -32,17 +32,11 @@ interface Props {
 interface CardAccordionProps {
   card: Card; // Your Card type here
   account: string | null;
-  isLoadingApproval: boolean;
-  HandleClickApprove: Function; // Update with the actual type
+
   // ... any other props you need
 }
 
-const CardAccordion: React.FC<CardAccordionProps> = ({
-  card,
-  account,
-  isLoadingApproval,
-  HandleClickApprove,
-}) => {
+const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -56,7 +50,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
 
   function formatAddress(address: string): string {
     if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
-      throw new Error('Invalid Ethereum address');
+      alert(`Invalid Ethereum address: ${address}`);
     }
     return `${address.substr(0, 6)}...${address.substr(-8)}`;
   }
@@ -222,34 +216,6 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
                     : 'Waiting for opponent to accept wager'}
                 </Text>
               </Stack>
-              {!card.isInProgress &&
-                Number(card.player1Address) === Number(account) && (
-                  <>
-                    <Box marginTop={8} />
-
-                    <Button
-                      color="#000000" // Set the desired text color
-                      backgroundColor="#94febf" // Set the desired background color
-                      variant="solid"
-                      _hover={{
-                        color: '#000000', // Set the text color on hover
-                        backgroundColor: '#62ffa2', // Set the background color on hover
-                      }}
-                      size="lg"
-                      isLoading={isLoadingApproval}
-                      loadingText="Submitting Approval Transaction"
-                      onClick={() =>
-                        HandleClickApprove(
-                          card.matchAddress,
-                          card.wagerToken,
-                          card.wagerAmount,
-                        )
-                      }
-                    >
-                      Accept Wager
-                    </Button>
-                  </>
-                )}
             </Stack>
 
             <Box
@@ -257,7 +223,13 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
               marginBottom={useBreakpointValue({ base: 4, md: 0 })}
               order={useBreakpointValue({ base: 2, md: 1 })}
             >
-              <SidePanel card={card}></SidePanel>
+              <SidePanel
+                card={card}
+                isPendingApproval={
+                  !card.isInProgress &&
+                  Number(card.player1Address) === Number(account)
+                }
+              ></SidePanel>
             </Box>
           </Flex>
         </AccordionPanel>

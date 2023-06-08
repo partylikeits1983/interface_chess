@@ -34,7 +34,7 @@ interface CardAccordionProps {
   card: Card; // Your Card type here
   account: string | null;
   isLoadingApproval: boolean;
-  HandleClickApprove: Function; // Update with the actual type
+
   // ... any other props you need
 }
 
@@ -42,7 +42,6 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
   card,
   account,
   isLoadingApproval,
-  HandleClickApprove,
 }) => {
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
@@ -57,10 +56,9 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
 
   function formatAddress(address: string): string {
     if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
-      throw new Error('Invalid Ethereum address');
+      alert(`Invalid Ethereum address: ${address}`);
     }
     return `${address.substr(0, 6)}...${address.substr(-8)}`;
-    return address;
   }
 
   async function handleCopyAddress(address: string) {
@@ -206,11 +204,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
             </Stack>
 
             <Box width="50%">
-              <SidePanel
-                card={card}
-                account={account}
-                HandleClickApprove={HandleClickApprove}
-              ></SidePanel>
+              <SidePanel card={card} account={account}></SidePanel>
             </Box>
           </Flex>
         </AccordionPanel>
