@@ -59,7 +59,6 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         }
       } else {
         try {
-          alert('getting api');
           // trying to ping the GCP API
           const wagerAddresses = await GetWagersDB();
 

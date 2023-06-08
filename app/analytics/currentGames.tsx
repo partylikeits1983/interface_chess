@@ -31,8 +31,6 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
     const fetchData = async () => {
       try {
         if (useAPI) {
-          alert('getting api');
-
           // trying to ping GCP chess fish api
           const addresses = await GetWagersDB();
           const fendata = await GetWagersFenDB();
