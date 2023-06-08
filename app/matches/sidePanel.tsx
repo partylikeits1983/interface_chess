@@ -143,45 +143,52 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
           </Button>
         </Link>
         <Button
-          onClick={handleSubmitCancelWager}
-          style={{ width: '250px' }}
-          // colorScheme="teal"
+          style={{ width: '250px', position: 'relative' }}
           variant="outline"
           color="#fffff" // Set the desired text color
-          // backgroundColor="#94febf" // Set the desired background color
-
           _hover={{
             color: '#000000', // Set the text color on hover
             backgroundColor: '#62ffa2', // Set the background color on hover
           }}
-          size="md"
+          loadingText="Submitting Transaction"
+          onClick={() => handleSubmitCancelWager()}
         >
-          Cancel Wager
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            Cancel Wager
+            {isLoadingPayoutWager && (
+              <div
+                style={{
+                  position: 'absolute',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: '50%',
+                  left: 'calc(100% + 8px)',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                <Spinner
+                  thickness="2px"
+                  speed="0.85s"
+                  emptyColor="gray.800"
+                  color="gray.400"
+                  size="md"
+                />
+              </div>
+            )}
+          </div>
         </Button>
+
         <Button
-          onClick={handleSubmitPayoutWager}
-          style={{ width: '250px' }}
-          // colorScheme="teal"
+          style={{ width: '250px', position: 'relative' }}
           variant="outline"
           color="#fffff" // Set the desired text color
-          // backgroundColor="#94febf" // Set the desired background color
-
-          _hover={{
-            color: '#000000', // Set the text color on hover
-            backgroundColor: '#62ffa2', // Set the background color on hover
-          }}
-          size="md"
-        >
-          Payout Wager
-        </Button>
-
-        <Button
-          style={{ width: '250px' }}
-          // colorScheme="teal"
-          variant="outline"
-          color="#fffff" // Set the desired text color
-          // backgroundColor="#94febf" // Set the desired background color
-
           _hover={{
             color: '#000000', // Set the text color on hover
             backgroundColor: '#62ffa2', // Set the background color on hover
@@ -189,24 +196,35 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
           loadingText="Submitting Transaction"
           onClick={() => handleSubmitPayoutWager()}
         >
-          Payout Wager
           <div
             style={{
-              display: 'inline-block',
-              width: '24px',
-              textAlign: 'center',
-              marginLeft: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            {isLoadingPayoutWager ? (
-              <Spinner
-                thickness="2px"
-                speed="0.85s"
-                emptyColor="gray.800"
-                color="gray.400"
-                size="md"
-              />
-            ) : null}
+            Payout Wager
+            {isLoadingPayoutWager && (
+              <div
+                style={{
+                  position: 'absolute',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: '50%',
+                  left: 'calc(100% + 8px)',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                <Spinner
+                  thickness="2px"
+                  speed="0.85s"
+                  emptyColor="gray.800"
+                  color="gray.400"
+                  size="md"
+                />
+              </div>
+            )}
           </div>
         </Button>
       </Stack>
