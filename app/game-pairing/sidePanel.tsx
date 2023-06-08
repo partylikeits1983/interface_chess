@@ -207,19 +207,27 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
             Go to Match
           </Button>
         </Link>
-
-        {true && (
-          <div style={{ marginTop: '20px' }}>
+      </Stack>
+      {!card.isInProgress &&
+        Number(card.player0Address) !== Number(account) && (
+          <Box
+            marginTop="50px"
+            border="1px solid"
+            borderColor="gray.300"
+            borderRadius="md"
+            padding="4"
+          >
             <p style={{ marginTop: '10px' }}>
-              <strong>When accepting a wager, two transactions occur:</strong>
+              <strong>
+                When accepting a wager, two transactions will occur:
+              </strong>
             </p>
             <ul>
               <li>1) Approve Tokens Transaction</li>
               <li>2) Accept Wager Transaction</li>
             </ul>
-          </div>
+          </Box>
         )}
-      </Stack>
     </div>
   );
 };
