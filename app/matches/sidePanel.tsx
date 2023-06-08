@@ -33,7 +33,8 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [numberOfGames, setNumberOfGames] = useState('');
 
-  const [loading, setLoading] = useState(true);
+  const [isLoadingCancelWager, setLoadingCancelWager] = useState(false);
+  const [isLoadingPayoutWager, setLoadingPayoutWager] = useState(false);
 
   const router = useRouter();
 
@@ -71,29 +72,30 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
     getGameMoves();
   }, [card]);
 
-  function handleSubmitCancelWager() {
+  const handleSubmitCancelWager = async () => {
     try {
-      // adding await fails to build
-      // using useEffect makes everything glitchy
+      setLoadingCancelWager(true);
       console.log('handle cancel wager');
       console.log(matchAddress);
-      CancelWager(matchAddress);
+      await CancelWager(matchAddress);
+
+      setLoadingCancelWager(false);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  function handleSubmitPayoutWager() {
+  const handleSubmitPayoutWager = async () => {
     try {
-      // adding await fails to build
-      // using useEffect makes everything glitchy
+      setLoadingPayoutWager(true);
       console.log('handle payout wager');
       console.log(matchAddress);
-      PayoutWager(matchAddress);
+      await PayoutWager(matchAddress);
+      setLoadingPayoutWager(false);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div
@@ -171,6 +173,41 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
           size="md"
         >
           Payout Wager
+        </Button>
+
+        <Button
+          style={{ width: '250px' }}
+          // colorScheme="teal"
+          variant="outline"
+          color="#fffff" // Set the desired text color
+          // backgroundColor="#94febf" // Set the desired background color
+
+          _hover={{
+            color: '#000000', // Set the text color on hover
+            backgroundColor: '#62ffa2', // Set the background color on hover
+          }}
+          loadingText="Submitting Transaction"
+          onClick={() => handleSubmitPayoutWager()}
+        >
+          Payout Wager
+          <div
+            style={{
+              display: 'inline-block',
+              width: '24px',
+              textAlign: 'center',
+              marginLeft: '8px',
+            }}
+          >
+            {isLoadingPayoutWager ? (
+              <Spinner
+                thickness="2px"
+                speed="0.85s"
+                emptyColor="gray.800"
+                color="gray.400"
+                size="md"
+              />
+            ) : null}
+          </div>
         </Button>
       </Stack>
     </div>
