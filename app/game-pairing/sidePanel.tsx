@@ -7,7 +7,11 @@ import { Card } from '../types';
 import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
-import { match } from 'assert';
+
+const {
+  AcceptWagerAndApprove,
+  AcceptWagerConditions,
+} = require('ui/wallet-ui/api/form');
 
 const {
   GetGameMoves,
@@ -20,14 +24,9 @@ const {
 interface CardSidePanelProps {
   card: Card; // Your Card type here
   account: string | null;
-  HandleClickApprove: Function;
 }
 
-const SidePanel: FC<CardSidePanelProps> = ({
-  card,
-  account,
-  HandleClickApprove,
-}) => {
+const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
   const { matchAddress, player0Address, player1Address, wagerToken } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
@@ -40,6 +39,8 @@ const SidePanel: FC<CardSidePanelProps> = ({
   const [numberOfGames, setNumberOfGames] = useState('');
 
   const [loading, setLoading] = useState(true);
+
+  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
   useEffect(() => {
     const getGameMoves = async () => {
@@ -99,6 +100,20 @@ const SidePanel: FC<CardSidePanelProps> = ({
     }
   }
 
+  const handleClickApprove = async (
+    wagerAddress: string,
+    wagerToken: string,
+  ) => {
+    setIsLoadingApproval(true);
+    console.log(wagerToken);
+
+    // await Approve(wagerToken, wagerAmount);
+    await AcceptWagerAndApprove(wagerAddress);
+    await AcceptWagerConditions(wagerAddress);
+
+    setIsLoadingApproval(false);
+  };
+
   return (
     <div
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
@@ -138,17 +153,41 @@ const SidePanel: FC<CardSidePanelProps> = ({
                   backgroundColor: '#62ffa2', // Set the background color on hover
                 }}
                 size="md"
-                // isLoading={isLoadingApproval}
-                loadingText="Submitting Approval Transaction"
+                loadingText="Submitting Transaction"
                 onClick={() =>
-                  HandleClickApprove(
-                    card.matchAddress,
-                    card.wagerToken,
-                    card.wagerAmount,
-                  )
+                  handleClickApprove(card.matchAddress, card.wagerToken)
                 }
               >
-                Accept Wager
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Accept Wager
+                  {isLoadingApproval && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        top: '50%',
+                        left: 'calc(100% + 8px)',
+                        transform: 'translateY(-50%)',
+                      }}
+                    >
+                      <Spinner
+                        thickness="2px"
+                        speed="0.85s"
+                        emptyColor="gray.800"
+                        color="gray.400"
+                        size="md"
+                      />
+                    </div>
+                  )}
+                </div>
               </Button>
             </>
           )}
