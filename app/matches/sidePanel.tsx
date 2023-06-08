@@ -29,11 +29,8 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
   const [game, setGame] = useState(new Chess());
-  const [moves, setMoves] = useState<string[]>([]);
 
-  const [wagerAddress, setWagerAddress] = useState('');
   const [isPlayerWhite, setPlayerColor] = useState('white');
-  const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [numberOfGames, setNumberOfGames] = useState('');
 
   const [isLoadingGoToMatch, setLoadingGoToMatch] = useState(false);
@@ -149,50 +146,52 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
         )}
       </Box>
       <Stack spacing={4} mt={8}>
-        <Button
-          style={{ width: '250px', position: 'relative' }}
-          variant="outline"
-          color="#fffff" // Set the desired text color
-          _hover={{
-            color: '#000000', // Set the text color on hover
-            backgroundColor: '#62ffa2', // Set the background color on hover
-          }}
-          loadingText="Submitting Transaction"
-          onClick={() =>
-            handleClickApproveWager(card.matchAddress, card.wagerToken)
-          }
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+        {isPendingApproval && (
+          <Button
+            style={{ width: '250px', position: 'relative' }}
+            variant="outline"
+            color="#fffff" // Set the desired text color
+            _hover={{
+              color: '#000000', // Set the text color on hover
+              backgroundColor: '#62ffa2', // Set the background color on hover
             }}
+            loadingText="Submitting Transaction"
+            onClick={() =>
+              handleClickApproveWager(card.matchAddress, card.wagerToken)
+            }
           >
-            Accept Wager Conditions
-            {isLoadingApproval && (
-              <div
-                style={{
-                  position: 'absolute',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: '50%',
-                  left: 'calc(100% + 8px)',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                <Spinner
-                  thickness="2px"
-                  speed="0.85s"
-                  emptyColor="gray.800"
-                  color="gray.400"
-                  size="md"
-                />
-              </div>
-            )}
-          </div>
-        </Button>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              Accept Wager Conditions
+              {isLoadingApproval && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    top: '50%',
+                    left: 'calc(100% + 8px)',
+                    transform: 'translateY(-50%)',
+                  }}
+                >
+                  <Spinner
+                    thickness="2px"
+                    speed="0.85s"
+                    emptyColor="gray.800"
+                    color="gray.400"
+                    size="md"
+                  />
+                </div>
+              )}
+            </div>
+          </Button>
+        )}
 
         <Link href={`/game/${card.matchAddress}`}>
           <Button
@@ -238,91 +237,96 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
             </div>
           </Button>
         </Link>
-        <Button
-          style={{ width: '250px', position: 'relative' }}
-          variant="outline"
-          color="#fffff" // Set the desired text color
-          _hover={{
-            color: '#000000', // Set the text color on hover
-            backgroundColor: '#62ffa2', // Set the background color on hover
-          }}
-          loadingText="Submitting Transaction"
-          onClick={() => handleSubmitCancelWager()}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            Cancel Wager
-            {isLoadingCancelWager && (
-              <div
-                style={{
-                  position: 'absolute',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  top: '50%',
-                  left: 'calc(100% + 8px)',
-                  transform: 'translateY(-50%)',
-                }}
-              >
-                <Spinner
-                  thickness="2px"
-                  speed="0.85s"
-                  emptyColor="gray.800"
-                  color="gray.400"
-                  size="md"
-                />
-              </div>
-            )}
-          </div>
-        </Button>
 
-        <Button
-          style={{ width: '250px', position: 'relative' }}
-          variant="outline"
-          color="#fffff" // Set the desired text color
-          _hover={{
-            color: '#000000', // Set the text color on hover
-            backgroundColor: '#62ffa2', // Set the background color on hover
-          }}
-          loadingText="Submitting Transaction"
-          onClick={() => handleSubmitPayoutWager()}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            Payout Wager
-            {isLoadingPayoutWager && (
+        {!isPendingApproval && (
+          <>
+            <Button
+              style={{ width: '250px', position: 'relative' }}
+              variant="outline"
+              color="#fffff" // Set the desired text color
+              _hover={{
+                color: '#000000', // Set the text color on hover
+                backgroundColor: '#62ffa2', // Set the background color on hover
+              }}
+              loadingText="Submitting Transaction"
+              onClick={() => handleSubmitCancelWager()}
+            >
               <div
                 style={{
-                  position: 'absolute',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  top: '50%',
-                  left: 'calc(100% + 8px)',
-                  transform: 'translateY(-50%)',
                 }}
               >
-                <Spinner
-                  thickness="2px"
-                  speed="0.85s"
-                  emptyColor="gray.800"
-                  color="gray.400"
-                  size="md"
-                />
+                Cancel Wager
+                {isLoadingCancelWager && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      top: '50%',
+                      left: 'calc(100% + 8px)',
+                      transform: 'translateY(-50%)',
+                    }}
+                  >
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </Button>
+            </Button>
+
+            <Button
+              style={{ width: '250px', position: 'relative' }}
+              variant="outline"
+              color="#fffff" // Set the desired text color
+              _hover={{
+                color: '#000000', // Set the text color on hover
+                backgroundColor: '#62ffa2', // Set the background color on hover
+              }}
+              loadingText="Submitting Transaction"
+              onClick={() => handleSubmitPayoutWager()}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                Payout Wager
+                {isLoadingPayoutWager && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      top: '50%',
+                      left: 'calc(100% + 8px)',
+                      transform: 'translateY(-50%)',
+                    }}
+                  >
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                    />
+                  </div>
+                )}
+              </div>
+            </Button>
+          </>
+        )}
       </Stack>
     </div>
   );

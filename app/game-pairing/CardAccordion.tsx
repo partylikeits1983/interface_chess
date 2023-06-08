@@ -179,7 +179,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({
               </Stack>
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Time Per Player
+                  Wager Time Limit
                 </Text>
                 <Text fontSize="md">
                   {formatDuration(Number(card.timeLimit))}
