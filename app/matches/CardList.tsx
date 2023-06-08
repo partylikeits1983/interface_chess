@@ -6,21 +6,11 @@ import {
   Box,
   Heading,
   Text,
-  Skeleton,
-  Switch,
   Spinner,
-  FormControl,
-  FormLabel,
-  Select,
   Flex,
 } from '@chakra-ui/react';
 
-const {
-  GetAllWagers,
-  AcceptWagerAndApprove,
-  AcceptWagerConditions,
-  GetPlayerTurn,
-} = require('ui/wallet-ui/api/form');
+const { GetAllWagers } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
@@ -51,7 +41,6 @@ const CardList = () => {
   const { connect, accounts } = useMetamask();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
 
   const [sortValue, setSortValue] = useState('');
@@ -73,21 +62,6 @@ const CardList = () => {
   useEffect(() => {
     setAccount(accounts[0]);
   }, [accounts]);
-
-  const HandleClickApprove = async (
-    wagerAddress: string,
-    wagerToken: string,
-    wagerAmount: number,
-  ) => {
-    setIsLoadingApproval(true);
-    console.log(wagerToken);
-
-    // await Approve(wagerToken, wagerAmount);
-    await AcceptWagerAndApprove(wagerAddress);
-    await AcceptWagerConditions(wagerAddress);
-
-    setIsLoadingApproval(false);
-  };
 
   useEffect(() => {
     async function fetchCards() {
@@ -143,14 +117,7 @@ const CardList = () => {
           </Flex>
         ) : filteredAndSortedCards.length ? (
           filteredAndSortedCards.map((card, index) => (
-            <CardAccordion
-              key={index}
-              card={card}
-              account={account}
-              isLoadingApproval={isLoadingApproval}
-              HandleClickApprove={HandleClickApprove}
-              // ... any other props you need to pass
-            />
+            <CardAccordion key={index} card={card} account={account} />
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">

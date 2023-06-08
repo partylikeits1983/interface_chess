@@ -6,21 +6,14 @@ import {
   Box,
   Heading,
   Text,
-  Skeleton,
-  Switch,
   Spinner,
-  FormControl,
-  FormLabel,
-  Select,
   Flex,
 } from '@chakra-ui/react';
 
 const {
-  GetAllWagers,
   GetAllWagersForPairing,
   AcceptWagerAndApprove,
   AcceptWagerConditions,
-  GetPlayerTurn,
 } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
@@ -158,8 +151,6 @@ const CardList = () => {
               key={index}
               card={card}
               account={account}
-              isLoadingApproval={isLoadingApproval}
-              HandleClickApprove={HandleClickApprove}
               // ... any other props you need to pass
             />
           ))

@@ -12,7 +12,6 @@ import {
   Text,
   Flex,
   Box,
-  Button,
   HStack,
 } from '@chakra-ui/react';
 
@@ -31,18 +30,11 @@ interface Props {
 }
 
 interface CardAccordionProps {
-  card: Card; // Your Card type here
+  card: Card;
   account: string | null;
-  isLoadingApproval: boolean;
-
-  // ... any other props you need
 }
 
-const CardAccordion: React.FC<CardAccordionProps> = ({
-  card,
-  account,
-  isLoadingApproval,
-}) => {
+const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);

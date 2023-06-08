@@ -1,11 +1,4 @@
-import {
-  Select,
-  Switch,
-  FormControl,
-  FormLabel,
-  Flex,
-  Stack,
-} from '@chakra-ui/react';
+import { Select, Switch, Flex } from '@chakra-ui/react';
 
 interface CardFilterControlsProps {
   sortValue: string;

@@ -12,7 +12,6 @@ import {
   Text,
   Flex,
   Box,
-  Button,
   HStack,
   useBreakpointValue,
 } from '@chakra-ui/react';
@@ -30,10 +29,8 @@ interface Props {
 }
 
 interface CardAccordionProps {
-  card: Card; // Your Card type here
+  card: Card;
   account: string | null;
-
-  // ... any other props you need
 }
 
 const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
