@@ -161,7 +161,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
             }}
           >
             Cancel Wager
-            {isLoadingPayoutWager && (
+            {isLoadingCancelWager && (
               <div
                 style={{
                   position: 'absolute',
