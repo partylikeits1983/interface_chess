@@ -160,7 +160,7 @@ export const Approve = async (tokenAddress: string, amount: number) => {
     const value = await token.approve(ChessAddress, amount.toString());
     const allowance = await token.allowance(accounts[0], ChessAddress);
 
-    alert('success' + allowance);
+    alert('Success! allowance set: ' + allowance);
 
     return {
       value: value,

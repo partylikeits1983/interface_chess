@@ -149,7 +149,17 @@ export default function ChallengeForm() {
             </FormControl>
 
             <FormControl>
-              <FormLabel>Number of Games</FormLabel>
+              <FormLabel>
+                Number of Games{' '}
+                <Tooltip
+                  label="Number of games must be odd"
+                  aria-label="Number of games tooltip"
+                  placement="right"
+                >
+                  <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+                </Tooltip>
+              </FormLabel>
+
               <Input
                 type="number"
                 name="numberOfGames"
