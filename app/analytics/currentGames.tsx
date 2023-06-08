@@ -16,7 +16,11 @@ import {
   GetNumberOfGames,
 } from 'ui/wallet-ui/api/form';
 
-const CurrentGames = () => {
+interface CurrentGamesProps {
+  useAPI: boolean;
+}
+
+const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
   const [Games, setGames] = useState<string[]>([]);
 
@@ -26,17 +30,17 @@ const CurrentGames = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // trying to ping GCP chess fish api
-        const addresses = await GetWagersDB();
-        const fendata = await GetWagersFenDB();
+        if (useAPI) {
+          alert('getting api');
 
-        setWagerAddresses(addresses.reverse());
-        setGames(fendata.reverse());
+          // trying to ping GCP chess fish api
+          const addresses = await GetWagersDB();
+          const fendata = await GetWagersFenDB();
 
-        // setLoading(false);
-      } catch (error) {
-        try {
-          // if the GCP api is down => then try to use RPC link
+          setWagerAddresses(addresses.reverse());
+          setGames(fendata.reverse());
+        } else {
+          // if useAPI is false, then use the Smart Contract via RPC link
           console.log('Getting all games via RPC-LINK');
           const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
@@ -62,17 +66,15 @@ const CurrentGames = () => {
           }
           setGames(GamesFen.reverse()); // reverse to show newest first
           setWagerAddresses(fetchedWagerAddresses.reverse()); // same here
-
-          // setLoading(false);
-        } catch {
-          console.error(error);
         }
 
+        // setLoading(false);
+      } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, []);
+  }, [useAPI]);
 
   const router = useRouter();
   const handleBoardClick = (address: string) => {

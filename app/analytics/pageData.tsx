@@ -8,11 +8,13 @@ import Analytics from './analytics';
 import CurrentGames from './currentGames';
 
 const PageData: React.FC = () => {
+  const [useAPI, setUseAPI] = useState(false);
+
   return (
     <ChakraProvider>
       <Stack spacing={8}>
-        <Analytics />
-        <CurrentGames />
+        <Analytics useAPI={useAPI} handleToggle={() => setUseAPI(!useAPI)} />
+        <CurrentGames useAPI={useAPI} />
       </Stack>
     </ChakraProvider>
   );

@@ -56,12 +56,8 @@ const ERC20ABI = [
 const updateContractAddresses = async (): Promise<void> => {
   let { provider } = await setupProvider();
 
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
   const network = await provider.getNetwork();
   const chainId = network.chainId;
-
-  /*   console.log('Chain ID');
-  console.log(chainId); */
 
   const data: ContractAddress[] = require('./contractAddresses.json');
   const addresses: ContractAddress[] = JSON.parse(JSON.stringify(data));
@@ -78,8 +74,6 @@ const updateContractAddresses = async (): Promise<void> => {
     ChessAddress = chess;
     VerificationAddress = moveVerification;
     tokenAddress = token;
-
-    // console.log(ChessAddress, VerificationAddress, tokenAddress);
   }
   // Add more chains if needed.
 };
@@ -636,6 +630,7 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 };
 
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
+  await updateContractAddresses();
   let { provider } = await setupProvider();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);

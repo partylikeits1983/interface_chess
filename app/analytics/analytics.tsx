@@ -11,7 +11,6 @@ import {
   StatNumber,
   StatGroup,
   Spinner,
-  IconButton,
   Table,
   Flex,
   Switch,
@@ -23,12 +22,16 @@ import {
 } from '@chakra-ui/react';
 
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
-
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function Analytics() {
+interface AnalyticsProps {
+  useAPI: boolean;
+  handleToggle: () => void;
+}
+
+const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const [totalGames, setTotalGames] = useState('');
   const [totalWagers, setTotalWagers] = useState('');
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
@@ -36,51 +39,17 @@ export default function Analytics() {
 
   const router = useRouter();
 
-  const [useAPI, setUseAPI] = useState(false);
-
-  const handleToggle = () => {
-    setUseAPI(!useAPI);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // trying to ping the GCP API
-        const wagerAddresses = await GetWagersDB();
-
-        setWagerAddresses(wagerAddresses);
-        setTotalGames(wagerAddresses.length.toString());
-        setTotalWagers(wagerAddresses.length.toString());
-
-        setLoading(false);
-      } catch (error) {
-        try {
-          // if GCP api is down, calling contract directly (slower)
-          const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
-
-          setWagerAddresses(fetchedWagerAddresses);
-          setTotalGames(totalGames);
-          setTotalWagers(fetchedWagerAddresses.length.toString());
-
-          setLoading(false);
-        } catch (error) {
-          console.log(error);
-        }
-
-        console.error('Error fetching total games:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (useAPI) {
+      if (!useAPI) {
         try {
           const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
           setWagerAddresses(fetchedWagerAddresses);
+
+          console.log(fetchedWagerAddresses);
+          console.log(totalGames);
+
           setTotalGames(totalGames);
           setTotalWagers(fetchedWagerAddresses.length.toString());
 
@@ -90,6 +59,7 @@ export default function Analytics() {
         }
       } else {
         try {
+          alert('getting api');
           // trying to ping the GCP API
           const wagerAddresses = await GetWagersDB();
 
@@ -103,20 +73,22 @@ export default function Analytics() {
         }
       }
     };
-
     fetchData();
-  }, []);
+  }, [useAPI]);
 
   return (
     <ChakraProvider>
       <Flex justify="flex-end" pr={4} pt={0} alignItems="center">
         <Switch
           colorScheme="green"
-          isChecked={useAPI}
+          isChecked={!useAPI}
           onChange={handleToggle}
         />
 
-        <Tooltip label="When on, get values from on chain" hasArrow>
+        <Tooltip
+          label="When switched on, gets values from on-chain (slower). Switch off if you don't have metamask"
+          hasArrow
+        >
           <QuestionOutlineIcon color="white" ml={2} />
         </Tooltip>
       </Flex>
@@ -160,4 +132,6 @@ export default function Analytics() {
       </Box>
     </ChakraProvider>
   );
-}
+};
+
+export default Analytics;
