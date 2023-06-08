@@ -33,10 +33,17 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [numberOfGames, setNumberOfGames] = useState('');
 
+  const [isLoadingGoToMatch, setLoadingGoToMatch] = useState(false);
+
   const [isLoadingCancelWager, setLoadingCancelWager] = useState(false);
   const [isLoadingPayoutWager, setLoadingPayoutWager] = useState(false);
 
   const router = useRouter();
+
+  const handleGoToMatch = (matchAddress: string) => {
+    setLoadingGoToMatch(true);
+    router.push(`/game/${matchAddress}`);
+  };
 
   useEffect(() => {
     const getGameMoves = async () => {
@@ -126,20 +133,46 @@ const SidePanel: FC<CardSidePanelProps> = ({ card }) => {
       <Stack spacing={4} mt={8}>
         <Link href={`/game/${card.matchAddress}`}>
           <Button
-            style={{ width: '250px' }}
-            // colorScheme="teal"
+            style={{ width: '250px', position: 'relative' }}
             variant="outline"
             color="#fffff" // Set the desired text color
-            // backgroundColor="#94febf" // Set the desired background color
-
             _hover={{
               color: '#000000', // Set the text color on hover
               backgroundColor: '#62ffa2', // Set the background color on hover
             }}
-            size="md"
-            onClick={() => router.push(`/game/${card.matchAddress}`)}
+            loadingText="Loading"
+            onClick={() => handleGoToMatch(card.matchAddress)}
           >
-            Go to Match
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              Go to Match
+              {isLoadingCancelWager && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    top: '50%',
+                    left: 'calc(100% + 8px)',
+                    transform: 'translateY(-50%)',
+                  }}
+                >
+                  <Spinner
+                    thickness="2px"
+                    speed="0.85s"
+                    emptyColor="gray.800"
+                    color="gray.400"
+                    size="md"
+                  />
+                </div>
+              )}
+            </div>
           </Button>
         </Link>
         <Button
