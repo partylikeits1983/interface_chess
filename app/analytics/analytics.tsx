@@ -11,14 +11,19 @@ import {
   StatNumber,
   StatGroup,
   Spinner,
+  IconButton,
   Table,
-  Thead,
-  Tbody,
+  Flex,
+  Switch,
+  Tooltip,
   Tr,
   Th,
   Td,
   Link,
 } from '@chakra-ui/react';
+
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
+
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -30,6 +35,12 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
+
+  const [useAPI, setUseAPI] = useState(false);
+
+  const handleToggle = () => {
+    setUseAPI(!useAPI);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,8 +74,53 @@ export default function Analytics() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (useAPI) {
+        try {
+          const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
+
+          setWagerAddresses(fetchedWagerAddresses);
+          setTotalGames(totalGames);
+          setTotalWagers(fetchedWagerAddresses.length.toString());
+
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          // trying to ping the GCP API
+          const wagerAddresses = await GetWagersDB();
+
+          setWagerAddresses(wagerAddresses);
+          setTotalGames(wagerAddresses.length.toString());
+          setTotalWagers(wagerAddresses.length.toString());
+
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <ChakraProvider>
+      <Flex justify="flex-end" pr={4} pt={0} alignItems="center">
+        <Switch
+          colorScheme="green"
+          isChecked={useAPI}
+          onChange={handleToggle}
+        />
+
+        <Tooltip label="When on, get values from on chain" hasArrow>
+          <QuestionOutlineIcon color="white" ml={2} />
+        </Tooltip>
+      </Flex>
+
       <StatGroup color="white">
         <Stat>
           <StatLabel>Total Number of Games Played</StatLabel>
