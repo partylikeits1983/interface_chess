@@ -182,57 +182,68 @@ export default function ChallengeForm() {
             <HStack spacing="4">
               <Button
                 flex="1"
-                color="#000000" // Set the desired text color
-                backgroundColor="#94febf" // Set the desired background color
+                color="#000000"
+                backgroundColor="#94febf"
                 variant="solid"
                 size="lg"
                 loadingText="Submitting Transaction"
                 onClick={() => HandleClickApprove()}
                 _hover={{
-                  color: '#000000', // Set the text color on hover
-                  backgroundColor: '#62ffa2', // Set the background color on hover
+                  color: '#000000',
+                  backgroundColor: '#62ffa2',
                 }}
               >
                 Approve Tokens
-                <div>
-                  {isLoadingApproval && (
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: '24px',
+                    textAlign: 'center',
+                    marginLeft: '8px',
+                  }}
+                >
+                  {isLoadingApproval ? (
                     <Spinner
                       thickness="2px"
                       speed="0.85s"
                       emptyColor="gray.800"
                       color="gray.400"
                       size="md"
-                      ml={2} // Set the desired margin-left value
                     />
-                  )}
+                  ) : null}
                 </div>
               </Button>
               <Button
                 flex="1"
-                color="#000000" // Set the desired text color
-                backgroundColor="#94febf" // Set the desired background color
+                color="#000000"
+                backgroundColor="#94febf"
                 variant="solid"
                 size="lg"
-                // isLoading={true}
                 loadingText="Submitting Transaction"
                 onClick={() => HandleClickCreateWager()}
                 _hover={{
-                  color: '#000000', // Set the text color on hover
-                  backgroundColor: '#62ffa2', // Set the background color on hover
+                  color: '#000000',
+                  backgroundColor: '#62ffa2',
                 }}
               >
                 Create Wager
-                <div>
-                  {isLoadingCreateWager && (
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: '24px',
+                    textAlign: 'center',
+                    marginLeft: '8px',
+                  }}
+                >
+                  {isLoadingCreateWager ? (
                     <Spinner
                       thickness="2px"
                       speed="0.85s"
                       emptyColor="gray.800"
                       color="gray.400"
                       size="md"
-                      ml={2} // Set the desired margin-left value
                     />
-                  )}
+                  ) : null}
                 </div>
               </Button>
             </HStack>
