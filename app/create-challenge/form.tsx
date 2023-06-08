@@ -8,7 +8,7 @@ import {
   Button,
   Stack,
   HStack,
-  Avatar,
+  Spinner,
   ChakraProvider,
   Slider,
   SliderTrack,
@@ -202,7 +202,7 @@ export default function ChallengeForm() {
                 backgroundColor="#94febf" // Set the desired background color
                 variant="solid"
                 size="lg"
-                isLoading={isLoadingCreateWager}
+                // isLoading={true}
                 loadingText="Submitting Transaction"
                 onClick={() => HandleClickCreateWager()}
                 _hover={{
@@ -211,6 +211,18 @@ export default function ChallengeForm() {
                 }}
               >
                 Create Wager
+                <div>
+                  {true && (
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                      ml={2} // Set the desired margin-left value
+                    />
+                  )}
+                </div>
               </Button>
             </HStack>
           </Stack>
