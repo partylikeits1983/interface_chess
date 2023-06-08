@@ -50,10 +50,9 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     router.push(`/game/${matchAddress}`);
   };
 
-  const handleClickApprove = async (
+  const handleClickApproveWager = async (
     wagerAddress: string,
     wagerToken: string,
-    wagerAmount: number,
   ) => {
     setIsLoadingApproval(true);
     console.log(wagerToken);
@@ -150,6 +149,51 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
         )}
       </Box>
       <Stack spacing={4} mt={8}>
+        <Button
+          style={{ width: '250px', position: 'relative' }}
+          variant="outline"
+          color="#fffff" // Set the desired text color
+          _hover={{
+            color: '#000000', // Set the text color on hover
+            backgroundColor: '#62ffa2', // Set the background color on hover
+          }}
+          loadingText="Submitting Transaction"
+          onClick={() =>
+            handleClickApproveWager(card.matchAddress, card.wagerToken)
+          }
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            Accept Wager Conditions
+            {isLoadingApproval && (
+              <div
+                style={{
+                  position: 'absolute',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  top: '50%',
+                  left: 'calc(100% + 8px)',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                <Spinner
+                  thickness="2px"
+                  speed="0.85s"
+                  emptyColor="gray.800"
+                  color="gray.400"
+                  size="md"
+                />
+              </div>
+            )}
+          </div>
+        </Button>
+
         <Link href={`/game/${card.matchAddress}`}>
           <Button
             style={{ width: '250px', position: 'relative' }}
