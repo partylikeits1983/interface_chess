@@ -2,14 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-import {
-  Box,
-  Flex,
-  ListItem,
-  Text,
-  Link,
-  ChakraProvider,
-} from '@chakra-ui/react';
+import { Flex, Box, Link, ChakraProvider } from '@chakra-ui/react';
 
 export default function Docs() {
   const [loaded, setLoaded] = useState(false);
@@ -25,6 +18,40 @@ export default function Docs() {
       handleImageLoad();
     }
   }, []); // Run only once after initial render
+
+  const addAlfajoresNetwork = async () => {
+    const provider = (window as any).ethereum;
+
+    if (provider) {
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0xaef3',
+              chainName: 'Alfajores Testnet',
+              rpcUrls: ['https://alfajores-forno.celo-testnet.org'],
+              nativeCurrency: {
+                name: 'Celo',
+                symbol: 'A-CELO',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://explorer.celo.org/alfajores'],
+            },
+          ],
+        });
+      } catch (error) {
+        console.error(
+          'An error occurred while trying to switch to the Alfajores network:',
+          error,
+        );
+      }
+    } else {
+      console.log(
+        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+      );
+    }
+  };
 
   return (
     <ChakraProvider>
@@ -58,6 +85,46 @@ export default function Docs() {
             to explore the chess.fish documentation
           </span>
         </Box>
+
+        <Flex
+          justifyContent="center"
+          mt={4}
+          flexDirection={'row'}
+          align="center"
+        >
+          <Box
+            p={6}
+            bgColor="black"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            _hover={{
+              bgColor: 'gray.800',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              addAlfajoresNetwork();
+            }}
+          >
+            Add Celo Testnet to Metamask
+          </Box>
+          <Box
+            p={6}
+            bgColor="black"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            _hover={{
+              bgColor: 'gray.800',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              // Handle click event for the second box
+            }}
+          >
+            Celo Testnet Faucet
+          </Box>
+        </Flex>
       </Flex>
     </ChakraProvider>
   );
