@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Flex, Box, Link, ChakraProvider } from '@chakra-ui/react';
+import { Flex, Box, Link, Image, Text, ChakraProvider } from '@chakra-ui/react';
+
+import { ChevronRightIcon } from '@chakra-ui/icons';
 
 export default function Docs() {
   const [loaded, setLoaded] = useState(false);
@@ -70,14 +72,14 @@ export default function Docs() {
         <Box style={{ color: 'white' }}>
           Go to{' '}
           <Link
-            href="https://docs.chess.fish"
             isExternal
             color="green.500"
             fontWeight="bold"
+            onClick={() => {
+              window.open('https://docs.chess.fish', '_blank');
+            }}
           >
-            <a href="https://docs.chess.fish" style={{ color: 'green.500' }}>
-              docs.chess.fish
-            </a>
+            <i style={{ color: 'green.500' }}>docs.chess.fish</i>
           </Link>
         </Box>
         <Box mt={2}>
@@ -94,35 +96,54 @@ export default function Docs() {
         >
           <Box
             p={6}
-            bgColor="black"
+            bgColor="#08131c"
             color="white"
             borderRadius="md"
             cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            mr={5}
             _hover={{
-              bgColor: 'gray.800',
+              bgColor: 'gray.700',
               borderColor: 'white',
             }}
             onClick={() => {
               addAlfajoresNetwork();
             }}
           >
-            Add Celo Testnet to Metamask
+            <Flex justify="space-between" align="center">
+              <Box display="flex" alignItems="center">
+                <Image
+                  src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                  width="24px"
+                  height="24px"
+                />
+                <Text ml={3}>Add Celo Testnet to Metamask</Text>
+              </Box>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
           </Box>
+
           <Box
             p={6}
-            bgColor="black"
+            bgColor="#08131c"
             color="white"
             borderRadius="md"
             cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
             _hover={{
-              bgColor: 'gray.800',
+              bgColor: 'gray.700',
               borderColor: 'white',
             }}
             onClick={() => {
-              // Handle click event for the second box
+              window.open('https://faucet.celo.org/alfajores', '_blank');
             }}
           >
-            Celo Testnet Faucet
+            <Flex justify="space-between" align="center">
+              <Text>Celo Testnet Faucet</Text>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
           </Box>
         </Flex>
       </Flex>
