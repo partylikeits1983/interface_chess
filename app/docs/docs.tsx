@@ -55,6 +55,40 @@ export default function Docs() {
     }
   };
 
+  const addMumbaiNetwork = async () => {
+    const provider = (window as any).ethereum;
+
+    if (provider) {
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x89',
+              chainName: 'Polygon Mumbai',
+              rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
+              nativeCurrency: {
+                name: 'Matic',
+                symbol: 'MATIC',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://mumbai.polygonscan.com'],
+            },
+          ],
+        });
+      } catch (error) {
+        console.error(
+          'An error occurred while trying to switch to the Polygon Mumbai network:',
+          error,
+        );
+      }
+    } else {
+      console.log(
+        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+      );
+    }
+  };
+
   return (
     <ChakraProvider>
       <Flex flexDirection="column" alignItems="center">
@@ -103,6 +137,7 @@ export default function Docs() {
             borderColor="white"
             borderWidth={0.5}
             mr={5}
+            width="390px" // Set the width to 200 pixels
             _hover={{
               bgColor: 'gray.700',
               borderColor: 'white',
@@ -132,6 +167,7 @@ export default function Docs() {
             cursor="pointer"
             borderColor="white"
             borderWidth={0.5}
+            width="250px" // Set the width to 200 pixels
             _hover={{
               bgColor: 'gray.700',
               borderColor: 'white',
@@ -142,6 +178,67 @@ export default function Docs() {
           >
             <Flex justify="space-between" align="center">
               <Text>Celo Testnet Faucet</Text>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+        </Flex>
+
+        <Flex
+          justifyContent="center"
+          mt={4}
+          flexDirection={'row'}
+          align="center"
+        >
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            width="390px"
+            mr={5}
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              addMumbaiNetwork();
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Box display="flex" alignItems="center">
+                <Image
+                  src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                  width="24px"
+                  height="24px"
+                />
+                <Text ml={3}>Add Mumbai Testnet to Metamask</Text>
+              </Box>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            width="250px"
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              window.open('https://faucet.polygon.technology/', '_blank');
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Text>Mumbai Testnet Faucet</Text>
               <ChevronRightIcon boxSize={6} />
             </Flex>
           </Box>
