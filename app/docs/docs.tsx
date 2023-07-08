@@ -64,7 +64,7 @@ export default function Docs() {
           method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: '0x89',
+              chainId: '0x13881',
               chainName: 'Polygon Mumbai',
               rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
               nativeCurrency: {
