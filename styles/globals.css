@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* /styles/globals.css */
+.font-courier-prime {
+  font-family: 'Courier Prime', serif;
+}

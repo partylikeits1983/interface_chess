@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import {
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+} from '@chakra-ui/react';
 
 import { ethers } from 'ethers';
 
@@ -110,6 +117,9 @@ export default function NetworkButton(): JSX.Element {
             <MenuItem onClick={() => handleNetworkChange('BSC')}>
               BSC (coming soon)
             </MenuItem>
+
+            <MenuDivider />
+
             <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
               Mumbai Testnet
             </MenuItem>

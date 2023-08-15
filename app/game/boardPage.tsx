@@ -37,6 +37,7 @@ import {
   Spacer,
   Center,
   ChakraProvider,
+  Tooltip,
 } from '@chakra-ui/react';
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
@@ -621,17 +622,22 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             placeholder="input wager address"
           />
           <Box p={2}></Box>
-          <Button
-            color="black"
-            backgroundColor="#94febf"
-            onClick={handleBoardClick(wagerAddress)}
-            _hover={{
-              color: '#000000', // Set the text color on hover
-              backgroundColor: '#62ffa2', // Set the background color on hover
-            }}
+          <Tooltip
+            label="Click to view the game"
+            aria-label="View Game Tooltip"
           >
-            View Game
-          </Button>
+            <Button
+              color="black"
+              backgroundColor="#94febf"
+              onClick={handleBoardClick(wagerAddress)}
+              _hover={{
+                color: '#000000', // Set the text color on hover
+                backgroundColor: '#62ffa2', // Set the background color on hover
+              }}
+            >
+              View Game
+            </Button>
+          </Tooltip>
         </Flex>
       ) : null}
 

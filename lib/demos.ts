@@ -14,6 +14,11 @@ export const demos: { name: string; items: Item[] }[] = [
         description: 'chess.fish analytics',
       },
       {
+        name: 'Leaderboard 🏅',
+        slug: 'leaderboard',
+        description: 'chess.fish leaderboard',
+      },
+      {
         name: 'Create a Challenge ✍️',
         slug: 'create-challenge',
         description: 'Create a crypto chess wager',
