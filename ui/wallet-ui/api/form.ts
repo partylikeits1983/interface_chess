@@ -899,3 +899,68 @@ export const GetNumberOfGames = async (
     return [];
   }
 };
+
+type PlayerStats = {
+  totalGames: number;
+  gamesWon: number;
+};
+
+export const GetLeaderboardData = async (): Promise<{
+  [key: string]: PlayerStats;
+}> => {
+  await updateContractAddresses();
+  let { provider } = await setupProvider();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  const playerStatistics: { [key: string]: PlayerStats } = {};
+
+  try {
+    let wagerAddresses: string[] = [];
+
+    // Fetch all wager addresses
+    let value = 0;
+    let errorOccurred = false;
+    while (!errorOccurred) {
+      try {
+        const wagerAddress = await chess.allWagers(value.toString());
+        wagerAddresses.push(wagerAddress);
+        value++;
+      } catch (error) {
+        errorOccurred = true;
+      }
+    }
+
+    for (const wagerAddress of wagerAddresses) {
+      const wagerParams = await chess.gameWagers(wagerAddress);
+      const status = await chess.wagerStatus(wagerAddress);
+
+      const players = [wagerParams[0], wagerParams[1]];
+
+      players.forEach((player, index) => {
+        if (!playerStatistics[player]) {
+          playerStatistics[player] = {
+            totalGames: 0,
+            gamesWon: 0,
+          };
+        }
+
+        // Increment the total games played by the player
+        playerStatistics[player].totalGames += parseInt(wagerParams[4]);
+
+        // Increment the games won by the player
+        if (index === 0) {
+          playerStatistics[player].gamesWon += Number(status.winsPlayer0);
+        } else {
+          playerStatistics[player].gamesWon += Number(status.winsPlayer1);
+        }
+      });
+    }
+
+    return playerStatistics;
+  } catch (error) {
+    alert(`Analytics function : error`);
+    console.log(error);
+    return {};
+  }
+};

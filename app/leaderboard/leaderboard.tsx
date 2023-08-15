@@ -1,6 +1,6 @@
 'use client';
 
-import { GetAnalyticsData } from 'ui/wallet-ui/api/form';
+import { GetLeaderboardData } from 'ui/wallet-ui/api/form';
 import { GetWagersDB } from 'ui/wallet-ui/api/db-api';
 
 import {
@@ -31,27 +31,24 @@ interface AnalyticsProps {
   handleToggle: () => void;
 }
 
-const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
-  const [totalGames, setTotalGames] = useState('');
-  const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
+const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
+  const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       if (!useAPI) {
         try {
-          const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
-
-          setWagerAddresses(fetchedWagerAddresses);
-
-          console.log(fetchedWagerAddresses);
-          console.log(totalGames);
-
-          setTotalGames(totalGames);
-
-          setLoading(false);
+          const playerStatistics = await GetLeaderboardData();
+          const dataArray = Object.entries(playerStatistics).map(
+            ([address, stats]) => ({
+              playerAddress: address,
+              ...stats,
+            }),
+          );
+          console.log(dataArray);
+          setLeaderboardData(dataArray);
         } catch (error) {
           console.log(error);
         }
@@ -59,18 +56,20 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         try {
           // trying to ping the GCP API
           // const wagerAddresses = await GetWagersDB();
-
-          setWagerAddresses(wagerAddresses);
-          setTotalGames(wagerAddresses.length.toString());
-
-          setLoading(false);
         } catch (error) {
           console.log(error);
         }
       }
+      setLoading(false);
     };
+
     fetchData();
   }, [useAPI]);
+
+  // Sort data by games won
+  const sortedData = [...leaderboardData].sort(
+    (a, b) => b.gamesWon - a.gamesWon,
+  );
 
   return (
     <ChakraProvider>
@@ -89,33 +88,31 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         </Tooltip>
       </Flex>
 
-      <StatGroup color="white">
-        <Stat>
-          <StatLabel>Total Number of Players</StatLabel>
-          {loading ? <Spinner /> : <StatNumber>{totalGames}</StatNumber>}
-        </Stat>
-      </StatGroup>
-
       <Box overflowX="auto" maxWidth="100%">
         <Table variant="simple" mt={4} size="sm">
           <thead>
             <Tr>
               <Th color="white">#</Th>
-              <Th color="white">Wager Addresses</Th>
+              <Th color="white">Player Address</Th>
+              <Th color="white">Games Played</Th>
+              <Th color="white">Games Won</Th>
             </Tr>
           </thead>
           <tbody>
-            {wagerAddresses.map((address, index) => (
+            {sortedData.map((playerData, index) => (
               <Tr key={index}>
-                <Td color="green.400">{index + 1}</Td>
-                <Td>
-                  <Link
-                    color="green.400"
-                    onClick={() => router.push(`/game/${address}`)}
-                  >
-                    {address}
-                  </Link>
+                <Td color="white">
+                  {index === 0
+                    ? '🥇'
+                    : index === 1
+                    ? '🥈'
+                    : index === 2
+                    ? '🥉'
+                    : index + 1}
                 </Td>
+                <Td color="white">{playerData.playerAddress}</Td>
+                <Td color="white">{playerData.totalGames}</Td>
+                <Td color="white">{playerData.gamesWon}</Td>
               </Tr>
             ))}
           </tbody>
@@ -125,4 +122,4 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   );
 };
 
-export default Analytics;
+export default Leaderboard;
