@@ -109,13 +109,10 @@ export default function NetworkButton(): JSX.Element {
         <div style={{ position: 'relative', zIndex: 100 }}>
           <MenuList>
             <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
-              Mainnet (coming soon)
+              Ethereum (coming soon)
             </MenuItem>
             <MenuItem onClick={() => handleNetworkChange('Polygon')}>
               Polygon (coming soon)
-            </MenuItem>
-            <MenuItem onClick={() => handleNetworkChange('BSC')}>
-              BSC (coming soon)
             </MenuItem>
 
             <MenuDivider />
