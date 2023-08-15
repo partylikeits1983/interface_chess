@@ -64,7 +64,7 @@ export default function Docs() {
           method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: '0x89',
+              chainId: '0x13881',
               chainName: 'Polygon Mumbai',
               rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
               nativeCurrency: {
@@ -110,7 +110,7 @@ export default function Docs() {
             color="green.500"
             fontWeight="bold"
             onClick={() => {
-              window.open('https://docs.chess.fish', '_blank');
+              window.open('https://docs.chess.fish/', '_blank');
             }}
           >
             <i style={{ color: 'green.500' }}>docs.chess.fish</i>
@@ -118,7 +118,7 @@ export default function Docs() {
         </Box>
         <Box mt={2}>
           <span style={{ color: 'white' }}>
-            to explore the chess.fish documentation
+            to explore the ChessFish documentation
           </span>
         </Box>
 
