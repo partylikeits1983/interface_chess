@@ -40,6 +40,11 @@ export const demos: { name: string; items: Item[] }[] = [
         description: 'Explore current matches',
       },
       {
+        name: 'Protocol Dividends 🏛️',
+        slug: 'dividends',
+        description: 'Withdraw earned dividends',
+      },
+      {
         name: 'Docs 📖',
         slug: 'docs',
         description: 'Understand how chess.fish works',

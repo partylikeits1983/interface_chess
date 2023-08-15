@@ -4,6 +4,7 @@ import { CreateMatchType } from './types';
 
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
+const splitterABI = require('../../../contract-abi/SplitterABI');
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
@@ -16,6 +17,7 @@ interface ContractAddress {
   owner: string;
   token: string;
   chessToken: string;
+  dividendSplitter: string;
   moveVerification: string;
   chess: string;
 }
@@ -42,6 +44,8 @@ const addresses = JSON.parse(jsonString); // Parse the JSON string
 let ChessAddress = addresses[0].chess;
 let VerificationAddress = addresses[0].moveVerification;
 let tokenAddress = addresses[0].token;
+let ChessToken = addresses[0].chessToken;
+let DividendSplitter = addresses[0].dividendSplitter;
 
 const ERC20ABI = [
   'function transferFrom(address from, address to, uint value)',
@@ -49,6 +53,7 @@ const ERC20ABI = [
   'function approve(address account, uint amount) returns (bool)',
   'function allowance(address _owner, address _spender) public view returns (uint256 remaining)',
   'function balanceOf(address owner) view returns (uint balance)',
+  'function totalSupply() view returns (uint amount)',
   'event Transfer(address indexed from, address indexed to, address value)',
   'error InsufficientBalance(account owner, uint balance)',
 ];
@@ -68,12 +73,15 @@ const updateContractAddresses = async (): Promise<void> => {
   );
 
   if (matchingChain) {
-    const { chess, moveVerification, token } = matchingChain;
+    const { chess, moveVerification, token, chessToken, dividendSplitter } =
+      matchingChain;
 
     // Update the addresses based on the matching chain ID
     ChessAddress = chess;
     VerificationAddress = moveVerification;
     tokenAddress = token;
+    ChessToken = chessToken;
+    DividendSplitter = dividendSplitter;
   }
   // Add more chains if needed.
 };
@@ -962,5 +970,73 @@ export const GetLeaderboardData = async (): Promise<{
     alert(`Analytics function : error`);
     console.log(error);
     return {};
+  }
+};
+
+export const PayoutDividends = async (tokenAddress: string) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const splitter = new ethers.Contract(DividendSplitter, splitterABI, signer);
+  try {
+    // await chess.cancelWager(wagerAddress);
+    await splitter.releaseERC20(tokenAddress, accounts[0]);
+
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const GetDividendData = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const token = new ethers.Contract(ChessToken, ERC20ABI, signer);
+
+  try {
+    const userAmount = ethers.utils.formatEther(
+      await token.balanceOf(accounts[0]),
+      18,
+    );
+    const totalSupply = ethers.utils.formatEther(await token.totalSupply(), 18);
+
+    console.log(userAmount);
+    console.log(totalSupply);
+
+    const userPercent = (userAmount / totalSupply) * 100;
+
+    return [userPercent, totalSupply];
+  } catch (error) {
+    console.log(error);
+    return [0, 0];
+  }
+};
+
+export const GetDividendPayoutData = async (tokenAddress: string) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const splitter = new ethers.Contract(DividendSplitter, splitterABI, signer);
+
+  try {
+    const userAmount = ethers.utils.formatEther(
+      await splitter.releasedERC20(tokenAddress, accounts[0]),
+      18,
+    );
+
+    return userAmount;
+  } catch (error) {
+    console.log(error);
+    return [0, 0];
   }
 };
