@@ -9,33 +9,33 @@ export const demos: { name: string; items: Item[] }[] = [
     name: 'Menu',
     items: [
       {
-        name: 'Analytics',
+        name: 'Analytics 📊',
         slug: 'analytics',
         description: 'chess.fish analytics',
       },
       {
-        name: 'Create a Challenge',
+        name: 'Create a Challenge ✍️',
         slug: 'create-challenge',
         description: 'Create a crypto chess wager',
       },
       {
-        name: 'Pairing Room',
+        name: 'Pairing Room 👥',
         slug: 'game-pairing',
         description: 'Find a chess wager',
       },
 
       {
-        name: 'Your Matches',
+        name: 'Your Matches 🎯',
         slug: 'matches',
         description: 'View your current matches',
       },
       {
-        name: 'Game Viewer',
+        name: 'Game Viewer 🔎',
         slug: 'game',
         description: 'Explore current matches',
       },
       {
-        name: 'Docs',
+        name: 'Docs 📖',
         slug: 'docs',
         description: 'Understand how chess.fish works',
       },

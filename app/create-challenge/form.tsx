@@ -101,7 +101,17 @@ export default function ChallengeForm() {
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <FormControl>
-              <FormLabel>Wager Token</FormLabel>
+              <FormLabel>
+                Wager Token{' '}
+                <Tooltip
+                  label="type to search token or paste ERC20 address"
+                  aria-label="Player Address Tooltip"
+                  placement="right"
+                >
+                  <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+                </Tooltip>
+              </FormLabel>
+
               <AutocompleteToken
                 options={tokenOptions}
                 onChange={(value: string) =>
@@ -198,7 +208,7 @@ export default function ChallengeForm() {
               <p>{convertSecondsToTime(formInputs.timePerMove)}</p>
             </FormControl>
 
-            <HStack spacing="4">
+            <HStack spacing="4" direction={{ base: 'column', md: 'row' }}>
               <Button
                 flex="1"
                 color="#000000"
