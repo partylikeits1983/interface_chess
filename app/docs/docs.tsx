@@ -147,7 +147,7 @@ export default function Docs() {
           />
         </Box>
         <Box style={{ color: 'white' }}>
-          Go to{' '}
+          Read the{' '}
           <Link
             isExternal
             color="green.500"
@@ -156,14 +156,11 @@ export default function Docs() {
               window.open('https://docs.chess.fish/', '_blank');
             }}
           >
-            <i style={{ color: 'green.500' }}>docs.chess.fish</i>
-          </Link>
+            <i style={{ color: 'green.500' }}>Chess.fish documentation</i>
+          </Link>{' '}
+          to learn more
         </Box>
-        <Box mt={2}>
-          <span style={{ color: 'white' }}>
-            to explore the ChessFish documentation
-          </span>
-        </Box>
+
         <div style={{ height: '20px' }}></div>
 
         <Flex
@@ -353,6 +350,27 @@ export default function Docs() {
             </Flex>
           </Box>
         </Flex>
+
+        <div style={{ height: '20px' }}></div>
+
+        <Box style={{ color: 'white' }}>
+          Don't have metamask yet?{' '}
+          <Link
+            isExternal
+            color="green.500"
+            // fontWeight="bold"
+            onClick={() => {
+              window.open(
+                'https://support.metamask.io/hc/en-us/articles/360015489531-Getting-started-with-MetaMask',
+                '_blank',
+              );
+            }}
+          >
+            <i style={{ color: 'green.500' }}>
+              Read Getting Started With Metamask
+            </i>
+          </Link>
+        </Box>
       </Flex>
     </ChakraProvider>
   );
