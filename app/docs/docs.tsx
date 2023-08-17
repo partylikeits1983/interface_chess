@@ -2,7 +2,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Flex, Box, Link, Image, Text, ChakraProvider } from '@chakra-ui/react';
+import {
+  Flex,
+  Box,
+  Link,
+  Image,
+  Text,
+  Heading,
+  ChakraProvider,
+} from '@chakra-ui/react';
 
 import { ChevronRightIcon } from '@chakra-ui/icons';
 
@@ -32,7 +40,7 @@ export default function Docs() {
             {
               chainId: '0x89',
               chainName: 'Polygon Mumbai',
-              rpcUrls: ['https://rpc.ankr.com/polygon_mumbai	'],
+              rpcUrls: ['https://polygon.llamarpc.com'],
               nativeCurrency: {
                 name: 'Matic',
                 symbol: 'MATIC',
@@ -156,6 +164,73 @@ export default function Docs() {
             to explore the ChessFish documentation
           </span>
         </Box>
+        <div style={{ height: '20px' }}></div>
+
+        <Flex
+          justifyContent="center"
+          mt={4}
+          flexDirection={'row'}
+          align="center"
+        >
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            mr={5}
+            width="390px" // Set the width to 200 pixels
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              addPolygon();
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Box display="flex" alignItems="center">
+                <Image
+                  src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                  width="24px"
+                  height="24px"
+                />
+                <Image
+                  src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Polygon_Blockchain_Matic_Logo.svg"
+                  width="24px"
+                  height="24px"
+                />
+                <Text ml={3}>Add Polygon to Metamask</Text>
+              </Box>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            width="250px" // Set the width to 200 pixels
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              window.open('https://polygonscan.com/', '_blank');
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Text>Polygon Block explorer</Text>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+        </Flex>
 
         <Flex
           justifyContent="center"
