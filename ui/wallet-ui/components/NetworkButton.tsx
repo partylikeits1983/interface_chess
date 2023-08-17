@@ -60,11 +60,12 @@ export default function NetworkButton(): JSX.Element {
 
           // Access the `ethereum` object through the provider
           await provider.send('wallet_switchEthereumChain', [{ chainId }]);
+
+          // Once the network switch is confirmed, reload the page
+          window.location.reload();
         }
       } catch (error) {
         console.error(error);
-        // This error code indicates that the chain has not been added to MetaMask.
-        console.log(error);
       }
     } else {
       console.log('Please install MetaMask!');
