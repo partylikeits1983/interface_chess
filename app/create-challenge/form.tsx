@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   FormControl,
@@ -21,9 +21,12 @@ import {
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const { ethers } = require('ethers');
-const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
+const { CreateWager, Approve, getChainId } = require('ui/wallet-ui/api/form');
 
-import tokenOptions from './autocomplete-token-options';
+import {
+  tokenAddressesByChainID,
+  options,
+} from '../../ui/wallet-ui/api/autocomplete-token-options';
 import AutocompleteToken from './autocomplete-token';
 
 import AutocompletePlayer from './autocomplete-player';
@@ -40,6 +43,38 @@ interface FormInputs {
 export default function ChallengeForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
+
+  const [chainID, setChainID] = useState<string>('1');
+  const [tokenOptions, setTokenOptions] = useState<any[]>([]); // default empty array
+
+  useEffect(() => {
+    // Inner async function to fetch chainID
+    const fetchChainId = async () => {
+      try {
+        const id = String(await getChainId());
+        setChainID(id);
+        console.log('CHAIN ID', id);
+      } catch (error) {
+        console.error('Failed to fetch chainID:', error);
+      }
+    };
+    fetchChainId(); // Calling the inner function
+  }, []);
+
+  useEffect(() => {
+    // This effect will run every time chainID changes
+    const tokenOptions = options.map((token) => {
+      const addressByChain = tokenAddressesByChainID[chainID];
+      return {
+        ...token,
+        address: addressByChain
+          ? addressByChain[token.label]
+          : '0x0000000000000000000000000000000000000000', // some default or error address
+      };
+    });
+
+    setTokenOptions(tokenOptions);
+  }, [chainID]); // Dependent on chainID
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);

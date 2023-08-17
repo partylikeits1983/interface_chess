@@ -37,6 +37,17 @@ interface Card {
   isPlayerTurn: boolean;
 }
 
+interface TokenAddresses {
+  network: string;
+  chainID: number;
+  NATIVE: string;
+  WBTC: string;
+  WETH: string;
+  USDT: string;
+  USDC: string;
+  DAI: string;
+}
+
 const data: ContractAddress = require('./contractAddresses.json');
 const jsonString = JSON.stringify(data); // Convert the object to JSON string
 const addresses = JSON.parse(jsonString); // Parse the JSON string
@@ -46,6 +57,16 @@ let VerificationAddress = addresses[0].moveVerification;
 let tokenAddress = addresses[0].token;
 let ChessToken = addresses[0].chessToken;
 let DividendSplitter = addresses[0].dividendSplitter;
+
+const tokenData: TokenAddresses = require('./tokenAddresses.json');
+const tokenjson = JSON.stringify(tokenData);
+const tokenAddresses = JSON.parse(tokenjson);
+
+let WBTC = tokenAddresses[0].WBTC;
+let WETH = tokenAddresses[0].WETH;
+let USDT = tokenAddresses[0].USDT;
+let USDC = tokenAddresses[0].USDC;
+let DAI = tokenAddresses[0].DAI;
 
 const ERC20ABI = [
   'function transferFrom(address from, address to, uint value)',
@@ -64,26 +85,36 @@ const updateContractAddresses = async (): Promise<void> => {
   const network = await provider.getNetwork();
   const chainId = network.chainId;
 
-  const data: ContractAddress[] = require('./contractAddresses.json');
-  const addresses: ContractAddress[] = JSON.parse(JSON.stringify(data));
+  const contractData: ContractAddress[] = require('./contractAddresses.json');
+  const addresses: ContractAddress[] = JSON.parse(JSON.stringify(contractData));
 
-  // Find the matching chain ID in the array of objects
+  const tokenData: TokenAddresses[] = require('./tokenAddresses.json');
+  const tokenAddresses: TokenAddresses[] = JSON.parse(
+    JSON.stringify(tokenData),
+  );
+
   const matchingChain = addresses.find(
     (address) => address.chainID === chainId,
   );
+  const matchingChainTokens = tokenAddresses.find(
+    (token) => token.chainID === chainId,
+  );
 
   if (matchingChain) {
-    const { chess, moveVerification, token, chessToken, dividendSplitter } =
-      matchingChain;
-
-    // Update the addresses based on the matching chain ID
-    ChessAddress = chess;
-    VerificationAddress = moveVerification;
-    tokenAddress = token;
-    ChessToken = chessToken;
-    DividendSplitter = dividendSplitter;
+    ChessAddress = matchingChain.chess;
+    VerificationAddress = matchingChain.moveVerification;
+    tokenAddress = matchingChain.token;
+    ChessToken = matchingChain.chessToken;
+    DividendSplitter = matchingChain.dividendSplitter;
   }
-  // Add more chains if needed.
+
+  if (matchingChainTokens) {
+    WBTC = matchingChainTokens.WBTC;
+    WETH = matchingChainTokens.WETH;
+    USDT = matchingChainTokens.USDT;
+    USDC = matchingChainTokens.USDC;
+    DAI = matchingChainTokens.DAI;
+  }
 };
 
 const setupProvider = async () => {
@@ -122,6 +153,18 @@ const setupProvider = async () => {
   return { provider, signer, accounts, isWalletConnected };
 };
 
+export const getChainId = async () => {
+  let { provider } = await setupProvider();
+
+  try {
+    const network = await provider.getNetwork();
+    const chainId = network.chainId;
+    return chainId;
+  } catch {
+    return 0;
+  }
+};
+
 export const getBalance = async (address: string) => {
   await updateContractAddresses();
 
@@ -145,6 +188,37 @@ export const getBalance = async (address: string) => {
       // @ts-ignore
       status: '😥 Something went wrong: ' + error.message,
     };
+  }
+};
+
+export const getDividendBalances = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const wbtc = new ethers.Contract(WBTC, ERC20ABI, signer);
+  const weth = new ethers.Contract(WETH, ERC20ABI, signer);
+  const usdt = new ethers.Contract(USDT, ERC20ABI, signer);
+  const usdc = new ethers.Contract(USDC, ERC20ABI, signer);
+  const dai = new ethers.Contract(DAI, ERC20ABI, signer);
+
+  try {
+    let wbtc_bal = await wbtc.balanceOf(DividendSplitter);
+    let weth_bal = await weth.balanceOf(DividendSplitter);
+    let usdt_bal = await usdt.balanceOf(DividendSplitter);
+    let usdc_bal = await usdc.balanceOf(DividendSplitter);
+    let dai_bal = await dai.balanceOf(DividendSplitter);
+
+    wbtc_bal = ethers.utils.formatEther(wbtc_bal);
+    weth_bal = ethers.utils.formatEther(weth_bal);
+    usdt_bal = ethers.utils.formatEther(usdt_bal);
+    usdc_bal = ethers.utils.formatEther(usdc_bal);
+    dai_bal = ethers.utils.formatEther(dai_bal);
+
+    return [wbtc_bal, weth_bal, usdt_bal, usdc_bal, dai_bal];
+  } catch (error) {
+    return [0, 0, 0, 0, 0];
   }
 };
 
@@ -982,7 +1056,6 @@ export const PayoutDividends = async (tokenAddress: string) => {
 
   const splitter = new ethers.Contract(DividendSplitter, splitterABI, signer);
   try {
-    // await chess.cancelWager(wagerAddress);
     await splitter.releaseERC20(tokenAddress, accounts[0]);
 
     return true;
