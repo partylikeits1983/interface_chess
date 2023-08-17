@@ -21,6 +21,41 @@ export default function Docs() {
     }
   }, []); // Run only once after initial render
 
+  const addPolygon = async () => {
+    const provider = (window as any).ethereum;
+
+    if (provider) {
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x89',
+              chainName: 'Polygon Mumbai',
+              rpcUrls: ['https://rpc.ankr.com/polygon_mumbai	'],
+              nativeCurrency: {
+                name: 'Matic',
+                symbol: 'MATIC',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://polygonscan.com/'],
+            },
+          ],
+        });
+      } catch (error) {
+        console.error(
+          'An error occurred while trying to switch to the Polygon Mumbai network:',
+          error,
+        );
+      }
+    } else {
+      console.log(
+        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+      );
+    }
+  };
+
+  // testnets
   const addAlfajoresNetwork = async () => {
     const provider = (window as any).ethereum;
 
