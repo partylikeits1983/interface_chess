@@ -2,13 +2,13 @@
   {
     "network": "maticmum",
     "chainID": 80001,
-    "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
-    "token": "0xe8F8f6D6F5c172878f7899BBFa68fFf9b8d7eB63",
-    "chessToken": "0xDAa9ce8b907De49F9EAC1CD81B5A8749d3C42c93",
-    "dividendSplitter": "0x94463Ab8EeDc9b732e98708aAe736dBcb3E9A990",
-    "chessNFT": "0x66abe9c8135359144529326B4308690716F76667",
-    "moveVerification": "0x9d0985F22FdB48538B014F2d807dbc11cC5425bf",
-    "chess": "0xf671D6D821A4F6fD830B7D148650d91818BA3f6A"
+    "owner": "0x6D6C6eb240e1D6aff9a3A217771DD6D8f6c53d44",
+    "token": "0xc08eC0F487C510118B0933b5B026e715FD075D88",
+    "chessToken": "0x76459df4A83372Cc9F3D0758AB944A65133E6984",
+    "dividendSplitter": "0xB99796fc68b7812B2B27E83AF615eA24FF494165",
+    "chessNFT": "0x27b088F7146dE1696ffCdC201026f12657702fF8",
+    "moveVerification": "0xeB1c133Eb08Afd99Fc40c6AD6463284d8c135fBD",
+    "chess": "0xbeE8eD6Ed1ab571E123Df969B0D7E2cAb35f0EDc"
   },
   {
     "network": "unknown",
@@ -22,14 +22,14 @@
     "chess": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c"
   },
   {
-    "network": "celoTestnet",
+    "network": "unknown",
     "chainID": 44787,
-    "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
-    "token": "0x5F0053F3fd4e3832103Ec70BD693dd7eF68bA2d0",
-    "chessToken": "0x390b78585Accb118ad45eeD74C73a0594c5Cc1a5",
-    "dividendSplitter": "0x077B72FaA401155ce02629B7e80912d5D97F37C2",
-    "chessNFT": "0xD6deDfAae1D322A535fE75a35Bf633eDc4Cf8649",
-    "moveVerification": "0x3D9f6315aa86c79dBCFF74B0a59647a76Fc53633",
-    "chess": "0xb8205900AD8162f585Ff99Af0f29cADDA1B1A1A3"
+    "owner": "0x6D6C6eb240e1D6aff9a3A217771DD6D8f6c53d44",
+    "token": "0xc08eC0F487C510118B0933b5B026e715FD075D88",
+    "chessToken": "0x76459df4A83372Cc9F3D0758AB944A65133E6984",
+    "dividendSplitter": "0xB99796fc68b7812B2B27E83AF615eA24FF494165",
+    "chessNFT": "0x27b088F7146dE1696ffCdC201026f12657702fF8",
+    "moveVerification": "0xeB1c133Eb08Afd99Fc40c6AD6463284d8c135fBD",
+    "chess": "0xbeE8eD6Ed1ab571E123Df969B0D7E2cAb35f0EDc"
   }
 ]
