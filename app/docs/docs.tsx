@@ -354,7 +354,7 @@ export default function Docs() {
         <div style={{ height: '20px' }}></div>
 
         <Box style={{ color: 'white' }}>
-          Don't have metamask yet?{' '}
+          Don&apos;t have metamask yet?{' '}
           <Link
             isExternal
             color="green.500"

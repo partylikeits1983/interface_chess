@@ -53,13 +53,13 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     token: '',
   });
 
-  const [tokenAmount, setTokenAmount] = useState('');
+  const [tokenAmount, setTokenAmount] = useState(0);
   const [receivedTokens, setReceivedTokens] = useState(0);
 
-  const handleTokenAmountChange = (e) => {
-    const value = e.target.value;
+  const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
     setTokenAmount(value);
-    setReceivedTokens(Number(value) * 2);
+    setReceivedTokens(value * 2);
   };
 
   useEffect(() => {
