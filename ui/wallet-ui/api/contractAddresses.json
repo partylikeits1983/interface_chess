@@ -3,12 +3,12 @@
     "network": "maticmum",
     "chainID": 80001,
     "owner": "0x6D6C6eb240e1D6aff9a3A217771DD6D8f6c53d44",
-    "token": "0xc08eC0F487C510118B0933b5B026e715FD075D88",
-    "chessToken": "0x76459df4A83372Cc9F3D0758AB944A65133E6984",
-    "dividendSplitter": "0xB99796fc68b7812B2B27E83AF615eA24FF494165",
-    "chessNFT": "0x27b088F7146dE1696ffCdC201026f12657702fF8",
-    "moveVerification": "0xeB1c133Eb08Afd99Fc40c6AD6463284d8c135fBD",
-    "chess": "0xbeE8eD6Ed1ab571E123Df969B0D7E2cAb35f0EDc"
+    "chessToken": "0x21b39BC6960Bb590d3c8D2A1E5d198f91ACb6a61",
+    "dividendSplitter": "0x79010e6c5d743ca658B07a0963BD650b93111d68",
+    "chessNFT": "0x1b1848d37Bc2DC59cc9a4C77745B62d7421231Df",
+    "moveVerification": "0xF6e676AD254765737415dCFB07ECEc84EeFb45fC",
+    "chess": "0x703F8d991C3d7eB24c1F23A1a46478f51802Bf43",
+    "crowdSale": "0x68C081083ee079EdfF189209a86b3cEF748fadA3"
   },
   {
     "network": "unknown",
