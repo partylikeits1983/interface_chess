@@ -1125,15 +1125,11 @@ export const GetChessFishTokens = async (amountIn: number) => {
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const crowdSaleABI = new ethers.Contract(
-    DividendSplitter,
-    splitterABI,
-    signer,
-  );
+  const crowdSale = new ethers.Contract(CrowdSale, crowdSaleABI, signer);
 
   try {
     const userAmount = ethers.utils.formatEther(
-      await splitter.releasedERC20(tokenAddress, accounts[0]),
+      await crowdSale.releasedERC20(tokenAddress, accounts[0]),
       18,
     );
 
