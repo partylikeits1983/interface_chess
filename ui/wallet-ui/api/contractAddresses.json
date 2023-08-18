@@ -13,13 +13,13 @@
   {
     "network": "unknown",
     "chainID": 31337,
-    "owner": "0x04E7aD617B38D9FCd9A65C8A1b30255350faC8C6",
-    "token": "0xdf1724f11b65d6a6155B057F33fBDfB2F3B95E17",
-    "chessToken": "0x029C1A99D6ae043FbE0D8BF021135D67c3443642",
-    "dividendSplitter": "0x0eAD3040254F3aC340F3490DEDc8a6159365E39E",
-    "chessNFT": "0x9963Aeb98a0d7ffC48F175f305234889E71b7D77",
-    "moveVerification": "0xECd78C20F29B29199ed5e6dB101A3816d39F963e",
-    "chess": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c"
+    "owner": "0x6D6C6eb240e1D6aff9a3A217771DD6D8f6c53d44",
+    "chessToken": "0x703F8d991C3d7eB24c1F23A1a46478f51802Bf43",
+    "dividendSplitter": "0x68C081083ee079EdfF189209a86b3cEF748fadA3",
+    "chessNFT": "0xe41578B6b692623BDfd439B89ee54dDbC6b5604B",
+    "moveVerification": "0x1A93dc535634E50c7F361aD2ECE91F71C5008D2B",
+    "chess": "0x2273b92FFA82ffD0Cf6B1a884f070eA5E30222a4",
+    "crowdSale": "0xa427ac286779d33a53a7B2395DFDd043745503E6"
   },
   {
     "network": "unknown",

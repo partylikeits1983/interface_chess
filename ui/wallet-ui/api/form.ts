@@ -5,6 +5,7 @@ import { CreateMatchType } from './types';
 const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 const splitterABI = require('../../../contract-abi/SplitterABI');
+const crowdSaleABI = require('../../../contract-abi/CrowdSaleABI');
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
@@ -20,6 +21,7 @@ interface ContractAddress {
   dividendSplitter: string;
   moveVerification: string;
   chess: string;
+  crowdSale: string;
 }
 
 interface Card {
@@ -57,6 +59,7 @@ let VerificationAddress = addresses[0].moveVerification;
 let tokenAddress = addresses[0].token;
 let ChessToken = addresses[0].chessToken;
 let DividendSplitter = addresses[0].dividendSplitter;
+let CrowdSale = addresses[0].crowdSale;
 
 const tokenData: TokenAddresses = require('./tokenAddresses.json');
 const tokenjson = JSON.stringify(tokenData);
@@ -106,6 +109,7 @@ const updateContractAddresses = async (): Promise<void> => {
     tokenAddress = matchingChain.token;
     ChessToken = matchingChain.chessToken;
     DividendSplitter = matchingChain.dividendSplitter;
+    CrowdSale = matchingChain.crowdSale;
   }
 
   if (matchingChainTokens) {
@@ -1100,6 +1104,32 @@ export const GetDividendPayoutData = async (tokenAddress: string) => {
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const splitter = new ethers.Contract(DividendSplitter, splitterABI, signer);
+
+  try {
+    const userAmount = ethers.utils.formatEther(
+      await splitter.releasedERC20(tokenAddress, accounts[0]),
+      18,
+    );
+
+    return userAmount;
+  } catch (error) {
+    console.log(error);
+    return [0, 0];
+  }
+};
+
+export const GetChessFishTokens = async (amountIn: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const crowdSaleABI = new ethers.Contract(
+    DividendSplitter,
+    splitterABI,
+    signer,
+  );
 
   try {
     const userAmount = ethers.utils.formatEther(
