@@ -50,6 +50,7 @@
     "ethers": "5.7.2",
     "framer-motion": "10.12.7",
     "fs": "0.0.1-security",
+    "hardhat-gas-reporter": "1.0.9",
     "ms": "3.0.0-canary.1",
     "net": "1.0.2",
     "next": "13.3.2-canary.7",

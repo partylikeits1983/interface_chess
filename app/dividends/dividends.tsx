@@ -17,6 +17,9 @@ import {
   Flex,
   Text,
   Button,
+  Box,
+  Input,
+  VStack,
 } from '@chakra-ui/react';
 
 import AutocompleteToken from './autocomplete-token';
@@ -49,6 +52,15 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const [formInputs, setFormInputs] = useState<FormInputs>({
     token: '',
   });
+
+  const [tokenAmount, setTokenAmount] = useState('');
+  const [receivedTokens, setReceivedTokens] = useState(0);
+
+  const handleTokenAmountChange = (e) => {
+    const value = e.target.value;
+    setTokenAmount(value);
+    setReceivedTokens(Number(value) * 2);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,6 +128,11 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     await PayoutDividends(formInputs.token);
   };
 
+  const getCrowdsaleTokens = (amountIn: number) => {
+    // Your implementation here
+    console.log(`Getting crowdsale tokens for amount: ${amountIn}`);
+  };
+
   return (
     <ChakraProvider>
       <Text>
@@ -146,6 +163,33 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       <Button onClick={handlePayoutDividends} colorScheme="green" mt={3}>
         Payout Dividends
       </Button>
+
+      {/* Section to get chess fish tokens */}
+      <Box
+        mt={5}
+        borderWidth="1px"
+        borderColor="white"
+        borderRadius="md"
+        padding="3"
+      >
+        <Text fontWeight="bold">LIMITED TIME CROWDSALE</Text>
+        <Text>1 MATIC = 2 CHFS tokens</Text>
+        <VStack spacing={3} alignItems="start">
+          <Input
+            value={tokenAmount}
+            placeholder="Enter matic amount"
+            onChange={handleTokenAmountChange}
+          />
+          <Text>You will receive: {receivedTokens} CHFS tokens</Text>
+        </VStack>
+        <Button
+          colorScheme="green"
+          mt={3}
+          onClick={() => getCrowdsaleTokens(receivedTokens)}
+        >
+          Get Tokens
+        </Button>
+      </Box>
     </ChakraProvider>
   );
 };
