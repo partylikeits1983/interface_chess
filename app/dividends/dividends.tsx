@@ -62,12 +62,12 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     console.log(inputValue);
 
     // Modified regex to handle one decimal point, starting with a dot, and up to two decimals
-    if (inputValue === '' || /^\d*\.?\d{0,2}$/.test(inputValue)) {
+    if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
       setTokenAmount(inputValue);
 
       // Convert to number and handle potential NaN scenario
       const valueAsNumber = parseFloat(inputValue) || 0;
-      setReceivedTokens(Number((valueAsNumber * 2).toFixed(2)));
+      setReceivedTokens(Number((valueAsNumber * 2).toFixed(5)));
     }
   };
 
