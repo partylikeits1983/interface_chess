@@ -1,30 +1,24 @@
+import rawData from './tokenAddresses.json';
+
 type TokenAddresses = {
   [key: string]: {
     [tokenName: string]: string;
   };
 };
 
-const tokenAddressesByChainID: TokenAddresses = {
-  '80001': {
-    // Mumbai
-    WBTC: '0xc08eC0F487C510118B0933b5B026e715FD075D88',
-    WETH: '0xc08eC0F487C510118B0933b5B026e715FD075D88',
-    USDT: '0xc08eC0F487C510118B0933b5B026e715FD075D88',
-    USDC: '0xc08eC0F487C510118B0933b5B026e715FD075D88',
-    DAI: '0xc08eC0F487C510118B0933b5B026e715FD075D88',
-    // ... other tokens
+// Process the raw JSON data to fit the TokenAddresses format
+const tokenAddressesByChainID: TokenAddresses = rawData.reduce(
+  (acc, current) => {
+    const chainIDString = current.chainID.toString();
+
+    const { network, chainID, ...tokens } = current;
+
+    acc[chainIDString] = tokens;
+
+    return acc;
   },
-  '44787': {
-    // Celo Testnet
-    WBTC: '0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c',
-    WETH: '0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c',
-    USDT: '0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c',
-    USDC: '0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c',
-    DAI: '0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c',
-    // ... other tokens
-  },
-  // ... other chainIDs
-};
+  {} as TokenAddresses,
+);
 
 const options = [
   {

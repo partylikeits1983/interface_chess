@@ -78,6 +78,7 @@ const ERC20ABI = [
   'function allowance(address _owner, address _spender) public view returns (uint256 remaining)',
   'function balanceOf(address owner) view returns (uint balance)',
   'function totalSupply() view returns (uint amount)',
+  'function decimals() view returns (uint decimals)',
   'event Transfer(address indexed from, address indexed to, address value)',
   'error InsufficientBalance(account owner, uint balance)',
 ];
@@ -240,7 +241,10 @@ export const Approve = async (tokenAddress: string, amount: number) => {
     const value = await token.approve(ChessAddress, amount.toString());
     const allowance = await token.allowance(accounts[0], ChessAddress);
 
-    alert('Success! allowance set: ' + allowance);
+    const decimals = await token.decimals();
+    const readableAmount = ethers.utils.formatUnits(allowance, decimals);
+
+    alertSuccessFeedback('Success! allowance set: ' + readableAmount);
 
     return {
       value: value,
@@ -710,7 +714,10 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 
     return true;
   } catch (error) {
-    alert(`wager address: ${wagerAddress} not found`);
+    // alert(`wager address: ${wagerAddress} not found`);
+    alertWarningFeedback(
+      `Accept Wager Conditions pending... Wait until token approve tx success`,
+    );
     console.log(error);
   }
 };
