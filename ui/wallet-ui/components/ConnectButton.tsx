@@ -4,16 +4,32 @@ import { Button, Box, Text } from '@chakra-ui/react';
 import { formatEther } from '@ethersproject/units';
 
 import { useMetamask } from './Metamask';
+import { getChainId } from '../api/form';
+
 import Identicon from './Identicon';
+
+import networks from 'ui/wallet-ui/api/tokenAddresses.json';
 
 type Props = {
   handleOpenModal: any;
+};
+
+const getCurrencyByChainId = async (): Promise<string> => {
+  const chainId = await getChainId();
+
+  // Find the network object with the matching chainID
+  const networkObj = networks.find((network) => network.chainID === chainId);
+
+  // If found, return the currency. If not, return "ETH" as a default.
+  return networkObj?.currency || 'ETH';
 };
 
 export default function ConnectButton({ handleOpenModal }: Props) {
   const { connect, getAccounts, accounts, getBalance } = useMetamask();
   const [account, setAccount] = useState<string | null>(null);
   const [formattedBalance, setFormattedBalance] = useState<string>('');
+
+  const [nativeCurrency, setNativeCurrency] = useState('ETH');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -40,6 +56,10 @@ export default function ConnectButton({ handleOpenModal }: Props) {
           .toFixed(3)
           .toString();
         setFormattedBalance(formattedBalance);
+
+        const currency = await getCurrencyByChainId();
+
+        setNativeCurrency(currency);
       }
     };
 
@@ -72,7 +92,9 @@ export default function ConnectButton({ handleOpenModal }: Props) {
     >
       <Box px="3">
         <Text color="white" fontSize="md">
-          <span>{formattedBalance} ETH</span>
+          <span>
+            {formattedBalance} {nativeCurrency}
+          </span>
         </Text>
       </Box>
       <Button

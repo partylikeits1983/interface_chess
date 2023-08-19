@@ -1,6 +1,7 @@
 [
   {
     "network": "maticmum",
+    "currency": "MATIC",
     "chainID": 80001,
     "NATIVE": "0x0000000000000000000000000000000000000000",
     "WBTC": "0xc08eC0F487C510118B0933b5B026e715FD075D88",
@@ -11,6 +12,7 @@
   },
   {
     "network": "polygon",
+    "currency": "MATIC",
     "chainID": 137,
     "NATIVE": "0x0000000000000000000000000000000000000000",
     "WBTC": "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
@@ -21,6 +23,7 @@
   },
   {
     "network": "unknown",
+    "currency": "ETH",
     "chainID": 31337,
     "NATIVE": "0x0000000000000000000000000000000000000000",
     "WBTC": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
@@ -31,6 +34,7 @@
   },
   {
     "network": "celoTestnet",
+    "currency": "CELO",
     "chainID": 44787,
     "NATIVE": "0x0000000000000000000000000000000000000000",
     "WBTC": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
