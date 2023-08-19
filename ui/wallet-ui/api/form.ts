@@ -853,7 +853,8 @@ export const PayoutWager = async (wagerAddress: string) => {
 
     return true;
   } catch (error) {
-    alert(`wager address: ${wagerAddress} not found`);
+    // alert(`wager address: ${wagerAddress} not found`);
+    alertWarningFeedback('cannot payout wager yet');
     console.log(error);
   }
 };
