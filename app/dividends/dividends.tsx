@@ -53,13 +53,20 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     token: '',
   });
 
-  const [tokenAmount, setTokenAmount] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState<string>('');
   const [receivedTokens, setReceivedTokens] = useState(0);
 
   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setTokenAmount(value);
-    setReceivedTokens(value * 2);
+    const inputValue = e.target.value;
+
+    // Check if input is a valid float or an empty string
+    if (inputValue === '' || /^-?\d*(\.\d+)?$/.test(inputValue)) {
+      setTokenAmount(inputValue);
+
+      // Convert to number only when you need to perform arithmetic operations
+      const valueAsNumber = parseFloat(inputValue) || 0;
+      setReceivedTokens(valueAsNumber * 2);
+    }
   };
 
   useEffect(() => {
