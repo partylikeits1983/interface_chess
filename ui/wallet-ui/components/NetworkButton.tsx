@@ -11,10 +11,11 @@ import {
 import { ethers } from 'ethers';
 
 const NETWORK_NAMES: { [key: string]: string } = {
-  0x1: 'Mainnet',
-  0x89: 'Polygon',
+  0x1: 'Ethereum Mainnet',
+  0x89: 'Polygon Mainnet',
+  0xa4ec: 'Celo Mainnet',
   0x38: 'BSC',
-  0x13881: 'Mumbai',
+  0x13881: 'Mumbai Testnet',
   0x2a: 'Kovan',
   0xaef3: 'Alfajores Testnet',
 };
@@ -32,6 +33,9 @@ export default function NetworkButton(): JSX.Element {
         break;
       case 'Polygon':
         chainId = '0x89';
+        break;
+      case 'Celo Mainnet':
+        chainId = '0xa4ec';
         break;
       case 'BSC':
         chainId = '0x38';
@@ -115,11 +119,14 @@ export default function NetworkButton(): JSX.Element {
             <MenuItem onClick={() => handleNetworkChange('Polygon')}>
               Polygon (coming soon)
             </MenuItem>
+            <MenuItem onClick={() => handleNetworkChange('Celo Mainnet')}>
+              Celo (coming soon)
+            </MenuItem>
 
             <MenuDivider />
 
             <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
-              Mumbai Testnet
+              Polygon Testnet
             </MenuItem>
             <MenuItem onClick={() => handleNetworkChange('Alphajores Testnet')}>
               Celo Testnet

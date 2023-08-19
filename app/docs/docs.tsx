@@ -52,7 +52,41 @@ export default function Docs() {
         });
       } catch (error) {
         console.error(
-          'An error occurred while trying to switch to the Polygon Mumbai network:',
+          'An error occurred while trying to switch to the Polygon network:',
+          error,
+        );
+      }
+    } else {
+      console.log(
+        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+      );
+    }
+  };
+
+  const addCelo = async () => {
+    const provider = (window as any).ethereum;
+
+    if (provider) {
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0xa4ec',
+              chainName: 'Celo Mainnet',
+              rpcUrls: ['https://rpc.ankr.com/celo'],
+              nativeCurrency: {
+                name: 'Celo',
+                symbol: 'CELO',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://explorer.celo.org/mainnet/'],
+            },
+          ],
+        });
+      } catch (error) {
+        console.error(
+          'An error occurred while trying to switch to the Celo network:',
           error,
         );
       }
@@ -250,7 +284,7 @@ export default function Docs() {
               borderColor: 'white',
             }}
             onClick={() => {
-              addAlfajoresNetwork();
+              addCelo();
             }}
           >
             <Flex justify="space-between" align="center">
@@ -260,7 +294,7 @@ export default function Docs() {
                   width="24px"
                   height="24px"
                 />
-                <Text ml={3}>Add Celo Testnet to Metamask</Text>
+                <Text ml={3}>Add Celo Mainnet to Metamask</Text>
               </Box>
               <ChevronRightIcon boxSize={6} />
             </Flex>
@@ -284,7 +318,7 @@ export default function Docs() {
             }}
           >
             <Flex justify="space-between" align="center">
-              <Text>Celo Testnet Faucet</Text>
+              <Text>Celo Block Explorer</Text>
               <ChevronRightIcon boxSize={6} />
             </Flex>
           </Box>
@@ -346,6 +380,66 @@ export default function Docs() {
           >
             <Flex justify="space-between" align="center">
               <Text>Mumbai Testnet Faucet</Text>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+        </Flex>
+        <Flex
+          justifyContent="center"
+          mt={4}
+          flexDirection={'row'}
+          align="center"
+        >
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            mr={5}
+            width="390px" // Set the width to 200 pixels
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              addAlfajoresNetwork();
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Box display="flex" alignItems="center">
+                <Image
+                  src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                  width="24px"
+                  height="24px"
+                />
+                <Text ml={3}>Add Celo Testnet to Metamask</Text>
+              </Box>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            width="250px" // Set the width to 200 pixels
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              window.open('https://faucet.celo.org/alfajores', '_blank');
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Text>Celo Testnet Faucet</Text>
               <ChevronRightIcon boxSize={6} />
             </Flex>
           </Box>
