@@ -1132,7 +1132,6 @@ export const GetChessFishTokens = async (amountIn: string) => {
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
 
   const crowdSale = new ethers.Contract(CrowdSale, crowdSaleABI, signer);
 
@@ -1141,5 +1140,23 @@ export const GetChessFishTokens = async (amountIn: string) => {
   } catch (error) {
     console.log(error);
     return false;
+  }
+};
+
+export const getCrowdSaleBalance = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const token = new ethers.Contract(ChessToken, ERC20ABI, signer);
+
+  try {
+    const value = await token.balanceOf(CrowdSale);
+    const balance = ethers.utils.formatEther(value);
+
+    return balance;
+  } catch (error) {
+    return 0;
   }
 };

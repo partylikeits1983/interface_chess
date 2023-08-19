@@ -6,6 +6,7 @@ import {
   PayoutDividends,
   getChainId,
   getBalance,
+  getCrowdSaleBalance,
   getDividendBalances,
   GetChessFishTokens,
 } from 'ui/wallet-ui/api/form';
@@ -57,6 +58,8 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const [tokenAmount, setTokenAmount] = useState<string>('');
   const [receivedTokens, setReceivedTokens] = useState<number>(0);
 
+  const [CFSHbalance, setCFSHBalance] = useState('');
+
   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
@@ -76,13 +79,11 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       if (!useAPI) {
         try {
           const [dividendAmount, totalSupply] = await GetDividendData();
-
           setDividendAmount(dividendAmount);
           setTotalSupply(totalSupply);
 
-          // const nativeBalance = await getBalance(address)
-          // const [wbtc_bal, weth_bal, usdt_bal, usdc_bal, dai_bal] = await getDividendBalances();
-          // setTokenDividendBalances([wbtc_bal, weth_bal, usdt_bal, usdc_bal, dai_bal]);
+          const balanceCFSH = await getCrowdSaleBalance();
+          setCFSHBalance(balanceCFSH);
         } catch (error) {
           console.log(error);
         }
@@ -181,6 +182,7 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         padding="3"
       >
         <Text fontWeight="bold">LIMITED TIME CROWDSALE</Text>
+        <Text>{CFSHbalance} ChessFish tokens left</Text>
         <Text>1 MATIC = 2 CHFS tokens</Text>
         <VStack spacing={3} alignItems="start">
           <Input

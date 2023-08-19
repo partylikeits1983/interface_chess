@@ -47,9 +47,6 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
           setWagerAddresses(fetchedWagerAddresses);
 
-          console.log(fetchedWagerAddresses);
-          console.log(totalGames);
-
           setTotalGames(totalGames);
           setTotalWagers(fetchedWagerAddresses.length.toString());
 

@@ -83,7 +83,6 @@ export default function ChallengeForm() {
   };
 
   const HandleClickCreateWager = async () => {
-    console.log(formInputs);
     setIsLoadingCreateWager(true);
     await CreateWager(formInputs);
     setIsLoadingCreateWager(false);
@@ -105,7 +104,6 @@ export default function ChallengeForm() {
       ...prevInputs,
       [name]: value,
     }));
-    console.log(formInputs);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
