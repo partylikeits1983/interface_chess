@@ -59,8 +59,10 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
-    // Modified regex to handle one decimal point
-    if (inputValue === '' || /^\d+(\.\d{1,2})?$/.test(inputValue)) {
+    console.log(inputValue);
+
+    // Modified regex to handle one decimal point, starting with a dot, and up to two decimals
+    if (inputValue === '' || /^\d*\.?\d{0,2}$/.test(inputValue)) {
       setTokenAmount(inputValue);
 
       // Convert to number and handle potential NaN scenario
