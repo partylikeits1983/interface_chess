@@ -1125,8 +1125,10 @@ export const GetDividendPayoutData = async (tokenAddress: string) => {
   }
 };
 
-export const GetChessFishTokens = async (amountIn: number) => {
+export const GetChessFishTokens = async (amountIn: string) => {
   await updateContractAddresses();
+
+  const amount = ethers.utils.parseEther(amountIn);
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -1135,14 +1137,9 @@ export const GetChessFishTokens = async (amountIn: number) => {
   const crowdSale = new ethers.Contract(CrowdSale, crowdSaleABI, signer);
 
   try {
-    const userAmount = ethers.utils.formatEther(
-      await crowdSale.releasedERC20(tokenAddress, accounts[0]),
-      18,
-    );
-
-    return userAmount;
+    await crowdSale.getChessFishTokens({ value: amount });
   } catch (error) {
     console.log(error);
-    return [0, 0];
+    return false;
   }
 };

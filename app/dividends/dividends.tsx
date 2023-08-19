@@ -7,6 +7,7 @@ import {
   getChainId,
   getBalance,
   getDividendBalances,
+  GetChessFishTokens,
 } from 'ui/wallet-ui/api/form';
 
 import {
@@ -135,9 +136,9 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     await PayoutDividends(formInputs.token);
   };
 
-  const getCrowdsaleTokens = (amountIn: number) => {
-    // Your implementation here
-    console.log(`Getting crowdsale tokens for amount: ${amountIn}`);
+  const getCrowdsaleTokens = async (amountIn: string) => {
+    console.log(`Getting chessfish tokens`);
+    await GetChessFishTokens(amountIn);
   };
 
   return (
@@ -192,7 +193,7 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         <Button
           colorScheme="green"
           mt={3}
-          onClick={() => getCrowdsaleTokens(receivedTokens)}
+          onClick={() => getCrowdsaleTokens(tokenAmount)}
         >
           Get Tokens
         </Button>
