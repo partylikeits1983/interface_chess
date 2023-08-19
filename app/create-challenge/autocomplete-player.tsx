@@ -37,8 +37,6 @@ const AutocompletePlayer: React.FC<AutocompleteProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
-    console.log(value);
-
     setInputValue(value);
     onChange(value);
 

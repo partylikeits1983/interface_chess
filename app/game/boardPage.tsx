@@ -99,7 +99,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       if (wager && Object.keys(wager).length !== 0) {
         alertWarningFeedback(`Getting wager data: ${wager.matchAddress}`);
         e.preventDefault(); // This may be optional, depending on your needs
-        console.log(address);
         router.push(`/game/${address}`);
       } else {
         alertWarningFeedback('ROUTER: Wager address not found');
@@ -371,8 +370,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       if (result && result.captured) {
         wasCaptured = true;
       }
-
-      console.log('HERE IN MAKE A MOVE');
     } catch {
       result = null;
       console.log('Invalid move');
