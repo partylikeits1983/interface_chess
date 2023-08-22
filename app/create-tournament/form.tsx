@@ -231,7 +231,7 @@ export default function ChallengeForm() {
               <FormLabel>
                 Tournament Time Limit{' '}
                 <Tooltip
-                  label="This is the amount of time the tournament will be held"
+                  label="This is the amount of time the tournament will be held once started"
                   aria-label="Number of games tooltip"
                   placement="right"
                 >

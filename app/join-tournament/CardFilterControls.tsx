@@ -39,7 +39,7 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
       </Flex>
       <Flex width="50%" justifyContent="flex-end">
         <label htmlFor="hide-pending" style={{ marginRight: '10px' }}>
-          Hide Pending
+          Hide In Progress Tournaments
         </label>
         <Switch
           id="hide-pending"

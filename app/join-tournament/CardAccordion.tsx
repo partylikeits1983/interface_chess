@@ -118,6 +118,28 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
     setIsLoadingJoin(false);
   };
 
+  function timeUntilStart(startTime: number): string {
+    const now = new Date();
+    const targetDate = new Date(startTime * 1000 + 86400 * 1000);
+    const difference = targetDate.getTime() - now.getTime();
+
+    console.log(startTime);
+    console.log(targetDate);
+
+    if (difference <= 0) {
+      return 'Tournament can begin';
+    }
+
+    // Calculate the days, hours, minutes, and seconds
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${hours} hours ${minutes} minutes until tournament can begin`;
+  }
+
   return (
     <Accordion allowToggle>
       <AccordionItem>
@@ -126,7 +148,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
             <Flex justify="space-between" alignItems="center" w="full">
               <HStack spacing="1.5rem">
                 <Identicon account={card.players[0]} />
-                <Text fontSize="md">{`TournamentID: ${card.tournamentNonce}`}</Text>
+                <Text fontSize="md">{`Tournament # ${card.tournamentNonce}`}</Text>
               </HStack>
               <HStack spacing="1.5rem">
                 <Text></Text>
@@ -145,66 +167,92 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
             <Table variant="simple">
               <Tbody>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Tournament ID
                   </Td>
-                  <Td>{card.tournamentNonce}</Td>
+                  <Td color="white" fontSize="lg">
+                    {card.tournamentNonce}
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Number of Games Per Match
                   </Td>
-                  <Td>{card.numberOfGames}</Td>
+                  <Td color="white" fontSize="lg">
+                    {card.numberOfGames}
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Wager Token
                   </Td>
-                  <Td>
+                  <Td color="white" fontSize="lg">
                     {formatAddress(card.token)}
                     <CopyIcon
                       ml={2}
                       cursor="pointer"
                       onClick={() => handleCopyAddress(card.token)}
+                      color="white"
                     />
                   </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Tournament Pool Size
                   </Td>
-                  <Td>{card.tokenAmount * card.players.length}</Td>
+                  <Td color="white" fontSize="lg">
+                    {card.tokenAmount * card.players.length}
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Tournament Entry Fee
                   </Td>
-                  <Td>{card.tokenAmount.toString()}</Td>
+                  <Td color="white" fontSize="lg">
+                    {card.tokenAmount.toString()}
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Wager Time Limit
                   </Td>
-                  <Td>{formatDuration(Number(card.timeLimit))}</Td>
+                  <Td color="white" fontSize="lg">
+                    {formatDuration(Number(card.timeLimit))}
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Player Limit
                   </Td>
-                  <Td>{card.numberOfPlayers}</Td>
+                  <Td color="white" fontSize="lg">
+                    {card.numberOfPlayers}
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td fontWeight="bold" color="gray.500">
+                  <Td fontWeight="bold" color="white" fontSize="lg">
+                    Time Until Start
+                  </Td>
+                  <Td color="white" fontSize="lg">
+                    {timeUntilStart(card.startTime)}
+                  </Td>
+                </Tr>
+
+                <Tr>
+                  <Td fontWeight="bold" color="white" fontSize="lg">
                     Number of Players waiting
                   </Td>
-                  <Td>{card.players.length}</Td>
+                  <Td color="white" fontSize="lg">
+                    {card.players.length}
+                  </Td>
                 </Tr>
                 {card.players.map((playerAddress, index) => (
                   <Tr key={index}>
-                    <Td fontWeight="bold" color="gray.500">
+                    <Td fontWeight="bold" color="white" fontSize="lg">
                       {index === 0 ? 'Player Addresses' : ''}
                     </Td>
-                    <Td>{playerAddress}</Td>
+                    <Td color="white" fontSize="sm">
+                      {playerAddress}
+                    </Td>
                   </Tr>
                 ))}
               </Tbody>
