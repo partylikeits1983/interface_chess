@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const { ethers } = require('ethers');
 
@@ -14,15 +14,18 @@ import {
   Box,
   HStack,
   useBreakpointValue,
+  Table,
+  Th,
+  Tr,
+  Td,
+  Tbody,
 } from '@chakra-ui/react';
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
 import copyIconFeedback from 'ui/copyIconFeedback';
 
-import SidePanel from './sidePanel';
-
-import { Card } from '../types';
+import { getChainId } from '#/ui/wallet-ui/api/form';
 
 interface TournamentData {
   tournamentNonce: number;
@@ -46,6 +49,8 @@ interface CardAccordionProps {
 }
 
 const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
+  const [token, setToken] = useState('');
+
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -110,7 +115,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
               </HStack>
 
               <HStack spacing="1.5rem">
-                <Text>{card.token}</Text>
+                <Text></Text>
 
                 <AccordionIcon />
               </HStack>
@@ -122,82 +127,70 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
             direction={useBreakpointValue({ base: 'column', md: 'row' })}
             alignItems={useBreakpointValue({
               base: 'stretch',
-              md: 'flex-start',
+              md: 'flex-center',
             })}
+            justifyContent="center"
           >
-            <Stack
-              spacing={2}
-              width={useBreakpointValue({ base: '100%', md: '50%' })}
-            >
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Match Address
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.players[0])}</Text>
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() => handleCopyAddress(card.players[0])}
-                  />
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Number of Games
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">{card.numberOfGames}</Text>
-                </Flex>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Wager Token
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.token)}</Text>
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() => handleCopyAddress(card.token)}
-                  />
-                </Flex>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Tournament Entry Fee
-                </Text>
-                <Text fontSize="md">
-                  {ethers.utils.formatUnits(
-                    ethers.BigNumber.from(
-                      fromScientificNotation(card.tokenAmount.toString()),
-                    ),
-                    18,
-                  )}
-                </Text>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Wager Time Limit
-                </Text>
-                <Text fontSize="md">
-                  {formatDuration(Number(card.timeLimit))}
-                </Text>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Number of Games
-                </Text>
-                <Text fontSize="md">{card.numberOfGames}</Text>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Status
-                </Text>
-              </Stack>
-            </Stack>
-
+            <Table variant="simple">
+              <Tbody>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
+                    Tournament ID
+                  </Td>
+                  <Td>{card.tournamentNonce}</Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
+                    Number of Games
+                  </Td>
+                  <Td>{card.numberOfGames}</Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
+                    Wager Token
+                  </Td>
+                  <Td>
+                    {formatAddress(card.token)}
+                    <CopyIcon
+                      ml={2}
+                      cursor="pointer"
+                      onClick={() => handleCopyAddress(card.token)}
+                    />
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
+                    Tournament Entry Fee
+                  </Td>
+                  <Td>
+                    {ethers.utils.formatUnits(
+                      ethers.BigNumber.from(
+                        fromScientificNotation(card.tokenAmount.toString()),
+                      ),
+                      18,
+                    )}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
+                    Wager Time Limit
+                  </Td>
+                  <Td>{formatDuration(Number(card.timeLimit))}</Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
+                    Player Limit
+                  </Td>
+                  <Td>{card.numberOfPlayers}</Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
+                    Number of Players waiting
+                  </Td>
+                  <Td>{card.players.length}</Td>
+                </Tr>
+              </Tbody>
+            </Table>
             <Box
               width={useBreakpointValue({ base: '100%', md: '50%' })}
               marginBottom={useBreakpointValue({ base: 4, md: 0 })}

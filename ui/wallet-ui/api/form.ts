@@ -1250,7 +1250,6 @@ export const GetTournaments = async () => {
   const signer = provider.getSigner();
 
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
-
   const tournamentsData: TournamentData[] = [];
 
   try {
