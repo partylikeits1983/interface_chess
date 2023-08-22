@@ -21,7 +21,11 @@ import {
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const { ethers } = require('ethers');
-const { CreateWager, Approve, getChainId } = require('ui/wallet-ui/api/form');
+const {
+  CreateTournament,
+  ApproveTournament,
+  getChainId,
+} = require('ui/wallet-ui/api/form');
 
 import {
   tokenAddressesByChainID,
@@ -33,16 +37,17 @@ import AutocompletePlayer from './autocomplete-player';
 import pairingOptions from './autocomplete-player-options';
 
 interface FormInputs {
-  player1: string;
+  numberOfPlayers: number;
   wagerToken: string;
   wagerAmount: number;
-  timePerMove: number;
   numberOfGames: number;
+  timeLimit: number;
 }
 
 export default function ChallengeForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
-  const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
+  const [isLoadingCreateTournament, setIsLoadingCreateTournament] =
+    useState(false);
 
   const [chainID, setChainID] = useState<string>('1');
   const [tokenOptions, setTokenOptions] = useState<any[]>([]); // default empty array
@@ -78,22 +83,22 @@ export default function ChallengeForm() {
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
-    await Approve(formInputs.wagerToken, formInputs.wagerAmount);
+    await ApproveTournament(formInputs.wagerToken, formInputs.wagerAmount);
     setIsLoadingApproval(false);
   };
 
-  const HandleClickCreateWager = async () => {
-    setIsLoadingCreateWager(true);
-    await CreateWager(formInputs);
-    setIsLoadingCreateWager(false);
+  const HandleClickCreateTournament = async () => {
+    setIsLoadingCreateTournament(true);
+    await CreateTournament(formInputs);
+    setIsLoadingCreateTournament(false);
   };
 
   const [formInputs, setFormInputs] = useState<FormInputs>({
-    player1: '',
+    numberOfPlayers: 0,
     wagerToken: '',
     wagerAmount: 0,
-    timePerMove: 0,
     numberOfGames: 0,
+    timeLimit: 0,
   });
 
   const handleInputChange = (
@@ -114,8 +119,9 @@ export default function ChallengeForm() {
   const handleSliderChange = (value: number) => {
     setFormInputs((prevInputs) => ({
       ...prevInputs,
-      timePerMove: value,
+      timeLimit: value,
     }));
+    console.log(formInputs);
   };
 
   const convertSecondsToTime = (seconds: number): string => {
@@ -157,7 +163,16 @@ export default function ChallengeForm() {
             </FormControl>
 
             <FormControl>
-              <FormLabel>Tournament Entry Fee</FormLabel>
+              <FormLabel>
+                Tournament Entry Fee{' '}
+                <Tooltip
+                  label="The amount required for other players to deposit to enter the tournament"
+                  aria-label="Number of games tooltip"
+                  placement="right"
+                >
+                  <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+                </Tooltip>
+              </FormLabel>
               <Input
                 type="number"
                 name="wagerAmount"
@@ -171,9 +186,32 @@ export default function ChallengeForm() {
 
             <FormControl>
               <FormLabel>
-                Number of Games{' '}
+                Number of Players{' '}
                 <Tooltip
-                  label="Number of games must be odd"
+                  label="Set the maximum number of players in the tournament. Minimum 3 players, maximum 25 players"
+                  aria-label="Number of games tooltip"
+                  placement="right"
+                >
+                  <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+                </Tooltip>
+              </FormLabel>
+
+              <Input
+                type="number"
+                name="numberOfPlayers"
+                value={formInputs.numberOfPlayers}
+                onChange={handleInputChange}
+                required
+                width="100%"
+                min={0}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>
+                Number of Games Per 1v1 Match{' '}
+                <Tooltip
+                  label="Number of games must be less than 3"
                   aria-label="Number of games tooltip"
                   placement="right"
                 >
@@ -194,9 +232,9 @@ export default function ChallengeForm() {
 
             <FormControl>
               <FormLabel>
-                Time Limit{' '}
+                Tournament Time Limit{' '}
                 <Tooltip
-                  label="Note: the time limit is the limit for all games, i.e. the timer does not reset after each game"
+                  label="This is the amount of time the tournament will be held"
                   aria-label="Number of games tooltip"
                   placement="right"
                 >
@@ -207,16 +245,16 @@ export default function ChallengeForm() {
                 min={0}
                 max={604800}
                 step={1}
-                value={formInputs.timePerMove}
+                value={formInputs.timeLimit}
                 onChange={handleSliderChange}
-                defaultValue={formInputs.timePerMove}
+                defaultValue={formInputs.timeLimit}
               >
                 <SliderTrack bg="#e2e8f0">
                   <SliderFilledTrack bg="#94febf" />
                 </SliderTrack>
                 <SliderThumb />
               </Slider>
-              <p>{convertSecondsToTime(formInputs.timePerMove)}</p>
+              <p>{convertSecondsToTime(formInputs.timeLimit)}</p>
             </FormControl>
 
             <HStack spacing="4" direction={{ base: 'column', md: 'row' }}>
@@ -260,7 +298,7 @@ export default function ChallengeForm() {
                 variant="solid"
                 size="lg"
                 loadingText="Submitting Transaction"
-                onClick={() => HandleClickCreateWager()}
+                onClick={() => HandleClickCreateTournament()}
                 _hover={{
                   color: '#000000',
                   backgroundColor: '#62ffa2',
@@ -275,7 +313,7 @@ export default function ChallengeForm() {
                     marginLeft: '8px',
                   }}
                 >
-                  {isLoadingCreateWager ? (
+                  {isLoadingCreateTournament ? (
                     <Spinner
                       thickness="2px"
                       speed="0.85s"

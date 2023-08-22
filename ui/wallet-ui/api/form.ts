@@ -6,6 +6,7 @@ const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
 const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
 const splitterABI = require('../../../contract-abi/SplitterABI');
 const crowdSaleABI = require('../../../contract-abi/CrowdSaleABI');
+const tournamentABI = require('../../../contract-abi/TournamentABI');
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
@@ -22,6 +23,7 @@ interface ContractAddress {
   moveVerification: string;
   chess: string;
   crowdSale: string;
+  tournament: string;
 }
 
 interface Card {
@@ -60,6 +62,7 @@ let tokenAddress = addresses[0].token;
 let ChessToken = addresses[0].chessToken;
 let DividendSplitter = addresses[0].dividendSplitter;
 let CrowdSale = addresses[0].crowdSale;
+let Tournament = addresses[0].tournament;
 
 const tokenData: TokenAddresses = require('./tokenAddresses.json');
 const tokenjson = JSON.stringify(tokenData);
@@ -111,6 +114,7 @@ const updateContractAddresses = async (): Promise<void> => {
     ChessToken = matchingChain.chessToken;
     DividendSplitter = matchingChain.dividendSplitter;
     CrowdSale = matchingChain.crowdSale;
+    Tournament = matchingChain.tournament;
   }
 
   if (matchingChainTokens) {
@@ -1151,5 +1155,73 @@ export const getCrowdSaleBalance = async () => {
     return balance;
   } catch (error) {
     return 0;
+  }
+};
+
+interface TournamentParams {
+  numberOfPlayers: number;
+  wagerToken: string;
+  wagerAmount: number;
+  numberOfGames: number;
+  timeLimit: number;
+}
+
+export const CreateTournament = async (params: TournamentParams) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  console.log(params);
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+  try {
+    await tournament.createTournament(
+      params.numberOfPlayers,
+      params.numberOfGames,
+      params.wagerToken,
+      params.wagerAmount,
+      params.timeLimit,
+    );
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const ApproveTournament = async (
+  tokenAddress: string,
+  amount: number,
+) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+
+  try {
+    // @dev amount.toSting() was a nightmare bug to find...
+    const value = await token.approve(Tournament, amount.toString());
+    const allowance = await token.allowance(accounts[0], ChessAddress);
+
+    const decimals = await token.decimals();
+    const readableAmount = ethers.utils.formatUnits(allowance, decimals);
+
+    alertSuccessFeedback('Success! allowance set: ' + readableAmount);
+
+    return {
+      value: value,
+      success: true,
+      status: '✅ Check out your transaction on Etherscan',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      // @ts-ignore
+      status: '😥 Something went wrong: ' + error.message,
+    };
   }
 };
