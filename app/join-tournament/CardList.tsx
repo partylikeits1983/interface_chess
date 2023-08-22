@@ -10,7 +10,7 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetTournaments, GetPlayerAddresses } = require('ui/wallet-ui/api/form');
+const { GetTournaments } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
@@ -18,6 +18,7 @@ import CardAccordion from './CardAccordion'; // Import the CardAccordion compone
 import CardFilterControls from './CardFilterControls';
 
 interface TournamentData {
+  tournamentNonce: number;
   numberOfPlayers: number;
   players: string[];
   numberOfGames: number;

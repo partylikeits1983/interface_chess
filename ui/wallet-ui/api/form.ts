@@ -1227,6 +1227,7 @@ export const ApproveTournament = async (
 };
 
 interface TournamentData {
+  tournamentNonce: number;
   numberOfPlayers: number;
   players: string[];
   numberOfGames: number;
@@ -1259,22 +1260,25 @@ export const GetTournaments = async () => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      const tournamentData: TournamentData = {
-        numberOfPlayers: Number(data[0]),
-        players: [],
-        numberOfGames: Number(data[1]),
-        token: data[2],
-        tokenAmount: Number(data[3]),
-        isInProgress: Boolean(data[4]),
-        startTime: Number(data[5]),
-        timeLimit: Number(data[6]),
-        isComplete: Boolean(data[7]),
-      };
+      if (Boolean(data[4]) == false) {
+        const tournamentData: TournamentData = {
+          tournamentNonce: i,
+          numberOfPlayers: Number(data[0]),
+          players: [],
+          numberOfGames: Number(data[1]),
+          token: data[2],
+          tokenAmount: Number(data[3]),
+          isInProgress: Boolean(data[4]),
+          startTime: Number(data[5]),
+          timeLimit: Number(data[6]),
+          isComplete: Boolean(data[7]),
+        };
 
-      const players = await tournament.getTournamentPlayers(i);
-      tournamentData.players = players;
+        const players = await tournament.getTournamentPlayers(i);
+        tournamentData.players = players;
 
-      tournamentsData.push(tournamentData);
+        tournamentsData.push(tournamentData);
+      }
     }
   } catch (error) {
     // Handle error if needed

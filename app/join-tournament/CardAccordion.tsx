@@ -25,6 +25,7 @@ import SidePanel from './sidePanel';
 import { Card } from '../types';
 
 interface TournamentData {
+  tournamentNonce: number;
   numberOfPlayers: number;
   players: string[];
   numberOfGames: number;
@@ -105,17 +106,12 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
             <Flex justify="space-between" alignItems="center" w="full">
               <HStack spacing="1.5rem">
                 <Identicon account={card.players[0]} />
-                <Text fontSize="md">{`Address: ${formatAddress(
-                  card.players[0],
-                )}`}</Text>
+                <Text fontSize="md">{`TournamentID: ${card.tournamentNonce}`}</Text>
               </HStack>
 
               <HStack spacing="1.5rem">
-                {card.isInProgress ? (
-                  <Text>In Progress</Text>
-                ) : (
-                  <Text>Pending</Text>
-                )}
+                <Text>{card.token}</Text>
+
                 <AccordionIcon />
               </HStack>
             </Flex>
