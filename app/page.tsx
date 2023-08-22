@@ -29,14 +29,10 @@ export default function Page() {
       <Link
         href={`/join-tournament`}
         key={`play now`}
-        className="group block space-y-1.5 rounded-lg bg-gray-900 px-5 py-3 hover:bg-gray-800"
+        className="group block flex h-[70px] flex-col items-center justify-center space-y-1.5 rounded-lg bg-green-900 px-5 py-3 transition-colors duration-500 hover:bg-green-800"
       >
-        <div className="font-medium text-gray-200 group-hover:text-gray-50">
-          {`play now`}
-        </div>
-
-        <div className="line-clamp-3 text-sm text-gray-400 group-hover:text-gray-300">
-          {'PLAY'}
+        <div className="text-2xl font-medium text-gray-200 group-hover:text-gray-50">
+          Play Now ▶️
         </div>
       </Link>
 
