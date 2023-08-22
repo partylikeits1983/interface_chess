@@ -14,18 +14,24 @@ import {
   Box,
   HStack,
   useBreakpointValue,
+  Button,
   Table,
   Th,
   Tr,
   Td,
   Tbody,
+  Spinner,
 } from '@chakra-ui/react';
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
 import copyIconFeedback from 'ui/copyIconFeedback';
 
-import { getChainId } from '#/ui/wallet-ui/api/form';
+import {
+  getChainId,
+  ApproveTournament,
+  JoinTournament,
+} from '#/ui/wallet-ui/api/form';
 
 interface TournamentData {
   tournamentNonce: number;
@@ -50,6 +56,8 @@ interface CardAccordionProps {
 
 const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
   const [token, setToken] = useState('');
+  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
+  const [isLoadingJoin, setIsLoadingJoin] = useState(false);
 
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
@@ -103,6 +111,18 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
     return sign + coefficients[0] + zeros;
   }
 
+  const HandleClickApprove = async () => {
+    setIsLoadingApproval(true);
+    await ApproveTournament(card.token, card.tokenAmount);
+    setIsLoadingApproval(false);
+  };
+
+  const HandleClickCreateTournament = async () => {
+    setIsLoadingJoin(true);
+    await JoinTournament(card.tournamentNonce);
+    setIsLoadingJoin(false);
+  };
+
   return (
     <Accordion allowToggle>
       <AccordionItem>
@@ -113,10 +133,8 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
                 <Identicon account={card.players[0]} />
                 <Text fontSize="md">{`TournamentID: ${card.tournamentNonce}`}</Text>
               </HStack>
-
               <HStack spacing="1.5rem">
                 <Text></Text>
-
                 <AccordionIcon />
               </HStack>
             </Flex>
@@ -124,12 +142,10 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
         </h2>
         <AccordionPanel pb={4}>
           <Flex
-            direction={useBreakpointValue({ base: 'column', md: 'row' })}
-            alignItems={useBreakpointValue({
-              base: 'stretch',
-              md: 'flex-center',
-            })}
+            direction="column" // Set direction to column
+            alignItems="center"
             justifyContent="center"
+            height="100%"
           >
             <Table variant="simple">
               <Tbody>
@@ -141,7 +157,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
                 </Tr>
                 <Tr>
                   <Td fontWeight="bold" color="gray.500">
-                    Number of Games
+                    Number of Games Per Match
                   </Td>
                   <Td>{card.numberOfGames}</Td>
                 </Tr>
@@ -160,16 +176,15 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
                 </Tr>
                 <Tr>
                   <Td fontWeight="bold" color="gray.500">
+                    Tournament Pool Size
+                  </Td>
+                  <Td>{card.tokenAmount * card.players.length}</Td>
+                </Tr>
+                <Tr>
+                  <Td fontWeight="bold" color="gray.500">
                     Tournament Entry Fee
                   </Td>
-                  <Td>
-                    {ethers.utils.formatUnits(
-                      ethers.BigNumber.from(
-                        fromScientificNotation(card.tokenAmount.toString()),
-                      ),
-                      18,
-                    )}
-                  </Td>
+                  <Td>{card.tokenAmount.toString()}</Td>
                 </Tr>
                 <Tr>
                   <Td fontWeight="bold" color="gray.500">
@@ -189,13 +204,85 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
                   </Td>
                   <Td>{card.players.length}</Td>
                 </Tr>
+                {card.players.map((playerAddress, index) => (
+                  <Tr key={index}>
+                    <Td fontWeight="bold" color="gray.500">
+                      {index === 0 ? 'Player Addresses' : ''}
+                    </Td>
+                    <Td>{playerAddress}</Td>
+                  </Tr>
+                ))}
               </Tbody>
             </Table>
-            <Box
-              width={useBreakpointValue({ base: '100%', md: '50%' })}
-              marginBottom={useBreakpointValue({ base: 4, md: 0 })}
-              order={useBreakpointValue({ base: 2, md: 1 })}
-            ></Box>
+
+            <HStack spacing="4" direction={{ base: 'column', md: 'row' }}>
+              <Button
+                flex="1"
+                color="#000000"
+                backgroundColor="#94febf"
+                variant="solid"
+                size="lg"
+                loadingText="Submitting Transaction"
+                onClick={() => HandleClickApprove()}
+                _hover={{
+                  color: '#000000',
+                  backgroundColor: '#62ffa2',
+                }}
+              >
+                Approve Tokens
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: '24px',
+                    textAlign: 'center',
+                    marginLeft: '8px',
+                  }}
+                >
+                  {isLoadingApproval ? (
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                    />
+                  ) : null}
+                </div>
+              </Button>
+              <Button
+                flex="1"
+                color="#000000"
+                backgroundColor="#94febf"
+                variant="solid"
+                size="lg"
+                loadingText="Submitting Transaction"
+                onClick={() => HandleClickCreateTournament()}
+                _hover={{
+                  color: '#000000',
+                  backgroundColor: '#62ffa2',
+                }}
+              >
+                Join Tournament
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: '24px',
+                    textAlign: 'center',
+                    marginLeft: '8px',
+                  }}
+                >
+                  {isLoadingJoin ? (
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                    />
+                  ) : null}
+                </div>
+              </Button>
+            </HStack>
           </Flex>
         </AccordionPanel>
       </AccordionItem>

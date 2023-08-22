@@ -1190,6 +1190,21 @@ export const CreateTournament = async (params: TournamentParams) => {
   }
 };
 
+export const JoinTournament = async (tournamentID: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+  try {
+    await tournament.joinTournament(tournamentID);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const ApproveTournament = async (
   tokenAddress: string,
   amount: number,
