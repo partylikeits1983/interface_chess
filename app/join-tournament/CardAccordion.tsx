@@ -111,14 +111,9 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
     return sign + coefficients[0] + zeros;
   }
 
-  const HandleClickApprove = async () => {
-    setIsLoadingApproval(true);
-    await ApproveTournament(card.token, card.tokenAmount);
-    setIsLoadingApproval(false);
-  };
-
   const HandleClickCreateTournament = async () => {
     setIsLoadingJoin(true);
+    await ApproveTournament(card.token, card.tokenAmount);
     await JoinTournament(card.tournamentNonce);
     setIsLoadingJoin(false);
   };
@@ -216,39 +211,6 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
             </Table>
 
             <HStack spacing="4" direction={{ base: 'column', md: 'row' }}>
-              <Button
-                flex="1"
-                color="#000000"
-                backgroundColor="#94febf"
-                variant="solid"
-                size="lg"
-                loadingText="Submitting Transaction"
-                onClick={() => HandleClickApprove()}
-                _hover={{
-                  color: '#000000',
-                  backgroundColor: '#62ffa2',
-                }}
-              >
-                Approve Tokens
-                <div
-                  style={{
-                    display: 'inline-block',
-                    width: '24px',
-                    textAlign: 'center',
-                    marginLeft: '8px',
-                  }}
-                >
-                  {isLoadingApproval ? (
-                    <Spinner
-                      thickness="2px"
-                      speed="0.85s"
-                      emptyColor="gray.800"
-                      color="gray.400"
-                      size="md"
-                    />
-                  ) : null}
-                </div>
-              </Button>
               <Button
                 flex="1"
                 color="#000000"
