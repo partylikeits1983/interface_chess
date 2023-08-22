@@ -38,11 +38,11 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
         </Select>
       </Flex>
       <Flex width="50%" justifyContent="flex-end">
-        <label htmlFor="hide-games" style={{ marginRight: '10px' }}>
+        <label htmlFor="hide-pending" style={{ marginRight: '10px' }}>
           Hide Pending
         </label>
         <Switch
-          id="hide-games"
+          id="hide-pending"
           isChecked={filterValue}
           onChange={(event) => setFilterValue(event.target.checked)}
         />

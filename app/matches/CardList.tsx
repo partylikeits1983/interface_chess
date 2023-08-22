@@ -8,6 +8,8 @@ import {
   Text,
   Spinner,
   Flex,
+  Select,
+  Switch,
 } from '@chakra-ui/react';
 
 const { GetAllWagers } = require('ui/wallet-ui/api/form');
@@ -30,6 +32,7 @@ interface Card {
   timePlayer0: number;
   timePlayer1: number;
   isPlayerTurn: boolean;
+  isTournament: boolean;
 }
 
 interface Props {
@@ -45,6 +48,8 @@ const CardList = () => {
 
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
+
+  const [showOnlyTournaments, setShowOnlyTournaments] = useState(false); // add this state
 
   useEffect(() => {
     const handleConnect = async () => {
@@ -86,6 +91,8 @@ const CardList = () => {
     switch (sortValue) {
       case 'isPending':
         return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;
+      case 'isTournament':
+        return a.isTournament === b.isTournament ? 0 : a.isTournament ? -1 : 1;
       case 'wagerAmountAsc':
         return a.wagerAmount - b.wagerAmount;
       case 'wagerAmountDesc':
@@ -96,7 +103,9 @@ const CardList = () => {
   });
 
   const filteredAndSortedCards = sortedCards.filter(
-    (card) => !filterValue || card.isInProgress,
+    (card) =>
+      (!filterValue || card.isInProgress) &&
+      (!showOnlyTournaments || card.isTournament),
   );
 
   return (
@@ -105,12 +114,57 @@ const CardList = () => {
         <Heading as="h2" size="lg" mb={4}>
           Your Current Matches
         </Heading>
-        <CardFilterControls
-          sortValue={sortValue}
-          setSortValue={setSortValue}
-          filterValue={filterValue}
-          setFilterValue={setFilterValue}
-        />
+
+        <Flex
+          align="center"
+          justifyContent="space-between"
+          paddingBottom="20px"
+        >
+          <Flex width="50%">
+            <Select
+              size="sm"
+              style={{ color: 'white' }}
+              value={sortValue}
+              onChange={(event) => setSortValue(event.target.value)}
+              placeholder=""
+              bg="black"
+              color="white"
+              width="100%"
+            >
+              <option style={{ color: 'black' }} value="isPending">
+                In Progress First
+              </option>
+              <option style={{ color: 'black' }} value="wagerAmountAsc">
+                Wager Amount (lowest first)
+              </option>
+              <option style={{ color: 'black' }} value="wagerAmountDesc">
+                Wager Amount (highest first)
+              </option>
+            </Select>
+          </Flex>
+          <Flex width="50%" justifyContent="flex-end">
+            <label htmlFor="hide-pending-games" style={{ marginRight: '10px' }}>
+              Hide Pending
+            </label>
+            <Switch
+              id="hide-pending-games"
+              isChecked={filterValue}
+              onChange={(event) => setFilterValue(event.target.checked)}
+            />
+          </Flex>
+
+          <Flex width="50%" justifyContent="flex-end">
+            <label htmlFor="show-tournaments" style={{ marginRight: '10px' }}>
+              Show only Tournaments
+            </label>
+            <Switch
+              id="show-tournaments"
+              isChecked={showOnlyTournaments}
+              onChange={(event) => setShowOnlyTournaments(event.target.checked)}
+            />
+          </Flex>
+        </Flex>
+
         {isLoading ? (
           <Flex justify="center">
             <Spinner size="lg" />

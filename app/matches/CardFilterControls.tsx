@@ -5,6 +5,8 @@ interface CardFilterControlsProps {
   setSortValue: (value: string) => void;
   filterValue: boolean;
   setFilterValue: (value: boolean) => void;
+  showOnlyTournaments: boolean;
+  setShowOnlyTournaments: (value: boolean) => void;
 }
 
 const CardFilterControls: React.FC<CardFilterControlsProps> = ({
@@ -12,6 +14,8 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
   setSortValue,
   filterValue,
   setFilterValue,
+  showOnlyTournaments,
+  setShowOnlyTournaments,
 }) => {
   return (
     <Flex align="center" justifyContent="space-between" paddingBottom="20px">
@@ -38,24 +42,24 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
         </Select>
       </Flex>
       <Flex width="50%" justifyContent="flex-end">
-        <label htmlFor="hide-games" style={{ marginRight: '10px' }}>
+        <label htmlFor="hide-pending-games" style={{ marginRight: '10px' }}>
           Hide Pending
         </label>
         <Switch
-          id="hide-games"
+          id="hide-pending-games"
           isChecked={filterValue}
           onChange={(event) => setFilterValue(event.target.checked)}
         />
       </Flex>
 
       <Flex width="50%" justifyContent="flex-end">
-        <label htmlFor="hide-games" style={{ marginRight: '10px' }}>
+        <label htmlFor="show-tournaments" style={{ marginRight: '10px' }}>
           Show only Tournaments
         </label>
         <Switch
-          id="hide-games"
-          isChecked={filterValue}
-          onChange={(event) => setFilterValue(event.target.checked)}
+          id="show-tournaments"
+          isChecked={showOnlyTournaments}
+          onChange={(event) => setShowOnlyTournaments(event.target.checked)}
         />
       </Flex>
     </Flex>
