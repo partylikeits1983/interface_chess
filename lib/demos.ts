@@ -19,16 +19,25 @@ export const demos: { name: string; items: Item[] }[] = [
         description: 'chess.fish leaderboard',
       },
       {
+        name: 'Create Tournament 🛠️',
+        slug: 'create-tournament',
+        description: 'Create a tournament',
+      },
+      {
+        name: 'Join Tournament 🏆',
+        slug: 'join-tournament',
+        description: 'Join a tournament',
+      },
+      {
         name: 'Create a Challenge ✍️',
         slug: 'create-challenge',
-        description: 'Create a crypto chess wager',
+        description: 'Create a 1v1 crypto chess wager',
       },
       {
         name: 'Pairing Room 👥',
         slug: 'game-pairing',
-        description: 'Find a chess wager',
+        description: 'Find a 1v1 chess wager',
       },
-
       {
         name: 'Your Matches 🎯',
         slug: 'matches',

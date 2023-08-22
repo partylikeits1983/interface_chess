@@ -2,6 +2,7 @@ import { demos } from '#/lib/demos';
 import Link from 'next/link';
 
 import { Analytics } from '@vercel/analytics/react';
+import { Button } from '@chakra-ui/react'; // Importing the Chakra UI button
 
 // import { AddressBar } from '#/ui/address-bar';
 
@@ -24,6 +25,20 @@ export default function Page() {
           style={{ maxWidth: '40%', maxHeight: '40%' }}
         />
       </div>
+
+      <Link
+        href={`/join-tournament`}
+        key={`play now`}
+        className="group block space-y-1.5 rounded-lg bg-gray-900 px-5 py-3 hover:bg-gray-800"
+      >
+        <div className="font-medium text-gray-200 group-hover:text-gray-50">
+          {`play now`}
+        </div>
+
+        <div className="line-clamp-3 text-sm text-gray-400 group-hover:text-gray-300">
+          {'PLAY'}
+        </div>
+      </Link>
 
       <div className="space-y-10 text-white">
         {demos.map((section) => {
