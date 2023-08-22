@@ -28,6 +28,7 @@ interface TournamentData {
   startTime: number;
   timeLimit: number;
   isComplete: boolean;
+  isTournament: boolean;
 }
 
 interface Props {
@@ -64,6 +65,8 @@ const CardList = () => {
     switch (sortValue) {
       case 'isPending':
         return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;
+      case 'isTournament':
+        return a.isTournament === b.isTournament ? 0 : a.isTournament ? -1 : 1;
       case 'wagerAmountAsc':
         return a.tokenAmount - b.tokenAmount;
       case 'wagerAmountDesc':

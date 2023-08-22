@@ -47,6 +47,17 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
           onChange={(event) => setFilterValue(event.target.checked)}
         />
       </Flex>
+
+      <Flex width="50%" justifyContent="flex-end">
+        <label htmlFor="hide-games" style={{ marginRight: '10px' }}>
+          Show only Tournaments
+        </label>
+        <Switch
+          id="hide-games"
+          isChecked={filterValue}
+          onChange={(event) => setFilterValue(event.target.checked)}
+        />
+      </Flex>
     </Flex>
   );
 };

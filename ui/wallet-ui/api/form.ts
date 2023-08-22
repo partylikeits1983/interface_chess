@@ -1252,6 +1252,7 @@ interface TournamentData {
   startTime: number;
   timeLimit: number;
   isComplete: boolean;
+  isTournament: boolean;
 }
 
 interface Tournaments {
@@ -1286,6 +1287,7 @@ export const GetTournaments = async () => {
           startTime: Number(data[5]),
           timeLimit: Number(data[6]),
           isComplete: Boolean(data[7]),
+          isTournament: Boolean(data[8]),
         };
 
         const players = await tournament.getTournamentPlayers(i);
