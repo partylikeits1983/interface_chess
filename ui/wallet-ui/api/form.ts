@@ -1225,3 +1225,81 @@ export const ApproveTournament = async (
     };
   }
 };
+
+interface TournamentData {
+  numberOfPlayers: number;
+  players: string[];
+  numberOfGames: number;
+  token: string;
+  tokenAmount: number;
+  isInProgress: boolean;
+  startTime: number;
+  timeLimit: number;
+  isComplete: boolean;
+}
+
+interface Tournaments {
+  tournamentData: TournamentData;
+}
+
+export const GetTournaments = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  const tournamentsData: TournamentData[] = [];
+
+  try {
+    let tournamentNonce = await tournament.tournamentNonce();
+
+    // First loop to get the basic tournament data
+    for (let i = 0; i < tournamentNonce; i++) {
+      const data = await tournament.tournaments(i);
+
+      const tournamentData: TournamentData = {
+        numberOfPlayers: Number(data[0]),
+        players: [],
+        numberOfGames: Number(data[1]),
+        token: data[2],
+        tokenAmount: Number(data[3]),
+        isInProgress: Boolean(data[4]),
+        startTime: Number(data[5]),
+        timeLimit: Number(data[6]),
+        isComplete: Boolean(data[7]),
+      };
+
+      const players = await tournament.getTournamentPlayers(i);
+      tournamentData.players = players;
+
+      tournamentsData.push(tournamentData);
+    }
+  } catch (error) {
+    // Handle error if needed
+  }
+
+  return tournamentsData;
+};
+
+export const GetPlayerAddresses = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  const tournamentsData: TournamentData[] = [];
+
+  try {
+    const tournamentNonce = await tournament.tournamentNonce();
+
+    const players = await tournament.getTournamentPlayers(tournamentNonce - 1);
+
+    return players;
+  } catch (error) {
+    // Handle error if needed
+  }
+};

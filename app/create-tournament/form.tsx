@@ -33,9 +33,6 @@ import {
 } from '../../ui/wallet-ui/api/autocomplete-token-options';
 import AutocompleteToken from './autocomplete-token';
 
-import AutocompletePlayer from './autocomplete-player';
-import pairingOptions from './autocomplete-player-options';
-
 interface FormInputs {
   numberOfPlayers: number;
   wagerToken: string;

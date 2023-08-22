@@ -10,69 +10,46 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetAllWagers } = require('ui/wallet-ui/api/form');
+const { GetTournaments, GetPlayerAddresses } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
 import CardAccordion from './CardAccordion'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
+interface TournamentData {
+  numberOfPlayers: number;
+  players: string[];
   numberOfGames: number;
+  token: string;
+  tokenAmount: number;
   isInProgress: boolean;
+  startTime: number;
   timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
+  isComplete: boolean;
 }
 
 interface Props {
-  cards: Card[];
+  cards: TournamentData[];
 }
 
 const CardList = () => {
-  const [account, setAccount] = useState<string | null>(null);
-  const { connect, accounts } = useMetamask();
-
   const [isLoading, setIsLoading] = useState(true);
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<TournamentData[]>([]);
 
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
 
   useEffect(() => {
-    const handleConnect = async () => {
-      if (account === undefined) {
-        const isConnected = await connect();
-        if (!isConnected) {
-          setAccount('');
-        }
-      }
-    };
-
-    handleConnect();
-  }, [account, connect]);
-
-  useEffect(() => {
-    setAccount(accounts[0]);
-  }, [accounts]);
-
-  useEffect(() => {
     async function fetchCards() {
       try {
         setIsLoading(true);
-        const data = await GetAllWagers();
+        const data = await GetTournaments();
 
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
         } else {
-          console.error('GetAllWagers returned invalid data:', cards);
+          // console.error('GetAllWagers returned invalid data:', cards);
         }
         setIsLoading(false);
       } catch (error) {
@@ -87,9 +64,9 @@ const CardList = () => {
       case 'isPending':
         return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;
       case 'wagerAmountAsc':
-        return a.wagerAmount - b.wagerAmount;
+        return a.tokenAmount - b.tokenAmount;
       case 'wagerAmountDesc':
-        return b.wagerAmount - a.wagerAmount;
+        return b.tokenAmount - a.tokenAmount;
       default:
         return 0;
     }
@@ -117,7 +94,7 @@ const CardList = () => {
           </Flex>
         ) : filteredAndSortedCards.length ? (
           filteredAndSortedCards.map((card, index) => (
-            <CardAccordion key={index} card={card} account={account} />
+            <CardAccordion key={index} card={card} />
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">

@@ -24,16 +24,27 @@ import SidePanel from './sidePanel';
 
 import { Card } from '../types';
 
+interface TournamentData {
+  numberOfPlayers: number;
+  players: string[];
+  numberOfGames: number;
+  token: string;
+  tokenAmount: number;
+  isInProgress: boolean;
+  startTime: number;
+  timeLimit: number;
+  isComplete: boolean;
+}
+
 interface Props {
-  cards: Card[];
+  cards: TournamentData[];
 }
 
 interface CardAccordionProps {
-  card: Card;
-  account: string | null;
+  card: TournamentData;
 }
 
-const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
+const CardAccordion: React.FC<CardAccordionProps> = ({ card }) => {
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -93,9 +104,9 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
           <AccordionButton>
             <Flex justify="space-between" alignItems="center" w="full">
               <HStack spacing="1.5rem">
-                <Identicon account={card.matchAddress} />
+                <Identicon account={card.players[0]} />
                 <Text fontSize="md">{`Address: ${formatAddress(
-                  card.matchAddress,
+                  card.players[0],
                 )}`}</Text>
               </HStack>
 
@@ -127,36 +138,21 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                   Match Address
                 </Text>
                 <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.matchAddress)}</Text>
+                  <Text fontSize="md">{formatAddress(card.players[0])}</Text>
                   <CopyIcon
                     ml={2}
                     cursor="pointer"
-                    onClick={() => handleCopyAddress(card.matchAddress)}
+                    onClick={() => handleCopyAddress(card.players[0])}
                   />
                 </Flex>
               </Stack>
 
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Opponent Address
+                  Number of Games
                 </Text>
                 <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {Number(account) == Number(card.player0Address)
-                      ? formatAddress(card.player1Address)
-                      : formatAddress(card.player0Address)}
-                  </Text>
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() =>
-                      handleCopyAddress(
-                        card.isInProgress
-                          ? card.player1Address
-                          : card.player0Address,
-                      )
-                    }
-                  />
+                  <Text fontSize="md">{card.numberOfGames}</Text>
                 </Flex>
               </Stack>
               <Stack spacing={0}>
@@ -164,22 +160,22 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                   Wager Token
                 </Text>
                 <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.wagerToken)}</Text>
+                  <Text fontSize="md">{formatAddress(card.token)}</Text>
                   <CopyIcon
                     ml={2}
                     cursor="pointer"
-                    onClick={() => handleCopyAddress(card.wagerToken)}
+                    onClick={() => handleCopyAddress(card.token)}
                   />
                 </Flex>
               </Stack>
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Wager Amount
+                  Tournament Entry Fee
                 </Text>
                 <Text fontSize="md">
                   {ethers.utils.formatUnits(
                     ethers.BigNumber.from(
-                      fromScientificNotation(card.wagerAmount.toString()),
+                      fromScientificNotation(card.tokenAmount.toString()),
                     ),
                     18,
                   )}
@@ -203,15 +199,6 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
                   Status
                 </Text>
-                <Text fontSize="md">
-                  {card.isInProgress
-                    ? card.isPlayerTurn
-                      ? 'Your turn'
-                      : 'Waiting for opponent to move'
-                    : Number(card.player1Address) === Number(account)
-                    ? 'Pending Your Approval'
-                    : 'Waiting for opponent to accept wager'}
-                </Text>
               </Stack>
             </Stack>
 
@@ -219,15 +206,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
               width={useBreakpointValue({ base: '100%', md: '50%' })}
               marginBottom={useBreakpointValue({ base: 4, md: 0 })}
               order={useBreakpointValue({ base: 2, md: 1 })}
-            >
-              <SidePanel
-                card={card}
-                isPendingApproval={
-                  !card.isInProgress &&
-                  Number(card.player1Address) === Number(account)
-                }
-              ></SidePanel>
-            </Box>
+            ></Box>
           </Flex>
         </AccordionPanel>
       </AccordionItem>
