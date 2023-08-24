@@ -1293,11 +1293,7 @@ export const GetPendingTournaments = async () => {
         const players = await tournament.getTournamentPlayers(i);
         tournamentData.players = players;
 
-        if (tournamentData.isInProgress !== true) {
-          const players = await tournament.getTournamentPlayers(i);
-          tournamentData.players = players;
-          tournamentsData.push(tournamentData);
-        }
+        tournamentsData.push(tournamentData);
       }
     }
   } catch (error) {
@@ -1323,29 +1319,29 @@ export const GetInProgressTournaments = async () => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      if (Boolean(data[4]) == false) {
-        const tournamentData: TournamentData = {
-          tournamentNonce: i,
-          numberOfPlayers: Number(data[0]),
-          players: [],
-          numberOfGames: Number(data[1]),
-          token: data[2],
-          tokenAmount: Number(data[3]),
-          isInProgress: Boolean(data[4]),
-          startTime: Number(data[5]),
-          timeLimit: Number(data[6]),
-          isComplete: Boolean(data[7]),
-          isTournament: Boolean(data[8]),
-        };
+      console.log(data);
 
+      const tournamentData: TournamentData = {
+        tournamentNonce: i,
+        numberOfPlayers: Number(data[0]),
+        players: [],
+        numberOfGames: Number(data[1]),
+        token: data[2],
+        tokenAmount: Number(data[3]),
+        isInProgress: Boolean(data[4]),
+        startTime: Number(data[5]),
+        timeLimit: Number(data[6]),
+        isComplete: Boolean(data[7]),
+        isTournament: Boolean(data[8]),
+      };
+
+      const players = await tournament.getTournamentPlayers(i);
+      tournamentData.players = players;
+
+      if (tournamentData.isInProgress === true) {
         const players = await tournament.getTournamentPlayers(i);
         tournamentData.players = players;
-
-        if (tournamentData.isInProgress === true) {
-          const players = await tournament.getTournamentPlayers(i);
-          tournamentData.players = players;
-          tournamentsData.push(tournamentData);
-        }
+        tournamentsData.push(tournamentData);
       }
     }
   } catch (error) {
@@ -1393,7 +1389,7 @@ export const GetTournament = async (tournamentID: number) => {
   return tournamentData;
 };
 
-export const GetPlayerAddresses = async () => {
+export const ExitTournament = async (tounamentId: number) => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -1401,7 +1397,37 @@ export const GetPlayerAddresses = async () => {
 
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
 
-  const tournamentsData: TournamentData[] = [];
+  try {
+    await tournament.exitTournament(tounamentId);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const StartTournament = async (tounamentId: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  try {
+    await tournament.startTournament(tounamentId);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const GetPlayerAddresses = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
 
   try {
     const tournamentNonce = await tournament.tournamentNonce();

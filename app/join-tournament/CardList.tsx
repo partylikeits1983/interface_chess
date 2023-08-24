@@ -14,7 +14,7 @@ const { GetPendingTournaments } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
-import CardAccordion from './CardAccordion'; // Import the CardAccordion component
+import TournamentCard from './TournamentCard'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
 
 interface TournamentData {
@@ -98,7 +98,7 @@ const CardList = () => {
           </Flex>
         ) : filteredAndSortedCards.length ? (
           filteredAndSortedCards.map((card, index) => (
-            <CardAccordion key={index} card={card} />
+            <TournamentCard key={index} card={card} />
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">

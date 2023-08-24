@@ -32,6 +32,7 @@ import {
   getChainId,
   ApproveTournament,
   JoinTournament,
+  ExitTournament,
   StartTournament,
 } from '#/ui/wallet-ui/api/form';
 
@@ -58,6 +59,9 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
   const [isLoadingJoin, setIsLoadingJoin] = useState(false);
   const [isLoadingStart, setIsLoadingStart] = useState(false);
+  const [isLoadingExitTournament, setIsLoadingExitTournament] = useState(false);
+
+  const [isUserInTournament, setIsUserInTournament] = useState(false);
 
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
@@ -124,6 +128,12 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     setIsLoadingStart(false);
   };
 
+  const HandleClickExitTournament = async () => {
+    setIsLoadingExitTournament(true);
+    await ExitTournament(card.tournamentNonce);
+    setIsLoadingExitTournament(false);
+  };
+
   function timeUntilStart(startTime: number): string {
     const now = new Date();
     const targetDate = new Date(startTime * 1000 + 86400 * 1000);
@@ -143,7 +153,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     );
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
 
-    return `${hours} hours ${minutes} minutes`;
+    return `${hours} hours ${minutes} minutes until tournament can begin`;
   }
 
   type DataField = {
@@ -171,11 +181,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
       label: 'Wager Time Limit',
       value: formatDuration(Number(card.timeLimit)),
     },
-    { label: 'Number of Players', value: card.players.length },
-    {
-      label: 'End Time',
-      value: timeUntilStart(card.startTime + card.timeLimit),
-    },
+    { label: 'Player Limit', value: card.numberOfPlayers },
+    { label: 'Time Until Start', value: timeUntilStart(card.startTime) },
   ];
 
   const BoxTemplate: React.FC<BoxTemplateProps> = ({
@@ -276,9 +283,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
               </Box>
             </Flex>
 
-            <HStack spacing="4" direction={{ base: 'column', md: 'row' }}>
+            <Stack spacing="4" direction="column" mb={4}>
               <Button
-                flex="1"
                 color="#000000"
                 backgroundColor="#94febf"
                 variant="solid"
@@ -312,7 +318,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
               </Button>
 
               <Button
-                flex="1"
                 color="#000000"
                 backgroundColor="#94febf"
                 variant="solid"
@@ -344,7 +349,40 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                   ) : null}
                 </div>
               </Button>
-            </HStack>
+
+              <Button
+                color="#000000"
+                backgroundColor="#94febf"
+                variant="solid"
+                size="lg"
+                loadingText="Submitting Transaction"
+                onClick={() => HandleClickExitTournament()}
+                _hover={{
+                  color: '#000000',
+                  backgroundColor: '#62ffa2',
+                }}
+              >
+                Exit Tournament
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: '24px',
+                    textAlign: 'center',
+                    marginLeft: '8px',
+                  }}
+                >
+                  {isLoadingExitTournament ? (
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                    />
+                  ) : null}
+                </div>
+              </Button>
+            </Stack>
           </Flex>
         </AccordionPanel>
       </AccordionItem>
