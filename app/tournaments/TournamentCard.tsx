@@ -33,6 +33,7 @@ import {
   ApproveTournament,
   JoinTournament,
   StartTournament,
+  GetTournamentScore,
 } from '#/ui/wallet-ui/api/form';
 
 interface TournamentData {
@@ -52,12 +53,36 @@ interface CardAccordionProps {
   card: TournamentData;
 }
 
+type PlayerScores = {
+  [key: string]: number;
+};
+
 const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   const [token, setToken] = useState('');
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
   const [isLoadingJoin, setIsLoadingJoin] = useState(false);
   const [isLoadingStart, setIsLoadingStart] = useState(false);
+
+  // State to store scores
+  const [playerScores, setPlayerScores] = useState<PlayerScores>({});
+
+  useEffect(() => {
+    async function getScoreData() {
+      const data = await GetTournamentScore(card.tournamentNonce);
+      console.log('SCORE DATA');
+      console.log(data);
+
+      // Process data to map player addresses to their scores
+      const scoresObj: PlayerScores = {};
+      for (let i = 0; i < data[0].length; i++) {
+        scoresObj[data[0][i]] = data[1][i];
+      }
+
+      setPlayerScores(scoresObj);
+    }
+    getScoreData();
+  }, []);
 
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
@@ -262,12 +287,20 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                         <Td color="white" fontWeight="bold">
                           Address
                         </Td>
+                        <Td color="white" fontWeight="bold">
+                          {' '}
+                          {/* Adding a title for the score */}
+                          Score
+                        </Td>
                       </Tr>
                     </Thead>
                     <Tbody>
                       {card.players.map((playerAddress, index) => (
                         <Tr key={index}>
                           <Td color="white">{playerAddress}</Td>
+                          <Td color="white">
+                            {playerScores[playerAddress] || 'N/A'}
+                          </Td>
                         </Tr>
                       ))}
                     </Tbody>

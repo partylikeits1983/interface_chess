@@ -23,11 +23,7 @@ import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import TournamentList from './TournamentCardList';
 import TournamentCard from './TournamentCard';
 
-import {
-  getChainId,
-  GetTournament,
-  GetTournamentScore,
-} from '#/ui/wallet-ui/api/form';
+import { getChainId, GetTournament } from '#/ui/wallet-ui/api/form';
 
 interface TournamentData {
   tournamentNonce: number;
@@ -63,7 +59,7 @@ export const TournamentView: React.FC<TournamentViewProps> = ({
         // 3. Check for truthiness
         try {
           const data = await GetTournament(parseInt(tournamentID));
-
+          console.log(data);
           if (data !== null) {
             setTournament(data);
             setIdIsDefined(true);

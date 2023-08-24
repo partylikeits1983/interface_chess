@@ -1421,6 +1421,27 @@ export const StartTournament = async (tounamentId: number) => {
   }
 };
 
+export const GetTournamentScore = async (tournamentId: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  try {
+    const data = await tournament.viewTournamentScore(tournamentId);
+
+    // Create a new array and populate it with the converted values
+    const newData = [...data[1].map((item: any) => item.toString())];
+
+    return [data[0], newData];
+  } catch (error) {
+    console.log(error);
+  }
+  return [[], []];
+};
+
 export const GetPlayerAddresses = async () => {
   await updateContractAddresses();
 
