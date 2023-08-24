@@ -10,6 +10,7 @@ import {
   Text,
   Heading,
   ChakraProvider,
+  Spinner,
 } from '@chakra-ui/react';
 
 import { ChevronRightIcon } from '@chakra-ui/icons';
@@ -169,7 +170,17 @@ export default function Docs() {
   return (
     <ChakraProvider>
       <Flex flexDirection="column" alignItems="center">
-        <Box mb={2}>
+        <Box mb={2} position="relative" width="500px" height="500px">
+          {!loaded && (
+            <Box
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+            >
+              <Spinner />
+            </Box>
+          )}
           <img
             ref={imgRef}
             src="/chessDark__50.png"
@@ -177,7 +188,7 @@ export default function Docs() {
             width={500}
             height={500}
             onLoad={handleImageLoad}
-            style={loaded ? {} : { filter: 'blur(8px)' }}
+            style={loaded ? {} : { display: 'none' }}
           />
         </Box>
         <Box style={{ color: 'white' }}>
