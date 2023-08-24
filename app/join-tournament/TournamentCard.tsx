@@ -90,6 +90,15 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     }
   }
 
+  async function handleCopyLink(link: string) {
+    try {
+      await navigator.clipboard.writeText(link);
+      copyIconFeedback('Tournament Link copied to clipboard');
+    } catch (error) {
+      copyIconFeedback('Failed to copy');
+    }
+  }
+
   function fromScientificNotation(n: string): string {
     if (!n.includes('e')) {
       return n;
@@ -384,6 +393,36 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
               </Button>
             </Stack>
           </Flex>
+
+          <Box width={['100%', '100%']} px={2}>
+            <Box
+              bg="black"
+              p={3}
+              rounded="md"
+              my={0}
+              maxHeight="150px"
+              overflowY="auto"
+            >
+              <Box display="flex" alignItems="flex-start">
+                <Text
+                  fontWeight="bold"
+                  color="white"
+                  fontSize="sm"
+                  marginRight={2}
+                >
+                  🔗 Click to copy tournament link:
+                </Text>
+
+                <Text
+                  color="blue.500"
+                  onClick={() => handleCopyLink(card.token)}
+                  cursor="pointer"
+                >
+                  app.chess.fish/{card.tournamentNonce}
+                </Text>
+              </Box>
+            </Box>
+          </Box>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
