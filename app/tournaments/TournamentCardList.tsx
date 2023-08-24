@@ -84,7 +84,7 @@ const TournamentList = () => {
     <ChakraProvider>
       <Box>
         <Heading as="h2" size="lg" mb={4}>
-          All Tournaments
+          In Progress Tournaments
         </Heading>
         <CardFilterControls
           sortValue={sortValue}

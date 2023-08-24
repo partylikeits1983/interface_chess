@@ -10,7 +10,7 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetInProgressTournaments } = require('ui/wallet-ui/api/form');
+const { GetPendingTournaments } = require('ui/wallet-ui/api/form');
 
 // import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
@@ -46,7 +46,7 @@ const TournamentList = () => {
     async function fetchCards() {
       try {
         setIsLoading(true);
-        const data = await GetInProgressTournaments();
+        const data = await GetPendingTournaments();
 
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
@@ -84,7 +84,7 @@ const TournamentList = () => {
     <ChakraProvider>
       <Box>
         <Heading as="h2" size="lg" mb={4}>
-          All Tournaments
+          Join Tournament
         </Heading>
         <CardFilterControls
           sortValue={sortValue}
