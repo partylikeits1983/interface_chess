@@ -24,9 +24,14 @@ export const demos: { name: string; items: Item[] }[] = [
         description: 'Create a tournament',
       },
       {
-        name: 'Join Tournament 🏆',
+        name: 'Join Tournament ⛳️',
         slug: 'join-tournament',
         description: 'Join a tournament',
+      },
+      {
+        name: 'Tournament Viewer 🏆',
+        slug: 'tournaments',
+        description: 'Tournament viewer',
       },
       {
         name: 'Create a Challenge ✍️',
