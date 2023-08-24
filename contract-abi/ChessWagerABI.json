@@ -528,6 +528,11 @@
         "internalType": "uint256",
         "name": "timePlayer1",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isTournament",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -714,6 +719,40 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getWagerStatus",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

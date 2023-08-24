@@ -88,6 +88,7 @@ const CardList = () => {
   }, []);
 
   const sortedCards = [...cards].sort((a, b) => {
+    console.log(sortValue);
     switch (sortValue) {
       case 'isPending':
         return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;

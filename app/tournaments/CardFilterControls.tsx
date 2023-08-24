@@ -26,9 +26,6 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
           color="white"
           width="100%"
         >
-          <option style={{ color: 'black' }} value="isPending">
-            In Progress First
-          </option>
           <option style={{ color: 'black' }} value="wagerAmountAsc">
             Wager Amount (lowest first)
           </option>
@@ -36,16 +33,6 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
             Wager Amount (highest first)
           </option>
         </Select>
-      </Flex>
-      <Flex width="50%" justifyContent="flex-end">
-        <label htmlFor="hide-pending" style={{ marginRight: '10px' }}>
-          Hide In Progress Tournaments
-        </label>
-        <Switch
-          id="hide-pending"
-          isChecked={filterValue}
-          onChange={(event) => setFilterValue(event.target.checked)}
-        />
       </Flex>
     </Flex>
   );

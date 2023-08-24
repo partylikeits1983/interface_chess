@@ -149,7 +149,7 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       </Text>
       <Flex justifyContent="space-around" padding="5">
         <Stat borderRadius="lg" padding="5">
-          <StatLabel color="white">User&apos;s Dividend Amount</StatLabel>
+          <StatLabel color="white">Your Percent Dividend Amount</StatLabel>
           <StatNumber color="white">{dividendAmount} %</StatNumber>
         </Stat>
 

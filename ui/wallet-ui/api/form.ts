@@ -38,6 +38,7 @@ interface Card {
   timeLastMove: number;
   timePlayer0: number;
   timePlayer1: number;
+  isTournament: boolean;
   isPlayerTurn: boolean;
 }
 
@@ -288,6 +289,7 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
       timeLastMove: parseInt(wagerParams[7]),
       timePlayer0: parseInt(wagerParams[8]),
       timePlayer1: parseInt(wagerParams[9]),
+      isTournament: Boolean(wagerParams.isTournament),
       isPlayerTurn: false,
     };
 
@@ -428,6 +430,7 @@ export const GetAllWagers = async (): Promise<Card[]> => {
         timePlayer0: parseInt(wagerParams[8]),
         timePlayer1: parseInt(wagerParams[9]),
         isPlayerTurn: isPlayerTurn,
+        isTournament: Boolean(wagerParams[10]),
       };
 
       allWagerParams.push(card);
@@ -478,6 +481,7 @@ export const GetAllWagersForPairing = async () => {
           timePlayer0: parseInt(wagerParams[8]),
           timePlayer1: parseInt(wagerParams[9]),
           isPlayerTurn: false,
+          isTournament: Boolean(wagerParams.isTournament),
         };
 
         pairingRoomWagers.push(card);
@@ -755,6 +759,7 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
         timePlayer0: parseInt(wagerParams[8]),
         timePlayer1: parseInt(wagerParams[9]),
         isPlayerTurn: false,
+        isTournament: Boolean(wagerParams.isTournament),
       };
       allWagerParams.push(card);
     }
@@ -793,6 +798,7 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
       timeLastMove: parseInt(wagerParams[7]),
       timePlayer0: parseInt(wagerParams[8]),
       timePlayer1: parseInt(wagerParams[9]),
+      isTournament: Boolean(wagerParams.isTournament),
       isPlayerTurn: false,
     };
 
@@ -881,9 +887,6 @@ export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
   if (isWalletConnected) {
     const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
     try {
-      console.log('In Is Player White');
-      console.log(wagerAddress);
-
       const isPlayerWhite = await chess.isPlayerWhite(
         wagerAddress,
         accounts[0],
