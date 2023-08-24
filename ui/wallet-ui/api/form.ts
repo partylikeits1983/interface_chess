@@ -764,16 +764,17 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
       allWagerParams.push(card);
     }
 
-    let totalNumberOfGames = 0;
+    let games = 0;
     for (let i = 0; i < allWagerParams.length; i++) {
-      totalNumberOfGames += allWagerParams[i].numberOfGames;
+      const winsData = await chess.wagerStatus(wagerAddresses[i]);
+      games += Number(winsData.winsPlayer0);
+      games += Number(winsData.winsPlayer1);
     }
 
-    return [wagerAddresses, totalNumberOfGames.toString()];
+    return [wagerAddresses, games.toString()];
   } catch (error) {
-    alert(`Analytics function : error`);
     console.log(error);
-    return [[], ''];
+    return [[], '0'];
   }
 };
 
