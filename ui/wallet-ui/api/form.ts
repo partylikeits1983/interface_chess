@@ -1421,6 +1421,22 @@ export const StartTournament = async (tounamentId: number) => {
   }
 };
 
+export const PayoutTournament = async (tounamentId: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  try {
+    await tournament.payoutTournament(tounamentId);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const GetTournamentScore = async (tournamentId: number) => {
   await updateContractAddresses();
 
@@ -1458,5 +1474,32 @@ export const GetPlayerAddresses = async () => {
     return players;
   } catch (error) {
     // Handle error if needed
+  }
+};
+
+export const GetIsTournamentEnded = async (tournamentId: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  try {
+    const data = await tournament.tournaments(tournamentId);
+
+    const startTime = Number(data.startTime);
+    const timeLimit = Number(data.timeLimit);
+
+    const endTime = startTime + timeLimit;
+
+    // Get current unix timestamp
+    const currentTimestamp = Math.floor(Date.now() / 1000); // Divided by 1000 to convert from ms to s
+
+    console.log(currentTimestamp);
+    return currentTimestamp > endTime; // Return true if currentTimestamp is greater, else false
+  } catch (error) {
+    // Handle error if needed
+    console.error(error); // Optionally log the error
+    return false; // Fallback return value in case of error
   }
 };

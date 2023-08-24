@@ -34,6 +34,8 @@ import {
   JoinTournament,
   StartTournament,
   GetTournamentScore,
+  GetIsTournamentEnded,
+  PayoutTournament,
 } from '#/ui/wallet-ui/api/form';
 
 interface TournamentData {
@@ -59,10 +61,10 @@ type PlayerScores = {
 
 const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   const [token, setToken] = useState('');
-  const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
-  const [isLoadingJoin, setIsLoadingJoin] = useState(false);
-  const [isLoadingStart, setIsLoadingStart] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isTournamentEnded, setIsTournamentEnded] = useState(false);
 
   // State to store scores
   const [playerScores, setPlayerScores] = useState<PlayerScores>({});
@@ -70,8 +72,11 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   useEffect(() => {
     async function getScoreData() {
       const data = await GetTournamentScore(card.tournamentNonce);
-      console.log('SCORE DATA');
-      console.log(data);
+
+      const isEnded = await GetIsTournamentEnded(card.tournamentNonce);
+      if (isEnded) {
+        setIsTournamentEnded(true);
+      }
 
       // Process data to map player addresses to their scores
       const scoresObj: PlayerScores = {};
@@ -136,37 +141,27 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     return sign + coefficients[0] + zeros;
   }
 
-  const HandleClickJoinTournament = async () => {
-    setIsLoadingJoin(true);
-    await ApproveTournament(card.token, card.tokenAmount);
-    await JoinTournament(card.tournamentNonce);
-    setIsLoadingJoin(false);
+  const HandleClickHandlePayoutTournament = async () => {
+    setIsLoading(true);
+    await PayoutTournament(card.tournamentNonce);
+    setIsLoading(false);
   };
 
-  const HandleClickStartTournament = async () => {
-    setIsLoadingStart(true);
-    await StartTournament(card.tournamentNonce);
-    setIsLoadingStart(false);
-  };
+  function timeUntilEndTime(endTime: number): string {
+    // Get current unix timestamp
+    const currentTimestamp = Math.floor(Date.now() / 1000); // Divided by 1000 to convert from ms to s
 
-  function timeUntilStart(startTime: number): string {
-    const now = new Date();
-    const targetDate = new Date(startTime * 1000 + 86400 * 1000);
-    const difference = targetDate.getTime() - now.getTime();
+    const difference = endTime - currentTimestamp;
 
-    console.log(startTime);
-    console.log(targetDate);
+    // Calculate total minutes
+    const totalMinutes = Math.abs(Math.floor(difference / 60));
+    let hours = Math.floor(totalMinutes / 60);
+    let minutes = totalMinutes % 60;
 
-    if (difference <= 0) {
-      return 'Tournament can begin';
+    // Adjust hours for negative difference
+    if (difference < 0) {
+      hours = -hours;
     }
-
-    // Calculate the days, hours, minutes, and seconds
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
 
     return `${hours} hours ${minutes} minutes`;
   }
@@ -188,7 +183,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     { label: 'Number of Games Per Match', value: card.numberOfGames },
     { label: 'Wager Token', value: formatAddress(card.token), hasIcon: true },
     {
-      label: 'Tournament Pool Size',
+      label: 'Tournament Pool Size Limit',
       value: card.tokenAmount * card.players.length,
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
@@ -196,10 +191,10 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
       label: 'Wager Time Limit',
       value: formatDuration(Number(card.timeLimit)),
     },
-    { label: 'Number of Players', value: card.players.length },
+    { label: 'Number of Players In Tournament', value: card.players.length },
     {
       label: 'End Time',
-      value: timeUntilStart(card.startTime + card.timeLimit),
+      value: timeUntilEndTime(card.startTime + card.timeLimit),
     },
   ];
 
@@ -310,73 +305,45 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
             </Flex>
 
             <HStack spacing="4" direction={{ base: 'column', md: 'row' }}>
-              <Button
-                flex="1"
-                color="#000000"
-                backgroundColor="#94febf"
-                variant="solid"
-                size="lg"
-                loadingText="Submitting Transaction"
-                onClick={() => HandleClickJoinTournament()}
-                _hover={{
-                  color: '#000000',
-                  backgroundColor: '#62ffa2',
-                }}
-              >
-                Join Tournament
-                <div
-                  style={{
-                    display: 'inline-block',
-                    width: '24px',
-                    textAlign: 'center',
-                    marginLeft: '8px',
-                  }}
-                >
-                  {isLoadingJoin ? (
-                    <Spinner
-                      thickness="2px"
-                      speed="0.85s"
-                      emptyColor="gray.800"
-                      color="gray.400"
-                      size="md"
-                    />
-                  ) : null}
-                </div>
-              </Button>
-
-              <Button
-                flex="1"
-                color="#000000"
-                backgroundColor="#94febf"
-                variant="solid"
-                size="lg"
-                loadingText="Submitting Transaction"
-                onClick={() => HandleClickStartTournament()}
-                _hover={{
-                  color: '#000000',
-                  backgroundColor: '#62ffa2',
-                }}
-              >
-                Start Tournament
-                <div
-                  style={{
-                    display: 'inline-block',
-                    width: '24px',
-                    textAlign: 'center',
-                    marginLeft: '8px',
-                  }}
-                >
-                  {isLoadingStart ? (
-                    <Spinner
-                      thickness="2px"
-                      speed="0.85s"
-                      emptyColor="gray.800"
-                      color="gray.400"
-                      size="md"
-                    />
-                  ) : null}
-                </div>
-              </Button>
+              {isTournamentEnded ? (
+                <>
+                  <Button
+                    flex="1"
+                    color="#000000"
+                    backgroundColor="#94febf"
+                    variant="solid"
+                    size="lg"
+                    loadingText="Submitting Transaction"
+                    onClick={() => HandleClickHandlePayoutTournament()}
+                    _hover={{
+                      color: '#000000',
+                      backgroundColor: '#62ffa2',
+                    }}
+                  >
+                    End Tournament and Handle Payout
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        width: '24px',
+                        textAlign: 'center',
+                        marginLeft: '8px',
+                      }}
+                    >
+                      {isLoading ? (
+                        <Spinner
+                          thickness="2px"
+                          speed="0.85s"
+                          emptyColor="gray.800"
+                          color="gray.400"
+                          size="md"
+                        />
+                      ) : null}
+                    </div>
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
             </HStack>
           </Flex>
         </AccordionPanel>

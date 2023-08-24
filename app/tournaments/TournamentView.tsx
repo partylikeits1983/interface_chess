@@ -107,13 +107,11 @@ export const TournamentView: React.FC<TournamentViewProps> = ({
         <>
           {isIdDefined ? (
             <>
-              <Text>TRUE</Text>
               <Text>{tournamentID}</Text>
               {Tournament ? <TournamentCard card={Tournament} /> : null}
             </>
           ) : (
             <>
-              <Text>FALSE</Text>
               <TournamentList></TournamentList>
             </>
           )}
