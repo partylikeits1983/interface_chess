@@ -46,10 +46,6 @@ interface TournamentData {
   isComplete: boolean;
 }
 
-interface Props {
-  cards: TournamentData[];
-}
-
 interface CardAccordionProps {
   card: TournamentData;
 }

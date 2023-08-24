@@ -1259,7 +1259,7 @@ interface Tournaments {
   tournamentData: TournamentData;
 }
 
-export const GetTournaments = async () => {
+export const GetPendingTournaments = async () => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -1293,7 +1293,11 @@ export const GetTournaments = async () => {
         const players = await tournament.getTournamentPlayers(i);
         tournamentData.players = players;
 
-        tournamentsData.push(tournamentData);
+        if (tournamentData.isInProgress !== true) {
+          const players = await tournament.getTournamentPlayers(i);
+          tournamentData.players = players;
+          tournamentsData.push(tournamentData);
+        }
       }
     }
   } catch (error) {
@@ -1301,6 +1305,92 @@ export const GetTournaments = async () => {
   }
 
   return tournamentsData;
+};
+
+export const GetInProgressTournaments = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+  const tournamentsData: TournamentData[] = [];
+
+  try {
+    let tournamentNonce = await tournament.tournamentNonce();
+
+    // First loop to get the basic tournament data
+    for (let i = 0; i < tournamentNonce; i++) {
+      const data = await tournament.tournaments(i);
+
+      if (Boolean(data[4]) == false) {
+        const tournamentData: TournamentData = {
+          tournamentNonce: i,
+          numberOfPlayers: Number(data[0]),
+          players: [],
+          numberOfGames: Number(data[1]),
+          token: data[2],
+          tokenAmount: Number(data[3]),
+          isInProgress: Boolean(data[4]),
+          startTime: Number(data[5]),
+          timeLimit: Number(data[6]),
+          isComplete: Boolean(data[7]),
+          isTournament: Boolean(data[8]),
+        };
+
+        const players = await tournament.getTournamentPlayers(i);
+        tournamentData.players = players;
+
+        if (tournamentData.isInProgress === true) {
+          const players = await tournament.getTournamentPlayers(i);
+          tournamentData.players = players;
+          tournamentsData.push(tournamentData);
+        }
+      }
+    }
+  } catch (error) {
+    // Handle error if needed
+  }
+
+  return tournamentsData;
+};
+
+export const GetTournament = async (tournamentID: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  let tournamentData: TournamentData | null = null; // Initialize it to null or some default value
+
+  try {
+    const data = await tournament.tournaments(tournamentID);
+    if (Boolean(data[4]) == false) {
+      tournamentData = {
+        tournamentNonce: tournamentID,
+        numberOfPlayers: Number(data[0]),
+        players: [],
+        numberOfGames: Number(data[1]),
+        token: data[2],
+        tokenAmount: Number(data[3]),
+        isInProgress: Boolean(data[4]),
+        startTime: Number(data[5]),
+        timeLimit: Number(data[6]),
+        isComplete: Boolean(data[7]),
+        isTournament: Boolean(data[8]),
+      };
+
+      const players = await tournament.getTournamentPlayers(tournamentID);
+      tournamentData.players = players;
+    }
+  } catch (error) {
+    // Handle error if needed
+    console.error('Error fetching tournament data:', error);
+    // You could also consider setting tournamentData to some error state here
+  }
+
+  return tournamentData;
 };
 
 export const GetPlayerAddresses = async () => {

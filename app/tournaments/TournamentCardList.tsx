@@ -10,9 +10,9 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetTournaments } = require('ui/wallet-ui/api/form');
+const { GetInProgressTournaments } = require('ui/wallet-ui/api/form');
 
-import { useMetamask } from 'ui/wallet-ui/components/Metamask';
+// import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
 import TournamentCard from './TournamentCard'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
@@ -46,7 +46,7 @@ const TournamentList = () => {
     async function fetchCards() {
       try {
         setIsLoading(true);
-        const data = await GetTournaments();
+        const data = await GetInProgressTournaments();
 
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
@@ -102,7 +102,7 @@ const TournamentList = () => {
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">
-            No Tournaments created yet.
+            No tournaments in progress yet.
           </Text>
         )}
       </Box>
