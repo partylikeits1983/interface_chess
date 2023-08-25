@@ -34,6 +34,8 @@ import {
   JoinTournament,
   ExitTournament,
   StartTournament,
+  GetIsUserInTournament,
+  GetCanTournamentBegin,
 } from '#/ui/wallet-ui/api/form';
 
 interface TournamentData {
@@ -61,7 +63,21 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   const [isLoadingStart, setIsLoadingStart] = useState(false);
   const [isLoadingExitTournament, setIsLoadingExitTournament] = useState(false);
 
-  // const [isUserInTournament, setIsUserInTournament] = useState(false);
+  const [isUserInTournament, setIsUserInTournament] = useState(false);
+  const [canTournamentBegin, setCanTournamentBegin] = useState(false);
+
+  useEffect(() => {
+    async function getUserIsInTournament() {
+      const resultIsInTournament = await GetIsUserInTournament(
+        card.tournamentNonce,
+      );
+      const resultCanBegin = await GetCanTournamentBegin(card.tournamentNonce);
+
+      setIsUserInTournament(Boolean(resultIsInTournament));
+      setCanTournamentBegin(Boolean(resultCanBegin));
+    }
+    getUserIsInTournament();
+  }, []);
 
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
@@ -293,39 +309,77 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
             </Flex>
 
             <Stack spacing="4" direction="column" mb={4}>
-              <Button
-                color="#000000"
-                backgroundColor="#94febf"
-                variant="solid"
-                size="lg"
-                loadingText="Submitting Transaction"
-                onClick={() => HandleClickJoinTournament()}
-                _hover={{
-                  color: '#000000',
-                  backgroundColor: '#62ffa2',
-                }}
-              >
-                Join Tournament
-                <div
-                  style={{
-                    display: 'inline-block',
-                    width: '24px',
-                    textAlign: 'center',
-                    marginLeft: '8px',
-                  }}
-                >
-                  {isLoadingJoin ? (
-                    <Spinner
-                      thickness="2px"
-                      speed="0.85s"
-                      emptyColor="gray.800"
-                      color="gray.400"
-                      size="md"
-                    />
-                  ) : null}
-                </div>
-              </Button>
-
+              {isUserInTournament ? (
+                <>
+                  <Button
+                    color="#000000"
+                    backgroundColor="#94febf"
+                    variant="solid"
+                    size="lg"
+                    loadingText="Submitting Transaction"
+                    onClick={() => HandleClickExitTournament()}
+                    _hover={{
+                      color: '#000000',
+                      backgroundColor: '#62ffa2',
+                    }}
+                  >
+                    Exit Tournament
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        width: '24px',
+                        textAlign: 'center',
+                        marginLeft: '8px',
+                      }}
+                    >
+                      {isLoadingExitTournament ? (
+                        <Spinner
+                          thickness="2px"
+                          speed="0.85s"
+                          emptyColor="gray.800"
+                          color="gray.400"
+                          size="md"
+                        />
+                      ) : null}
+                    </div>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    color="#000000"
+                    backgroundColor="#94febf"
+                    variant="solid"
+                    size="lg"
+                    loadingText="Submitting Transaction"
+                    onClick={() => HandleClickJoinTournament()}
+                    _hover={{
+                      color: '#000000',
+                      backgroundColor: '#62ffa2',
+                    }}
+                  >
+                    Join Tournament
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        width: '24px',
+                        textAlign: 'center',
+                        marginLeft: '8px',
+                      }}
+                    >
+                      {isLoadingJoin ? (
+                        <Spinner
+                          thickness="2px"
+                          speed="0.85s"
+                          emptyColor="gray.800"
+                          color="gray.400"
+                          size="md"
+                        />
+                      ) : null}
+                    </div>
+                  </Button>
+                </>
+              )}
               <Button
                 color="#000000"
                 backgroundColor="#94febf"
@@ -348,39 +402,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                   }}
                 >
                   {isLoadingStart ? (
-                    <Spinner
-                      thickness="2px"
-                      speed="0.85s"
-                      emptyColor="gray.800"
-                      color="gray.400"
-                      size="md"
-                    />
-                  ) : null}
-                </div>
-              </Button>
-
-              <Button
-                color="#000000"
-                backgroundColor="#94febf"
-                variant="solid"
-                size="lg"
-                loadingText="Submitting Transaction"
-                onClick={() => HandleClickExitTournament()}
-                _hover={{
-                  color: '#000000',
-                  backgroundColor: '#62ffa2',
-                }}
-              >
-                Exit Tournament
-                <div
-                  style={{
-                    display: 'inline-block',
-                    width: '24px',
-                    textAlign: 'center',
-                    marginLeft: '8px',
-                  }}
-                >
-                  {isLoadingExitTournament ? (
                     <Spinner
                       thickness="2px"
                       speed="0.85s"

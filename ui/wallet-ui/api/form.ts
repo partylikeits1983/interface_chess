@@ -1518,3 +1518,50 @@ export const GetIsTournamentEnded = async (tournamentId: number) => {
     return false; // Fallback return value in case of error
   }
 };
+
+export const GetIsUserInTournament = async (tournamentId: number) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+  try {
+    const players = await tournament.getTournamentPlayers(tournamentId);
+    let isPlayerInTournament = false;
+    for (let i = 0; i < players.length; i++) {
+      if (parseInt(players[0], 16) === parseInt(accounts[0], 16)) {
+        isPlayerInTournament = true;
+      }
+    }
+
+    return isPlayerInTournament;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const GetCanTournamentBegin = async (tournamentId: number) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+  try {
+    const data = await tournament.tournaments(tournamentId);
+
+    const startTime = Number(data.startTime) * 1000; // Assuming the startTime is in seconds. Convert it to milliseconds for JavaScript.
+
+    const timeNow = Date.now(); // Get current time in milliseconds.
+
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+
+    if (timeNow - startTime > oneDayInMilliseconds) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+};
