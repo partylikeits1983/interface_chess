@@ -1181,12 +1181,20 @@ export const CreateTournament = async (params: TournamentParams) => {
   console.log(params);
 
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+  const token = new ethers.Contract(params.wagerToken, ERC20ABI, signer);
+
+  const decimals = await token.decimals();
+  const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
+
+  // const value = await token.approve(Tournament, amountAdjusted);
+  // const allowance = await token.allowance(accounts[0], ChessAddress);
+
   try {
     await tournament.createTournament(
       params.numberOfPlayers,
       params.numberOfGames,
       params.wagerToken,
-      params.wagerAmount,
+      amountAdjusted,
       params.timeLimit,
     );
 
@@ -1224,11 +1232,12 @@ export const ApproveTournament = async (
   const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
 
   try {
-    // @dev amount.toSting() was a nightmare bug to find...
-    const value = await token.approve(Tournament, amount.toString());
+    const decimals = await token.decimals();
+    const amountAdjusted = ethers.utils.parseUnits(amount, decimals);
+
+    const value = await token.approve(Tournament, amountAdjusted);
     const allowance = await token.allowance(accounts[0], ChessAddress);
 
-    const decimals = await token.decimals();
     const readableAmount = ethers.utils.formatUnits(allowance, decimals);
 
     alertSuccessFeedback('Success! allowance set: ' + readableAmount);
