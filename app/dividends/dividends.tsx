@@ -28,7 +28,7 @@ import AutocompleteToken from './autocomplete-token';
 import {
   tokenAddressesByChainID,
   options,
-} from '../../ui/wallet-ui/api/autocomplete-token-options';
+} from '../../ui/wallet-ui/api/token-information';
 
 import React, { useEffect, useState, FC } from 'react';
 

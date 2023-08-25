@@ -26,7 +26,7 @@ const { CreateWager, Approve, getChainId } = require('ui/wallet-ui/api/form');
 import {
   tokenAddressesByChainID,
   options,
-} from '../../ui/wallet-ui/api/autocomplete-token-options';
+} from '../../ui/wallet-ui/api/token-information';
 import AutocompleteToken from './autocomplete-token';
 
 import AutocompletePlayer from './autocomplete-player';

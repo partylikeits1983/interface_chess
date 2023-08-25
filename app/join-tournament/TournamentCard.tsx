@@ -28,6 +28,8 @@ import { CopyIcon } from '@chakra-ui/icons';
 
 import copyIconFeedback from 'ui/copyIconFeedback';
 
+import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
+
 import {
   getChainId,
   ApproveTournament,
@@ -66,15 +68,34 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   const [isUserInTournament, setIsUserInTournament] = useState(false);
   const [canTournamentBegin, setCanTournamentBegin] = useState(false);
 
+  const [chainID, setChainID] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  type TokenDetail = {
+    label: string;
+    image: string;
+  };
+
+  const [tokenDetail, setTokenDetail] = useState<TokenDetail | null>(null);
+
   useEffect(() => {
     async function getUserIsInTournament() {
+      setIsLoading(true);
       const resultIsInTournament = await GetIsUserInTournament(
         card.tournamentNonce,
       );
       const resultCanBegin = await GetCanTournamentBegin(card.tournamentNonce);
+      const chainData = await getChainId();
 
       setIsUserInTournament(Boolean(resultIsInTournament));
       setCanTournamentBegin(Boolean(resultCanBegin));
+
+      setChainID(Number(chainData));
+      const detail = getTokenDetails(chainID, card.token);
+      setTokenDetail(detail);
+
+      setIsLoading(false);
     }
     getUserIsInTournament();
   }, []);
@@ -183,32 +204,42 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
   type DataField = {
     label: string;
-    value: string | number;
-    hasIcon?: boolean;
-  };
-
-  type BoxTemplateProps = {
-    label: string;
-    value: string | number;
+    value: string | { label: string; icon: string | null };
     hasIcon?: boolean;
   };
 
   const dataFields: DataField[] = [
-    { label: 'Tournament ID', value: card.tournamentNonce },
-    { label: 'Number of Games Per Match', value: card.numberOfGames },
-    { label: 'Wager Token', value: formatAddress(card.token), hasIcon: true },
+    { label: 'Tournament ID', value: card.tournamentNonce.toString() }, // convert to string
+    {
+      label: 'Number of Games Per Match',
+      value: card.numberOfGames.toString(),
+    }, // convert to string
+    {
+      label: 'Wager Token',
+      value: {
+        label: formatAddress(card.token),
+        icon: tokenDetail ? tokenDetail.image : null,
+      },
+      hasIcon: true,
+    },
     {
       label: 'Tournament Pool Size',
-      value: card.tokenAmount * card.players.length,
+      value: (card.tokenAmount * card.players.length).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
     {
       label: 'Wager Time Limit',
-      value: formatDuration(Number(card.timeLimit)),
+      value: formatDuration(Number(card.timeLimit)), // assuming formatDuration returns a string
     },
-    { label: 'Player Limit', value: card.numberOfPlayers },
-    { label: 'Time Until Start', value: timeUntilStart(card.startTime) },
+    { label: 'Player Limit', value: card.numberOfPlayers.toString() }, // convert to string
+    { label: 'Time Until Start', value: timeUntilStart(card.startTime) }, // assuming timeUntilStart returns a string
   ];
+
+  type BoxTemplateProps = {
+    label: string;
+    value: string | { label: string; icon: string | null };
+    hasIcon?: boolean;
+  };
 
   const BoxTemplate: React.FC<BoxTemplateProps> = ({
     label,
@@ -230,7 +261,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
       </Text>
       <Flex alignItems="center" flex="1">
         <Text color="white" fontSize="sm">
-          {value}
+          {value.toString()}
         </Text>
         {hasIcon && (
           <CopyIcon
@@ -268,45 +299,53 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
             justifyContent="center"
             height="100%"
           >
-            <Flex width="100%" maxW="800px" mx="auto" wrap="wrap" mb={4}>
-              {dataFields.map((field, index) => (
-                <Box key={index} width={['100%', '50%']} px={2}>
-                  <BoxTemplate {...field} />
-                </Box>
-              ))}
+            {isLoading ? (
+              <>
+                <Spinner></Spinner>
+              </>
+            ) : (
+              <>
+                <Flex width="100%" maxW="800px" mx="auto" wrap="wrap" mb={4}>
+                  {dataFields.map((field, index) => (
+                    <Box key={index} width={['100%', '50%']} px={2}>
+                      <BoxTemplate {...field} />
+                    </Box>
+                  ))}
 
-              <Box width={['100%', '100%']} px={2}>
-                <Box
-                  bg="black"
-                  p={3}
-                  rounded="md"
-                  my={3}
-                  border="1px solid white"
-                  maxHeight="150px"
-                  overflowY="auto"
-                >
-                  <Text fontWeight="bold" color="white" fontSize="sm">
-                    Player Addresses
-                  </Text>
-                  <Table variant="simple" size="xs">
-                    <Thead>
-                      <Tr>
-                        <Td color="white" fontWeight="bold">
-                          Address
-                        </Td>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {card.players.map((playerAddress, index) => (
-                        <Tr key={index}>
-                          <Td color="white">{playerAddress}</Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </Box>
-              </Box>
-            </Flex>
+                  <Box width={['100%', '100%']} px={2}>
+                    <Box
+                      bg="black"
+                      p={3}
+                      rounded="md"
+                      my={3}
+                      border="1px solid white"
+                      maxHeight="150px"
+                      overflowY="auto"
+                    >
+                      <Text fontWeight="bold" color="white" fontSize="sm">
+                        Player Addresses
+                      </Text>
+                      <Table variant="simple" size="xs">
+                        <Thead>
+                          <Tr>
+                            <Td color="white" fontWeight="bold">
+                              Address
+                            </Td>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {card.players.map((playerAddress, index) => (
+                            <Tr key={index}>
+                              <Td color="white">{playerAddress}</Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
+                  </Box>
+                </Flex>
+              </>
+            )}
 
             <Stack spacing="4" direction="column" mb={4}>
               {isUserInTournament ? (

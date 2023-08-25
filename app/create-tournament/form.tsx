@@ -30,7 +30,7 @@ const {
 import {
   tokenAddressesByChainID,
   options,
-} from '../../ui/wallet-ui/api/autocomplete-token-options';
+} from '../../ui/wallet-ui/api/token-information';
 import AutocompleteToken from './autocomplete-token';
 
 interface FormInputs {
