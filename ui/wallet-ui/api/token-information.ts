@@ -52,9 +52,13 @@ const getTokenDetails = (
   chainID: number,
   address: string,
 ): TokenDetail | null => {
+  // const chainIDString = '80001'.toString();
   const chainIDString = chainID.toString();
 
   const chainData = tokenAddressesByChainID[chainIDString];
+
+  console.log(chainIDString);
+  console.log(chainData);
   if (!chainData) return null; // Return null if chainID is not found
 
   // Find token name by address for the given chain ID
@@ -64,9 +68,11 @@ const getTokenDetails = (
 
   if (!tokenName) return null; // Return null if token name not found
 
+  console.log(tokenName);
   // Find the token details by name from the options array
   const tokenDetail = options.find((option) => option.label === tokenName);
 
+  console.log(tokenDetail);
   return tokenDetail || null; // Return token details or null if not found
 };
 

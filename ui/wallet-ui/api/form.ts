@@ -169,8 +169,14 @@ export const getChainId = async () => {
   try {
     const network = await provider.getNetwork();
     const chainId = network.chainId;
+
+    console.log(' chain id HERE');
+    console.log(chainId);
+
     return chainId;
-  } catch {
+  } catch (error) {
+    console.log(' chain id ERROR');
+    console.log(error);
     return 0;
   }
 };

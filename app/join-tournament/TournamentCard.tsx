@@ -78,7 +78,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   };
 
   const [tokenDetail, setTokenDetail] = useState<TokenDetail | null>(null);
-
   useEffect(() => {
     async function getUserIsInTournament() {
       setIsLoading(true);
@@ -92,9 +91,10 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
       setCanTournamentBegin(Boolean(resultCanBegin));
 
       setChainID(Number(chainData));
-      const detail = getTokenDetails(chainID, card.token);
-      setTokenDetail(detail);
 
+      // pass chainData not chainId... sigh
+      const detail = getTokenDetails(chainData, card.token);
+      setTokenDetail(detail);
       setIsLoading(false);
     }
     getUserIsInTournament();
@@ -245,35 +245,55 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     label,
     value,
     hasIcon,
-  }) => (
-    <Box
-      bg="black"
-      p={3}
-      h="60px"
-      rounded="md"
-      my={1}
-      border="0.5px solid white"
-      display="flex"
-      alignItems="center"
-    >
-      <Text fontWeight="bold" color="white" fontSize="sm" mr={3}>
-        {label}
-      </Text>
-      <Flex alignItems="center" flex="1">
-        <Text color="white" fontSize="sm">
-          {value.toString()}
+  }) => {
+    let displayValue: string;
+    let iconUrl: string | null = null;
+
+    if (typeof value === 'object' && 'label' in value) {
+      displayValue =
+        tokenDetail && tokenDetail.label ? tokenDetail.label : value.label;
+      iconUrl = value.icon;
+    } else {
+      displayValue = value.toString();
+    }
+
+    return (
+      <Box
+        bg="black"
+        p={3}
+        h="60px"
+        rounded="md"
+        my={1}
+        border="0.5px solid white"
+        display="flex"
+        alignItems="center"
+      >
+        <Text fontWeight="bold" color="white" fontSize="sm" mr={3}>
+          {label}
         </Text>
-        {hasIcon && (
-          <CopyIcon
-            ml={2}
-            cursor="pointer"
-            onClick={() => handleCopyAddress(card.token)}
-            color="white"
-          />
-        )}
-      </Flex>
-    </Box>
-  );
+        <Flex alignItems="center" flex="1">
+          <Text color="white" fontSize="sm">
+            {displayValue}
+          </Text>
+          {iconUrl && (
+            <img
+              src={iconUrl}
+              alt="token icon"
+              style={{ marginLeft: '8px', height: '24px', width: '24px' }}
+            />
+          )}
+          {hasIcon && (
+            <CopyIcon
+              ml={2}
+              cursor="pointer"
+              onClick={() => handleCopyAddress(card.token)}
+              color="white"
+            />
+          )}
+        </Flex>
+      </Box>
+    );
+  };
 
   return (
     <Accordion allowToggle>
