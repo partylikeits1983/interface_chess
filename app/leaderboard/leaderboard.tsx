@@ -94,7 +94,7 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
             <Tr>
               <Th color="white">#</Th>
               <Th color="white">Player Address</Th>
-              <Th color="white">Games Played</Th>
+              <Th color="white">Total Games</Th>
               <Th color="white">Games Won</Th>
             </Tr>
           </thead>

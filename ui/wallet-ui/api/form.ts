@@ -1032,6 +1032,8 @@ export const GetLeaderboardData = async (): Promise<{
       const players = [wagerParams[0], wagerParams[1]];
 
       players.forEach((player, index) => {
+        if (player === ethers.constants.AddressZero) return; // Skip the iteration if player is the zero address
+
         if (!playerStatistics[player]) {
           playerStatistics[player] = {
             totalGames: 0,
