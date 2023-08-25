@@ -234,19 +234,18 @@ export const getDividendBalances = async () => {
 
 export const Approve = async (tokenAddress: string, amount: number) => {
   await updateContractAddresses();
-
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
-
   try {
-    // @dev amount.toSting() was a nightmare bug to find...
-    const value = await token.approve(ChessAddress, amount.toString());
+    const decimals = await token.decimals();
+    const amountAdjusted = ethers.utils.parseUnits(amount, decimals);
+
+    const value = await token.approve(Tournament, amountAdjusted);
     const allowance = await token.allowance(accounts[0], ChessAddress);
 
-    const decimals = await token.decimals();
     const readableAmount = ethers.utils.formatUnits(allowance, decimals);
 
     alertSuccessFeedback('Success! allowance set: ' + readableAmount);
@@ -351,16 +350,19 @@ export const CheckValidMove = async (moves: string[]) => {
 
 export const CreateWager = async (form: CreateMatchType) => {
   await updateContractAddresses();
-
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+
+  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+  const decimals = await token.decimals();
+
   try {
     const player1 = form.player1.toString();
     const wagerToken = form.wagerToken.toString();
-    let wager = ethers.utils.parseEther(form.wagerAmount.toString());
+    let wager = ethers.utils.parseUnits(form.wagerAmount.toString(), decimals);
     let maxTimePerMove = Number(form.timePerMove);
     let numberOfGames = Number(form.numberOfGames);
 
@@ -371,7 +373,7 @@ export const CreateWager = async (form: CreateMatchType) => {
       maxTimePerMove,
       numberOfGames,
     );
-    const receipt = await tx.wait();
+    await tx.wait();
 
     const wagers = await chess.getAllUserGames(accounts[0]);
     const wagerAddress = wagers[wagers.length - 1];
@@ -402,8 +404,6 @@ export const GetAllWagers = async (): Promise<Card[]> => {
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
     const wagers = await chess.getAllUserGames(accounts[0]);
-
-    console.log('GetAllWagers');
 
     const allWagerParams = [];
     for (let i = 0; i < wagers.length; i++) {
