@@ -38,6 +38,8 @@ import {
   PayoutTournament,
 } from '#/ui/wallet-ui/api/form';
 
+import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
+
 interface TournamentData {
   tournamentNonce: number;
   numberOfPlayers: number;
@@ -69,6 +71,13 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   // State to store scores
   const [playerScores, setPlayerScores] = useState<PlayerScores>({});
 
+  type TokenDetail = {
+    label: string;
+    image: string;
+  };
+  const [chainID, setChainID] = useState(0);
+  const [tokenDetail, setTokenDetail] = useState<TokenDetail | null>(null);
+
   useEffect(() => {
     async function getScoreData() {
       const data = await GetTournamentScore(card.tournamentNonce);
@@ -85,6 +94,13 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
       }
 
       setPlayerScores(scoresObj);
+
+      const chainData = await getChainId();
+      setChainID(Number(chainData));
+
+      // pass chainData not chainId... sigh
+      const detail = getTokenDetails(chainData, card.token);
+      setTokenDetail(detail);
     }
     getScoreData();
   }, []);
@@ -168,69 +184,99 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
   type DataField = {
     label: string;
-    value: string | number;
-    hasIcon?: boolean;
-  };
-
-  type BoxTemplateProps = {
-    label: string;
-    value: string | number;
+    value: string | { label: string; icon: string | null };
     hasIcon?: boolean;
   };
 
   const dataFields: DataField[] = [
-    { label: 'Tournament ID', value: card.tournamentNonce },
-    { label: 'Number of Games Per Match', value: card.numberOfGames },
-    { label: 'Wager Token', value: formatAddress(card.token), hasIcon: true },
+    { label: 'Tournament ID', value: card.tournamentNonce.toString() }, // convert to string
     {
-      label: 'Tournament Pool Size Limit',
-      value: card.tokenAmount * card.players.length,
+      label: 'Number of Games Per Match',
+      value: card.numberOfGames.toString(),
+    }, // convert to string
+    {
+      label: 'Wager Token',
+      value: {
+        label: formatAddress(card.token),
+        icon: tokenDetail ? tokenDetail.image : null,
+      },
+      hasIcon: true,
+    },
+    {
+      label: 'Tournament Pool Size',
+      value: (card.tokenAmount * card.players.length).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
     {
       label: 'Wager Time Limit',
-      value: formatDuration(Number(card.timeLimit)),
+      value: formatDuration(Number(card.timeLimit)), // assuming formatDuration returns a string
     },
-    { label: 'Number of Players In Tournament', value: card.players.length },
+    { label: 'Player Limit', value: card.numberOfPlayers.toString() }, // convert to string
     {
       label: 'End Time',
       value: timeUntilEndTime(card.startTime + card.timeLimit),
     },
   ];
 
+  type BoxTemplateProps = {
+    label: string;
+    value: string | { label: string; icon: string | null };
+    hasIcon?: boolean;
+  };
+
   const BoxTemplate: React.FC<BoxTemplateProps> = ({
     label,
     value,
     hasIcon,
-  }) => (
-    <Box
-      bg="black"
-      p={3}
-      h="60px"
-      rounded="md"
-      my={1}
-      border="0.5px solid white"
-      display="flex"
-      alignItems="center"
-    >
-      <Text fontWeight="bold" color="white" fontSize="sm" mr={3}>
-        {label}
-      </Text>
-      <Flex alignItems="center" flex="1">
-        <Text color="white" fontSize="sm">
-          {value}
+  }) => {
+    let displayValue: string;
+    let iconUrl: string | null = null;
+
+    if (typeof value === 'object' && 'label' in value) {
+      displayValue =
+        tokenDetail && tokenDetail.label ? tokenDetail.label : value.label;
+      iconUrl = value.icon;
+    } else {
+      displayValue = value.toString();
+    }
+
+    return (
+      <Box
+        bg="black"
+        p={3}
+        h="60px"
+        rounded="md"
+        my={1}
+        border="0.5px solid white"
+        display="flex"
+        alignItems="center"
+      >
+        <Text fontWeight="bold" color="white" fontSize="sm" mr={3}>
+          {label}
         </Text>
-        {hasIcon && (
-          <CopyIcon
-            ml={2}
-            cursor="pointer"
-            onClick={() => handleCopyAddress(card.token)}
-            color="white"
-          />
-        )}
-      </Flex>
-    </Box>
-  );
+        <Flex alignItems="center" flex="1">
+          <Text color="white" fontSize="sm">
+            {displayValue}
+          </Text>
+          {iconUrl && (
+            <img
+              src={iconUrl}
+              alt="token icon"
+              style={{ marginLeft: '8px', height: '24px', width: '24px' }}
+            />
+          )}
+          {hasIcon && (
+            <CopyIcon
+              ml={2}
+              cursor="pointer"
+              onClick={() => handleCopyAddress(card.token)}
+              color="white"
+            />
+          )}
+        </Flex>
+      </Box>
+    );
+  };
 
   return (
     <Accordion allowToggle>
