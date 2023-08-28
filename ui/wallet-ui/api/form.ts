@@ -362,6 +362,9 @@ export const CreateWager = async (form: CreateMatchType) => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
 
+  console.log('HERE');
+  console.log(form);
+
   const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
   const decimals = await token.decimals();
 
@@ -371,6 +374,8 @@ export const CreateWager = async (form: CreateMatchType) => {
     let wager = ethers.utils.parseUnits(form.wagerAmount.toString(), decimals);
     let maxTimePerMove = Number(form.timePerMove);
     let numberOfGames = Number(form.numberOfGames);
+
+    console.log(wagerToken);
 
     const tx = await chess.createGameWager(
       player1,
