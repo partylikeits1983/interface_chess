@@ -86,6 +86,9 @@ export default function NetworkButton(): JSX.Element {
       };
 
       getConnectedNetwork();
+    } else {
+      // default to mumbai
+      setSelectedNetwork(NETWORK_NAMES[0x13881]);
     }
   }, []);
 

@@ -149,26 +149,27 @@ const setupProvider = async () => {
 
   // If provider is not set (either window.ethereum is not available or user rejected the connection)
   // then use the custom JSON-RPC provider
-  if (!provider) {
-    const customRpcUrl = 'https://rpc.ankr.com/polygon_mumbai';
+  if (!detectedProvider) {
+    const customRpcUrl = 'https://rpc-mumbai.maticvigil.com';
     provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
     signer = provider;
     accounts = undefined;
     isWalletConnected = false;
-    console.log('JSON-RPC provider is set - Form.ts');
+    // console.log('JSON-RPC provider is set - Form.ts');
   }
 
   return { provider, signer, accounts, isWalletConnected };
 };
 
 export const getChainId = async () => {
-  let { provider } = await setupProvider();
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   try {
     const network = await provider.getNetwork();
     const chainId = network.chainId;
 
-    console.log(' chain id HERE');
+    console.log('chain id');
     console.log(chainId);
 
     return chainId;
@@ -586,8 +587,8 @@ export const GetGameMoves = async (
   wagerAddress: string,
   gameID: number,
 ): Promise<string[]> => {
-  let { provider } = await setupProvider();
   await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -621,8 +622,8 @@ interface WagerStatus {
 export const GetWagerStatus = async (
   wagerAddress: string,
 ): Promise<[number, number]> => {
-  let { provider } = await setupProvider();
   await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -652,8 +653,8 @@ interface WagerPlayerAddresses {
 export const GetWagerPlayers = async (
   wagerAddress: string,
 ): Promise<[string, string]> => {
-  let { provider } = await setupProvider();
   await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -678,8 +679,8 @@ export const GetWagerPlayers = async (
 };
 
 export const GetTimeRemaining = async (wagerAddress: string) => {
-  let { provider } = await setupProvider();
   await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -731,9 +732,19 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
   }
 };
 
+async function setupProviderViewData() {
+  const customRpcUrl = 'https://rpc-mumbai.maticvigil.com';
+  const provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
+
+  return { provider };
+}
+
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
-  await updateContractAddresses();
-  let { provider } = await setupProvider();
+  // await updateContractAddresses();
+
+  let { provider } = await setupProviderViewData();
+  console.log(provider);
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -787,7 +798,9 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
 };
 
 export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
-  let { provider } = await setupProvider();
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
