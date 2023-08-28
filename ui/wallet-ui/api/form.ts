@@ -87,10 +87,13 @@ const ERC20ABI = [
 ];
 
 const updateContractAddresses = async (): Promise<void> => {
-  let { provider } = await setupProvider();
+  let { provider, isWalletConnected } = await setupProvider();
 
-  const network = await provider.getNetwork();
-  const chainId = network.chainId;
+  let chainId = 80001;
+  if (!isWalletConnected) {
+    const network = await provider.getNetwork();
+    chainId = network.chainId;
+  }
 
   const contractData: ContractAddress[] = require('./contractAddresses.json');
   const addresses: ContractAddress[] = JSON.parse(JSON.stringify(contractData));
@@ -588,7 +591,9 @@ export const GetGameMoves = async (
   gameID: number,
 ): Promise<string[]> => {
   await updateContractAddresses();
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  let { provider } = await setupProviderViewData();
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -733,7 +738,7 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 };
 
 async function setupProviderViewData() {
-  const customRpcUrl = 'https://rpc-mumbai.maticvigil.com';
+  const customRpcUrl = 'https://polygon-mumbai-bor.publicnode.com';
   const provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
 
   return { provider };
@@ -742,9 +747,8 @@ async function setupProviderViewData() {
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
   await updateContractAddresses();
 
-  // let { provider } = await setupProviderViewData();
-  // console.log(provider);
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  let { provider } = await setupProviderViewData();
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -993,11 +997,12 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 export const GetNumberOfGames = async (
   wagerAddress: string,
 ): Promise<number[]> => {
-  let { signer } = await setupProvider();
-
   await updateContractAddresses();
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  let { provider } = await setupProviderViewData();
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
     const numberOfGames = parseInt(wagerParams[4]);
@@ -1027,7 +1032,8 @@ export const GetLeaderboardData = async (): Promise<{
   [key: string]: PlayerStats;
 }> => {
   await updateContractAddresses();
-  let { provider } = await setupProvider();
+  // let { provider } = await setupProvider();
+  let { provider } = await setupProviderViewData();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
