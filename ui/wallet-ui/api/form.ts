@@ -1226,6 +1226,7 @@ export const JoinTournament = async (tournamentID: number) => {
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
   try {
     await tournament.joinTournament(tournamentID);
+    alertSuccessFeedback('Success! Joined Tournament: ' + tournamentID);
     return true;
   } catch (error) {
     return false;
