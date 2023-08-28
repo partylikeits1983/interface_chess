@@ -75,12 +75,6 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "player1",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
         "name": "wagerToken",
         "type": "address"
       },
@@ -163,10 +157,6 @@
     "type": "event"
   },
   {
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
-  {
     "inputs": [],
     "name": "ChessFishNFT",
     "outputs": [
@@ -228,7 +218,7 @@
     ],
     "name": "acceptWager",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -431,21 +421,21 @@
       },
       {
         "internalType": "uint256",
-        "name": "wager",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timeLimit",
+        "name": "wagerAmount",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "numberOfGames",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeLimit",
+        "type": "uint256"
       }
     ],
-    "name": "createGameWagerTournament",
+    "name": "createGameWagerTournamentSingle",
     "outputs": [
       {
         "internalType": "address",
@@ -536,6 +526,40 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "move",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "moveNumber",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expiration",
+        "type": "uint256"
+      }
+    ],
+    "name": "generateMoveMessage",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -703,6 +727,40 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "move",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "moveNumber",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expiration",
+        "type": "uint256"
+      }
+    ],
+    "name": "getMessageHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -929,6 +987,19 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "wagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "startWagersInTournament",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_fee",
         "type": "uint256"
@@ -985,6 +1056,64 @@
   {
     "inputs": [
       {
+        "internalType": "bytes[]",
+        "name": "message",
+        "type": "bytes[]"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "signature",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "verifyGameUpdateState",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes[]",
+        "name": "message",
+        "type": "bytes[]"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "signature",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "verifyGameView",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "wager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "outcome",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint16[]",
+        "name": "moves",
+        "type": "uint16[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -1010,9 +1139,5 @@
     ],
     "stateMutability": "view",
     "type": "function"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
   }
 ]

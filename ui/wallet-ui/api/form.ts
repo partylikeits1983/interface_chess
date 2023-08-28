@@ -17,11 +17,10 @@ interface ContractAddress {
   network: string;
   chainID: number;
   owner: string;
-  token: string;
   chessToken: string;
   dividendSplitter: string;
   moveVerification: string;
-  chess: string;
+  chessWager: string;
   crowdSale: string;
   tournament: string;
 }
@@ -59,7 +58,7 @@ const addresses = JSON.parse(jsonString); // Parse the JSON string
 
 let ChessAddress = addresses[0].chess;
 let VerificationAddress = addresses[0].moveVerification;
-let tokenAddress = addresses[0].token;
+// let tokenAddress = addresses[0].token;
 let ChessToken = addresses[0].chessToken;
 let DividendSplitter = addresses[0].dividendSplitter;
 let CrowdSale = addresses[0].crowdSale;
@@ -109,9 +108,8 @@ const updateContractAddresses = async (): Promise<void> => {
   );
 
   if (matchingChain) {
-    ChessAddress = matchingChain.chess;
+    ChessAddress = matchingChain.chessWager;
     VerificationAddress = matchingChain.moveVerification;
-    tokenAddress = matchingChain.token;
     ChessToken = matchingChain.chessToken;
     DividendSplitter = matchingChain.dividendSplitter;
     CrowdSale = matchingChain.crowdSale;
@@ -187,7 +185,7 @@ export const getBalance = async (address: string) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
-  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+  const token = new ethers.Contract(address, ERC20ABI, signer);
 
   try {
     const value = await token.balanceOf(address);
@@ -355,6 +353,7 @@ export const CheckValidMove = async (moves: string[]) => {
 };
 
 export const CreateWager = async (form: CreateMatchType) => {
+  console.log('HERERER 494949');
   await updateContractAddresses();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -362,10 +361,11 @@ export const CreateWager = async (form: CreateMatchType) => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
 
-  console.log('HERE');
-  console.log(form);
-
-  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+  const token = new ethers.Contract(
+    form.wagerToken.toString(),
+    ERC20ABI,
+    signer,
+  );
   const decimals = await token.decimals();
 
   try {
@@ -374,8 +374,6 @@ export const CreateWager = async (form: CreateMatchType) => {
     let wager = ethers.utils.parseUnits(form.wagerAmount.toString(), decimals);
     let maxTimePerMove = Number(form.timePerMove);
     let numberOfGames = Number(form.numberOfGames);
-
-    console.log(wagerToken);
 
     const tx = await chess.createGameWager(
       player1,
@@ -1196,9 +1194,6 @@ export const CreateTournament = async (params: TournamentParams) => {
 
   const decimals = await token.decimals();
   const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
-
-  // const value = await token.approve(Tournament, amountAdjusted);
-  // const allowance = await token.allowance(accounts[0], ChessAddress);
 
   try {
     await tournament.createTournament(
