@@ -740,11 +740,11 @@ async function setupProviderViewData() {
 }
 
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
-  // await updateContractAddresses();
+  await updateContractAddresses();
 
-  let { provider } = await setupProviderViewData();
-  console.log(provider);
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+  // let { provider } = await setupProviderViewData();
+  // console.log(provider);
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
