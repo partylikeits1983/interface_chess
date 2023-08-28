@@ -991,11 +991,14 @@ export const GetNumberOfGames = async (
 
     const gameNumber = await chess.getGameLength(wagerAddress);
 
-    const data = [Number(gameNumber), Number(numberOfGames)];
+    let data: number[] = [];
+
+    if (Number(gameNumber) == Number(numberOfGames)) {
+      data = [Number(gameNumber) - 1, Number(numberOfGames)];
+    }
 
     return data;
   } catch (error) {
-    // alert(`In playerturn : ${wagerAddress} not found`);
     console.log(`getNumberOfGames function: invalid address ${wagerAddress}`);
     console.log(error);
     return [];
