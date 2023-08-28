@@ -353,7 +353,6 @@ export const CheckValidMove = async (moves: string[]) => {
 };
 
 export const CreateWager = async (form: CreateMatchType) => {
-  console.log('HERERER 494949');
   await updateContractAddresses();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -1189,8 +1188,16 @@ export const CreateTournament = async (params: TournamentParams) => {
 
   console.log(params);
 
-  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
-  const token = new ethers.Contract(params.wagerToken, ERC20ABI, signer);
+  const tournament = new ethers.Contract(
+    Tournament.toString(),
+    tournamentABI,
+    signer,
+  );
+  const token = new ethers.Contract(
+    params.wagerToken.toString(),
+    ERC20ABI,
+    signer,
+  );
 
   const decimals = await token.decimals();
   const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
