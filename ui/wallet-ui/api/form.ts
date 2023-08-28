@@ -1444,6 +1444,8 @@ export const StartTournament = async (tounamentId: number) => {
 
   try {
     await tournament.startTournament(tounamentId);
+    alertSuccessFeedback('Success! Tournament Started!');
+
     return true;
   } catch (error) {
     return false;
