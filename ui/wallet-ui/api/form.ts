@@ -592,8 +592,7 @@ export const GetGameMoves = async (
 ): Promise<string[]> => {
   await updateContractAddresses();
 
-  let { provider } = await setupProviderViewData();
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
@@ -737,18 +736,10 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
   }
 };
 
-async function setupProviderViewData() {
-  const customRpcUrl = 'https://polygon-mumbai-bor.publicnode.com';
-  const provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
-
-  return { provider };
-}
-
 export const GetAnalyticsData = async (): Promise<[string[], string]> => {
   await updateContractAddresses();
 
-  let { provider } = await setupProviderViewData();
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
