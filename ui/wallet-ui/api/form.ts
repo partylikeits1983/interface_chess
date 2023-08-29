@@ -891,7 +891,7 @@ export const CancelWager = async (wagerAddress: string) => {
 
     return true;
   } catch (error) {
-    alert(`wager address: ${wagerAddress} not found`);
+    // alert(`wager address: ${wagerAddress} not found`);
     console.log(error);
   }
 };
@@ -1074,7 +1074,7 @@ export const GetLeaderboardData = async (): Promise<{
 
     return playerStatistics;
   } catch (error) {
-    alert(`Analytics function : error`);
+    //alert(`Analytics function : error`);
     console.log(error);
     return {};
   }

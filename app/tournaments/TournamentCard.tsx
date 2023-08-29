@@ -118,7 +118,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
   function formatAddress(address: string): string {
     if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
-      alert(`Invalid Ethereum address: ${address}`);
+      // alert(`Invalid Ethereum address: ${address}`);
     }
     return `${address.substr(0, 6)}...${address.substr(-8)}`;
   }
