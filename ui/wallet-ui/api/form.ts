@@ -990,8 +990,7 @@ export const GetNumberOfGames = async (
 ): Promise<number[]> => {
   await updateContractAddresses();
 
-  let { provider } = await setupProviderViewData();
-  // const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
   try {
@@ -1023,8 +1022,7 @@ export const GetLeaderboardData = async (): Promise<{
   [key: string]: PlayerStats;
 }> => {
   await updateContractAddresses();
-  // let { provider } = await setupProvider();
-  let { provider } = await setupProviderViewData();
+  let { provider } = await setupProvider();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
