@@ -41,7 +41,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!useAPI) {
+      if (useAPI) {
         try {
           const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 

@@ -74,6 +74,8 @@ const CardList = () => {
         setIsLoading(true);
         const data = await GetAllWagers();
 
+        console.log(data);
+
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
         } else {
