@@ -89,11 +89,8 @@ const ERC20ABI = [
 const updateContractAddresses = async (): Promise<void> => {
   let { provider, isWalletConnected } = await setupProvider();
 
-  let chainId = 80001;
-  if (!isWalletConnected) {
-    const network = await provider.getNetwork();
-    chainId = network.chainId;
-  }
+  const network = await provider.getNetwork();
+  const chainId = network.chainId;
 
   const contractData: ContractAddress[] = require('./contractAddresses.json');
   const addresses: ContractAddress[] = JSON.parse(JSON.stringify(contractData));
@@ -414,6 +411,8 @@ export const GetAllWagers = async (): Promise<Card[]> => {
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+
+  alert(chess.address);
   try {
     const wagers = await chess.getAllUserGames(accounts[0]);
 
