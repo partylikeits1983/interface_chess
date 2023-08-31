@@ -87,7 +87,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         />
 
         <Tooltip
-          label="When switched on, gets values from API. Switch off if you want to use RPC blockchain data"
+          label="When switched on, gets values from metamask RPC (slower). Switch off if you want to use chessfish API."
           hasArrow
         >
           <QuestionOutlineIcon color="white" ml={2} />
