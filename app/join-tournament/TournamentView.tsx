@@ -49,6 +49,8 @@ export const TournamentView: React.FC<TournamentViewProps> = ({
 
   useEffect(() => {
     async function fetchTournament() {
+      console.log('globstat', globalState.useAPI);
+
       if (tournamentID) {
         // 3. Check for truthiness
         try {

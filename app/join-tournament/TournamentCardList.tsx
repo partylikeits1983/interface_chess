@@ -54,6 +54,8 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
     async function fetchCards() {
       setIsLoading(true);
 
+      console.log('globstat', globalState.useAPI);
+
       if (globalState.useAPI) {
         const data = await GetTournamentDataDB(globalState.chainID);
 

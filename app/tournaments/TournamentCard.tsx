@@ -85,13 +85,12 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     async function getScoreData() {
       setIsLoading(true);
       if (!globalState.useAPI) {
-        /*         const data = await GetTournamentScore(card.tournamentNonce);
+        const data = await GetTournamentScore(card.tournamentNonce);
 
         const isEnded = await GetIsTournamentEnded(card.tournamentNonce);
         if (isEnded) {
           setIsTournamentEnded(true);
         }
-
         // Process data to map player addresses to their scores
         const scoresObj: PlayerScores = {};
         for (let i = 0; i < data[0].length; i++) {
@@ -106,8 +105,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         // pass chainData not chainId... sigh
         const detail = getTokenDetails(chainData, card.token);
         setTokenDetail(detail);
-
- */
       } else {
         setIsTournamentEnded(false);
         const detail = getTokenDetails(80001, card.token);

@@ -83,6 +83,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   const [tokenDetail, setTokenDetail] = useState<TokenDetail | null>(null);
   useEffect(() => {
     async function getUserIsInTournament() {
+      console.log('globstat', globalState.useAPI);
+
       setIsLoading(true);
       if (!globalState.useAPI) {
         const resultIsInTournament = await GetIsUserInTournament(
