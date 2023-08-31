@@ -4,6 +4,7 @@ const getWagersFenMethod = '/wagersfen';
 const getWagersMethod = '/wageraddresses';
 const getAnalyticsMethod = '/analytics';
 const getLeaderboardMethod = '/leaderboard';
+const getTournamentMethod = '/tournaments';
 
 export async function GetWagersFenDB(chainId: number): Promise<string[]> {
   const url = apiURL + getWagersFenMethod + '/' + chainId;
@@ -77,6 +78,21 @@ export async function GetAnalyticsDB(chainId: number) {
 
 export async function GetLeaderboardDataDB(chainId: number) {
   const url = apiURL + getLeaderboardMethod + '/' + chainId;
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`);
+    }
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw new Error(`Error fetching wagers data: ${error}`);
+  }
+}
+
+export async function GetTournamentDataDB(chainId: number) {
+  const url = apiURL + getTournamentMethod + '/' + chainId;
   try {
     const response = await fetch(url, { mode: 'cors' });
     if (!response.ok) {

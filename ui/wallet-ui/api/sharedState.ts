@@ -1,14 +1,15 @@
-// sharedState.ts
-
 import { useState, useEffect } from 'react';
+const ethers = require('ethers');
 
 type State = {
   chainID: number;
+  useAPI: boolean;
 };
 
 let listeners: React.Dispatch<React.SetStateAction<State>>[] = [];
 let state: State = {
-  chainID: 80001, // You can set the default chainID value here.
+  chainID: 80001,
+  useAPI: false,
 };
 
 export function useStateManager(
@@ -19,6 +20,7 @@ export function useStateManager(
 
   useEffect(() => {
     listeners.push(newSetState);
+    checkMetaMaskConnection();
 
     return () => {
       listeners = listeners.filter((listener) => listener !== newSetState);
@@ -33,4 +35,15 @@ function setState(newState: Partial<State>) {
   for (let listener of listeners) {
     listener(state);
   }
+}
+
+// Helper function to check Metamask connection
+async function checkMetaMaskConnection() {
+  let useAPI = false;
+  if (typeof window.ethereum !== 'undefined') {
+    useAPI = false;
+  } else {
+    useAPI = true;
+  }
+  setState({ useAPI: useAPI });
 }

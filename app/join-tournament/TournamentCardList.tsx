@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, FC } from 'react';
+
 import {
   ChakraProvider,
   Box,
@@ -8,14 +9,15 @@ import {
   Text,
   Spinner,
   Flex,
+  Switch,
 } from '@chakra-ui/react';
 
 const { GetPendingTournaments } = require('ui/wallet-ui/api/form');
+const { GetTournamentDataDB } = require('ui/wallet-ui/api/db-api');
 
-// import { useMetamask } from 'ui/wallet-ui/components/Metamask';
-
-import TournamentCard from './TournamentCard'; // Import the CardAccordion component
+import TournamentCard from './TournamentCard';
 import CardFilterControls from './CardFilterControls';
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;
@@ -35,31 +37,50 @@ interface Props {
   cards: TournamentData[];
 }
 
-const TournamentList = () => {
+interface TournamentListProps {
+  useAPI: boolean;
+}
+
+const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [cards, setCards] = useState<TournamentData[]>([]);
 
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
 
+  const [globalState, setGlobalState] = useStateManager();
+
   useEffect(() => {
     async function fetchCards() {
-      try {
-        setIsLoading(true);
-        const data = await GetPendingTournaments();
+      setIsLoading(true);
+
+      if (useAPI) {
+        const data = await GetTournamentDataDB(globalState.chainID);
+
+        console.log(data);
 
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
         } else {
           // console.error('GetAllWagers returned invalid data:', cards);
         }
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching wagers:', error);
+      } else {
+        try {
+          const data = await GetPendingTournaments();
+
+          if (Array.isArray(data)) {
+            setCards(data.reverse()); // reverse to show newest first
+          } else {
+            // console.error('GetAllWagers returned invalid data:', cards);
+          }
+        } catch (error) {
+          console.error('Error fetching wagers:', error);
+        }
       }
+      setIsLoading(false);
     }
     fetchCards();
-  }, []);
+  }, [useAPI]);
 
   const sortedCards = [...cards].sort((a, b) => {
     switch (sortValue) {
@@ -83,9 +104,11 @@ const TournamentList = () => {
   return (
     <ChakraProvider>
       <Box>
-        <Heading as="h2" size="lg" mb={4}>
-          Join Tournament
-        </Heading>
+        <Flex alignItems="center" justifyContent="space-between" mb={4}>
+          <Heading as="h2" size="lg">
+            Join Tournament
+          </Heading>
+        </Flex>
         <CardFilterControls
           sortValue={sortValue}
           setSortValue={setSortValue}

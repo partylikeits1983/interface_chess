@@ -5,19 +5,9 @@ const { ethers } = require('ethers');
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import {
-  Input,
-  Box,
-  Button,
-  Flex,
-  Text,
-  Spinner,
-  Skeleton,
-  Spacer,
-  Center,
-  ChakraProvider,
-  Tooltip,
-} from '@chakra-ui/react';
+import { Box, Text, Spinner, Center, ChakraProvider } from '@chakra-ui/react';
+
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
 import TournamentList from './TournamentCardList';
@@ -52,6 +42,10 @@ export const TournamentView: React.FC<TournamentViewProps> = ({
   const [isLoading, setIsLoading] = useState(true); // 1. Initialize isLoading to true
   const [isIdDefined, setIdIsDefined] = useState(!!tournamentID); // Default based on the truthiness of tournamentID
   const [Tournament, setTournament] = useState<TournamentData>();
+
+  const [useAPI, setUseAPI] = useState(true);
+
+  const [globalState, setGlobalState] = useStateManager();
 
   useEffect(() => {
     async function fetchTournament() {
@@ -108,7 +102,7 @@ export const TournamentView: React.FC<TournamentViewProps> = ({
             </>
           ) : (
             <>
-              <TournamentList></TournamentList>
+              <TournamentList useAPI={globalState.useAPI}></TournamentList>
             </>
           )}
         </>

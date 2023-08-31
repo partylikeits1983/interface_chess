@@ -27,7 +27,6 @@ import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
 import copyIconFeedback from 'ui/copyIconFeedback';
-
 import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
 
 import {
@@ -39,6 +38,8 @@ import {
   GetIsUserInTournament,
   GetCanTournamentBegin,
 } from '#/ui/wallet-ui/api/form';
+
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;
@@ -71,6 +72,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   const [chainID, setChainID] = useState(0);
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const [globalState, setGlobalState] = useStateManager();
 
   type TokenDetail = {
     label: string;
