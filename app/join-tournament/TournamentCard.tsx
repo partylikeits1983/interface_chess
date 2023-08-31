@@ -84,20 +84,27 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   useEffect(() => {
     async function getUserIsInTournament() {
       setIsLoading(true);
-      const resultIsInTournament = await GetIsUserInTournament(
-        card.tournamentNonce,
-      );
-      const resultCanBegin = await GetCanTournamentBegin(card.tournamentNonce);
-      const chainData = await getChainId();
+      if (!globalState.useAPI) {
+        const resultIsInTournament = await GetIsUserInTournament(
+          card.tournamentNonce,
+        );
+        const resultCanBegin = await GetCanTournamentBegin(
+          card.tournamentNonce,
+        );
+        const chainData = await getChainId();
 
-      setIsUserInTournament(Boolean(resultIsInTournament));
-      setCanTournamentBegin(Boolean(resultCanBegin));
+        setIsUserInTournament(Boolean(resultIsInTournament));
+        setCanTournamentBegin(Boolean(resultCanBegin));
 
-      setChainID(Number(chainData));
+        setChainID(Number(chainData));
 
-      // pass chainData not chainId... sigh
-      const detail = getTokenDetails(chainData, card.token);
-      setTokenDetail(detail);
+        const detail = getTokenDetails(chainData, card.token);
+        setTokenDetail(detail);
+        setIsLoading(false);
+      } else {
+        setIsUserInTournament(false);
+        setCanTournamentBegin(false);
+      }
       setIsLoading(false);
     }
     getUserIsInTournament();
@@ -208,7 +215,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     );
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
 
-    return `${hours} hours ${minutes} minutes until tournament can begin`;
+    return `${hours} hours ${minutes} minutes until start`;
   }
 
   type DataField = {
