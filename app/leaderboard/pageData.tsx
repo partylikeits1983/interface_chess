@@ -12,7 +12,7 @@ const PageData: React.FC = () => {
   return (
     <ChakraProvider>
       <Stack spacing={8}>
-        <Leaderboard useAPI={useAPI} handleToggle={() => setUseAPI(useAPI)} />
+        <Leaderboard useAPI={useAPI} handleToggle={() => setUseAPI(!useAPI)} />
       </Stack>
     </ChakraProvider>
   );

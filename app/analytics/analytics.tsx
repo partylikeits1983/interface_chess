@@ -83,7 +83,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       <Flex justify="flex-end" pr={4} pt={0} alignItems="center">
         <Switch
           colorScheme="green"
-          isChecked={!useAPI}
+          isChecked={useAPI}
           onChange={handleToggle}
         />
 

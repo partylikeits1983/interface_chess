@@ -87,7 +87,7 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         />
 
         <Tooltip
-          label="When switched on, gets values from on-chain (slower). Switch off if you don't have metamask"
+          label="When switched on, gets values ChessFish API (faster). Switch off if you want to use your metamask RPC url."
           hasArrow
         >
           <QuestionOutlineIcon color="white" ml={2} />
