@@ -3,13 +3,11 @@
 import { GetLeaderboardData } from 'ui/wallet-ui/api/form';
 import { GetLeaderboardDataDB } from 'ui/wallet-ui/api/db-api';
 
+import alertWarningFeedback from '#/ui/alertWarningFeedback';
+
 import {
   ChakraProvider,
-  Stat,
-  StatLabel,
   Box,
-  StatNumber,
-  StatGroup,
   Spinner,
   Table,
   Flex,
@@ -33,13 +31,13 @@ interface AnalyticsProps {
 
 const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [globalState, setGlobalState] = useStateManager();
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      setIsLoading(true);
       if (useAPI) {
         try {
           const playerStatistics = await GetLeaderboardData();
@@ -64,10 +62,11 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           console.log(playerStatistics);
           setLeaderboardData(playerStatistics);
         } catch (error) {
+          alertWarningFeedback('ChessFish API returned 404, use metamask');
           console.log(error);
         }
       }
-      setLoading(false);
+      setIsLoading(false);
     };
 
     fetchData();
@@ -96,34 +95,40 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       </Flex>
 
       <Box overflowX="auto" maxWidth="100%">
-        <Table variant="simple" mt={4} size="sm">
-          <thead>
-            <Tr>
-              <Th color="white">#</Th>
-              <Th color="white">Player Address</Th>
-              <Th color="white">Total Games</Th>
-              <Th color="white">Games Won</Th>
-            </Tr>
-          </thead>
-          <tbody>
-            {sortedData.map((playerData, index) => (
-              <Tr key={index}>
-                <Td color="white">
-                  {index === 0
-                    ? '🥇'
-                    : index === 1
-                    ? '🥈'
-                    : index === 2
-                    ? '🥉'
-                    : index + 1}
-                </Td>
-                <Td color="white">{playerData.playerAddress}</Td>
-                <Td color="white">{playerData.totalGames}</Td>
-                <Td color="white">{playerData.gamesWon}</Td>
+        {isLoading ? (
+          <>
+            <Spinner />
+          </>
+        ) : (
+          <Table variant="simple" mt={4} size="sm">
+            <thead>
+              <Tr>
+                <Th color="white">#</Th>
+                <Th color="white">Player Address</Th>
+                <Th color="white">Total Games</Th>
+                <Th color="white">Games Won</Th>
               </Tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {sortedData.map((playerData, index) => (
+                <Tr key={index}>
+                  <Td color="white">
+                    {index === 0
+                      ? '🥇'
+                      : index === 1
+                      ? '🥈'
+                      : index === 2
+                      ? '🥉'
+                      : index + 1}
+                  </Td>
+                  <Td color="white">{playerData.playerAddress}</Td>
+                  <Td color="white">{playerData.totalGames}</Td>
+                  <Td color="white">{playerData.gamesWon}</Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Box>
     </ChakraProvider>
   );

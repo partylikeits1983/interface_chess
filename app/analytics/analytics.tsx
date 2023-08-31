@@ -26,6 +26,7 @@ import React, { useEffect, useState, FC } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
 interface AnalyticsProps {
   useAPI: boolean;
@@ -56,6 +57,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
           setLoading(false);
         } catch (error) {
+          alertWarningFeedback('ChessFish API returned 404, use metamask');
           console.log(error);
         }
       } else {
@@ -86,7 +88,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         />
 
         <Tooltip
-          label="When switched on, gets values from metamask RPC (slower). Switch off if you want to use chessfish API."
+          label="When switched on, gets values ChessFish API (faster). Switch off if you want to use your metamask RPC url."
           hasArrow
         >
           <QuestionOutlineIcon color="white" ml={2} />

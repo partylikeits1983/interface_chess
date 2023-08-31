@@ -13,7 +13,7 @@ const PageData: React.FC = () => {
   return (
     <ChakraProvider>
       <Stack spacing={8}>
-        <Analytics useAPI={useAPI} handleToggle={() => setUseAPI(!useAPI)} />
+        <Analytics useAPI={useAPI} handleToggle={() => setUseAPI(useAPI)} />
         <CurrentGames useAPI={useAPI} />
       </Stack>
     </ChakraProvider>
