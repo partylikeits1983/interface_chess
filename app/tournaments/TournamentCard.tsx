@@ -39,6 +39,7 @@ import {
 } from '#/ui/wallet-ui/api/form';
 
 import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;
@@ -78,29 +79,41 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   const [chainID, setChainID] = useState(0);
   const [tokenDetail, setTokenDetail] = useState<TokenDetail | null>(null);
 
+  const [globalState, setGlobalState] = useStateManager();
+
   useEffect(() => {
     async function getScoreData() {
-      const data = await GetTournamentScore(card.tournamentNonce);
+      setIsLoading(true);
+      if (!globalState.useAPI) {
+        /*         const data = await GetTournamentScore(card.tournamentNonce);
 
-      const isEnded = await GetIsTournamentEnded(card.tournamentNonce);
-      if (isEnded) {
-        setIsTournamentEnded(true);
+        const isEnded = await GetIsTournamentEnded(card.tournamentNonce);
+        if (isEnded) {
+          setIsTournamentEnded(true);
+        }
+
+        // Process data to map player addresses to their scores
+        const scoresObj: PlayerScores = {};
+        for (let i = 0; i < data[0].length; i++) {
+          scoresObj[data[0][i]] = data[1][i];
+        }
+
+        setPlayerScores(scoresObj);
+
+        const chainData = await getChainId();
+        setChainID(Number(chainData));
+
+        // pass chainData not chainId... sigh
+        const detail = getTokenDetails(chainData, card.token);
+        setTokenDetail(detail);
+
+ */
+      } else {
+        setIsTournamentEnded(false);
+        const detail = getTokenDetails(80001, card.token);
+        setTokenDetail(detail);
       }
-
-      // Process data to map player addresses to their scores
-      const scoresObj: PlayerScores = {};
-      for (let i = 0; i < data[0].length; i++) {
-        scoresObj[data[0][i]] = data[1][i];
-      }
-
-      setPlayerScores(scoresObj);
-
-      const chainData = await getChainId();
-      setChainID(Number(chainData));
-
-      // pass chainData not chainId... sigh
-      const detail = getTokenDetails(chainData, card.token);
-      setTokenDetail(detail);
+      setIsLoading(false);
     }
     getScoreData();
   }, []);
@@ -136,31 +149,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     } catch (error) {
       copyIconFeedback('Failed to copy address');
     }
-  }
-
-  function fromScientificNotation(n: string): string {
-    if (!n.includes('e')) {
-      return n;
-    }
-    let sign = +n < 0 ? '-' : '',
-      coefficients = n.replace('-', '').split('e'),
-      e = Number(coefficients.pop()),
-      zeros = '',
-      decimalPointIndex = coefficients[0].indexOf('.');
-
-    if (decimalPointIndex !== -1) {
-      let decimalPart = coefficients[0].split('.')[1];
-      coefficients[0] = coefficients[0].substring(0, decimalPointIndex);
-      zeros =
-        decimalPart.length > e
-          ? '.' + decimalPart.substring(0, decimalPart.length - e)
-          : '';
-      e -= decimalPart.length;
-    }
-
-    while (e-- > 0) zeros += '0';
-
-    return sign + coefficients[0] + zeros;
   }
 
   const HandleClickHandlePayoutTournament = async () => {
@@ -314,46 +302,53 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                   <BoxTemplate {...field} />
                 </Box>
               ))}
-
-              <Box width={['100%', '100%']} px={2}>
-                <Box
-                  bg="black"
-                  p={3}
-                  rounded="md"
-                  my={3}
-                  border="1px solid white"
-                  maxHeight="150px"
-                  overflowY="auto"
-                >
-                  <Text fontWeight="bold" color="white" fontSize="sm">
-                    Player Addresses
-                  </Text>
-                  <Table variant="simple" size="xs">
-                    <Thead>
-                      <Tr>
-                        <Td color="white" fontWeight="bold">
-                          Address
-                        </Td>
-                        <Td color="white" fontWeight="bold">
-                          {' '}
-                          {/* Adding a title for the score */}
-                          Score
-                        </Td>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {card.players.map((playerAddress, index) => (
-                        <Tr key={index}>
-                          <Td color="white">{playerAddress}</Td>
-                          <Td color="white">
-                            {playerScores[playerAddress] || 'N/A'}
-                          </Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </Box>
-              </Box>
+              {isLoading ? (
+                <>
+                  <Spinner></Spinner>
+                </>
+              ) : (
+                <>
+                  <Box width={['100%', '100%']} px={2}>
+                    <Box
+                      bg="black"
+                      p={3}
+                      rounded="md"
+                      my={3}
+                      border="1px solid white"
+                      maxHeight="150px"
+                      overflowY="auto"
+                    >
+                      <Text fontWeight="bold" color="white" fontSize="sm">
+                        Player Addresses
+                      </Text>
+                      <Table variant="simple" size="xs">
+                        <Thead>
+                          <Tr>
+                            <Td color="white" fontWeight="bold">
+                              Address
+                            </Td>
+                            <Td color="white" fontWeight="bold">
+                              {' '}
+                              {/* Adding a title for the score */}
+                              Score
+                            </Td>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {card.players.map((playerAddress, index) => (
+                            <Tr key={index}>
+                              <Td color="white">{playerAddress}</Td>
+                              <Td color="white">
+                                {playerScores[playerAddress] || 'N/A'}
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
+                  </Box>
+                </>
+              )}
             </Flex>
 
             <HStack spacing="4" direction={{ base: 'column', md: 'row' }}>

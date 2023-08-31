@@ -11,11 +11,12 @@ import {
 } from '@chakra-ui/react';
 
 const { GetInProgressTournaments } = require('ui/wallet-ui/api/form');
-
-// import { useMetamask } from 'ui/wallet-ui/components/Metamask';
+const { GetTournamentDataDB } = require('ui/wallet-ui/api/db-api');
 
 import TournamentCard from './TournamentCard'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
+
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;
@@ -42,22 +43,37 @@ const TournamentList = () => {
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
 
+  const [globalState, setGlobalState] = useStateManager();
+
   useEffect(() => {
     async function fetchCards() {
-      try {
-        setIsLoading(true);
-        const data = await GetInProgressTournaments();
+      setIsLoading(true);
 
+      if (globalState.useAPI) {
+        const data = await GetTournamentDataDB(globalState.chainID);
+        console.log(data);
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
         } else {
           // console.error('GetAllWagers returned invalid data:', cards);
         }
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching wagers:', error);
+      } else {
+        try {
+          const data = await GetInProgressTournaments();
+
+          if (Array.isArray(data)) {
+            setCards(data.reverse()); // reverse to show newest first
+          } else {
+            // console.error('GetAllWagers returned invalid data:', cards);
+          }
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Error fetching wagers:', error);
+        }
       }
+      setIsLoading(false);
     }
+
     fetchCards();
   }, []);
 

@@ -54,10 +54,8 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
     async function fetchCards() {
       setIsLoading(true);
 
-      if (useAPI) {
+      if (globalState.useAPI) {
         const data = await GetTournamentDataDB(globalState.chainID);
-
-        console.log(data);
 
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
@@ -80,7 +78,7 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
       setIsLoading(false);
     }
     fetchCards();
-  }, [useAPI]);
+  }, []);
 
   const sortedCards = [...cards].sort((a, b) => {
     switch (sortValue) {
