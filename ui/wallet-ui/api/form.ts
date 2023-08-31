@@ -412,7 +412,6 @@ export const GetAllWagers = async (): Promise<Card[]> => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
 
-  alert(chess.address);
   try {
     const wagers = await chess.getAllUserGames(accounts[0]);
 
