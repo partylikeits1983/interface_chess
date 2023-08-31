@@ -23,7 +23,6 @@ import {
 
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import React, { useEffect, useState, FC } from 'react';
-// import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useStateManager } from 'ui/wallet-ui/api/sharedState';

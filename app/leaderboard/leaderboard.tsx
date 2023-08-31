@@ -1,7 +1,7 @@
 'use client';
 
 import { GetLeaderboardData } from 'ui/wallet-ui/api/form';
-import { GetWagersDB } from 'ui/wallet-ui/api/db-api';
+import { GetLeaderboardDataDB } from 'ui/wallet-ui/api/db-api';
 
 import {
   ChakraProvider,
@@ -23,8 +23,8 @@ import {
 
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import React, { useEffect, useState, FC } from 'react';
-import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
+
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 
 interface AnalyticsProps {
   useAPI: boolean;
@@ -35,10 +35,12 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [globalState, setGlobalState] = useStateManager();
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      if (!useAPI) {
+      if (useAPI) {
         try {
           const playerStatistics = await GetLeaderboardData();
           const dataArray = Object.entries(playerStatistics).map(
@@ -56,6 +58,11 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         try {
           // trying to ping the GCP API
           // const wagerAddresses = await GetWagersDB();
+          const chainId = globalState.chainID;
+          const playerStatistics = await GetLeaderboardDataDB(chainId);
+
+          console.log(playerStatistics);
+          setLeaderboardData(playerStatistics);
         } catch (error) {
           console.log(error);
         }
