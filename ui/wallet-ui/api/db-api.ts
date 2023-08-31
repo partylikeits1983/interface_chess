@@ -1,9 +1,11 @@
 const apiURL = 'https://api.chess.fish';
+
 const getWagersFenMethod = '/wagersfen';
 const getWagersMethod = '/wageraddresses';
+const getAnalyticsMethod = '/analytics';
 
-export async function GetWagersFenDB(): Promise<string[]> {
-  const url = apiURL + getWagersFenMethod;
+export async function GetWagersFenDB(chainId: number): Promise<string[]> {
+  const url = apiURL + getWagersFenMethod + '/' + chainId;
   try {
     const response = await fetch(url, { mode: 'cors' });
     if (!response.ok) {
@@ -27,11 +29,10 @@ export async function GetWagersFenDB(): Promise<string[]> {
   }
 }
 
-export async function GetWagersDB(): Promise<string[]> {
-  const url = apiURL + getWagersMethod;
+export async function GetWagersDB(chainId: number): Promise<string[]> {
+  const url = apiURL + getWagersMethod + '/' + chainId;
   try {
     const response = await fetch(url, { mode: 'cors' });
-    console.log('HERE!');
     if (!response.ok) {
       throw new Error(`Request failed with status code ${response.status}`);
     }
@@ -48,6 +49,25 @@ export async function GetWagersDB(): Promise<string[]> {
       throw new Error(
         'GetWagersDB Invalid response format: "wagers" field is not an array.',
       );
+    }
+  } catch (error) {
+    throw new Error(`Error fetching wagers data: ${error}`);
+  }
+}
+
+export async function GetAnalyticsDB(chainId: number) {
+  const url = apiURL + getAnalyticsMethod + '/' + chainId;
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`);
+    }
+    const data = await response.json();
+
+    if (data.numberOfGames) {
+      return [data.numberOfGames, data.numberOfPlayers];
+    } else {
+      return [];
     }
   } catch (error) {
     throw new Error(`Error fetching wagers data: ${error}`);

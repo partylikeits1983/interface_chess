@@ -9,12 +9,18 @@ import { useRouter } from 'next/navigation';
 
 import { Box, Flex, Skeleton } from '@chakra-ui/react';
 
-import { GetWagersDB, GetWagersFenDB } from 'ui/wallet-ui/api/db-api';
+import {
+  GetWagersDB,
+  GetWagersFenDB,
+  GetAnalyticsDB,
+} from 'ui/wallet-ui/api/db-api';
 import {
   GetAnalyticsData,
   GetGameMoves,
   GetNumberOfGames,
 } from 'ui/wallet-ui/api/form';
+
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 
 interface CurrentGamesProps {
   useAPI: boolean;
@@ -27,16 +33,24 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   const [totalGames, setTotalGames] = useState('');
   const [totalWagers, setTotalWagers] = useState('');
 
+  const [globalState, setGlobalState] = useStateManager();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!useAPI) {
+        if (useAPI) {
           // trying to ping GCP chess fish api
-          const addresses = await GetWagersDB();
-          const fendata = await GetWagersFenDB();
+          const addresses = await GetWagersDB(globalState.chainID);
+          const fendata = await GetWagersFenDB(globalState.chainID);
+          const [numberOfGames, numberOfWagers] = await GetAnalyticsDB(
+            globalState.chainID,
+          );
 
-          setWagerAddresses(addresses.reverse());
-          setGames(fendata.reverse());
+          setWagerAddresses(addresses);
+          setGames(fendata);
+
+          setTotalGames(numberOfGames);
+          setTotalWagers(numberOfWagers);
         } else {
           // if useAPI is false, then use the Smart Contract via RPC link
           console.log('Getting all games via RPC-LINK');

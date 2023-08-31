@@ -23,8 +23,10 @@ import {
 
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import React, { useEffect, useState, FC } from 'react';
-import NextLink from 'next/link';
+// import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
+
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
 
 interface AnalyticsProps {
   useAPI: boolean;
@@ -39,16 +41,19 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
   const router = useRouter();
 
+  const [globalState, setGlobalState] = useStateManager();
+
   useEffect(() => {
     const fetchData = async () => {
       if (useAPI) {
         try {
-          const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
+          // trying to ping the GCP API
+          const chainId = globalState.chainID;
+          const wagerAddresses = await GetWagersDB(chainId);
 
-          setWagerAddresses(fetchedWagerAddresses);
-
-          setTotalGames(totalGames);
-          setTotalWagers(fetchedWagerAddresses.length.toString());
+          setWagerAddresses(wagerAddresses.reverse());
+          setTotalGames(wagerAddresses.length.toString());
+          setTotalWagers(wagerAddresses.length.toString());
 
           setLoading(false);
         } catch (error) {
@@ -56,12 +61,12 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         }
       } else {
         try {
-          // trying to ping the GCP API
-          const wagerAddresses = await GetWagersDB();
+          const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
-          setWagerAddresses(wagerAddresses);
-          setTotalGames(wagerAddresses.length.toString());
-          setTotalWagers(wagerAddresses.length.toString());
+          setWagerAddresses(fetchedWagerAddresses);
+
+          setTotalGames(totalGames);
+          setTotalWagers(fetchedWagerAddresses.length.toString());
 
           setLoading(false);
         } catch (error) {
@@ -82,7 +87,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         />
 
         <Tooltip
-          label="When switched on, gets values from on-chain (slower). Switch off if you don't have metamask"
+          label="When switched on, gets values from API. Switch off if you want to use RPC blockchain data"
           hasArrow
         >
           <QuestionOutlineIcon color="white" ml={2} />

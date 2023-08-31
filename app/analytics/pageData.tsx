@@ -8,7 +8,7 @@ import Analytics from './analytics';
 import CurrentGames from './currentGames';
 
 const PageData: React.FC = () => {
-  const [useAPI, setUseAPI] = useState(false);
+  const [useAPI, setUseAPI] = useState(true);
 
   return (
     <ChakraProvider>

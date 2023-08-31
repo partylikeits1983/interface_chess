@@ -10,6 +10,8 @@ import {
 
 import { ethers } from 'ethers';
 
+import { useStateManager } from '../api/sharedState';
+
 const NETWORK_NAMES: { [key: string]: string } = {
   0x1: 'Ethereum Mainnet',
   0x89: 'Polygon Mainnet',
@@ -23,6 +25,9 @@ const NETWORK_NAMES: { [key: string]: string } = {
 export default function NetworkButton(): JSX.Element {
   const [selectedNetwork, setSelectedNetwork] =
     useState<string>('Select Network');
+
+  const initialChainID = { chainID: 80001 };
+  const [globalState, setGlobalState] = useStateManager(initialChainID);
 
   const handleNetworkChange = async (network: string): Promise<void> => {
     // Define chainId based on selected network
@@ -83,6 +88,7 @@ export default function NetworkButton(): JSX.Element {
         const network = await provider.getNetwork();
 
         setSelectedNetwork(NETWORK_NAMES[network.chainId]);
+        setGlobalState({ chainID: network.chainId });
       };
       getConnectedNetwork();
     } else {

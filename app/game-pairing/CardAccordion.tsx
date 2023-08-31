@@ -46,10 +46,16 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
     }
   }
 
-  function formatAddress(address: string): string {
+  function formatAddress(address?: string): string {
+    if (typeof address !== 'string') {
+      return 'Invalid input';
+    }
+
     if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
       // alert(`Invalid Ethereum address: ${address}`);
+      return 'Invalid address';
     }
+
     return `${address.substr(0, 6)}...${address.substr(-8)}`;
   }
 
