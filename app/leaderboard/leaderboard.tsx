@@ -31,6 +31,7 @@ interface AnalyticsProps {
 
 const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
+  const [sortedData, setSortedData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const [globalState, setGlobalState] = useStateManager();
@@ -47,27 +48,28 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
               ...stats,
             }),
           );
-          console.log(dataArray);
           setLeaderboardData(dataArray);
+          const sortedArray = [...dataArray].sort(
+            (a, b) => b.gamesWon - a.gamesWon,
+          );
+          setSortedData(sortedArray);
         } catch (error) {
           console.log(error);
         }
       } else {
         try {
-          // trying to ping the GCP API
-          // const wagerAddresses = await GetWagersDB();
           const chainId = globalState.chainID;
 
           console.log('HERE1');
           const playerStatistics = await GetLeaderboardDataDB(chainId);
           console.log('HERE2');
 
-          console.log(playerStatistics);
-
-          console.log('HERE3');
-
           if (Array.isArray(playerStatistics)) {
             setLeaderboardData(playerStatistics);
+            const sortedArray = [...playerStatistics].sort(
+              (a, b) => b.gamesWon - a.gamesWon,
+            );
+            setSortedData(sortedArray);
           }
           console.log('HERE4');
         } catch (error) {
@@ -79,12 +81,7 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     };
 
     fetchData();
-  }, [useAPI]);
-
-  // Sort data by games won
-  const sortedData = [...leaderboardData].sort(
-    (a, b) => b.gamesWon - a.gamesWon,
-  );
+  }, [useAPI, globalState]);
 
   return (
     <ChakraProvider>
