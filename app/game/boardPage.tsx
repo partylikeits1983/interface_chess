@@ -111,7 +111,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   }
 
   const handleBack = () => {
-    console.log('backwards');
     setGameID((prevGameID) => {
       const newGameID = prevGameID > 0 ? prevGameID - 1 : prevGameID;
       const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;

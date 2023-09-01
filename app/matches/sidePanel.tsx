@@ -8,6 +8,7 @@ import { Card } from '../types';
 import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
+import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 const {
   GetGameMoves,
@@ -56,6 +57,8 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
 
     await AcceptWagerAndApprove(wagerAddress);
     await AcceptWagerConditions(wagerAddress);
+
+    alertSuccessFeedback('Wager Accepted!');
 
     setIsLoadingApproval(false);
   };
