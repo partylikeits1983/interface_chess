@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 const ethers = require('ethers');
 
 import alertWarningFeedbackConnectMetamask from '#/ui/alertWarningConnectMetamask';
+import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 type State = {
   chainID: number;

@@ -86,6 +86,9 @@ dependencies:
   bufferutil:
     specifier: 4.0.7
     version: 4.0.7
+  canvas-confetti:
+    specifier: 1.6.0
+    version: 1.6.0
   chess:
     specifier: 1.1.0
     version: 1.1.0
@@ -175,6 +178,9 @@ devDependencies:
   '@tailwindcss/typography':
     specifier: 0.5.9
     version: 0.5.9(tailwindcss@3.3.1)
+  '@types/canvas-confetti':
+    specifier: 1.6.0
+    version: 1.6.0
   '@types/ms':
     specifier: 0.7.31
     version: 0.7.31
@@ -7728,6 +7734,13 @@ packages:
       '@types/node': 18.11.17
     dev: false
 
+  /@types/canvas-confetti@1.6.0:
+    resolution:
+      {
+        integrity: sha512-Yq6rIccwcco0TLD5SMUrIM7Fk7Fe/C0jmNRxJJCLtAF6gebDkPuUjK5EHedxecm69Pi/aA+It39Ux4OHmFhjRw==,
+      }
+    dev: true
+
   /@types/chrome@0.0.136:
     resolution:
       {
@@ -11002,6 +11015,13 @@ packages:
       {
         integrity: sha512-2efF8SAZwgAX1FJr87KWhvuJxnGJKOnctQa8xLOskAXNXq8oiuqgl6u1kk3fFpsp3GgvzlRjiK1sl63hNtFADw==,
       }
+
+  /canvas-confetti@1.6.0:
+    resolution:
+      {
+        integrity: sha512-ej+w/m8Jzpv9Z7W7uJZer14Ke8P2ogsjg4ZMGIuq4iqUOqY2Jq8BNW42iGmNfRwREaaEfFIczLuZZiEVSYNHAA==,
+      }
+    dev: false
 
   /case@1.6.3:
     resolution:
