@@ -81,6 +81,7 @@ export async function GetLeaderboardDataDB(chainId: number) {
   try {
     const response = await fetch(url, { mode: 'cors' });
     if (!response.ok) {
+      console.log('GET LEADERBOARD DATA', response.status);
       throw new Error(`Request failed with status code ${response.status}`);
     }
     const data = await response.json();
