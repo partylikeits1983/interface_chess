@@ -57,10 +57,19 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           // trying to ping the GCP API
           // const wagerAddresses = await GetWagersDB();
           const chainId = globalState.chainID;
+
+          console.log('HERE1');
           const playerStatistics = await GetLeaderboardDataDB(chainId);
+          console.log('HERE2');
 
           console.log(playerStatistics);
-          setLeaderboardData(playerStatistics);
+
+          console.log('HERE3');
+
+          if (Array.isArray(playerStatistics)) {
+            setLeaderboardData(playerStatistics);
+          }
+          console.log('HERE4');
         } catch (error) {
           alertWarningFeedback('ChessFish API returned 404, use metamask');
           console.log(error);
