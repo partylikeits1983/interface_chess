@@ -94,13 +94,11 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           <QuestionOutlineIcon color="white" ml={2} />
         </Tooltip>
       </Flex>
-
       <StatGroup color="white">
         <Stat>
           <StatLabel>Total Number of Games Played</StatLabel>
           {loading ? <Spinner /> : <StatNumber>{totalGames}</StatNumber>}
         </Stat>
-
         <Stat>
           <StatLabel>Current Number of Wagers</StatLabel>
           {loading ? <Spinner /> : <StatNumber>{totalWagers}</StatNumber>}

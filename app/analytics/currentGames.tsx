@@ -7,7 +7,7 @@ import { Chessboard } from 'react-chessboard';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { Box, Flex, Skeleton } from '@chakra-ui/react';
+import { Box, Flex, Skeleton, Text } from '@chakra-ui/react';
 
 import {
   GetWagersDB,
@@ -95,31 +95,37 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   };
 
   return (
-    <Flex wrap="wrap" justifyContent="center" w="100%">
-      {Games.slice(0, 9).map((fen, index) => (
-        <Flex
-          key={index}
-          m={15}
-          direction="column"
-          align="center"
-          w="calc(33.33% - 30px)" // considering the margin of 15 on both sides
-        >
-          <Box
-            as="button"
-            onClick={() => handleBoardClick(wagerAddresses[index])}
-            _hover={{ transform: 'scale(1.02)' }}
-            transition="0.15s"
-            w="100%" // Ensure the Box fills its parent's width
+    <>
+      <Text color="white" marginBottom="0.5">
+        Latest Games
+      </Text>
+      <Flex wrap="wrap" justifyContent="center" w="100%">
+        {Games.slice(0, 9).map((fen, index) => (
+          <Flex
+            key={index}
+            m={15}
+            marginTop={0} // Decrease the top margin here
+            direction="column"
+            align="center"
+            w="calc(33.33% - 30px)" // considering the margin of 15 on both sides
           >
-            <Chessboard
-              arePiecesDraggable={false}
-              position={fen}
-              boardWidth={250}
-            />
-          </Box>
-        </Flex>
-      ))}
-    </Flex>
+            <Box
+              as="button"
+              onClick={() => handleBoardClick(wagerAddresses[index])}
+              _hover={{ transform: 'scale(1.02)' }}
+              transition="0.15s"
+              w="100%" // Ensure the Box fills its parent's width
+            >
+              <Chessboard
+                arePiecesDraggable={false}
+                position={fen}
+                boardWidth={250}
+              />
+            </Box>
+          </Flex>
+        ))}
+      </Flex>
+    </>
   );
 };
 
