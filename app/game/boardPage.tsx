@@ -638,54 +638,56 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             </Button>
           </Tooltip>
         </Flex>
-      ) : null}
-
-      {isLoading && wager !== '' ? (
-        // Grey UI skeleton
-        <>
-          <Skeleton height="50px" startColor="gray.800" endColor="black" />
-        </>
       ) : (
         <>
-          <GameInfo
-            wager={wager}
-            wagerToken={wagerToken}
-            wagerAmount={wagerAmount}
-            numberOfGames={numberOfGamesInfo}
-            timeLimit={timeLimit}
-            timePlayer0={timePlayer0}
-            timePlayer1={timePlayer1}
-            isPlayerTurn={isPlayerTurn}
-            isPlayer0White={isPlayer0White}
-          />
+          {isLoading && wager !== '' ? (
+            // Grey UI skeleton
+            <>
+              <Skeleton height="50px" startColor="gray.800" endColor="black" />
+            </>
+          ) : (
+            <>
+              <GameInfo
+                wager={wager}
+                wagerToken={wagerToken}
+                wagerAmount={wagerAmount}
+                numberOfGames={numberOfGamesInfo}
+                timeLimit={timeLimit}
+                timePlayer0={timePlayer0}
+                timePlayer1={timePlayer1}
+                isPlayerTurn={isPlayerTurn}
+                isPlayer0White={isPlayer0White}
+              />
 
-          <div style={{ marginTop: '10px' }}></div>
+              <div style={{ marginTop: '10px' }}></div>
 
-          <Box p={3} border="0.5px solid white">
-            <Flex
-              direction={{ base: 'column', md: 'row' }}
-              alignItems="center"
-              justifyContent="center" // To center the items horizontally
-              width="100%" // To ensure the flex container takes the full width
-            >
-              <Flex
-                alignItems="center" // This ensures that the GameTimer is vertically centered
-                justifyContent="center" // This ensures that the GameTimer is horizontally centered
-                mr={{ md: 4 }} // Optional margin to separate the GameTimer and ScoreBoard on larger screens
-              >
-                <GameTimer
-                  wager={wager}
-                  timeLimit={timeLimit}
-                  timePlayer0={timePlayer0}
-                  timePlayer1={timePlayer1}
-                  isPlayerTurn={isPlayerTurn}
-                  isPlayer0White={isPlayer0White}
-                />
-              </Flex>
+              <Box p={3} border="0.5px solid white">
+                <Flex
+                  direction={{ base: 'column', md: 'row' }}
+                  alignItems="center"
+                  justifyContent="center" // To center the items horizontally
+                  width="100%" // To ensure the flex container takes the full width
+                >
+                  <Flex
+                    alignItems="center" // This ensures that the GameTimer is vertically centered
+                    justifyContent="center" // This ensures that the GameTimer is horizontally centered
+                    mr={{ md: 4 }} // Optional margin to separate the GameTimer and ScoreBoard on larger screens
+                  >
+                    <GameTimer
+                      wager={wager}
+                      timeLimit={timeLimit}
+                      timePlayer0={timePlayer0}
+                      timePlayer1={timePlayer1}
+                      isPlayerTurn={isPlayerTurn}
+                      isPlayer0White={isPlayer0White}
+                    />
+                  </Flex>
 
-              <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
-            </Flex>
-          </Box>
+                  <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
+                </Flex>
+              </Box>
+            </>
+          )}
         </>
       )}
     </ChakraProvider>
