@@ -1548,7 +1548,7 @@ export const GetIsUserInTournament = async (tournamentId: number) => {
     const players = await tournament.getTournamentPlayers(tournamentId);
     let isPlayerInTournament = false;
     for (let i = 0; i < players.length; i++) {
-      if (parseInt(players[0], 16) === parseInt(accounts[0], 16)) {
+      if (parseInt(players[i], 16) === parseInt(accounts[0], 16)) {
         isPlayerInTournament = true;
       }
     }

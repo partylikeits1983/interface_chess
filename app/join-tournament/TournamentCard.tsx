@@ -90,6 +90,9 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         const resultIsInTournament = await GetIsUserInTournament(
           card.tournamentNonce,
         );
+
+        alert(resultIsInTournament);
+
         const resultCanBegin = await GetCanTournamentBegin(
           card.tournamentNonce,
         );
