@@ -659,9 +659,20 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             isPlayer0White={isPlayer0White}
           />
 
+          <div style={{ marginTop: '10px' }}></div>
+
           <Box p={3} border="0.5px solid white">
-            <Flex direction={{ base: 'column', md: 'row' }} alignItems="center">
-              <Flex width="100%">
+            <Flex
+              direction={{ base: 'column', md: 'row' }}
+              alignItems="center"
+              justifyContent="center" // To center the items horizontally
+              width="100%" // To ensure the flex container takes the full width
+            >
+              <Flex
+                alignItems="center" // This ensures that the GameTimer is vertically centered
+                justifyContent="center" // This ensures that the GameTimer is horizontally centered
+                mr={{ md: 4 }} // Optional margin to separate the GameTimer and ScoreBoard on larger screens
+              >
                 <GameTimer
                   wager={wager}
                   timeLimit={timeLimit}
@@ -671,8 +682,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
                   isPlayer0White={isPlayer0White}
                 />
               </Flex>
-
-              <Spacer />
 
               <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
             </Flex>
