@@ -513,10 +513,14 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
                 <Text
                   color="blue.500"
-                  onClick={() => handleCopyLink(card.token)}
+                  onClick={() =>
+                    handleCopyLink(
+                      `app.chess.fish/tournaments/${card.tournamentNonce}`,
+                    )
+                  }
                   cursor="pointer"
                 >
-                  app.chess.fish/{card.tournamentNonce}
+                  app.chess.fish/tournaments/{card.tournamentNonce}
                 </Text>
               </Box>
             </Box>

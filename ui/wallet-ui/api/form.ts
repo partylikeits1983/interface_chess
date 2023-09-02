@@ -1212,6 +1212,7 @@ export const CreateTournament = async (params: TournamentParams) => {
       params.timeLimit,
     );
 
+    alertSuccessFeedback('Tournament Created!');
     return true;
   } catch (error) {
     return false;

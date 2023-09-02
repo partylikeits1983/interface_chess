@@ -95,7 +95,7 @@ export default function ChallengeForm() {
     wagerToken: '',
     wagerAmount: 0,
     numberOfGames: 0,
-    timeLimit: 0,
+    timeLimit: 7200,
   });
 
   const handleInputChange = (
@@ -239,7 +239,7 @@ export default function ChallengeForm() {
                 </Tooltip>
               </FormLabel>
               <Slider
-                min={0}
+                min={7200}
                 max={604800}
                 step={1}
                 value={formInputs.timeLimit}

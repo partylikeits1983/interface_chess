@@ -55,7 +55,6 @@ export const TournamentView: React.FC<TournamentViewProps> = ({
         // 3. Check for truthiness
         try {
           const data = await GetTournament(parseInt(tournamentID));
-          console.log(data);
           if (data !== null) {
             setTournament(data);
             setIdIsDefined(true);
@@ -98,10 +97,7 @@ export const TournamentView: React.FC<TournamentViewProps> = ({
       ) : (
         <>
           {isIdDefined ? (
-            <>
-              <Text>{tournamentID}</Text>
-              {Tournament ? <TournamentCard card={Tournament} /> : null}
-            </>
+            <>{Tournament ? <TournamentCard card={Tournament} /> : null}</>
           ) : (
             <>
               <TournamentList useAPI={globalState.useAPI}></TournamentList>

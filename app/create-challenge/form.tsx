@@ -93,7 +93,7 @@ export default function ChallengeForm() {
     player1: '',
     wagerToken: '',
     wagerAmount: 0,
-    timePerMove: 0,
+    timePerMove: 7200,
     numberOfGames: 0,
   });
 
@@ -227,7 +227,7 @@ export default function ChallengeForm() {
                 </Tooltip>
               </FormLabel>
               <Slider
-                min={0}
+                min={7200}
                 max={604800}
                 step={1}
                 value={formInputs.timePerMove}
