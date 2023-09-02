@@ -74,11 +74,12 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
-  // const [isPlayerTurnSC_NEW, setPlayerTurnSC_NEW] = useState(false);
 
   const [numberOfGames, setNumberOfGames] = useState(0);
   const [numberOfGamesInfo, setNumberOfGamesInfo] = useState('');
   const [timeLimit, setTimeLimit] = useState(0);
+
+  const [wagerToken, setWagerToken] = useState('');
   const [wagerAmount, setWagerAmount] = useState('');
 
   const [timePlayer0, setTimePlayer0] = useState(0);
@@ -180,6 +181,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setPlayerColor(isPlayerWhite);
 
         const matchData = await GetWagerData(wager);
+
+        setWagerToken(matchData.wagerToken);
 
         setWagerAmount(
           ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
@@ -526,8 +529,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           const [timePlayer0, timePlayer1, isPlayer0Turn] =
             await GetTimeRemaining(wager);
 
-          setTimePlayer0(timePlayer0);
-          setTimePlayer1(timePlayer1);
           setIsPlayer0Turn(isPlayer0Turn);
 
           if (_isPlayerTurnSC !== isPlayerTurn) {
@@ -544,6 +545,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
               _isPlayerTurnSC !== isPlayerTurnSC
             ) {
               updateState(_isPlayerTurnSC, currentGame);
+              setTimePlayer0(timePlayer0);
+              setTimePlayer1(timePlayer1);
             }
           }
         } catch (error) {
@@ -646,6 +649,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         <>
           <GameInfo
             wager={wager}
+            wagerToken={wagerToken}
             wagerAmount={wagerAmount}
             numberOfGames={numberOfGamesInfo}
             timeLimit={timeLimit}
