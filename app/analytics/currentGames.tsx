@@ -104,22 +104,25 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
           <Flex
             key={index}
             m={15}
-            marginTop={0} // Decrease the top margin here
+            marginTop={0}
             direction="column"
             align="center"
-            w="calc(33.33% - 30px)" // considering the margin of 15 on both sides
+            w={{ base: 'calc(100% - 30px)', md: 'calc(33.33% - 30px)' }}
+            // On base (smaller screens), it takes the full width minus the margins.
+            // On medium (md) screens and above, it takes a third of the width minus the margins.
           >
             <Box
               as="button"
               onClick={() => handleBoardClick(wagerAddresses[index])}
               _hover={{ transform: 'scale(1.02)' }}
               transition="0.15s"
-              w="100%" // Ensure the Box fills its parent's width
+              w="100%"
             >
               <Chessboard
                 arePiecesDraggable={false}
                 position={fen}
                 boardWidth={250}
+                // Adjust the width of the board based on the screen size.
               />
             </Box>
           </Flex>
