@@ -26,9 +26,6 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, numberOfGames }) => {
         const [_player0Address, _player1Address] = await GetWagerPlayers(wager);
         setPlayer0Address(_player0Address);
         setPlayer1Address(_player1Address);
-
-        console.log('INSIDE OF COMPONENT');
-        console.log(_winsPlayer0, _winsPlayer1);
       }
     };
 

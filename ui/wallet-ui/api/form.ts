@@ -136,7 +136,7 @@ const setupProvider = async () => {
       signer = provider.getSigner();
       accounts = await provider.listAccounts();
       await provider.send('eth_requestAccounts', []);
-      console.log('Web3 provider is set');
+      // console.log('Web3 provider is set');
       isWalletConnected = true;
     } catch (error) {
       console.error('User rejected the connection request.', error);
@@ -630,7 +630,6 @@ export const GetWagerStatus = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    console.log('GET WAGER STATUS !!!!!!');
     const wagerStatusData = await chess.wagerStatus(wagerAddress);
 
     const wagerStatus: WagerStatus = {
@@ -661,7 +660,6 @@ export const GetWagerPlayers = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    console.log('GET WAGER PLAYER ADDRESS !!!!!!');
     const wagerPlayerData = await chess.gameWagers(wagerAddress);
 
     const wagerStatus: WagerPlayerAddresses = {
@@ -797,9 +795,6 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
 
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
-
-    console.log('WAGER PARAMS');
-
     const card: Card = {
       matchAddress: wagerAddress,
       player0Address: wagerParams[0],
@@ -930,9 +925,6 @@ export const IsPlayerAddressWhite = async (
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('In Is Player White');
-    console.log(wagerAddress);
-
     const isPlayerWhite = await chess.isPlayerWhite(
       wagerAddress,
       playerAddress,
@@ -958,9 +950,6 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 
   if (isWalletConnected) {
     try {
-      console.log('In Get Player Turn');
-      console.log(wagerAddress);
-
       const playerTurn = await chess.getPlayerMove(wagerAddress);
 
       let isPlayerTurn;
@@ -997,8 +986,6 @@ export const GetNumberOfGames = async (
     const gameNumber = Number(await chess.getGameLength(wagerAddress));
 
     let data: number[] = [];
-
-    console.log('DATA', numberOfGames, gameNumber);
 
     if (Number(gameNumber) === Number(numberOfGames)) {
       data.push(Number(gameNumber) - 1);
