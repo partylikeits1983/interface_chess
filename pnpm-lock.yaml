@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -79,7 +79,7 @@ dependencies:
     version: 1.0.1
   '@web3-react/core':
     specifier: 8.2.0
-    version: 8.2.0(bufferutil@4.0.7)(react@18.2.0)(utf-8-validate@6.0.3)
+    version: 8.2.0(bufferutil@4.0.7)(immer@9.0.21)(react@18.2.0)(utf-8-validate@5.0.10)
   audio-loader:
     specifier: 1.0.3
     version: 1.0.3
@@ -9088,26 +9088,6 @@ packages:
       zustand: 4.3.8(immer@9.0.21)(react@18.2.0)
     optionalDependencies:
       '@ethersproject/providers': 5.7.2(bufferutil@4.0.7)(utf-8-validate@5.0.10)
-    transitivePeerDependencies:
-      - bufferutil
-      - immer
-      - utf-8-validate
-    dev: false
-
-  /@web3-react/core@8.2.0(bufferutil@4.0.7)(react@18.2.0)(utf-8-validate@6.0.3):
-    resolution:
-      {
-        integrity: sha512-r7dmK2E8Jrpvm/DF93hGMB+8lECHSI3Oo0NrHbhxkisK6in6rdgAXeYFhZtM48LBAm9py6fQvLzjCM6Qx9q0oQ==,
-      }
-    peerDependencies:
-      react: '>=16.8'
-    dependencies:
-      '@web3-react/store': 8.2.0(immer@9.0.21)(react@18.2.0)
-      '@web3-react/types': 8.2.0(immer@9.0.21)(react@18.2.0)
-      react: 18.2.0
-      zustand: 4.3.8(immer@9.0.21)(react@18.2.0)
-    optionalDependencies:
-      '@ethersproject/providers': 5.7.2(bufferutil@4.0.7)(utf-8-validate@6.0.3)
     transitivePeerDependencies:
       - bufferutil
       - immer

@@ -687,7 +687,6 @@ export const GetTimeRemaining = async (wagerAddress: string) => {
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    console.log('TIME REMAINING');
     const timeRemaining = await chess.checkTimeRemaining(wagerAddress);
 
     const playerToMove = await chess.getPlayerMove(wagerAddress);
@@ -988,8 +987,6 @@ export const GetNumberOfGames = async (
 ): Promise<number[]> => {
   await updateContractAddresses();
 
-  console.log('HERE1');
-
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
@@ -1001,13 +998,15 @@ export const GetNumberOfGames = async (
 
     let data: number[] = [];
 
+    console.log('DATA', numberOfGames, gameNumber);
+
     if (Number(gameNumber) === Number(numberOfGames)) {
       data.push(Number(gameNumber) - 1);
       data.push(Number(numberOfGames));
+    } else {
+      data.push(Number(gameNumber));
+      data.push(Number(numberOfGames));
     }
-
-    console.log('NUMBER OF GAMES');
-    console.log(data);
 
     return data;
   } catch (error) {
