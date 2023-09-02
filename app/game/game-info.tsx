@@ -147,11 +147,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
 
   return (
     <div>
-      <Box
-        p={3}
-        // rounded="md"
-        border="0.5px solid white"
-      >
+      <Box p={3} border="0.5px solid white">
         {wager !== '' && (
           <div>
             <Table size="xl">

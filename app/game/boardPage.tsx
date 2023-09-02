@@ -643,7 +643,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       {isLoading && wager !== '' ? (
         // Grey UI skeleton
         <>
-          <Skeleton height="50px" startColor="gray.800" endColor="gray.700" />
+          <Skeleton height="50px" startColor="gray.800" endColor="black" />
         </>
       ) : (
         <>
@@ -658,22 +658,25 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             isPlayerTurn={isPlayerTurn}
             isPlayer0White={isPlayer0White}
           />
-          <Flex direction={{ base: 'column', md: 'row' }} alignItems="center">
-            <Flex width="100%">
-              <GameTimer
-                wager={wager}
-                timeLimit={timeLimit}
-                timePlayer0={timePlayer0}
-                timePlayer1={timePlayer1}
-                isPlayerTurn={isPlayerTurn}
-                isPlayer0White={isPlayer0White}
-              />
+
+          <Box p={3} border="0.5px solid white">
+            <Flex direction={{ base: 'column', md: 'row' }} alignItems="center">
+              <Flex width="100%">
+                <GameTimer
+                  wager={wager}
+                  timeLimit={timeLimit}
+                  timePlayer0={timePlayer0}
+                  timePlayer1={timePlayer1}
+                  isPlayerTurn={isPlayerTurn}
+                  isPlayer0White={isPlayer0White}
+                />
+              </Flex>
+
+              <Spacer />
+
+              <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
             </Flex>
-
-            <Spacer />
-
-            <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
-          </Flex>
+          </Box>
         </>
       )}
     </ChakraProvider>
