@@ -95,19 +95,26 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   };
 
   return (
-    <Flex wrap="wrap" justifyContent="center">
+    <Flex wrap="wrap" justifyContent="center" w="100%">
       {Games.slice(0, 9).map((fen, index) => (
-        <Flex key={index} m={15} direction="column" align="center">
+        <Flex
+          key={index}
+          m={15}
+          direction="column"
+          align="center"
+          w="calc(33.33% - 30px)" // considering the margin of 15 on both sides
+        >
           <Box
             as="button"
             onClick={() => handleBoardClick(wagerAddresses[index])}
             _hover={{ transform: 'scale(1.02)' }}
             transition="0.15s"
+            w="100%" // Ensure the Box fills its parent's width
           >
             <Chessboard
               arePiecesDraggable={false}
               position={fen}
-              boardWidth={250} // 100% to fill the box
+              boardWidth={250}
             />
           </Box>
         </Flex>
