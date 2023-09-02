@@ -59,11 +59,7 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       } else {
         try {
           const chainId = globalState.chainID;
-
-          console.log('HERE1');
           const playerStatistics = await GetLeaderboardDataDB(chainId);
-          console.log('HERE2');
-
           if (Array.isArray(playerStatistics)) {
             setLeaderboardData(playerStatistics);
             const sortedArray = [...playerStatistics].sort(
@@ -111,8 +107,8 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
               <Tr>
                 <Th color="white">#</Th>
                 <Th color="white">Player Address</Th>
-                <Th color="white">Total Games</Th>
                 <Th color="white">Games Won</Th>
+                <Th color="white">Total Games</Th>
               </Tr>
             </thead>
             <tbody>
@@ -128,8 +124,8 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
                       : index + 1}
                   </Td>
                   <Td color="white">{playerData.playerAddress}</Td>
-                  <Td color="white">{playerData.totalGames}</Td>
                   <Td color="white">{playerData.gamesWon}</Td>
+                  <Td color="white">{playerData.totalGames}</Td>
                 </Tr>
               ))}
             </tbody>
