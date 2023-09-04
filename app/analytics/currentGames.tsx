@@ -88,6 +88,48 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
     fetchData();
   }, [useAPI]);
 
+  /*   async function getLastMoveSourceSquare() {
+    const movesArray = await GetGameMoves(wager, gameID);
+    const game = new Chess();
+
+    for (let i = 0; i < movesArray.length; i++) {
+      game.move(movesArray[i]);
+    }
+
+    // Obtain all past moves
+    const moves = game.history({ verbose: true });
+
+    // If there are no moves, return false.
+    if (moves.length === 0) {
+      return false;
+    }
+
+    // Get the last move from the moves array
+    const lastMove = moves[moves.length - 1];
+
+    // The 'from' property indicates the source square of the move
+    const fromSquare = lastMove.from;
+    const toSquare = lastMove.to;
+
+    const highlightSquares: any = {};
+    
+    // Highlight the source square with a light green
+    highlightSquares[fromSquare] = {
+      background: 'rgba(144, 238, 144, 0.4)', // light green
+    };
+    
+    // Highlight the destination square with a slightly darker green
+    highlightSquares[toSquare] = {
+      background: 'rgba(0, 128, 0, 0.4)', // darker green
+    };
+
+    setOptionSquares(highlightSquares);
+
+    return { from: fromSquare, to: toSquare };
+}
+
+ */
+
   const router = useRouter();
   const handleBoardClick = (address: string) => {
     console.log(address);

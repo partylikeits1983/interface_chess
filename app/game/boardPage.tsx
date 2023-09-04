@@ -228,6 +228,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setGame(game);
         setGameFEN(game.fen());
         setLocalGame(game);
+        getLastMoveSourceSquare();
 
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
@@ -480,7 +481,14 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
-  function getLastMoveSourceSquare() {
+  async function getLastMoveSourceSquare() {
+    const movesArray = await GetGameMoves(wager, gameID);
+    const game = new Chess();
+
+    for (let i = 0; i < movesArray.length; i++) {
+      game.move(movesArray[i]);
+    }
+
     // Obtain all past moves
     const moves = game.history({ verbose: true });
 
@@ -494,16 +502,23 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     // The 'from' property indicates the source square of the move
     const fromSquare = lastMove.from;
+    const toSquare = lastMove.to;
 
-    // We can then highlight this square or do any other operations as needed
     const highlightSquares: any = {};
+
+    // Highlight the source square with a light green
     highlightSquares[fromSquare] = {
-      background: 'rgba(255, 255, 0, 0.4)',
+      background: 'rgba(144, 238, 144, 0.4)', // light green
+    };
+
+    // Highlight the destination square with a slightly darker green
+    highlightSquares[toSquare] = {
+      background: 'rgba(0, 128, 0, 0.4)', // darker green
     };
 
     setOptionSquares(highlightSquares);
 
-    return fromSquare;
+    return { from: fromSquare, to: toSquare };
   }
 
   // update time
