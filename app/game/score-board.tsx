@@ -49,16 +49,19 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, numberOfGames }) => {
               <Table>
                 <thead>
                   <tr>
+                    <th>Color</th>
                     <th>User Address</th>
                     <th>Wins</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
+                    <td>Black</td>
                     <td>{player1Address}</td>
                     <td>{winsPlayer1}</td>
                   </tr>
                   <tr>
+                    <td>White</td>
                     <td>{player0Address}</td>
                     <td>{winsPlayer0}</td>
                   </tr>
@@ -72,14 +75,17 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, numberOfGames }) => {
                   <tr>
                     <th>User Address</th>
                     <th>Wins</th>
+                    <th>Color</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
+                    <td>Black</td>
                     <td>{player0Address}</td>
                     <td>{winsPlayer0}</td>
                   </tr>
                   <tr>
+                    <td>White</td>
                     <td>{player1Address}</td>
                     <td>{winsPlayer1}</td>
                   </tr>

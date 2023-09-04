@@ -41,23 +41,29 @@ const GameTimer: React.FC<GameTimerProps> = ({
           {isPlayer0White ? (
             <>
               <Text>
-                Time White:{' '}
-                {formatSecondsToTime(
-                  timePlayer0 > 0 ? timePlayer0.toString() : '0',
-                )}
+                Time White ⚪{' '}
+                <Text as="span" fontWeight="bold">
+                  {formatSecondsToTime(
+                    timePlayer0 > 0 ? timePlayer0.toString() : '0',
+                  )}
+                </Text>
               </Text>
               <Progress
+                size="sm"
                 colorScheme="green"
                 bg="gray"
                 value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}
               />
               <Text>
-                Time Black:{' '}
-                {formatSecondsToTime(
-                  timePlayer1 > 0 ? timePlayer1.toString() : '0',
-                )}
+                Time Black ⚫{' '}
+                <Text as="span" fontWeight="bold">
+                  {formatSecondsToTime(
+                    timePlayer1 > 0 ? timePlayer1.toString() : '0',
+                  )}
+                </Text>
               </Text>
               <Progress
+                size="sm"
                 colorScheme="green"
                 bg="gray"
                 value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
@@ -66,23 +72,29 @@ const GameTimer: React.FC<GameTimerProps> = ({
           ) : (
             <>
               <Text>
-                Time White:{' '}
-                {formatSecondsToTime(
-                  timePlayer1 > 0 ? timePlayer1.toString() : '0',
-                )}
+                Time White ⚪{' '}
+                <Text as="span" fontWeight="bold">
+                  {formatSecondsToTime(
+                    timePlayer1 > 0 ? timePlayer1.toString() : '0',
+                  )}
+                </Text>
               </Text>
               <Progress
+                size="sm"
                 colorScheme="green"
                 bg="gray"
                 value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
               />
               <Text>
-                Time Black:{' '}
-                {formatSecondsToTime(
-                  timePlayer0 > 0 ? timePlayer0.toString() : '0',
-                )}
+                Time Black ⚫{' '}
+                <Text as="span" fontWeight="bold">
+                  {formatSecondsToTime(
+                    timePlayer0 > 0 ? timePlayer0.toString() : '0',
+                  )}
+                </Text>
               </Text>
               <Progress
+                size="sm"
                 colorScheme="green"
                 bg="gray"
                 value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}

@@ -352,7 +352,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                       <BoxTemplate {...field} />
                     </Box>
                   ))}
-
                   <Box width={['100%', '100%']} px={2}>
                     <Box
                       bg="black"
