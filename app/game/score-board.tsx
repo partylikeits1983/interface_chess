@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { GetWagerPlayers, GetWagerStatus } from '#/ui/wallet-ui/api/form';
+import {
+  GetWagerPlayers,
+  GetWagerStatus,
+  IsPlayerWhite,
+} from '#/ui/wallet-ui/api/form';
 
 interface ScoreBoardProps {
   wager: string;
@@ -15,6 +19,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, numberOfGames }) => {
 
   const [winsPlayer0, setWinsPlayer0] = useState(0);
   const [winsPlayer1, setWinsPlayer1] = useState(0);
+  const [isPlayer0White, setIsPlayer0White] = useState(false);
 
   useEffect(() => {
     const fetchWins = async () => {
@@ -26,6 +31,9 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, numberOfGames }) => {
         const [_player0Address, _player1Address] = await GetWagerPlayers(wager);
         setPlayer0Address(_player0Address);
         setPlayer1Address(_player1Address);
+
+        const _isPlayer0White = await IsPlayerWhite(_player0Address);
+        setIsPlayer0White(_isPlayer0White);
       }
     };
 
@@ -35,24 +43,51 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, numberOfGames }) => {
   return (
     <div>
       {wager !== '' && (
-        <Table>
-          <thead>
-            <tr>
-              <th>User Address</th>
-              <th>Wins</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{player0Address}</td>
-              <td>{winsPlayer0}</td>
-            </tr>
-            <tr>
-              <td>{player1Address}</td>
-              <td>{winsPlayer1}</td>
-            </tr>
-          </tbody>
-        </Table>
+        <>
+          {isPlayer0White ? (
+            <>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>User Address</th>
+                    <th>Wins</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{player1Address}</td>
+                    <td>{winsPlayer1}</td>
+                  </tr>
+                  <tr>
+                    <td>{player0Address}</td>
+                    <td>{winsPlayer0}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </>
+          ) : (
+            <>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>User Address</th>
+                    <th>Wins</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{player0Address}</td>
+                    <td>{winsPlayer0}</td>
+                  </tr>
+                  <tr>
+                    <td>{player1Address}</td>
+                    <td>{winsPlayer1}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </>
+          )}
+        </>
       )}
     </div>
   );
