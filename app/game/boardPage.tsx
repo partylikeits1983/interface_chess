@@ -423,7 +423,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       promotion: 'q', // always promote to a queen for example simplicity
     });
 
-    /*     const move = gameCopy.move({
+    /*     
+    const move = gameCopy.move({
       from: moveFrom,
       to: square,
       promotion: 'q', // always promote to a queen for example simplicity
@@ -479,6 +480,32 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
+  function getLastMoveSourceSquare() {
+    // Obtain all past moves
+    const moves = game.history({ verbose: true });
+
+    // If there are no moves, return false.
+    if (moves.length === 0) {
+      return false;
+    }
+
+    // Get the last move from the moves array
+    const lastMove = moves[moves.length - 1];
+
+    // The 'from' property indicates the source square of the move
+    const fromSquare = lastMove.from;
+
+    // We can then highlight this square or do any other operations as needed
+    const highlightSquares: any = {};
+    highlightSquares[fromSquare] = {
+      background: 'rgba(255, 255, 0, 0.4)',
+    };
+
+    setOptionSquares(highlightSquares);
+
+    return fromSquare;
+  }
+
   // update time
   useEffect(() => {
     // define timer here
@@ -505,7 +532,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
       if (isMounted) {
-        const moveSound = new Audio('/sounds/OpponentMove2.mp3');
+        const moveSound = new Audio('/sounds/Move.mp3');
         moveSound.load();
         moveSound.play();
 
@@ -515,6 +542,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setGameFEN(currentGame.fen());
         setPlayerTurn(_isPlayerTurnSC);
         setPlayerTurnSC(_isPlayerTurnSC);
+
+        getLastMoveSourceSquare();
 
         // for timer func
         setIsPlayer0Turn(!isPlayer0Turn);
