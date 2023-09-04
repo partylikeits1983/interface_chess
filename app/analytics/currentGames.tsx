@@ -35,6 +35,9 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
 
   const [globalState, setGlobalState] = useStateManager();
 
+  // Board state
+  const [moveSquares, setMoveSquare] = useState({});
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,14 +91,7 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
     fetchData();
   }, [useAPI]);
 
-  /*   async function getLastMoveSourceSquare() {
-    const movesArray = await GetGameMoves(wager, gameID);
-    const game = new Chess();
-
-    for (let i = 0; i < movesArray.length; i++) {
-      game.move(movesArray[i]);
-    }
-
+  /* async function getLastMoveSourceSquare(game: Chess) {
     // Obtain all past moves
     const moves = game.history({ verbose: true });
 
@@ -123,12 +119,10 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
       background: 'rgba(0, 128, 0, 0.4)', // darker green
     };
 
-    setOptionSquares(highlightSquares);
+    setMoveSquare(highlightSquares);
 
     return { from: fromSquare, to: toSquare };
-}
-
- */
+} */
 
   const router = useRouter();
   const handleBoardClick = (address: string) => {
@@ -149,8 +143,13 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
             marginTop={0}
             direction="column"
             align="center"
-            w={{ base: 'calc(100% - 30px)', md: 'calc(33.33% - 30px)' }}
-            // On base (smaller screens), it takes the full width minus the margins.
+            w={{
+              base: 'calc(100% - 30px)',
+              sm: 'calc(50% - 30px)',
+              md: 'calc(33.33% - 30px)',
+            }}
+            // On base (smallest screens), it takes the full width minus the margins.
+            // On small (sm) screens, it takes half of the width minus the margins.
             // On medium (md) screens and above, it takes a third of the width minus the margins.
           >
             <Box
@@ -164,7 +163,9 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
                 arePiecesDraggable={false}
                 position={fen}
                 boardWidth={250}
-                // Adjust the width of the board based on the screen size.
+                customSquareStyles={{
+                  ...moveSquares,
+                }}
               />
             </Box>
           </Flex>
