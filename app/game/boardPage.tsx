@@ -691,20 +691,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
             </>
           ) : (
             <>
-              <GameInfo
-                wager={wager}
-                wagerToken={wagerToken}
-                wagerAmount={wagerAmount}
-                numberOfGames={numberOfGamesInfo}
-                timeLimit={timeLimit}
-                timePlayer0={timePlayer0}
-                timePlayer1={timePlayer1}
-                isPlayerTurn={isPlayerTurn}
-                isPlayer0White={isPlayer0White}
-              />
-
-              <div style={{ marginTop: '10px' }}></div>
-
+              {' '}
               <Box p={3} border="0.5px solid white">
                 <Flex
                   direction={{ base: 'column', md: 'row' }}
@@ -730,6 +717,18 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
                   <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
                 </Flex>
               </Box>
+              <div style={{ marginTop: '10px' }}></div>
+              <GameInfo
+                wager={wager}
+                wagerToken={wagerToken}
+                wagerAmount={wagerAmount}
+                numberOfGames={numberOfGamesInfo}
+                timeLimit={timeLimit}
+                timePlayer0={timePlayer0}
+                timePlayer1={timePlayer1}
+                isPlayerTurn={isPlayerTurn}
+                isPlayer0White={isPlayer0White}
+              />
             </>
           )}
         </>
