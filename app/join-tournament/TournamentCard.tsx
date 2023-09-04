@@ -320,7 +320,10 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
           <AccordionButton>
             <Flex justify="space-between" alignItems="center" w="full">
               <HStack spacing="1.5rem">
-                <Identicon account={card.players[0]} />
+                <Identicon
+                  account={card.players[0]}
+                  account2={card.tournamentNonce.toString()}
+                />
                 <Text fontSize="md">{`Tournament # ${card.tournamentNonce}`}</Text>
               </HStack>
               <HStack spacing="1.5rem">

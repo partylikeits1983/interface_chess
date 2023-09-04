@@ -10,13 +10,21 @@ const StyledIdenticon = styled.div`
   }
 `;
 
-export default function Identicon({ account }: { account: string }) {
+interface IdenticonProps {
+  account: string;
+  account2?: string;
+}
+
+export default function Identicon({ account, account2 = '' }: IdenticonProps) {
   const ref: RefObject<HTMLDivElement> = useRef(null);
 
   useEffect(() => {
     if (account && ref.current) {
       ref.current.innerHTML = '';
-      const identicon = Jazzicon(16, parseInt(account.slice(2, 10), 16));
+      const identicon = Jazzicon(
+        16,
+        parseInt(account.slice(2, 10) + account2, 16),
+      );
       identicon.style.transform = 'scale(2)'; // Adjust the scale factor to resize the Identicon
       ref.current.appendChild(identicon);
     }
