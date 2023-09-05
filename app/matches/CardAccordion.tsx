@@ -14,10 +14,15 @@ import {
   Box,
   HStack,
   useBreakpointValue,
+  getToken,
 } from '@chakra-ui/react';
-import Identicon from 'ui/IdenticonGames';
-import { CopyIcon } from '@chakra-ui/icons';
 
+import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
+import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+
+import Identicon from 'ui/IdenticonGames';
+
+import { CopyIcon } from '@chakra-ui/icons';
 import copyIconFeedback from 'ui/copyIconFeedback';
 
 import SidePanel from './sidePanel';
@@ -34,6 +39,8 @@ interface CardAccordionProps {
 }
 
 const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
+  const [globalState, setGlobalState] = useStateManager();
+
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -91,6 +98,8 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
 
     return sign + coefficients[0] + zeros;
   }
+
+  const tokenDetails = getTokenDetails(globalState.chainID, card.wagerToken);
 
   return (
     <Accordion allowToggle>
@@ -165,12 +174,32 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                   />
                 </Flex>
               </Stack>
+
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
                   Wager Token
                 </Text>
                 <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.wagerToken)}</Text>
+                  {tokenDetails ? (
+                    <>
+                      <img
+                        src={tokenDetails.image}
+                        alt="token icon"
+                        style={{
+                          marginLeft: '8px',
+                          height: '24px',
+                          width: '24px',
+                        }}
+                      />
+                      <Text fontSize="md">{tokenDetails.label}</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text fontSize="md">
+                        {formatAddress(card.wagerToken)}
+                      </Text>
+                    </>
+                  )}
                   <CopyIcon
                     ml={2}
                     cursor="pointer"
@@ -178,6 +207,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                   />
                 </Flex>
               </Stack>
+
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
                   Wager Amount
