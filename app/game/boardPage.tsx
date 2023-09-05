@@ -88,6 +88,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
+  const [hasGameInitialized, setHasGameInitialized] = useState(false);
+
   const [isLoading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -161,6 +163,29 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       getLastMoveSourceSquare(tempGame, newMoveNumber);
     }
   };
+
+  useEffect(() => {
+    // This will only run once hasGameInitialized is set to true
+    const handleKeyDown = (event: KeyboardEvent) => {
+      console.log('Key pressed:', event.key);
+      switch (event.key) {
+        case 'ArrowLeft':
+          handleBackMove();
+          break;
+        case 'ArrowRight':
+          handleForwardMove();
+          break;
+        default:
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [hasGameInitialized, moveNumber]);
 
   async function getLastMoveSourceSquare(
     gameInstance: Chess,
@@ -272,11 +297,15 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setIsPlayer0White(isPlayer0White);
 
         setLoading(false);
+        setHasGameInitialized(true);
       } else {
         setLoading(false);
+        setHasGameInitialized(true);
       }
     };
+
     asyncSetWagerAddress();
+    setHasGameInitialized(true);
   }, [wager]);
 
   // Initialize board
