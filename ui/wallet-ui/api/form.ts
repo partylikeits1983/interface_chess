@@ -706,6 +706,44 @@ export const GetTimeRemaining = async (wagerAddress: string) => {
   }
 };
 
+export const IsWagerGameTimeEnded = async (wagerAddress: string) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  try {
+    const timeRemaining = await chess.checkTimeRemaining(wagerAddress);
+
+    let isWagerTimeEnded = false;
+    if (Number(timeRemaining[0]) || Number(timeRemaining[1]) < 0) {
+      // alert("END TIME");
+      isWagerTimeEnded = true;
+    }
+
+    return isWagerTimeEnded;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const UpdateWagerStateTime = async (wagerAddress: string) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+
+  try {
+    await chess.updateWagerStateTime(wagerAddress);
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
 export const AcceptWagerConditions = async (wagerAddress: string) => {
   await updateContractAddresses();
 

@@ -18,6 +18,8 @@ const {
   CancelWager,
   AcceptWagerAndApprove,
   AcceptWagerConditions,
+  IsWagerGameTimeEnded,
+  UpdateWagerStateTime,
 } = require('ui/wallet-ui/api/form');
 
 interface CardSidePanelProps {
@@ -37,30 +39,17 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const [isLoadingGoToMatch, setLoadingGoToMatch] = useState(false);
 
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
-
   const [isLoadingCancelWager, setLoadingCancelWager] = useState(false);
   const [isLoadingPayoutWager, setLoadingPayoutWager] = useState(false);
+  const [isLoadingUpdateTime, setIsLoadingUpdateTime] = useState(false);
+
+  const [isTimeEnded, setIsTimeEnded] = useState(false);
 
   const router = useRouter();
 
   const handleGoToMatch = (matchAddress: string) => {
     setLoadingGoToMatch(true);
     router.push(`/game/${matchAddress}`);
-  };
-
-  const handleClickApproveWager = async (
-    wagerAddress: string,
-    wagerToken: string,
-  ) => {
-    setIsLoadingApproval(true);
-    console.log(wagerToken);
-
-    await AcceptWagerAndApprove(wagerAddress);
-    await AcceptWagerConditions(wagerAddress);
-
-    alertSuccessFeedback('Wager Accepted!');
-
-    setIsLoadingApproval(false);
   };
 
   useEffect(() => {
@@ -89,6 +78,9 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
         const isPlayerWhite = await IsPlayerWhite(card.matchAddress);
         setPlayerColor(isPlayerWhite);
 
+        const isTimeEnded = await IsWagerGameTimeEnded(card.matchAddress);
+        setIsTimeEnded(isTimeEnded);
+
         setIsChessboardLoading(false);
       } else {
         setIsChessboardLoading(false);
@@ -96,6 +88,33 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     };
     getGameMoves();
   }, [card]);
+
+  const handleSubmitPayoutWager = async () => {
+    try {
+      setLoadingPayoutWager(true);
+      console.log('handle payout wager');
+      console.log(matchAddress);
+      await PayoutWager(matchAddress);
+      setLoadingPayoutWager(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClickApproveWager = async (
+    wagerAddress: string,
+    wagerToken: string,
+  ) => {
+    setIsLoadingApproval(true);
+    console.log(wagerToken);
+
+    await AcceptWagerAndApprove(wagerAddress);
+    await AcceptWagerConditions(wagerAddress);
+
+    alertSuccessFeedback('Wager Accepted!');
+
+    setIsLoadingApproval(false);
+  };
 
   const handleSubmitCancelWager = async () => {
     try {
@@ -110,16 +129,15 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     }
   };
 
-  const handleSubmitPayoutWager = async () => {
-    try {
-      setLoadingPayoutWager(true);
-      console.log('handle payout wager');
-      console.log(matchAddress);
-      await PayoutWager(matchAddress);
-      setLoadingPayoutWager(false);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleClickUpdateTimeWager = async (wagerAddress: string) => {
+    setIsLoadingUpdateTime(true);
+    console.log(wagerToken);
+
+    await UpdateWagerStateTime(wagerAddress);
+
+    // alertSuccessFeedback('Wager State Updated!');
+
+    setIsLoadingUpdateTime(false);
   };
 
   return (
@@ -216,7 +234,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
               }}
             >
               Go to Match
-              {isLoadingCancelWager && (
+              {isLoadingGoToMatch && (
                 <div
                   style={{
                     position: 'absolute',
@@ -330,6 +348,53 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
             </Button>
           </>
         )}
+
+        {IsWagerGameTimeEnded ? (
+          <>
+            <Button
+              style={{ width: '250px', position: 'relative' }}
+              variant="outline"
+              color="#fffff" // Set the desired text color
+              _hover={{
+                color: '#000000', // Set the text color on hover
+                backgroundColor: '#62ffa2', // Set the background color on hover
+              }}
+              loadingText="Submitting Transaction"
+              onClick={() => handleClickUpdateTimeWager(card.matchAddress)}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                Claim Win On Time
+                {isLoadingUpdateTime && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      top: '50%',
+                      left: 'calc(100% + 8px)',
+                      transform: 'translateY(-50%)',
+                    }}
+                  >
+                    <Spinner
+                      thickness="2px"
+                      speed="0.85s"
+                      emptyColor="gray.800"
+                      color="gray.400"
+                      size="md"
+                    />
+                  </div>
+                )}
+              </div>
+            </Button>
+          </>
+        ) : null}
       </Stack>
       {isPendingApproval && (
         <Box
