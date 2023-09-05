@@ -1,37 +1,71 @@
 import React, { FC } from 'react';
 import { Button } from '@chakra-ui/react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from '@chakra-ui/icons';
 
 interface ForwardBackButtonsProps {
-  onBack: () => void;
-  onForward: () => void;
+  onBackMove: () => void;
+  onForwardMove: () => void;
+  onBackGame: () => void;
+  onForwardGame: () => void;
 }
 
 const ForwardBackButtons: FC<ForwardBackButtonsProps> = ({
-  onBack,
-  onForward,
+  onBackMove,
+  onForwardMove,
+  onBackGame,
+  onForwardGame,
 }) => {
   return (
     <div>
+      {/* Buttons for toggling through games */}
       <Button
-        leftIcon={<ChevronLeftIcon />}
-        onClick={onBack}
+        leftIcon={<ArrowLeftIcon />}
+        onClick={onBackGame}
         backgroundColor="#1A202C"
         size="sm"
         mr={2}
         _hover={{
-          color: '#000000', // Set the text color on hover
-          backgroundColor: '#2D3748', // Set the background color on hover
+          color: '#000000',
+          backgroundColor: '#2D3748',
+        }}
+      />
+      <Button
+        rightIcon={<ArrowRightIcon />}
+        onClick={onForwardGame}
+        backgroundColor="#1A202C"
+        size="sm"
+        mr={2}
+        _hover={{
+          color: '#000000',
+          backgroundColor: '#2D3748',
+        }}
+      />
+
+      {/* Buttons for toggling through moves */}
+      <Button
+        leftIcon={<ChevronLeftIcon />}
+        onClick={onBackMove}
+        backgroundColor="#1A202C"
+        size="sm"
+        mr={2}
+        _hover={{
+          color: '#000000',
+          backgroundColor: '#2D3748',
         }}
       />
       <Button
         rightIcon={<ChevronRightIcon />}
-        onClick={onForward}
+        onClick={onForwardMove}
         backgroundColor="#1A202C"
         size="sm"
         _hover={{
-          color: '#000000', // Set the text color on hover
-          backgroundColor: '#2D3748', // Set the background color on hover
+          color: '#000000',
+          backgroundColor: '#2D3748',
         }}
       />
     </div>

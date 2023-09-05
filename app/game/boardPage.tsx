@@ -69,6 +69,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
   );
   const [moves, setMoves] = useState<string[]>([]);
+  const [moveNumber, setMoveNumber] = useState(0);
 
   const [wagerAddress, setWagerAddress] = useState('');
   const [isPlayerWhite, setPlayerColor] = useState('white');
@@ -111,7 +112,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     setWagerAddress(event.target.value);
   }
 
-  const handleBack = () => {
+  const handleBackGame = () => {
     setGameID((prevGameID) => {
       const newGameID = prevGameID > 0 ? prevGameID - 1 : prevGameID;
       const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
@@ -120,11 +121,8 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     });
   };
 
-  const handleForward = () => {
-    console.log('forwards');
-
-    opponentMoveNotification('Your Turn to Move');
-
+  const handleForwardGame = () => {
+    // opponentMoveNotification('Your Turn to Move');
     setGameID((prevGameID) => {
       const newGameID =
         prevGameID < numberOfGames - 1 ? prevGameID + 1 : prevGameID;
@@ -132,6 +130,44 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       setNumberOfGamesInfo(gameNumberInfo);
       return newGameID;
     });
+  };
+
+  const handleBackMove = () => {
+    const moves = game.history();
+    const tempGame = new Chess();
+
+    if (moveNumber > 0) {
+      // Decrement the move number
+      const newMoveNumber = moveNumber - 1;
+      setMoveNumber(newMoveNumber);
+
+      // Replay moves on the temporary game object
+      for (let i = 0; i <= newMoveNumber; i++) {
+        tempGame.move(moves[i]);
+      }
+
+      // Update the FEN without modifying the original game state
+      setGameFEN(tempGame.fen());
+    }
+  };
+
+  const handleForwardMove = () => {
+    const moves = game.history();
+    const tempGame = new Chess();
+
+    if (moveNumber < moves.length - 1) {
+      // Increment the move number
+      const newMoveNumber = moveNumber + 1;
+      setMoveNumber(newMoveNumber);
+
+      // Replay moves on the temporary game object
+      for (let i = 0; i <= newMoveNumber; i++) {
+        tempGame.move(moves[i]);
+      }
+
+      // Update the FEN without modifying the original game state
+      setGameFEN(tempGame.fen());
+    }
   };
 
   function numberToString(num: number): string {
@@ -146,7 +182,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
           gameNumberData[1]
         }`;
-
         setGameID(Number(gameNumberData[0]));
         setNumberOfGames(Number(gameNumberData[1]));
         setNumberOfGamesInfo(gameNumber);
@@ -166,6 +201,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setPlayerTurnSC(_isPlayerTurn);
 
         const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
+
         setGameID(Number(gameNumberData[0]));
 
         const movesArray = await GetGameMoves(wager, gameNumberData[0]);
@@ -226,6 +262,11 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           game.move(movesArray[i]);
         }
         setGame(game);
+
+        console.log('Moves Array length', movesArray.length);
+        setMoveNumber(Number(movesArray.length));
+        console.log('MOVE NUMBRE', moveNumber);
+
         setGameFEN(game.fen());
         setLocalGame(game);
         getLastMoveSourceSquare();
@@ -365,10 +406,12 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     try {
       result = gameCopy.move(move);
       setGame(gameCopy);
+
       let MoveString = move.from + move.to;
       setMoves([...moves, MoveString]);
       setGameFEN(gameCopy.fen());
       setLocalGame(gameCopy);
+      setMoveNumber(game.moves().length);
 
       if (result && result.captured) {
         wasCaptured = true;
@@ -554,6 +597,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         opponentMoveNotification('Your Turn to Move');
 
         setGame(currentGame);
+        setMoveNumber(currentGame.moves().length);
         setGameFEN(currentGame.fen());
         setPlayerTurn(_isPlayerTurnSC);
         setPlayerTurnSC(_isPlayerTurnSC);
@@ -648,8 +692,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
               {' '}
               {/* Change top to "0" again */}
               <ForwardBackButtons
-                onBack={handleBack}
-                onForward={handleForward}
+                onBackMove={handleBackMove}
+                onForwardMove={handleForwardMove}
+                onBackGame={handleBackGame}
+                onForwardGame={handleForwardGame}
               />
             </Box>
           </Box>
