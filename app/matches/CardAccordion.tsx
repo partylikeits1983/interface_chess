@@ -121,8 +121,8 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                       ? 'Your turn 🟢'
                       : 'Waiting for opponent to move 🔴'
                     : Number(card.player1Address) === Number(account)
-                    ? 'Pending Your Approval'
-                    : 'Waiting for opponent to accept wager'}
+                    ? 'Pending Your Approval 🔵'
+                    : 'Waiting for opponent to accept wager 🔵'}
                 </Text>
                 <AccordionIcon />
               </HStack>

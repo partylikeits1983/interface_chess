@@ -854,7 +854,7 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
     // alert(`Error fetching wager data: ${error}`);
     console.log(error);
 
-    alertWarningFeedback('Wager address not found');
+    // alertWarningFeedback('Wager address not found');
 
     const card = {} as Card;
     return card;
@@ -945,7 +945,7 @@ export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
       console.log(`isPlayerWhite invalid address ${wagerAddress}`);
       console.log(error);
 
-      alertWarningFeedback('Wager address not found');
+      // alertWarningFeedback('Wager address not found');
       return false;
     }
   } else {
