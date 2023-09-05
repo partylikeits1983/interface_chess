@@ -133,8 +133,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   };
 
   const handleBackMove = () => {
-    console.log('MOVE NUMBER', moveNumber);
-
     const moves = game.history();
     const tempGame = new Chess();
 
@@ -150,8 +148,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   };
 
   const handleForwardMove = () => {
-    console.log('MOVE NUMBER', moveNumber);
-
     const moves = game.history();
     const tempGame = new Chess();
 
@@ -299,11 +295,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           newGame.move(movesArray[i]);
         }
         setGame(newGame);
-
-        console.log('Moves Array length', movesArray.length);
         setMoveNumber(Number(movesArray.length) - 1);
-        console.log('MOVE NUMBRE', moveNumber);
-
         setGameFEN(newGame.fen());
         setLocalGame(newGame);
         getLastMoveSourceSquare(newGame, movesArray.length - 1);

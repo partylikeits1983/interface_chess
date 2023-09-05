@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button } from '@chakra-ui/react';
+import { Button, Tooltip } from '@chakra-ui/react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -23,51 +23,62 @@ const ForwardBackButtons: FC<ForwardBackButtonsProps> = ({
   return (
     <div>
       {/* Buttons for toggling through games */}
-      <Button
-        leftIcon={<ArrowLeftIcon />}
-        onClick={onBackGame}
-        backgroundColor="#1A202C"
-        size="sm"
-        mr={2}
-        _hover={{
-          color: '#000000',
-          backgroundColor: '#2D3748',
-        }}
-      />
-      <Button
-        rightIcon={<ArrowRightIcon />}
-        onClick={onForwardGame}
-        backgroundColor="#1A202C"
-        size="sm"
-        mr={2}
-        _hover={{
-          color: '#000000',
-          backgroundColor: '#2D3748',
-        }}
-      />
 
       {/* Buttons for toggling through moves */}
-      <Button
-        leftIcon={<ChevronLeftIcon />}
-        onClick={onBackMove}
-        backgroundColor="#1A202C"
-        size="sm"
-        mr={2}
-        _hover={{
-          color: '#000000',
-          backgroundColor: '#2D3748',
-        }}
-      />
-      <Button
-        rightIcon={<ChevronRightIcon />}
-        onClick={onForwardMove}
-        backgroundColor="#1A202C"
-        size="sm"
-        _hover={{
-          color: '#000000',
-          backgroundColor: '#2D3748',
-        }}
-      />
+      <Tooltip label="Back game" aria-label="A tooltip">
+        <Button
+          leftIcon={<ArrowLeftIcon />}
+          onClick={onBackGame}
+          backgroundColor="#1A202C"
+          size="sm"
+          mr={2}
+          _hover={{
+            color: '#000000',
+            backgroundColor: '#2D3748',
+          }}
+        />
+      </Tooltip>
+
+      <Tooltip label="Back move" aria-label="A tooltip">
+        <Button
+          leftIcon={<ChevronLeftIcon />}
+          onClick={onBackMove}
+          backgroundColor="#1A202C"
+          size="sm"
+          mr={2}
+          _hover={{
+            color: '#000000',
+            backgroundColor: '#2D3748',
+          }}
+        />
+      </Tooltip>
+
+      <Tooltip label="Forward move" aria-label="A tooltip">
+        <Button
+          rightIcon={<ChevronRightIcon />}
+          onClick={onForwardMove}
+          backgroundColor="#1A202C"
+          size="sm"
+          mr={2}
+          _hover={{
+            color: '#000000',
+            backgroundColor: '#2D3748',
+          }}
+        />
+      </Tooltip>
+
+      <Tooltip label="Forward game" aria-label="A tooltip">
+        <Button
+          rightIcon={<ArrowRightIcon />}
+          onClick={onForwardGame}
+          backgroundColor="#1A202C"
+          size="sm"
+          _hover={{
+            color: '#000000',
+            backgroundColor: '#2D3748',
+          }}
+        />
+      </Tooltip>
     </div>
   );
 };
