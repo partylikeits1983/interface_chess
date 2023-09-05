@@ -717,7 +717,6 @@ export const IsWagerGameTimeEnded = async (wagerAddress: string) => {
 
     let isWagerTimeEnded = false;
     if (Number(timeRemaining[0]) || Number(timeRemaining[1]) < 0) {
-      // alert("END TIME");
       isWagerTimeEnded = true;
     }
 
@@ -737,6 +736,8 @@ export const UpdateWagerStateTime = async (wagerAddress: string) => {
   try {
     await chess.updateWagerStateTime(wagerAddress);
 
+    alertSuccessFeedback('Update wager state time success!');
+
     return true;
   } catch (error) {
     console.log(error);
@@ -753,11 +754,10 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('Accept wager conditions');
-    console.log(wagerAddress);
-
     const tx = await chess.acceptWager(wagerAddress);
     await tx.wait();
+
+    alertSuccessFeedback('Wager Conditions Accepted!');
 
     return true;
   } catch (error) {
@@ -1502,6 +1502,7 @@ export const PayoutTournament = async (tounamentId: number) => {
 
   try {
     await tournament.payoutTournament(tounamentId);
+    alertSuccessFeedback('Tournament Payout Successful!');
     return true;
   } catch (error) {
     return false;
