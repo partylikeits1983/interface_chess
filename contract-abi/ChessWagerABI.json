@@ -523,6 +523,11 @@
         "internalType": "bool",
         "name": "isTournament",
         "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "isComplete",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",

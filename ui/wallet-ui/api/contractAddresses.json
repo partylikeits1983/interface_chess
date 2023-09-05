@@ -2,26 +2,28 @@
   {
     "network": "maticmum",
     "chainID": 80001,
-    "deployer": "0x7D8EC310168dda96C1d310eaC00C9139002cA598",
-    "chessFishToken": "0x0e805fdbA0e60713eE429C6135884da976d47375",
-    "dividendSplitter": "0xAF83C6A6c5d838F8688C31bF9a68b1E535966a7b",
-    "chessNFT": "0x7A4E2A7b9C9eCd0A3554Fe6e3f596E53e34121ba",
-    "moveVerification": "0x6223350b1b974F2B0B63188779b7277D1171D1Fa",
-    "chessWager": "0x33Bb6Ddb7c232dFBe3FA46E7d8703e2476176447",
-    "crowdSale": "0x4A4391bBD427a6A9023566ee4d93129465f10D97",
-    "tournament": "0xB17F48a57d4eA690d5F204670F6296e6F61428aA"
+    "deployer": "0x46F18dc8C616CB0829BC0579E092e2429faF7fea",
+    "chessFishToken": "0x481A05D1Da50f8f5Eb2624d7283a38A1FFa8aacc",
+    "dividendSplitter": "0x172372c71a3F83f4D6da2AFed03e7df9d8163691",
+    "chessNFT": "0xDccFFB007afa1c5316BFa3b62705179624F8BB50",
+    "moveVerification": "0x23326209062A2a0692e82050001318164df8EBC5",
+    "chessWager": "0x55e47f9b92eBABE552cB84C98a1fFf99c5A1CE5A",
+    "crowdSale": "0x1D5dd72440189e3a8A52041cf246BC7b1FAe516C",
+    "tournament": "0xd0642ada19802c91AC72510c9dcd88A70AFe75f2",
+    "treasuryVesting": "0x4E1F3843FDEDc2f2D4c09BD44a475C3CAE588688"
   },
   {
     "network": "unknown",
     "chainID": 31337,
-    "deployer": "0x90B0755f749719FF5dF4E4F364bF6fda1799C88f",
-    "chessFishToken": "0x7734B6c30f20d9d006faA5EC2F0512542f8f2117",
-    "dividendSplitter": "0x60aF7188a1f493e3bdFdB99b8EeCdF1ADCC2325c",
-    "chessNFT": "0x67EB497cf450283dbE17D8bfCEc2Bdf7C3125f1D",
-    "moveVerification": "0x8cEf3848cD79328482884EF447CBc25D87B6FeB6",
-    "chessWager": "0x56369f7ab5163e4b75683B8ECa9Bd048ccae97c1",
-    "crowdSale": "0x809677ABCa6835F8Bd157Ea9df0958A751cF9f56",
-    "tournament": "0x4D5187bEE395c81ca426201Fb900BC055F15eD4D"
+    "deployer": "0x46F18dc8C616CB0829BC0579E092e2429faF7fea",
+    "chessFishToken": "0x481A05D1Da50f8f5Eb2624d7283a38A1FFa8aacc",
+    "dividendSplitter": "0x172372c71a3F83f4D6da2AFed03e7df9d8163691",
+    "chessNFT": "0xDccFFB007afa1c5316BFa3b62705179624F8BB50",
+    "moveVerification": "0x23326209062A2a0692e82050001318164df8EBC5",
+    "chessWager": "0x55e47f9b92eBABE552cB84C98a1fFf99c5A1CE5A",
+    "crowdSale": "0x1D5dd72440189e3a8A52041cf246BC7b1FAe516C",
+    "tournament": "0xd0642ada19802c91AC72510c9dcd88A70AFe75f2",
+    "treasuryVesting": "0x4E1F3843FDEDc2f2D4c09BD44a475C3CAE588688"
   },
   {
     "network": "unknown",
@@ -34,5 +36,13 @@
     "chessWager": "0x2F6963772a108eb6984bdF7B648455187eA07Ef5",
     "crowdSale": "0x5C02C335f038F57fcD5DdC28de7c1F4f144658F2",
     "tournament": "0x9aD815bc1d5269D4378bCF2b2101b14D4874cE09"
+  },
+  {
+    "network": "goerli",
+    "chainID": 5,
+    "owner": "0x46F18dc8C616CB0829BC0579E092e2429faF7fea",
+    "chessFishToken": "0x1D5dd72440189e3a8A52041cf246BC7b1FAe516C",
+    "crowdSale": "0x4E1F3843FDEDc2f2D4c09BD44a475C3CAE588688",
+    "treasuryVesting": "0x172372c71a3F83f4D6da2AFed03e7df9d8163691"
   }
 ]
