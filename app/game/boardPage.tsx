@@ -133,42 +133,79 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   };
 
   const handleBackMove = () => {
+    console.log('MOVE NUMBER', moveNumber);
+
     const moves = game.history();
     const tempGame = new Chess();
 
     if (moveNumber > 0) {
-      // Decrement the move number
       const newMoveNumber = moveNumber - 1;
       setMoveNumber(newMoveNumber);
-
-      // Replay moves on the temporary game object
       for (let i = 0; i <= newMoveNumber; i++) {
         tempGame.move(moves[i]);
       }
-
-      // Update the FEN without modifying the original game state
       setGameFEN(tempGame.fen());
+      getLastMoveSourceSquare(tempGame, newMoveNumber);
     }
   };
 
   const handleForwardMove = () => {
+    console.log('MOVE NUMBER', moveNumber);
+
     const moves = game.history();
     const tempGame = new Chess();
 
     if (moveNumber < moves.length - 1) {
-      // Increment the move number
       const newMoveNumber = moveNumber + 1;
       setMoveNumber(newMoveNumber);
-
-      // Replay moves on the temporary game object
       for (let i = 0; i <= newMoveNumber; i++) {
         tempGame.move(moves[i]);
       }
-
-      // Update the FEN without modifying the original game state
       setGameFEN(tempGame.fen());
+      getLastMoveSourceSquare(tempGame, newMoveNumber);
     }
   };
+
+  async function getLastMoveSourceSquare(
+    gameInstance: Chess,
+    moveNumber: number,
+  ) {
+    // Obtain all past moves from the passed gameInstance
+    const moves = gameInstance.history({ verbose: true });
+
+    // If there are no moves, return false.
+    if (moves.length === 0) {
+      return false;
+    }
+
+    // Get the last move from the moves array
+    const lastMove = moves[moveNumber];
+
+    // If there's no last move (e.g., moveNumber exceeds the move history), return false.
+    if (!lastMove) {
+      return false;
+    }
+
+    // The 'from' property indicates the source square of the move
+    const fromSquare = lastMove.from;
+    const toSquare = lastMove.to;
+
+    const highlightSquares: any = {};
+
+    // Highlight the source square with a light green
+    highlightSquares[fromSquare] = {
+      background: 'rgba(144, 238, 144, 0.4)', // light green
+    };
+
+    // Highlight the destination square with a slightly darker green
+    highlightSquares[toSquare] = {
+      background: 'rgba(0, 128, 0, 0.4)', // darker green
+    };
+
+    setMoveSquares(highlightSquares);
+
+    return { from: fromSquare, to: toSquare };
+  }
 
   function numberToString(num: number): string {
     return num.toLocaleString('fullwide', { useGrouping: false });
@@ -205,13 +242,13 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setGameID(Number(gameNumberData[0]));
 
         const movesArray = await GetGameMoves(wager, gameNumberData[0]);
-        const game = new Chess();
+        const newGame = new Chess();
         for (let i = 0; i < movesArray.length; i++) {
-          game.move(movesArray[i]);
+          newGame.move(movesArray[i]);
         }
-        setGame(game);
-        setGameFEN(game.fen());
-        setLocalGame(game);
+        setGame(newGame);
+        setGameFEN(newGame.fen());
+        setLocalGame(newGame);
 
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
@@ -257,19 +294,19 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setPlayerTurnSC(_isPlayerTurn);
 
         const movesArray = await GetGameMoves(wager, gameID);
-        const game = new Chess();
+        const newGame = new Chess();
         for (let i = 0; i < movesArray.length; i++) {
-          game.move(movesArray[i]);
+          newGame.move(movesArray[i]);
         }
-        setGame(game);
+        setGame(newGame);
 
         console.log('Moves Array length', movesArray.length);
-        setMoveNumber(Number(movesArray.length));
+        setMoveNumber(Number(movesArray.length) - 1);
         console.log('MOVE NUMBRE', moveNumber);
 
-        setGameFEN(game.fen());
-        setLocalGame(game);
-        getLastMoveSourceSquare();
+        setGameFEN(newGame.fen());
+        setLocalGame(newGame);
+        getLastMoveSourceSquare(newGame, movesArray.length - 1);
 
         const isPlayerWhite = await IsPlayerWhite(wager);
         setPlayerColor(isPlayerWhite);
@@ -524,46 +561,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     return true;
   }
 
-  async function getLastMoveSourceSquare() {
-    const movesArray = await GetGameMoves(wager, gameID);
-    const game = new Chess();
-
-    for (let i = 0; i < movesArray.length; i++) {
-      game.move(movesArray[i]);
-    }
-
-    // Obtain all past moves
-    const moves = game.history({ verbose: true });
-
-    // If there are no moves, return false.
-    if (moves.length === 0) {
-      return false;
-    }
-
-    // Get the last move from the moves array
-    const lastMove = moves[moves.length - 1];
-
-    // The 'from' property indicates the source square of the move
-    const fromSquare = lastMove.from;
-    const toSquare = lastMove.to;
-
-    const highlightSquares: any = {};
-
-    // Highlight the source square with a light green
-    highlightSquares[fromSquare] = {
-      background: 'rgba(144, 238, 144, 0.4)', // light green
-    };
-
-    // Highlight the destination square with a slightly darker green
-    highlightSquares[toSquare] = {
-      background: 'rgba(0, 128, 0, 0.4)', // darker green
-    };
-
-    setOptionSquares(highlightSquares);
-
-    return { from: fromSquare, to: toSquare };
-  }
-
   // update time
   useEffect(() => {
     // define timer here
@@ -602,7 +599,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         setPlayerTurn(_isPlayerTurnSC);
         setPlayerTurnSC(_isPlayerTurnSC);
 
-        getLastMoveSourceSquare();
+        getLastMoveSourceSquare(currentGame, currentGame.moves().length);
 
         // for timer func
         setIsPlayer0Turn(!isPlayer0Turn);
