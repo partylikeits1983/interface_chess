@@ -70,7 +70,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
         const game = new Chess();
 
         for (let i = 0; i < movesArray.length; i++) {
-          console.log(movesArray[i]);
           game.move(movesArray[i]);
         }
         setGame(game);
@@ -92,7 +91,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const handleSubmitPayoutWager = async () => {
     try {
       setLoadingPayoutWager(true);
-      console.log('handle payout wager');
       console.log(matchAddress);
       await PayoutWager(matchAddress);
       setLoadingPayoutWager(false);
@@ -106,7 +104,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     wagerToken: string,
   ) => {
     setIsLoadingApproval(true);
-    console.log(wagerToken);
 
     await AcceptWagerAndApprove(wagerAddress);
     await AcceptWagerConditions(wagerAddress);
@@ -119,8 +116,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const handleSubmitCancelWager = async () => {
     try {
       setLoadingCancelWager(true);
-      console.log('handle cancel wager');
-      console.log(matchAddress);
       await CancelWager(matchAddress);
 
       setLoadingCancelWager(false);

@@ -54,8 +54,6 @@ const AutocompletePlayer: React.FC<AutocompleteProps> = ({
   };
 
   const handleOptionClick = (option: Option) => {
-    console.log(option);
-
     setInputValue(option.label);
     setSelectedOption(option);
     setShowOptions(false);

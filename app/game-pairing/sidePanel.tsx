@@ -47,9 +47,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
       if (card.matchAddress != '') {
         setIsChessboardLoading(true);
 
-        console.log(card.matchAddress);
-        console.log(card.player0Address);
-
         const movesArray = await GetGameMoves(card.matchAddress);
         const game = new Chess();
 
@@ -80,8 +77,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
     try {
       // adding await fails to build
       // using useEffect makes everything glitchy
-      console.log('handle cancel wager');
-      console.log(matchAddress);
       CancelWager(matchAddress);
     } catch (error) {
       console.log(error);

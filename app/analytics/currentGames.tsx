@@ -126,7 +126,6 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
 
   const router = useRouter();
   const handleBoardClick = (address: string) => {
-    console.log(address);
     router.push(`/game/${address}`);
   };
 

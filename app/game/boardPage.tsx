@@ -509,7 +509,6 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
     if (!moveExists(potentialMoves, moveFrom, square)) {
       console.log("move doesn't exist");
-      console.log(potentialMoves);
 
       return;
     }

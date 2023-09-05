@@ -203,9 +203,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     const targetDate = new Date(startTime * 1000 + 86400 * 1000);
     const difference = targetDate.getTime() - now.getTime();
 
-    console.log(startTime);
-    console.log(targetDate);
-
     if (difference <= 0) {
       return 'Tournament can begin';
     }

@@ -1,7 +1,7 @@
 'use client';
 
 import { GetAnalyticsData } from 'ui/wallet-ui/api/form';
-import { GetWagersDB } from 'ui/wallet-ui/api/db-api';
+import { GetAnalyticsDB, GetWagersDB } from 'ui/wallet-ui/api/db-api';
 
 import {
   ChakraProvider,
@@ -50,10 +50,11 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           // trying to ping the GCP API
           const chainId = globalState.chainID;
           const wagerAddresses = await GetWagersDB(chainId);
+          const data = await GetAnalyticsDB(chainId);
 
           setWagerAddresses(wagerAddresses.reverse());
-          setTotalGames(wagerAddresses.length.toString());
-          setTotalWagers(wagerAddresses.length.toString());
+          setTotalGames(data[0].toString());
+          setTotalWagers(data[1].toString());
 
           setLoading(false);
         } catch (error) {
@@ -105,7 +106,13 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         </Stat>
       </StatGroup>
 
-      <Box overflowX="auto" maxWidth="100%">
+      <Box
+        overflowX="auto"
+        overflowY={wagerAddresses.length > 10 ? 'scroll' : 'visible'}
+        maxHeight={wagerAddresses.length > 10 ? '400px' : 'auto'} // adjust this value to your desired maximum height
+        maxWidth="100%"
+      >
+        {' '}
         <Table variant="simple" mt={4} size="sm">
           <thead>
             <Tr>

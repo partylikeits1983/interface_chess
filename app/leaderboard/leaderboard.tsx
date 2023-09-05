@@ -67,7 +67,6 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
             );
             setSortedData(sortedArray);
           }
-          console.log('HERE4');
         } catch (error) {
           alertWarningFeedback('ChessFish API returned 404, use metamask');
           console.log(error);

@@ -110,7 +110,6 @@ export default function ChallengeForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log(formInputs);
   };
 
   const handleSliderChange = (value: number) => {
@@ -118,7 +117,6 @@ export default function ChallengeForm() {
       ...prevInputs,
       timeLimit: value,
     }));
-    console.log(formInputs);
   };
 
   const convertSecondsToTime = (seconds: number): string => {

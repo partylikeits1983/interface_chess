@@ -67,7 +67,7 @@ export async function GetAnalyticsDB(chainId: number) {
     const data = await response.json();
 
     if (data.numberOfGames) {
-      return [data.numberOfGames, data.numberOfPlayers];
+      return [data.numberOfGames, data.numberOfWagers];
     } else {
       return [];
     }
