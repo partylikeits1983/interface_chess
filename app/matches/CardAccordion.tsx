@@ -137,54 +137,29 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
               md: 'flex-start',
             })}
           >
-            <Stack
-              spacing={2}
-              width={useBreakpointValue({ base: '100%', md: '50%' })}
+            <div
+              style={{
+                width: '100%',
+                padding: '10px',
+                backgroundColor: '#000',
+                borderRadius: '8px',
+              }}
             >
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Match Address
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.matchAddress)}</Text>
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() => handleCopyAddress(card.matchAddress)}
-                  />
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Opponent Address
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {Number(account) == Number(card.player0Address)
+              {[
+                {
+                  label: 'Match Address',
+                  value: formatAddress(card.matchAddress),
+                },
+                {
+                  label: 'Opponent Address',
+                  value:
+                    Number(account) == Number(card.player0Address)
                       ? formatAddress(card.player1Address)
-                      : formatAddress(card.player0Address)}
-                  </Text>
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() =>
-                      handleCopyAddress(
-                        card.isInProgress
-                          ? card.player1Address
-                          : card.player0Address,
-                      )
-                    }
-                  />
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Wager Token
-                </Text>
-                <Flex alignItems="center">
-                  {tokenDetails ? (
+                      : formatAddress(card.player0Address),
+                },
+                {
+                  label: 'Wager Token',
+                  value: tokenDetails ? (
                     <>
                       <img
                         src={tokenDetails.image}
@@ -198,62 +173,74 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                       <Text fontSize="md">{tokenDetails.label}</Text>
                     </>
                   ) : (
-                    <>
-                      <Text fontSize="md">
-                        {formatAddress(card.wagerToken)}
-                      </Text>
-                    </>
-                  )}
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() => handleCopyAddress(card.wagerToken)}
-                  />
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Wager Amount
-                </Text>
-                <Text fontSize="md">
-                  {ethers.utils.formatUnits(
+                    formatAddress(card.wagerToken)
+                  ),
+                },
+                {
+                  label: 'Wager Amount',
+                  value: ethers.utils.formatUnits(
                     ethers.BigNumber.from(
                       fromScientificNotation(card.wagerAmount.toString()),
                     ),
                     18,
-                  )}
-                </Text>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Wager Time Limit
-                </Text>
-                <Text fontSize="md">
-                  {formatDuration(Number(card.timeLimit))}
-                </Text>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Number of Games
-                </Text>
-                <Text fontSize="md">{card.numberOfGames}</Text>
-              </Stack>
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Status
-                </Text>
-                <Text fontSize="md">
-                  {card.isInProgress
+                  ),
+                },
+                {
+                  label: 'Wager Time Limit',
+                  value: formatDuration(Number(card.timeLimit)),
+                },
+                { label: 'Number of Games', value: card.numberOfGames },
+                {
+                  label: 'Status',
+                  value: card.isInProgress
                     ? card.isPlayerTurn
                       ? 'Your turn'
                       : 'Waiting for opponent to move'
                     : Number(card.player1Address) === Number(account)
                     ? 'Pending Your Approval'
-                    : 'Waiting for opponent to accept wager'}
-                </Text>
-              </Stack>
-            </Stack>
+                    : 'Waiting for opponent to accept wager',
+                },
+              ].map((item) => (
+                <Flex
+                  key={item.label}
+                  alignItems="center"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Flex
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    width="50%"
+                  >
+                    <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                      {item.label}
+                    </Text>
+                  </Flex>
+                  <Flex
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    width="50%"
+                  >
+                    {item.value}
+                    {[
+                      'Match Address',
+                      'Opponent Address',
+                      'Wager Token',
+                    ].includes(item.label) && (
+                      <CopyIcon
+                        ml={2}
+                        cursor="pointer"
+                        onClick={() =>
+                          handleCopyAddress(
+                            typeof item.value === 'string' ? item.value : '',
+                          )
+                        }
+                      />
+                    )}
+                  </Flex>
+                </Flex>
+              ))}
+            </div>
 
             <Box
               width={useBreakpointValue({ base: '100%', md: '50%' })}
