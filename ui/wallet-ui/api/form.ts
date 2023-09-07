@@ -237,7 +237,45 @@ export const getDividendBalances = async () => {
   }
 };
 
-export const Approve = async (tokenAddress: string, amount: number) => {
+export const ApproveChessWagerContract = async (
+  tokenAddress: string,
+  amount: number,
+) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+  try {
+    const decimals = await token.decimals();
+    const amountAdjusted = ethers.utils.parseUnits(amount, decimals);
+
+    const value = await token.approve(ChessAddress, amountAdjusted);
+    const allowance = await token.allowance(accounts[0], ChessAddress);
+
+    const readableAmount = ethers.utils.formatUnits(allowance, decimals);
+
+    alertSuccessFeedback('Success! allowance set: ' + readableAmount);
+
+    return {
+      value: value,
+      success: true,
+      status: '✅ Check out your transaction on Etherscan',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      // @ts-ignore
+      status: '😥 Something went wrong: ' + error.message,
+    };
+  }
+};
+
+export const ApproveTournamnetContract = async (
+  tokenAddress: string,
+  amount: number,
+) => {
   await updateContractAddresses();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -367,13 +405,15 @@ export const CreateWager = async (form: CreateMatchType) => {
     signer,
   );
   const decimals = await token.decimals();
-
   try {
     const player1 = form.player1.toString();
     const wagerToken = form.wagerToken.toString();
     let wager = ethers.utils.parseUnits(form.wagerAmount.toString(), decimals);
     let maxTimePerMove = Number(form.timePerMove);
     let numberOfGames = Number(form.numberOfGames);
+
+    console.log(await token.balanceOf(accounts[0]));
+    console.log(player1, wagerToken, wager, maxTimePerMove, numberOfGames);
 
     const tx = await chess.createGameWager(
       player1,

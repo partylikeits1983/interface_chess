@@ -22,7 +22,11 @@ import {
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const { ethers } = require('ethers');
-const { CreateWager, Approve, getChainId } = require('ui/wallet-ui/api/form');
+const {
+  CreateWager,
+  ApproveChessWagerContract,
+  getChainId,
+} = require('ui/wallet-ui/api/form');
 
 import {
   tokenAddressesByChainID,
@@ -79,7 +83,10 @@ export default function ChallengeForm() {
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
-    await Approve(formInputs.wagerToken, formInputs.wagerAmount);
+    await ApproveChessWagerContract(
+      formInputs.wagerToken,
+      formInputs.wagerAmount,
+    );
     setIsLoadingApproval(false);
   };
 
