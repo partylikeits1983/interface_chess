@@ -17,7 +17,7 @@ interface ContractAddress {
   network: string;
   chainID: number;
   owner: string;
-  chessToken: string;
+  chessFishToken: string;
   dividendSplitter: string;
   moveVerification: string;
   chessWager: string;
@@ -60,7 +60,7 @@ const addresses = JSON.parse(jsonString); // Parse the JSON string
 let ChessAddress = addresses[0].chess;
 let VerificationAddress = addresses[0].moveVerification;
 // let tokenAddress = addresses[0].token;
-let ChessToken = addresses[0].chessToken;
+let ChessToken = addresses[0].chessFishToken;
 let DividendSplitter = addresses[0].dividendSplitter;
 let CrowdSale = addresses[0].crowdSale;
 let Tournament = addresses[0].tournament;
@@ -111,7 +111,7 @@ const updateContractAddresses = async (): Promise<void> => {
   if (matchingChain) {
     ChessAddress = matchingChain.chessWager;
     VerificationAddress = matchingChain.moveVerification;
-    ChessToken = matchingChain.chessToken;
+    ChessToken = matchingChain.chessFishToken;
     DividendSplitter = matchingChain.dividendSplitter;
     CrowdSale = matchingChain.crowdSale;
     Tournament = matchingChain.tournament;
@@ -1178,12 +1178,14 @@ export const GetDividendData = async () => {
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const token = new ethers.Contract(ChessToken, ERC20ABI, signer);
+  // alert("HERE")
 
   try {
     const userAmount = ethers.utils.formatEther(
       await token.balanceOf(accounts[0]),
       18,
     );
+
     const totalSupply = ethers.utils.formatEther(await token.totalSupply(), 18);
 
     console.log(userAmount);

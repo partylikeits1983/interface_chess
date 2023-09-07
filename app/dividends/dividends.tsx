@@ -21,6 +21,7 @@ import {
   Button,
   Box,
   Input,
+  Link,
   VStack,
 } from '@chakra-ui/react';
 
@@ -146,6 +147,14 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     <ChakraProvider>
       <Text>
         To payout dividends select or paste the address of the token to payout.
+      </Text>
+      <Text>
+        <Link
+          href="https://mumbai.polygonscan.com/address/0xa804a4411ab00f7df2029a36ec8fda72f89b3b9a#tokentxns"
+          isExternal
+        >
+          PaymentSplitter Contract on Polygonscan
+        </Link>
       </Text>
       <Flex justifyContent="space-around" padding="5">
         <Stat borderRadius="lg" padding="5">
