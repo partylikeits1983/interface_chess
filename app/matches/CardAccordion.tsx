@@ -116,7 +116,9 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
 
               <HStack spacing="1.5rem">
                 <Text fontSize="md">
-                  {card.isInProgress
+                  {card.isComplete
+                    ? 'Wager completed ✅'
+                    : card.isInProgress
                     ? card.isPlayerTurn
                       ? 'Your turn 🟢'
                       : 'Waiting for opponent to move 🔴'

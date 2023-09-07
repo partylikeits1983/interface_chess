@@ -11,4 +11,6 @@ export interface Card {
   timePlayer0: number;
   timePlayer1: number;
   isPlayerTurn: boolean;
+  isTournament: boolean;
+  isComplete: boolean;
 }

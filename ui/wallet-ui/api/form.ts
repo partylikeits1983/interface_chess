@@ -39,6 +39,7 @@ interface Card {
   timePlayer1: number;
   isTournament: boolean;
   isPlayerTurn: boolean;
+  isComplete: boolean;
 }
 
 interface TokenAddresses {
@@ -333,6 +334,7 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
       timePlayer1: parseInt(wagerParams[9]),
       isTournament: Boolean(wagerParams.isTournament),
       isPlayerTurn: false,
+      isComplete: Boolean(wagerParams.isComplete),
     };
 
     const token = new ethers.Contract(card.wagerToken, ERC20ABI, signer);
@@ -481,6 +483,7 @@ export const GetAllWagers = async (): Promise<Card[]> => {
         timePlayer1: parseInt(wagerParams[9]),
         isPlayerTurn: isPlayerTurn,
         isTournament: Boolean(wagerParams[10]),
+        isComplete: Boolean(wagerParams.isComplete),
       };
 
       allWagerParams.push(card);
@@ -532,6 +535,7 @@ export const GetAllWagersForPairing = async () => {
           timePlayer1: parseInt(wagerParams[9]),
           isPlayerTurn: false,
           isTournament: Boolean(wagerParams.isTournament),
+          isComplete: Boolean(wagerParams.isComplete),
         };
 
         pairingRoomWagers.push(card);
@@ -790,14 +794,12 @@ export const AcceptWagerConditions = async (wagerAddress: string) => {
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
-
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
     const tx = await chess.acceptWager(wagerAddress);
     await tx.wait();
 
-    alertSuccessFeedback('Wager Conditions Accepted!');
+    // alertSuccessFeedback('Wager Conditions Accepted!');
 
     return true;
   } catch (error) {
@@ -847,6 +849,7 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
         timePlayer1: parseInt(wagerParams[9]),
         isPlayerTurn: false,
         isTournament: Boolean(wagerParams.isTournament),
+        isComplete: Boolean(wagerParams.isComplete),
       };
       allWagerParams.push(card);
     }
@@ -887,6 +890,7 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
       timePlayer1: parseInt(wagerParams[9]),
       isTournament: Boolean(wagerParams.isTournament),
       isPlayerTurn: false,
+      isComplete: Boolean(wagerParams.isComplete),
     };
 
     return card;
@@ -940,6 +944,7 @@ export const PayoutWager = async (wagerAddress: string) => {
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
     await chess.payoutWager(wagerAddress);
+    alertSuccessFeedback('Wager Payout Success!');
 
     return true;
   } catch (error) {

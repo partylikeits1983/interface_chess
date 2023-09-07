@@ -83,13 +83,13 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
     }
   }
 
-  function handleSubmitPayoutWager() {
+  async function handleSubmitPayoutWager() {
     try {
       // adding await fails to build
       // using useEffect makes everything glitchy
       console.log('handle payout wager');
       console.log(matchAddress);
-      PayoutWager(matchAddress);
+      await PayoutWager(matchAddress);
     } catch (error) {
       console.log(error);
     }

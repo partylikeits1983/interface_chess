@@ -33,6 +33,7 @@ interface Card {
   timePlayer1: number;
   isPlayerTurn: boolean;
   isTournament: boolean;
+  isComplete: boolean;
 }
 
 interface Props {
