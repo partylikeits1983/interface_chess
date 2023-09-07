@@ -138,7 +138,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     const moves = game.history();
     const tempGame = new Chess();
 
-    if (moveNumber > 0) {
+    if (moveNumber >= 0) {
       const newMoveNumber = moveNumber - 1;
       setMoveNumber(newMoveNumber);
       for (let i = 0; i <= newMoveNumber; i++) {
@@ -267,6 +267,10 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         for (let i = 0; i < movesArray.length; i++) {
           newGame.move(movesArray[i]);
         }
+        if (movesArray.length == 0) {
+          setMoveSquares({});
+        }
+
         setGame(newGame);
         setGameFEN(newGame.fen());
         setLocalGame(newGame);
