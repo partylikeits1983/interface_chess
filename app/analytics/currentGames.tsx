@@ -132,7 +132,7 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   return (
     <>
       <Text color="white" marginBottom="0.5">
-        Latest Games
+        Latest Wagers
       </Text>
       <Flex wrap="wrap" justifyContent="center" w="100%">
         {Games.slice(0, 9).map((fen, index) => (
