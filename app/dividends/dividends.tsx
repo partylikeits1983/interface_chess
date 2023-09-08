@@ -37,6 +37,7 @@ import TokenBalances from './tokenBalance';
 import CrowdSale from './crowdSale';
 
 import React, { useEffect, useState, FC } from 'react';
+import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 interface AnalyticsProps {
   useAPI: boolean;
@@ -140,8 +141,8 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   }, [formInputs]);
 
   const handlePayoutDividends = async () => {
-    console.log('FORM', formInputs);
     await PayoutDividends(formInputs.token);
+    alertSuccessFeedback('Dividends Successfully Paid');
   };
 
   return (
