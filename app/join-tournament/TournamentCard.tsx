@@ -181,8 +181,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
   const HandleClickJoinTournament = async () => {
     setIsLoadingJoin(true);
-    await ApproveTournament(card.token, card.tokenAmount);
-    await JoinTournament(card.tournamentNonce);
+    // await ApproveTournament(card.token, card.tokenAmount);
+    await JoinTournament(card.token, card.tokenAmount, card.tournamentNonce);
     setIsLoadingJoin(false);
   };
 

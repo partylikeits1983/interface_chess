@@ -1321,14 +1321,27 @@ export const CreateTournament = async (params: TournamentParams) => {
   }
 };
 
-export const JoinTournament = async (tournamentID: number) => {
+export const JoinTournament = async (
+  tokenAddress: string,
+  amount: number,
+  tournamentID: number,
+) => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
 
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+
   try {
+    const decimals = await token.decimals();
+    const amountAdjusted = ethers.utils.parseUnits(amount.toString(), decimals);
+    const tx1 = await token.approve(Tournament, amountAdjusted);
+    alertSuccessFeedback('Success! Allowance set, wait for join tx');
+    await tx1.wait();
+
     await tournament.joinTournament(tournamentID);
 
     alertSuccessFeedback('Success! Joined Tournament: ' + tournamentID);
