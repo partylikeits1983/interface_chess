@@ -340,7 +340,8 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
     const token = new ethers.Contract(card.wagerToken, ERC20ABI, signer);
 
     const value = await token.approve(ChessAddress, wagerParams[3].toString());
-    const allowance = await token.allowance(accounts[0], ChessAddress);
+    await value.wait();
+    // const allowance = await token.allowance(accounts[0], ChessAddress);
 
     // alert('success' + allowance);
 
@@ -1225,15 +1226,22 @@ export const GetDividendPayoutData = async (tokenAddress: string) => {
 export const GetChessFishTokens = async (amountIn: string) => {
   await updateContractAddresses();
 
-  const amount = ethers.utils.parseEther(amountIn);
+  const amount = ethers.utils.parseUnits(amountIn, 6);
+  console.log(amountIn);
+  console.log(amount);
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
   const crowdSale = new ethers.Contract(CrowdSale, crowdSaleABI, signer);
 
+  const usdc = new ethers.Contract(USDC, ERC20ABI, signer);
+
   try {
-    await crowdSale.getChessFishTokens({ value: amount });
+    const tx1 = await usdc.approve(CrowdSale, amount);
+    await tx1.wait();
+
+    await crowdSale.getChessFishTokens(amount);
   } catch (error) {
     console.log(error);
     return false;

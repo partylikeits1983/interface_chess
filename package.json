@@ -98,5 +98,6 @@
     "tls": false,
     "net": false,
     "fs": false
-  }
+  },
+  "proxy": "https://api.chess.fish"
 }

@@ -193,7 +193,7 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
       <Text textAlign="center">
         <Link
-          href="https://mumbai.polygonscan.com/address/0xa804a4411ab00f7df2029a36ec8fda72f89b3b9a#tokentxns"
+          href="https://mumbai.polygonscan.com/address/0x7a0d4Bb0C984eB68189d916D677cf0E0B8F5c240#tokentxns"
           isExternal
           color="green.500" // Styling the link blue
         >

@@ -16,6 +16,7 @@ import {
   Input,
   Link,
   VStack,
+  Spinner,
 } from '@chakra-ui/react';
 
 function CrowdSale() {
@@ -34,6 +35,7 @@ function CrowdSale() {
   };
 
   const [countdownTime, setCountdownTime] = useState(getInitialCountdown());
+  const [isLoadingGetTokens, setIsLoadingGetTokens] = useState(false);
 
   const formatTime = (time: number) => {
     const days = Math.floor(time / (24 * 3600));
@@ -83,7 +85,10 @@ function CrowdSale() {
 
   const getCrowdsaleTokens = async (amountIn: string) => {
     console.log(`Getting chessfish tokens`);
+    console.log('HERE', amountIn);
+    setIsLoadingGetTokens(true);
     await GetChessFishTokens(amountIn);
+    setIsLoadingGetTokens(false);
   };
 
   // Render
@@ -129,6 +134,11 @@ function CrowdSale() {
           >
             Get Tokens
           </Button>
+          {isLoadingGetTokens && (
+            <Flex justifyContent="center" alignItems="center" mt={3}>
+              <Spinner />
+            </Flex>
+          )}{' '}
         </Box>
       </Box>
     </>
