@@ -1164,6 +1164,8 @@ export const GetLeaderboardData = async (): Promise<{
 export const PayoutDividends = async (tokenAddress: string) => {
   await updateContractAddresses();
 
+  // alert(tokenAddress);
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);

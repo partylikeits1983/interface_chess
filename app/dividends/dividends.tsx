@@ -140,12 +140,8 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   }, [formInputs]);
 
   const handlePayoutDividends = async () => {
+    console.log('FORM', formInputs);
     await PayoutDividends(formInputs.token);
-  };
-
-  const getCrowdsaleTokens = async (amountIn: string) => {
-    console.log(`Getting chessfish tokens`);
-    await GetChessFishTokens(amountIn);
   };
 
   return (
@@ -206,7 +202,7 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         onChange={(value: string) =>
           setFormInputs((prevInputs) => ({
             ...prevInputs,
-            wagerToken: value,
+            token: value,
           }))
         }
       />
