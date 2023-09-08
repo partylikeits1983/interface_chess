@@ -68,11 +68,9 @@ const getTokenDetails = (
 
   if (!tokenName) return null; // Return null if token name not found
 
-  console.log(tokenName);
   // Find the token details by name from the options array
   const tokenDetail = options.find((option) => option.label === tokenName);
 
-  console.log(tokenDetail);
   return tokenDetail || null; // Return token details or null if not found
 };
 
