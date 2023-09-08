@@ -207,7 +207,7 @@ export const getBalance = async (address: string) => {
   }
 };
 
-export const getDividendBalances = async () => {
+export const GetDividendBalances = async () => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -232,7 +232,7 @@ export const getDividendBalances = async () => {
     usdc_bal = ethers.utils.formatEther(usdc_bal);
     dai_bal = ethers.utils.formatEther(dai_bal);
 
-    return [wbtc_bal, weth_bal, usdt_bal, usdc_bal, dai_bal];
+    return [dai_bal, usdc_bal, usdt_bal, wbtc_bal, weth_bal];
   } catch (error) {
     return [0, 0, 0, 0, 0];
   }

@@ -7,7 +7,7 @@ import {
   getChainId,
   getBalance,
   getCrowdSaleBalance,
-  getDividendBalances,
+  GetDividendBalances,
   GetChessFishTokens,
 } from 'ui/wallet-ui/api/form';
 
@@ -25,11 +25,15 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+
 import AutocompleteToken from './autocomplete-token';
 import {
   tokenAddressesByChainID,
   options,
 } from '../../ui/wallet-ui/api/token-information';
+
+import TokenBalances from './tokenBalance';
 
 import React, { useEffect, useState, FC } from 'react';
 
@@ -145,28 +149,56 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
   return (
     <ChakraProvider>
-      <Text>
-        To payout dividends select or paste the address of the token to payout.
-      </Text>
-      <Text>
+      <TokenBalances />
+
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        padding="10"
+        width="100%"
+      >
+        <Stat
+          borderRadius="lg"
+          padding="5"
+          width="50%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <StatLabel color="white" textAlign="center">
+            Your Percent Ownership
+          </StatLabel>
+          <StatNumber color="white" textAlign="center">
+            {dividendAmount} %
+          </StatNumber>
+        </Stat>
+
+        <Stat
+          borderRadius="lg"
+          padding="5"
+          width="50%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <StatLabel color="white" textAlign="center">
+            Total Supply
+          </StatLabel>
+          <StatNumber color="white" textAlign="center">
+            {totalSupply}
+          </StatNumber>
+        </Stat>
+      </Flex>
+
+      <Text textAlign="center">
         <Link
           href="https://mumbai.polygonscan.com/address/0xa804a4411ab00f7df2029a36ec8fda72f89b3b9a#tokentxns"
           isExternal
+          color="green.500" // Styling the link blue
         >
-          PaymentSplitter Contract on Polygonscan
+          PaymentSplitter Contract on Polygonscan <ExternalLinkIcon mx="2px" />
         </Link>
       </Text>
-      <Flex justifyContent="space-around" padding="5">
-        <Stat borderRadius="lg" padding="5">
-          <StatLabel color="white">Your Percent Dividend Amount</StatLabel>
-          <StatNumber color="white">{dividendAmount} %</StatNumber>
-        </Stat>
-
-        <Stat borderRadius="lg" padding="5">
-          <StatLabel color="white">Total Supply</StatLabel>
-          <StatNumber color="white">{totalSupply}</StatNumber>
-        </Stat>
-      </Flex>
 
       <AutocompleteToken
         options={tokenOptions}
