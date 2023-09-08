@@ -18,6 +18,7 @@ import {
   VStack,
   Spinner,
 } from '@chakra-ui/react';
+import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 function CrowdSale() {
   // State Declarations
@@ -89,6 +90,7 @@ function CrowdSale() {
     setIsLoadingGetTokens(true);
     await GetChessFishTokens(amountIn);
     setIsLoadingGetTokens(false);
+    alertSuccessFeedback('Success! ChessFish Tokens transfered!');
   };
 
   // Render

@@ -474,12 +474,15 @@ export const GetAllWagers = async (): Promise<Card[]> => {
         isPlayerTurn = false;
       }
 
+      const token = new ethers.Contract(wagerParams[2], ERC20ABI, signer);
+      const decimals = await token.decimals();
+
       const card: Card = {
         matchAddress: wagers[i],
         player0Address: wagerParams[0],
         player1Address: wagerParams[1],
         wagerToken: wagerParams[2],
-        wagerAmount: parseInt(wagerParams[3]),
+        wagerAmount: ethers.utils.formatUnits(wagerParams[3], decimals),
         numberOfGames: parseInt(wagerParams[4]),
         isInProgress: wagerParams[5],
         timeLimit: parseInt(wagerParams[6]),

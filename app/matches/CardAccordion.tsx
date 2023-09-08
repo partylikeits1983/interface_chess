@@ -181,12 +181,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                 },
                 {
                   label: 'Wager Amount',
-                  value: ethers.utils.formatUnits(
-                    ethers.BigNumber.from(
-                      fromScientificNotation(card.wagerAmount.toString()),
-                    ),
-                    18,
-                  ),
+                  value: card.wagerAmount.toString(),
                 },
                 {
                   label: 'Wager Time Limit',
