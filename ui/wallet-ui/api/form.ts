@@ -1313,6 +1313,7 @@ export const JoinTournament = async (tournamentID: number) => {
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
   try {
     await tournament.joinTournament(tournamentID);
+
     alertSuccessFeedback('Success! Joined Tournament: ' + tournamentID);
     return true;
   } catch (error) {
@@ -1331,13 +1332,11 @@ export const ApproveTournament = async (
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
-
   try {
     const decimals = await token.decimals();
-    const amountAdjusted = ethers.utils.parseUnits(amount, decimals);
-
+    const amountAdjusted = ethers.utils.parseUnits(amount.toString(), decimals);
     const value = await token.approve(Tournament, amountAdjusted);
-    const allowance = await token.allowance(accounts[0], ChessAddress);
+    const allowance = await token.allowance(accounts[0], Tournament);
 
     const readableAmount = ethers.utils.formatUnits(allowance, decimals);
 
@@ -1349,6 +1348,7 @@ export const ApproveTournament = async (
       status: '✅ Check out your transaction on Etherscan',
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       // @ts-ignore
