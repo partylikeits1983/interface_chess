@@ -167,7 +167,8 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                         src={tokenDetails.image}
                         alt="token icon"
                         style={{
-                          marginLeft: '8px',
+                          marginLeft: '0px',
+                          marginRight: '6px', // Added this line for spacing
                           height: '24px',
                           width: '24px',
                         }}
