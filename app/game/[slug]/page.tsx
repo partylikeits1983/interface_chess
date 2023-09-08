@@ -1,6 +1,5 @@
 import { Board } from '../boardPage';
 import { GameForm } from '../game-form';
-import { StatusBar } from '../status-bar';
 
 export default function Page({ params }: { params: { slug: string } }) {
   return (

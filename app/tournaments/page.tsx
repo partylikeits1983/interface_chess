@@ -1,5 +1,4 @@
 import { TournamentView } from './TournamentView';
-// import { StatusBar } from './status-bar';
 
 export default function Page() {
   return (
