@@ -34,6 +34,7 @@ import {
 } from '../../ui/wallet-ui/api/token-information';
 
 import TokenBalances from './tokenBalance';
+import CrowdSale from './crowdSale';
 
 import React, { useEffect, useState, FC } from 'react';
 
@@ -215,32 +216,8 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       </Button>
 
       {/* Section to get chess fish tokens */}
-      <Box
-        mt={5}
-        borderWidth="1px"
-        borderColor="white"
-        borderRadius="md"
-        padding="3"
-      >
-        <Text fontWeight="bold">LIMITED TIME CROWDSALE</Text>
-        <Text>{CFSHbalance} ChessFish tokens left</Text>
-        <Text>1 MATIC = 2 CHFS tokens</Text>
-        <VStack spacing={3} alignItems="start">
-          <Input
-            value={tokenAmount}
-            placeholder="Enter matic amount"
-            onChange={handleTokenAmountChange}
-          />
-          <Text>You will receive: {receivedTokens} CHFS tokens</Text>
-        </VStack>
-        <Button
-          colorScheme="green"
-          mt={3}
-          onClick={() => getCrowdsaleTokens(tokenAmount)}
-        >
-          Get Tokens
-        </Button>
-      </Box>
+
+      <CrowdSale />
     </ChakraProvider>
   );
 };
