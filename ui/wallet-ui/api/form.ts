@@ -1392,13 +1392,17 @@ export const GetPendingTournaments = async () => {
       const data = await tournament.tournaments(i);
 
       if (Boolean(data[4]) == false) {
+        const token = new ethers.Contract(data[2], ERC20ABI, signer);
+        const tokenDecimals = await token.decimals();
+        const tokenAmount = ethers.utils.formatUnits(data[3], tokenDecimals);
+
         const tournamentData: TournamentData = {
           tournamentNonce: i,
           numberOfPlayers: Number(data[0]),
           players: [],
           numberOfGames: Number(data[1]),
           token: data[2],
-          tokenAmount: Number(data[3]),
+          tokenAmount: Number(tokenAmount),
           isInProgress: Boolean(data[4]),
           startTime: Number(data[5]),
           timeLimit: Number(data[6]),
@@ -1435,7 +1439,9 @@ export const GetInProgressTournaments = async () => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      console.log(data);
+      const token = new ethers.Contract(data[2], ERC20ABI, signer);
+      const tokenDecimals = await token.decimals();
+      const tokenAmount = ethers.utils.formatUnits(data[3], tokenDecimals);
 
       const tournamentData: TournamentData = {
         tournamentNonce: i,
@@ -1443,7 +1449,7 @@ export const GetInProgressTournaments = async () => {
         players: [],
         numberOfGames: Number(data[1]),
         token: data[2],
-        tokenAmount: Number(data[3]),
+        tokenAmount: Number(tokenAmount),
         isInProgress: Boolean(data[4]),
         startTime: Number(data[5]),
         timeLimit: Number(data[6]),
@@ -1478,6 +1484,11 @@ export const GetTournament = async (tournamentID: number) => {
 
   try {
     const data = await tournament.tournaments(tournamentID);
+
+    const token = new ethers.Contract(data[2], ERC20ABI, signer);
+    const tokenDecimals = await token.decimals();
+    const tokenAmount = ethers.utils.formatUnits(data[3], tokenDecimals);
+
     if (Boolean(data[4]) == false) {
       tournamentData = {
         tournamentNonce: tournamentID,
@@ -1485,7 +1496,7 @@ export const GetTournament = async (tournamentID: number) => {
         players: [],
         numberOfGames: Number(data[1]),
         token: data[2],
-        tokenAmount: Number(data[3]),
+        tokenAmount: Number(tokenAmount),
         isInProgress: Boolean(data[4]),
         startTime: Number(data[5]),
         timeLimit: Number(data[6]),
