@@ -226,10 +226,14 @@ export const GetDividendBalances = async () => {
     let usdc_bal = await usdc.balanceOf(DividendSplitter);
     let dai_bal = await dai.balanceOf(DividendSplitter);
 
+    console.log('USDC', usdc_bal);
+    console.log(USDC);
+    console.log(DividendSplitter);
+
     wbtc_bal = ethers.utils.formatEther(wbtc_bal);
     weth_bal = ethers.utils.formatEther(weth_bal);
-    usdt_bal = ethers.utils.formatEther(usdt_bal);
-    usdc_bal = ethers.utils.formatEther(usdc_bal);
+    usdt_bal = ethers.utils.formatUnits(usdt_bal, 6);
+    usdc_bal = ethers.utils.formatUnits(usdc_bal, 6);
     dai_bal = ethers.utils.formatEther(dai_bal);
 
     return [dai_bal, usdc_bal, usdt_bal, wbtc_bal, weth_bal];
@@ -257,7 +261,7 @@ export const ApproveChessWagerContract = async (
 
     const readableAmount = ethers.utils.formatUnits(allowance, decimals);
 
-    alertSuccessFeedback('Success! allowance set: ' + readableAmount);
+    alertSuccessFeedback('Success! Allowance set');
 
     return {
       value: value,
