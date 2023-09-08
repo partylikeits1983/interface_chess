@@ -34,6 +34,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     player1Address,
     wagerToken,
     isInProgress,
+    isComplete,
   } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
@@ -50,6 +51,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const [isLoadingUpdateTime, setIsLoadingUpdateTime] = useState(false);
 
   const [isTimeEnded, setIsTimeEnded] = useState(false);
+  const [isTournament, setIsTournament] = useState(false);
 
   const router = useRouter();
 
@@ -85,6 +87,8 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
 
         const isTimeEnded = await IsWagerGameTimeEnded(card.matchAddress);
         setIsTimeEnded(isTimeEnded);
+
+        setIsTournament(card.isTournament);
 
         setIsChessboardLoading(false);
       } else {
@@ -260,7 +264,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </Button>
         </Link>
 
-        {!isInProgress && (
+        {!isInProgress && !isTournament && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}
@@ -307,7 +311,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </>
         )}
 
-        {!isPendingApproval && isInProgress && (
+        {!isPendingApproval && isInProgress && !isTournament && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}
@@ -354,7 +358,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </>
         )}
 
-        {IsWagerGameTimeEnded && isInProgress && (
+        {IsWagerGameTimeEnded && isInProgress && !isComplete && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}
