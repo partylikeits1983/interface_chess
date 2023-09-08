@@ -52,6 +52,8 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           const wagerAddresses = await GetWagersDB(chainId);
           const data = await GetAnalyticsDB(chainId);
 
+          console.log('HERE', data);
+
           setWagerAddresses(wagerAddresses.reverse());
           setTotalGames(data[0].toString());
           setTotalWagers(data[1].toString());
