@@ -98,16 +98,16 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
-  bg="black"
-  color="white"
-  border="1px"
-  borderColor="white"
-  minWidth="40%"   // Minimum width
-  maxWidth="55%"   // Maximum width
-  minHeight="20%"  // Minimum height
-  maxHeight="40%"  // Maximum height
-  overflow="auto"  // Adds scrollbars if content exceeds modal size
->
+        bg="black"
+        color="white"
+        border="1px"
+        borderColor="white"
+        minWidth="40%" // Minimum width
+        maxWidth="55%" // Maximum width
+        minHeight="20%" // Minimum height
+        maxHeight="40%" // Maximum height
+        overflow="auto" // Adds scrollbars if content exceeds modal size
+      >
         <ModalHeader>{wagerStatus ? 'Wager Outcome' : 'Game Over'}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

@@ -207,7 +207,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       const isWagerComplete = await GetIsWagerComplete(wagerAddress);
       setIsWagercomplete(isWagerComplete);
     }
-
   }
 
   // Initialize board
@@ -252,7 +251,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         let newGame = new Chess();
 
         let gameNumber = await GetGameNumber(wager);
-
 
         if (gameNumber !== undefined) {
           movesArray = await GetGameMoves(wager, gameNumber);
@@ -384,9 +382,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     }
 
     let isNewGame = false;
-
-
-    
 
     // Check for checkmate
     if (currentGame.isCheckmate()) {
@@ -521,33 +516,33 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     // WebSocket connection is established when isGameGasless is true
     // if (isGameGasless === true) {
-      const socket = io('https://api.chess.fish', {
-        transports: ['websocket'],
-        path: '/socket.io/',
-      });
+    const socket = io('https://api.chess.fish', {
+      transports: ['websocket'],
+      path: '/socket.io/',
+    });
 
-      socket.on('connect', () => {
-        console.log('Connected to websocket');
-        socket.emit('getGameFen', wager.toLowerCase());
-        socket.emit('subscribeToGame', wager.toLowerCase());
-      });
+    socket.on('connect', () => {
+      console.log('Connected to websocket');
+      socket.emit('getGameFen', wager.toLowerCase());
+      socket.emit('subscribeToGame', wager.toLowerCase());
+    });
 
-      socket.on('updateGameFen', async (data) => {
-        console.log('websocket:', data);
-        if (isMounted) {
-          const gameSocketData: IGameSocketData = data;
-          await handleUpdateUI(gameSocketData);
-        }
-      });
+    socket.on('updateGameFen', async (data) => {
+      console.log('websocket:', data);
+      if (isMounted) {
+        const gameSocketData: IGameSocketData = data;
+        await handleUpdateUI(gameSocketData);
+      }
+    });
 
-      socket.on('error', (errMsg) => {
-        console.error('Error:', errMsg);
-      });
+    socket.on('error', (errMsg) => {
+      console.error('Error:', errMsg);
+    });
 
-      socket.on('disconnect', () => {
-        console.log('Disconnected from server');
-      });
-    // } // isGameGasless is true 
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+    // } // isGameGasless is true
 
     return () => {
       isMounted = false;
@@ -588,7 +583,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 _isPlayerTurnSC !== isPlayerTurnSC
               ) {
                 if (isMounted) {
-                  const gameID = await GetGameNumber(wagerAddress)
+                  const gameID = await GetGameNumber(wagerAddress);
                   updateState('381', _isPlayerTurnSC, currentGame, gameID);
 
                   // this may not be needed...
@@ -625,10 +620,16 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     source: string,
     _isPlayerTurnSC: boolean,
     currentGame: Chess,
-    _gameID: number
+    _gameID: number,
   ) => {
-    console.log('updateState', source, currentGame.isCheckmate(), _gameID, gameID);
-    
+    console.log(
+      'updateState',
+      source,
+      currentGame.isCheckmate(),
+      _gameID,
+      gameID,
+    );
+
     setGameID(_gameID);
 
     if (currentGame.isCheckmate()) {
