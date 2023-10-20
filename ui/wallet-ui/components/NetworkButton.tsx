@@ -131,6 +131,10 @@ export default function NetworkButton(): JSX.Element {
               Celo (coming soon)
             </MenuItem>
 
+            <MenuItem onClick={() => handleNetworkChange('Celo Mainnet')}>
+              Arbitrum (coming soon)
+            </MenuItem>
+
             <MenuDivider />
 
             <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
