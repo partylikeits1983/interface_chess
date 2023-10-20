@@ -29,7 +29,7 @@ function CrowdSale() {
   const [hasMounted, setHasMounted] = useState(false);
   // Helper Functions
   const getInitialCountdown = () => {
-    const endDate = new Date(new Date().getFullYear(), 9, 8);
+    const endDate = new Date(new Date().getFullYear(), 10, 15);
     const currentTime = new Date().getTime();
     const endTime = endDate.getTime();
     return Math.floor((endTime - currentTime) / 1000);
