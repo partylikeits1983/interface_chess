@@ -10,13 +10,13 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetInProgressTournaments } = require('ui/wallet-ui/api/form');
-const { GetTournamentDataDB } = require('ui/wallet-ui/api/db-api');
+const { GetInProgressTournaments } = require('../api/form');
+const { GetTournamentDataDB } = require('../api/db-api');
 
 import TournamentCard from './TournamentCard'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
 
-import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import { useStateManager } from '#/app/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;

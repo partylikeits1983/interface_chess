@@ -13,14 +13,14 @@ import {
   GetWagersDB,
   GetWagersFenDB,
   GetAnalyticsDB,
-} from 'ui/wallet-ui/api/db-api';
+} from '#/app/api/db-api';
 import {
   GetAnalyticsData,
   GetGameMoves,
   GetNumberOfGames,
-} from 'ui/wallet-ui/api/form';
+} from '#/app/api/form';
 
-import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import { useStateManager } from '#/app/api/sharedState';
 
 interface CurrentGamesProps {
   useAPI: boolean;

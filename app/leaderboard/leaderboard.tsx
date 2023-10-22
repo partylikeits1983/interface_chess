@@ -1,7 +1,7 @@
 'use client';
 
-import { GetLeaderboardData } from 'ui/wallet-ui/api/form';
-import { GetLeaderboardDataDB } from 'ui/wallet-ui/api/db-api';
+import { GetLeaderboardData } from '#/app/api/form';
+import { GetLeaderboardDataDB } from '#/app/api/db-api';
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
@@ -22,7 +22,7 @@ import {
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import React, { useEffect, useState, FC } from 'react';
 
-import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import { useStateManager } from '#/app/api/sharedState';
 
 interface AnalyticsProps {
   useAPI: boolean;

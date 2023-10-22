@@ -2,11 +2,11 @@ const ethers = require('ethers');
 const { parseUnits } = require('ethers/lib/utils');
 import { CreateMatchType } from './types';
 
-const chessWagerABI = require('../../../contract-abi/ChessWagerABI');
-const moveVerificationABI = require('../../../contract-abi/MoveVerificationABI.json');
-const splitterABI = require('../../../contract-abi/SplitterABI');
-const crowdSaleABI = require('../../../contract-abi/CrowdSaleABI');
-const tournamentABI = require('../../../contract-abi/TournamentABI');
+const chessWagerABI = require('./contract-abi/ChessWagerABI');
+const moveVerificationABI = require('./contract-abi/MoveVerificationABI.json');
+const splitterABI = require('./contract-abi/SplitterABI');
+const crowdSaleABI = require('./contract-abi/CrowdSaleABI');
+const tournamentABI = require('./contract-abi/TournamentABI');
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { getCrowdSaleBalance, GetChessFishTokens } from 'ui/wallet-ui/api/form';
+import { getCrowdSaleBalance, GetChessFishTokens } from '#/app/api/form';
 
 import {
   ChakraProvider,

@@ -27,7 +27,7 @@ import {
   getChainId,
   GetTournament,
   GetTournamentScore,
-} from '#/ui/wallet-ui/api/form';
+} from '#/app/api/form';
 
 interface TournamentData {
   tournamentNonce: number;

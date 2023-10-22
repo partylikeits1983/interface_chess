@@ -12,12 +12,12 @@ import {
   Switch,
 } from '@chakra-ui/react';
 
-const { GetPendingTournaments } = require('ui/wallet-ui/api/form');
-const { GetTournamentDataDB } = require('ui/wallet-ui/api/db-api');
+const { GetPendingTournaments } = require('../api/form');
+const { GetTournamentDataDB } = require('../api/db-api');
 
 import TournamentCard from './TournamentCard';
 import CardFilterControls from './CardFilterControls';
-import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import { useStateManager } from '#/app/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;

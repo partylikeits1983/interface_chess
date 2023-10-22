@@ -26,12 +26,12 @@ const {
   CreateWager,
   ApproveChessWagerContract,
   getChainId,
-} = require('ui/wallet-ui/api/form');
+} = require('../api/form');
 
 import {
   tokenAddressesByChainID,
   options,
-} from '../../ui/wallet-ui/api/token-information';
+} from '../api/token-information';
 import AutocompleteToken from './autocomplete-token';
 
 import AutocompletePlayer from './autocomplete-player';

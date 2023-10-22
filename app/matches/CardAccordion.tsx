@@ -17,8 +17,8 @@ import {
   getToken,
 } from '@chakra-ui/react';
 
-import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
-import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import { getTokenDetails } from '#/app/api/token-information';
+import { useStateManager } from '#/app/api/sharedState';
 
 import Identicon from 'ui/IdenticonGames';
 

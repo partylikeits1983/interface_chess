@@ -24,7 +24,7 @@ const {
   GetWagerData,
   GetTimeRemaining,
   IsPlayerAddressWhite,
-} = require('ui/wallet-ui/api/form');
+} = require('../api/form');
 
 import {
   Input,

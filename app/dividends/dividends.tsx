@@ -9,7 +9,7 @@ import {
   getCrowdSaleBalance,
   GetDividendBalances,
   GetChessFishTokens,
-} from 'ui/wallet-ui/api/form';
+} from '#/app/api/form';
 
 import {
   ChakraProvider,
@@ -31,7 +31,7 @@ import AutocompleteToken from './autocomplete-token';
 import {
   tokenAddressesByChainID,
   options,
-} from '../../ui/wallet-ui/api/token-information';
+} from '../api/token-information';
 
 import TokenBalances from './tokenBalance';
 import CrowdSale from './crowdSale';

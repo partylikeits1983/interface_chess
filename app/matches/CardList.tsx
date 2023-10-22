@@ -12,7 +12,7 @@ import {
   Switch,
 } from '@chakra-ui/react';
 
-const { GetAllWagers } = require('ui/wallet-ui/api/form');
+const { GetAllWagers } = require('../api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 

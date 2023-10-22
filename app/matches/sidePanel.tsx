@@ -20,7 +20,7 @@ const {
   AcceptWagerConditions,
   IsWagerGameTimeEnded,
   UpdateWagerStateTime,
-} = require('ui/wallet-ui/api/form');
+} = require('../api/form');
 
 interface CardSidePanelProps {
   card: Card; // Your Card type here

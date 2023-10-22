@@ -36,10 +36,10 @@ import {
   GetTournamentScore,
   GetIsTournamentEnded,
   PayoutTournament,
-} from '#/ui/wallet-ui/api/form';
+} from '#/app/api/form';
 
-import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
-import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import { getTokenDetails } from '#/app/api/token-information';
+import { useStateManager } from '#/app/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;

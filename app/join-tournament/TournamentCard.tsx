@@ -27,7 +27,7 @@ import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
 import copyIconFeedback from 'ui/copyIconFeedback';
-import { getTokenDetails } from '#/ui/wallet-ui/api/token-information';
+import { getTokenDetails } from '#/app/api/token-information';
 
 import {
   getChainId,
@@ -37,9 +37,9 @@ import {
   StartTournament,
   GetIsUserInTournament,
   GetCanTournamentBegin,
-} from '#/ui/wallet-ui/api/form';
+} from '#/app/api/form';
 
-import { useStateManager } from 'ui/wallet-ui/api/sharedState';
+import { useStateManager } from '#/app/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;

@@ -10,7 +10,7 @@ import {
 
 import { ethers } from 'ethers';
 
-import { useStateManager } from '../api/sharedState';
+import { useStateManager } from '../../../app/api/sharedState';
 
 const NETWORK_NAMES: { [key: string]: string } = {
   0x1: 'Ethereum Mainnet',

@@ -4,11 +4,11 @@ import { Button, Box, Text } from '@chakra-ui/react';
 import { formatEther } from '@ethersproject/units';
 
 import { useMetamask } from './Metamask';
-import { getChainId } from '../api/form';
+import { getChainId } from '../../../app/api/form';
 
 import Identicon from './Identicon';
 
-import networks from 'ui/wallet-ui/api/tokenAddresses.json';
+import networks from '#/app/api/tokenAddresses.json';
 
 type Props = {
   handleOpenModal: any;

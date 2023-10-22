@@ -11,7 +11,7 @@ import { Chess } from 'chess.js';
 const {
   AcceptWagerAndApprove,
   AcceptWagerConditions,
-} = require('ui/wallet-ui/api/form');
+} = require('../api/form');
 
 const {
   GetGameMoves,
@@ -19,7 +19,7 @@ const {
   IsPlayerWhite,
   PayoutWager,
   CancelWager,
-} = require('ui/wallet-ui/api/form');
+} = require('../api/form');
 
 interface CardSidePanelProps {
   card: Card; // Your Card type here

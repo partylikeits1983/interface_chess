@@ -25,12 +25,12 @@ const {
   CreateTournament,
   ApproveTournament,
   getChainId,
-} = require('ui/wallet-ui/api/form');
+} = require('../api/form');
 
 import {
   tokenAddressesByChainID,
   options,
-} from '../../ui/wallet-ui/api/token-information';
+} from '../api/token-information';
 import AutocompleteToken from './autocomplete-token';
 
 interface FormInputs {

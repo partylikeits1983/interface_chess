@@ -7,7 +7,7 @@ import AccountModal from './components/AccountModal';
 import theme from './theme';
 import Layout from './components/Layout';
 // import "@fontsource/inter";
-import { getBalance } from './api/form';
+import { getBalance } from '../../app/api/form';
 import { useMetamask } from './components/Metamask';
 
 function ConnectWalletButton() {

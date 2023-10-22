@@ -4,7 +4,7 @@ import {
   GetWagerPlayers,
   GetWagerStatus,
   IsPlayerWhite,
-} from '#/ui/wallet-ui/api/form';
+} from '#/app/api/form';
 
 interface ScoreBoardProps {
   wager: string;
