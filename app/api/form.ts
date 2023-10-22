@@ -915,6 +915,7 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   }
 };
 
+
 export const PlayMove = async (
   wagerAddress: string,
   move: string,
@@ -931,6 +932,52 @@ export const PlayMove = async (
 
     const tx = await chess.playMove(wagerAddress, hex_move);
     await tx.wait();
+
+    return true;
+  } catch (error) {
+    // alert(`wager address: ${wagerAddress} not found`);
+    console.log(`playMove: invalid address ${wagerAddress}`);
+
+    console.log(error);
+    return false;
+  }
+};
+
+export const PlayMoveGasless = async (
+  wagerAddress: string,
+  move: string,
+): Promise<Boolean> => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+
+  let messageArray: any[] = [];
+  let signatureArray: any[] = [];
+
+  const timeNow = Date.now();
+  const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // plus two days
+
+
+  try {
+    const hex_move = await chess.moveToHex(move);
+
+    // const tx = await chess.playMove(wagerAddress, hex_move);
+    // await tx.wait();
+
+    // get number of moves in game and game number
+
+    const message = await chess.generateMoveMessage(wagerAddress, hex_move, 0, timeStamp);
+    messageArray.push(message);
+
+    const messageHash = await chess.getMessageHash(wagerAddress, hex_move, 0, timeStamp);
+
+    const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
+    signatureArray.push(signature);
+
 
     return true;
   } catch (error) {
