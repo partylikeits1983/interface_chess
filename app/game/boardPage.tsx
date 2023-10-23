@@ -38,6 +38,7 @@ import {
   Center,
   ChakraProvider,
   Tooltip,
+  Switch,
 } from '@chakra-ui/react';
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
@@ -61,6 +62,8 @@ interface BoardProps {
 }
 
 export const Board: React.FC<BoardProps> = ({ wager }) => {
+  const [isGasLess, setIsGasLess] = useState(true);
+
   const [gameID, setGameID] = useState(0);
 
   const [game, setGame] = useState(new Chess());
@@ -392,7 +395,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         moveSound.play();
       }
 
-      let success = await PlayMove(wagerAddress, move);
+      let success = await PlayMove(isGasLess, gameFEN, wagerAddress, move);
 
       setPlayerTurnSC(false);
 
@@ -759,6 +762,22 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
           ) : (
             <>
               {' '}
+              <Box
+                p={3}
+                border="0.5px solid white"
+                display="flex"
+                alignItems="center"
+                mb={3}
+              >
+                {' '}
+                {/* added mb={3} here */}
+                <Text mr={2}>Turn off to submit move on chain</Text>
+                <Switch
+                  isChecked={isGasLess}
+                  onChange={() => setIsGasLess(!isGasLess)}
+                />{' '}
+              </Box>
+              <div style={{ marginTop: '10px' }}></div>
               <Box p={3} border="0.5px solid white">
                 <Flex
                   direction={{ base: 'column', md: 'row' }}

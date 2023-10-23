@@ -10,6 +10,6 @@ pnpm start
 
 ## FORMATTING
 ```
-npx prettier --write '**/\*.ts'
-npx prettier --write '**/\*.tsx'
+npx prettier --write '**/*.ts'
+npx prettier --write '**/*.tsx'
 ```

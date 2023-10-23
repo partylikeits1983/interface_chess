@@ -8,6 +8,8 @@ const splitterABI = require('./contract-abi/SplitterABI');
 const crowdSaleABI = require('./contract-abi/CrowdSaleABI');
 const tournamentABI = require('./contract-abi/TournamentABI');
 
+import { signTxPushToDB } from './gaslessAPI';
+
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
@@ -915,8 +917,9 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   }
 };
 
-
 export const PlayMove = async (
+  gasLess: boolean,
+  gameFEN: string,
   wagerAddress: string,
   move: string,
 ): Promise<Boolean> => {
@@ -930,14 +933,25 @@ export const PlayMove = async (
   try {
     const hex_move = await chess.moveToHex(move);
 
-    const tx = await chess.playMove(wagerAddress, hex_move);
-    await tx.wait();
+    if (gasLess) {
+      const timeNow = Date.now();
+      const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // @dev set to the expiration of the wager
+
+      const gameNumber = Number(await chess.getGameLength(wagerAddress));
+      const moveNumber = Number((await chess.getGameMoves(wagerAddress, gameNumber)).length);   
+
+      const message = await chess.generateMoveMessage(wagerAddress, hex_move, moveNumber, timeStamp);
+      const messageHash = await chess.getMessageHash(wagerAddress, hex_move, moveNumber, timeStamp);
+
+      await signTxPushToDB(wagerAddress, gameFEN, moveNumber, message, messageHash);
+    } else {
+      const tx = await chess.playMove(wagerAddress, hex_move);
+      await tx.wait();
+    }
 
     return true;
   } catch (error) {
-    // alert(`wager address: ${wagerAddress} not found`);
     console.log(`playMove: invalid address ${wagerAddress}`);
-
     console.log(error);
     return false;
   }
@@ -951,16 +965,11 @@ export const PlayMoveGasless = async (
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
 
-  let messageArray: any[] = [];
-  let signatureArray: any[] = [];
-
   const timeNow = Date.now();
   const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // plus two days
-
 
   try {
     const hex_move = await chess.moveToHex(move);
@@ -970,14 +979,23 @@ export const PlayMoveGasless = async (
 
     // get number of moves in game and game number
 
-    const message = await chess.generateMoveMessage(wagerAddress, hex_move, 0, timeStamp);
-    messageArray.push(message);
+    const message = await chess.generateMoveMessage(
+      wagerAddress,
+      hex_move,
+      0,
+      timeStamp,
+    );
 
-    const messageHash = await chess.getMessageHash(wagerAddress, hex_move, 0, timeStamp);
+    const messageHash = await chess.getMessageHash(
+      wagerAddress,
+      hex_move,
+      0,
+      timeStamp,
+    );
 
-    const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
-    signatureArray.push(signature);
-
+    const signature = await signer.signMessage(
+      ethers.utils.arrayify(messageHash),
+    );
 
     return true;
   } catch (error) {

@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import {
-  GetWagerPlayers,
-  GetWagerStatus,
-  IsPlayerWhite,
-} from '#/app/api/form';
+import { GetWagerPlayers, GetWagerStatus, IsPlayerWhite } from '#/app/api/form';
 
 interface ScoreBoardProps {
   wager: string;

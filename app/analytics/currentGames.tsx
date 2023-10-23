@@ -9,11 +9,7 @@ import { useRouter } from 'next/navigation';
 
 import { Box, Flex, Skeleton, Text } from '@chakra-ui/react';
 
-import {
-  GetWagersDB,
-  GetWagersFenDB,
-  GetAnalyticsDB,
-} from '#/app/api/db-api';
+import { GetWagersDB, GetWagersFenDB, GetAnalyticsDB } from '#/app/api/db-api';
 import {
   GetAnalyticsData,
   GetGameMoves,
