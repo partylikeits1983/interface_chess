@@ -41,10 +41,7 @@ export const signTxPushToDB = async (
       const signerAddress = accounts[0];
       const signedMessage = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
-      const recoveredAddress = ethers.utils.verifyMessage(ethers.utils.arrayify(messageHash), signedMessage);
-
-      alert(recoveredAddress);
-
+      // const recoveredAddress = ethers.utils.verifyMessage(ethers.utils.arrayify(messageHash), signedMessage);
 
       const rawData = JSON.stringify({
         wagerAddress: wagerAddress,
