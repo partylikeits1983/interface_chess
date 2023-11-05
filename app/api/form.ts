@@ -943,7 +943,7 @@ export const PlayMove = async (
       const message = await chess.generateMoveMessage(wagerAddress, hex_move, moveNumber, timeStamp);
       const messageHash = await chess.getMessageHash(wagerAddress, hex_move, moveNumber, timeStamp);
 
-      await signTxPushToDB(wagerAddress, gameFEN, moveNumber, message, messageHash);
+      await signTxPushToDB(wagerAddress, move, hex_move, gameFEN, moveNumber, gameNumber, message, messageHash);
     } else {
       const tx = await chess.playMove(wagerAddress, hex_move);
       await tx.wait();
