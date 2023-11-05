@@ -1,6 +1,7 @@
 'use client';
 
-const { ethers } = require('ethers');
+import io from 'socket.io-client';
+import ethers from 'ethers';
 
 import { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
@@ -11,8 +12,11 @@ import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
 import ForwardBackButtons from './forward-back-buttons';
 import opponentMoveNotification from 'ui/opponentMoveNotification';
+import { checkIfGasless } from '../api/gaslessAPI';
 
 import { useRouter } from 'next/navigation';
+
+import { ICard, IBoardProps, IMove, IGameSocketData, } from "./interfaces/interfaces"
 
 const {
   CheckValidMove,
@@ -61,7 +65,7 @@ interface BoardProps {
   wager: string;
 }
 
-export const Board: React.FC<BoardProps> = ({ wager }) => {
+export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isGasLess, setIsGasLess] = useState(true);
 
   const [gameID, setGameID] = useState(0);
@@ -93,6 +97,9 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   const [hasGameInitialized, setHasGameInitialized] = useState(false);
 
+  const [isGasless, setIsGasless] = useState(false);
+
+
   const [isLoading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -100,7 +107,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   const handleBoardClick =
     (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
       // check if wager exists....
-      const wager: Card = await GetWagerData(address);
+      const wager: ICard = await GetWagerData(address);
 
       // check if wager is not empty and not null
       if (wager && Object.keys(wager).length !== 0) {
@@ -189,6 +196,18 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [hasGameInitialized, moveNumber]);
+
+  useEffect(() => {
+    const fetchGameStatus = async () => {
+      try {
+        const result = await checkIfGasless(wager);
+        setIsGasless(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchGameStatus();
+  }, [wager]);
 
   async function getLastMoveSourceSquare(
     gameInstance: Chess,
@@ -433,25 +452,13 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
 
   // CLICK TO MOVE
   const [optionSquares, setOptionSquares] = useState({});
-  const [potentialMoves, setPotentialMoves] = useState<Move[]>([]);
+  const [potentialMoves, setPotentialMoves] = useState<IMove[]>([]);
   const [rightClickedSquares, setRightClickedSquares] = useState({});
   const [moveFrom, setMoveFrom] = useState('');
   const [moveSquares, setMoveSquares] = useState({});
 
-  interface Move {
-    color: string;
-    piece: string;
-    from: string;
-    to: string;
-    san: string;
-    flags: string;
-    lan: string;
-    before: string;
-    after: string;
-  }
-
   function moveExists(
-    potentialMoves: Move[],
+    potentialMoves: IMove[],
     from: string,
     to: string,
   ): boolean {
@@ -461,7 +468,7 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
     );
   }
 
-  const makeAMove = (move: any): [Move | null, boolean] => {
+  const makeAMove = (move: any): [IMove | null, boolean] => {
     const gameMoves = game.fen();
     const gameCopy = new Chess();
     gameCopy.load(gameMoves);
@@ -611,54 +618,49 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
   // MOVE LISTENER
   useEffect(() => {
     let isMounted = true;
-
+  
     const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
       if (isMounted) {
         const moveSound = new Audio('/sounds/Move.mp3');
         moveSound.load();
         moveSound.play();
-
+  
         opponentMoveNotification('Your Turn to Move');
-
         setGame(currentGame);
         setMoveNumber(currentGame.moves().length);
         setGameFEN(currentGame.fen());
         setPlayerTurn(_isPlayerTurnSC);
         setPlayerTurnSC(_isPlayerTurnSC);
-
+  
         getLastMoveSourceSquare(currentGame, currentGame.moves().length);
-
+  
         // for timer func
         setIsPlayer0Turn(!isPlayer0Turn);
       }
     };
-
+  
     const interval = setInterval(() => {
       (async () => {
         try {
-          const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
-
-          const [timePlayer0, timePlayer1, isPlayer0Turn] =
-            await GetTimeRemaining(wager);
-
-          setIsPlayer0Turn(isPlayer0Turn);
-
-          if (_isPlayerTurnSC !== isPlayerTurn) {
-            const movesArray = await GetGameMoves(wager, gameID);
-            const currentGame = new Chess();
-
-            for (let i = 0; i < movesArray.length; i++) {
-              currentGame.move(movesArray[i]);
-            }
-
-            // Only update game state if the moves on-chain match with local state
-            if (
-              localGame.fen() === currentGame.fen() ||
-              _isPlayerTurnSC !== isPlayerTurnSC
-            ) {
-              updateState(_isPlayerTurnSC, currentGame);
-              setTimePlayer0(timePlayer0);
-              setTimePlayer1(timePlayer1);
+          if (!isGasless) {
+            const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
+            const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(wager);
+  
+            setIsPlayer0Turn(isPlayer0Turn);
+  
+            if (_isPlayerTurnSC !== isPlayerTurn) {
+              const movesArray = await GetGameMoves(wager, gameID);
+              const currentGame = new Chess();
+  
+              for (let i = 0; i < movesArray.length; i++) {
+                currentGame.move(movesArray[i]);
+              }
+  
+              if (localGame.fen() === currentGame.fen() || _isPlayerTurnSC !== isPlayerTurnSC) {
+                updateState(_isPlayerTurnSC, currentGame);
+                setTimePlayer0(timePlayer0);
+                setTimePlayer1(timePlayer1);
+              }
             }
           }
         } catch (error) {
@@ -666,12 +668,38 @@ export const Board: React.FC<BoardProps> = ({ wager }) => {
         }
       })();
     }, 2000);
-
+  
+    if (isGasless) {
+      // Use WebSocket for gasless games
+      const socket = io('https://api.chess.fish', {
+        transports: ['websocket'],
+        path: '/socket.io/'
+      });
+  
+      socket.on('gameUpdate', (data: IGameSocketData) => {
+        if (isMounted) {
+          const { moves, gameFEN, timeRemainingPlayer0, timeRemainingPlayer1, actualTimeRemainingSC } = data;
+  
+          const currentGame = new Chess();
+          moves.forEach(move => currentGame.move(move));
+  
+          const _isPlayerTurnSC = actualTimeRemainingSC % 2 === 0;  // Update this condition as per your logic
+  
+          updateState(_isPlayerTurnSC, currentGame);
+          setTimePlayer0(timeRemainingPlayer0);
+          setTimePlayer1(timeRemainingPlayer1);
+        }
+      });
+    }
+  
     return () => {
       clearInterval(interval);
       isMounted = false;
     };
-  }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC]); // Add moveSound to dependencies array
+  }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC, isGasless]);
+
+
+
 
   return (
     <ChakraProvider>
