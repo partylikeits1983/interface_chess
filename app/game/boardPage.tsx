@@ -146,8 +146,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     getLastMoveSourceSquare,
   });
 
-
-
   // Initialize board
   useEffect(() => {
     // Function to set wager address and game information
@@ -416,8 +414,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     isPlayerTurnSC,
     isGameGasless,
   ]);
-
-
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
   async function handleSubmitMove(

@@ -163,8 +163,6 @@ export const BoardUtils = (
     return true;
   }
 
-
-
   const handleBoardClick =
     (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
       // check if wager exists....
@@ -183,7 +181,6 @@ export const BoardUtils = (
     function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
       setWagerAddress(event.target.value);
     }
-
 
     const onDrop = (sourceSquare: any, targetSquare: any) => {
       setRightClickedSquares({});
@@ -250,9 +247,6 @@ export const BoardUtils = (
   
       return { from: fromSquare, to: toSquare };
     }
-
-
-
 
   return {
     optionSquares,
