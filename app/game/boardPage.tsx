@@ -1,7 +1,9 @@
 'use client';
 
 import io from 'socket.io-client';
-import ethers from 'ethers';
+
+// do not use import...
+const ethers = require('ethers');
 
 import { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
@@ -98,7 +100,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [hasGameInitialized, setHasGameInitialized] = useState(false);
 
   const [isGasless, setIsGasless] = useState(false);
-
 
   const [isLoading, setLoading] = useState(true);
 
@@ -669,27 +670,49 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       })();
     }, 2000);
   
+
     if (isGasless) {
-      // Use WebSocket for gasless games
       const socket = io('https://api.chess.fish', {
         transports: ['websocket'],
         path: '/socket.io/'
       });
-  
-      socket.on('gameUpdate', (data: IGameSocketData) => {
+
+      const gameWager = '0x6A5A6B46bF96131f3e1E8dD54562A063bC5cA0e6';
+
+      socket.on('connect', () => {
+        console.log('Connected to server');
+        socket.emit('getGameFen', gameWager);
+        socket.emit('subscribeToGame', gameWager);
+      });
+
+      socket.on('updateGameFen', (data) => {
+        console.log('Received game data:', data);
         if (isMounted) {
           const { moves, gameFEN, timeRemainingPlayer0, timeRemainingPlayer1, actualTimeRemainingSC } = data;
-  
+
           const currentGame = new Chess();
-          moves.forEach(move => currentGame.move(move));
-  
-          const _isPlayerTurnSC = actualTimeRemainingSC % 2 === 0;  // Update this condition as per your logic
-  
-          updateState(_isPlayerTurnSC, currentGame);
-          setTimePlayer0(timeRemainingPlayer0);
-          setTimePlayer1(timeRemainingPlayer1);
+          moves.forEach((move: string) => currentGame.move(move));
+          
+            // const _isPlayerTurnSC = actualTimeRemainingSC % 2 === 0;  // Update this condition as per your logic
+
+            alert(gameFEN);
+
+            updateState(false, currentGame);
+            setTimePlayer0(timeRemainingPlayer0);
+            setTimePlayer1(timeRemainingPlayer1);
+
+          updateState(false, currentGame);  // Call your update function
         }
       });
+
+      socket.on('error', (errMsg) => {
+        console.error('Error:', errMsg);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      });
+
     }
   
     return () => {
