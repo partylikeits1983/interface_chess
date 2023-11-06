@@ -88,6 +88,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isGasless, setIsGasless] = useState(false);
 
   const [isLoading, setLoading] = useState(true);
+  const [isMoveInProgress, setIsMoveInProgress] = useState(false);
 
   const router = useRouter();
 
@@ -457,6 +458,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   }
 
   const makeAMove = (move: any): [IMove | null, boolean] => {
+    setIsMoveInProgress(true);
+
     const gameMoves = game.fen();
     const gameCopy = new Chess();
     gameCopy.load(gameMoves);
@@ -465,7 +468,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     let wasCaptured = false;
     try {
       result = gameCopy.move(move);
-
       setGame(gameCopy);
 
       let MoveString = move.from + move.to;
@@ -483,6 +485,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     }
 
     console.log(gameCopy.ascii());
+    setIsMoveInProgress(false);
 
     return [result, wasCaptured]; // null if the move was illegal, the move object if the move was legal
   };
@@ -604,12 +607,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
   }, [isPlayer0Turn]); // Removed timePlayer0 and timePlayer1 from dependencies
 
-  // MOVE LISTENER
-// MOVE LISTENER
+
+// MOVE LISTENER - Polling
 useEffect(() => {
   let isMounted = true;
-
-  alert(localGame.fen());
+  let interval: NodeJS.Timeout;
 
   const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
     if (isMounted) {
@@ -618,8 +620,6 @@ useEffect(() => {
       moveSound.play();
 
       opponentMoveNotification('Your Turn to Move');
-      alert("HERE4");
-      console.log("x", currentGame.ascii());
       setGame(currentGame);
       setMoveNumber(currentGame.moves().length);
       setGameFEN(currentGame.fen());
@@ -631,50 +631,78 @@ useEffect(() => {
     }
   };
 
-  let interval: NodeJS.Timeout; // Declare interval with a type
-
-  if (!isGasless) {
+  // Polling occurs when isGasless is strictly false
+  if (isGasless === false) {
     interval = setInterval(() => {
-      (async () => {
-        try {
-          const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
-          const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(wager);
+      if (!isMoveInProgress) {
+        (async () => {
+          try {
+            const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
+            const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(wager);
 
-          setIsPlayer0Turn(isPlayer0Turn);
+            setIsPlayer0Turn(isPlayer0Turn);
 
-          if (_isPlayerTurnSC !== isPlayerTurn) {
-            const movesArray = await GetGameMoves(wager, gameID);
-            const currentGame = new Chess();
+            if (_isPlayerTurnSC !== isPlayerTurn) {
+              const movesArray = await GetGameMoves(wager, gameID);
+              const currentGame = new Chess();
 
-            for (let i = 0; i < movesArray.length; i++) {
-              currentGame.move(movesArray[i]);
+              for (let i = 0; i < movesArray.length; i++) {
+                currentGame.move(movesArray[i]);
+              }
+
+              if (localGame.fen() === currentGame.fen() || _isPlayerTurnSC !== isPlayerTurnSC) {
+                updateState(_isPlayerTurnSC, currentGame);
+                setTimePlayer0(timePlayer0);
+                setTimePlayer1(timePlayer1);
+              }
             }
-
-            if (localGame.fen() === currentGame.fen() || _isPlayerTurnSC !== isPlayerTurnSC) {
-              updateState(_isPlayerTurnSC, currentGame);
-              setTimePlayer0(timePlayer0);
-              setTimePlayer1(timePlayer1);
-            }
+          } catch (error) {
+            console.error(error);
           }
-        } catch (error) {
-          console.error(error);
-        }
-      })();
+        })();
+      }
     }, 2000);
   }
 
+  return () => {
+    clearInterval(interval); // Clear the interval when the component unmounts
+    isMounted = false;
+  };
+}, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC, isGasless]);
+
+// MOVE LISTENER - WebSocket
+useEffect(() => {
+  let isMounted = true;
+
+  const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
+    if (isMounted) {
+      const moveSound = new Audio('/sounds/Move.mp3');
+      moveSound.load();
+      moveSound.play();
+
+      opponentMoveNotification('Your Turn to Move');
+      setGame(currentGame);
+      setMoveNumber(currentGame.moves().length);
+      setGameFEN(currentGame.fen());
+      setPlayerTurn(_isPlayerTurnSC);
+      setPlayerTurnSC(_isPlayerTurnSC);
+
+      getLastMoveSourceSquare(currentGame, currentGame.moves().length);
+      setIsPlayer0Turn(!isPlayer0Turn);
+    }
+  };
+
+  // WebSocket connection is established when isGasless is true
   if (isGasless) {
     const socket = io('https://api.chess.fish', {
       transports: ['websocket'],
       path: '/socket.io/',
     });
 
-    const gameWager = '0x6A5A6B46bF96131f3e1E8dD54562A063bC5cA0e6';
-
     socket.on('connect', () => {
       console.log('Connected to server');
-      socket.emit('getGameFen', gameWager);
-      socket.emit('subscribeToGame', gameWager);
+      socket.emit('getGameFen', wager);
+      socket.emit('subscribeToGame', wager);
     });
 
     socket.on('updateGameFen', (data) => {
@@ -688,7 +716,7 @@ useEffect(() => {
         const isPlay0Turn = moves.length % 2 === 0;
         setIsPlayer0Turn(isPlay0Turn);
 
-        updateState(false, currentGame);
+        updateState(true, currentGame);
         setTimePlayer0(timeRemainingPlayer0);
         setTimePlayer1(timeRemainingPlayer1);
         setGameFEN(gameFEN);
@@ -705,10 +733,11 @@ useEffect(() => {
   }
 
   return () => {
-    clearInterval(interval); // Clear the interval when the component unmounts
     isMounted = false;
   };
-}, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC, isGasless]);
+}, [wager, isGasless]);
+
+
 
   return (
     <ChakraProvider>
