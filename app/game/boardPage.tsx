@@ -25,9 +25,7 @@ import useCheckValidMove from './boardUtils/useCheckValidMove';
 import useUpdateTime from './boardUtils/useUpdateTime';
 
 import {
-  ICard,
   IBoardProps,
-  IMove,
   IGameSocketData,
 } from './interfaces/interfaces';
 
@@ -55,8 +53,6 @@ import {
   Tooltip,
   Switch,
 } from '@chakra-ui/react';
-import alertWarningFeedback from '#/ui/alertWarningFeedback';
-import { current } from 'tailwindcss/colors';
 
 import { BoardUtils } from './boardUtils/boardUtils';
 
@@ -94,7 +90,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isGameGasless, setIsGameGasless] = useState(false);
 
   const [isLoading, setLoading] = useState(true);
-  const [isMoveInProgress, setIsMoveInProgress] = useState(false);
+  // const [isMoveInProgress, setIsMoveInProgress] = useState(false);
 
   const router = useRouter();
 
@@ -129,7 +125,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setGameFEN,
     setLocalGame,
     setMoveNumber,
-    setIsMoveInProgress,
     setPlayerTurn,
     handleSubmitMove,
   );

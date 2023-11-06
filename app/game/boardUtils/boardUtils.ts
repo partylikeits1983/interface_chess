@@ -31,7 +31,6 @@ export const BoardUtils = (
   setGameFEN: Function,
   setLocalGame: Function,
   setMoveNumber: Function,
-  setIsMoveInProgress: Function,
   setPlayerTurn: Function,
   handleSubmitMove: Function,
 ) => {
@@ -46,8 +45,6 @@ export const BoardUtils = (
 
   // MAKE A MOVE LOGIC
   const makeAMove = (move: any): [IMove | null, boolean] => {
-    setIsMoveInProgress(true);
-
     const gameMoves = game.fen();
     const gameCopy = new Chess();
     gameCopy.load(gameMoves);
@@ -73,7 +70,6 @@ export const BoardUtils = (
     }
 
     console.log(gameCopy.ascii());
-    setIsMoveInProgress(false);
 
     return [result, wasCaptured]; // null if the move was illegal, the move object if the move was legal
   };
