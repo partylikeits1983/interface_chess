@@ -938,12 +938,33 @@ export const PlayMove = async (
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // @dev set to the expiration of the wager
 
       const gameNumber = Number(await chess.getGameLength(wagerAddress));
-      const moveNumber = Number((await chess.getGameMoves(wagerAddress, gameNumber)).length);   
+      const moveNumber = Number(
+        (await chess.getGameMoves(wagerAddress, gameNumber)).length,
+      );
 
-      const message = await chess.generateMoveMessage(wagerAddress, hex_move, moveNumber, timeStamp);
-      const messageHash = await chess.getMessageHash(wagerAddress, hex_move, moveNumber, timeStamp);
+      const message = await chess.generateMoveMessage(
+        wagerAddress,
+        hex_move,
+        moveNumber,
+        timeStamp,
+      );
+      const messageHash = await chess.getMessageHash(
+        wagerAddress,
+        hex_move,
+        moveNumber,
+        timeStamp,
+      );
 
-      await signTxPushToDB(wagerAddress, move, hex_move, gameFEN, moveNumber, gameNumber, message, messageHash);
+      await signTxPushToDB(
+        wagerAddress,
+        move,
+        hex_move,
+        gameFEN,
+        moveNumber,
+        gameNumber,
+        message,
+        messageHash,
+      );
     } else {
       const tx = await chess.playMove(wagerAddress, hex_move);
       await tx.wait();

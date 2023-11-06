@@ -18,7 +18,12 @@ import { checkIfGasless } from '../api/gaslessAPI';
 
 import { useRouter } from 'next/navigation';
 
-import { ICard, IBoardProps, IMove, IGameSocketData, } from "./interfaces/interfaces"
+import {
+  ICard,
+  IBoardProps,
+  IMove,
+  IGameSocketData,
+} from './interfaces/interfaces';
 
 const {
   CheckValidMove,
@@ -619,45 +624,49 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   // MOVE LISTENER
   useEffect(() => {
     let isMounted = true;
-  
+
     const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
       if (isMounted) {
         const moveSound = new Audio('/sounds/Move.mp3');
         moveSound.load();
         moveSound.play();
-  
+
         opponentMoveNotification('Your Turn to Move');
         setGame(currentGame);
         setMoveNumber(currentGame.moves().length);
         setGameFEN(currentGame.fen());
         setPlayerTurn(_isPlayerTurnSC);
         setPlayerTurnSC(_isPlayerTurnSC);
-  
+
         getLastMoveSourceSquare(currentGame, currentGame.moves().length);
-  
+
         // for timer func
         setIsPlayer0Turn(!isPlayer0Turn);
       }
     };
-  
+
     const interval = setInterval(() => {
       (async () => {
         try {
           if (!isGasless) {
             const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
-            const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(wager);
-  
+            const [timePlayer0, timePlayer1, isPlayer0Turn] =
+              await GetTimeRemaining(wager);
+
             setIsPlayer0Turn(isPlayer0Turn);
-  
+
             if (_isPlayerTurnSC !== isPlayerTurn) {
               const movesArray = await GetGameMoves(wager, gameID);
               const currentGame = new Chess();
-  
+
               for (let i = 0; i < movesArray.length; i++) {
                 currentGame.move(movesArray[i]);
               }
-  
-              if (localGame.fen() === currentGame.fen() || _isPlayerTurnSC !== isPlayerTurnSC) {
+
+              if (
+                localGame.fen() === currentGame.fen() ||
+                _isPlayerTurnSC !== isPlayerTurnSC
+              ) {
                 updateState(_isPlayerTurnSC, currentGame);
                 setTimePlayer0(timePlayer0);
                 setTimePlayer1(timePlayer1);
@@ -669,12 +678,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         }
       })();
     }, 2000);
-  
 
     if (isGasless) {
       const socket = io('https://api.chess.fish', {
         transports: ['websocket'],
-        path: '/socket.io/'
+        path: '/socket.io/',
       });
 
       const gameWager = '0x6A5A6B46bF96131f3e1E8dD54562A063bC5cA0e6';
@@ -688,22 +696,28 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       socket.on('updateGameFen', (data) => {
         console.log('Received game data:', data);
         if (isMounted) {
-          const { moves, gameFEN, timeRemainingPlayer0, timeRemainingPlayer1, actualTimeRemainingSC } = data;
+          const {
+            moves,
+            gameFEN,
+            timeRemainingPlayer0,
+            timeRemainingPlayer1,
+            actualTimeRemainingSC,
+          } = data;
 
           const currentGame = new Chess();
           moves.forEach((move: string) => currentGame.move(move));
-                  
-            const isPlay0Turn = moves.length % 2 === 0;  // Update this condition as per your logic
 
-            setIsPlayer0Turn(isPlay0Turn);
-            // setIsPlayer0White()
-            
-            updateState(false, currentGame);
-            setTimePlayer0(timeRemainingPlayer0);
-            setTimePlayer1(timeRemainingPlayer1);
-            setGameFEN(gameFEN);
+          const isPlay0Turn = moves.length % 2 === 0; // Update this condition as per your logic
 
-          updateState(false, currentGame);  // Call your update function
+          setIsPlayer0Turn(isPlay0Turn);
+          // setIsPlayer0White()
+
+          updateState(false, currentGame);
+          setTimePlayer0(timeRemainingPlayer0);
+          setTimePlayer1(timeRemainingPlayer1);
+          setGameFEN(gameFEN);
+
+          updateState(false, currentGame); // Call your update function
         }
       });
 
@@ -714,17 +728,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       socket.on('disconnect', () => {
         console.log('Disconnected from server');
       });
-
     }
-  
+
     return () => {
       clearInterval(interval);
       isMounted = false;
     };
   }, [wager, wagerAddress, localGame, isPlayerTurn, isPlayerTurnSC, isGasless]);
-
-
-
 
   return (
     <ChakraProvider>
