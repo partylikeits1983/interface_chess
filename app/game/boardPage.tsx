@@ -692,14 +692,16 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           const currentGame = new Chess();
           moves.forEach((move: string) => currentGame.move(move));
-          
-            // const _isPlayerTurnSC = actualTimeRemainingSC % 2 === 0;  // Update this condition as per your logic
+                  
+            const isPlay0Turn = moves.length % 2 === 0;  // Update this condition as per your logic
 
-            alert(gameFEN);
-
+            setIsPlayer0Turn(isPlay0Turn);
+            // setIsPlayer0White()
+            
             updateState(false, currentGame);
             setTimePlayer0(timeRemainingPlayer0);
             setTimePlayer1(timeRemainingPlayer1);
+            setGameFEN(gameFEN);
 
           updateState(false, currentGame);  // Call your update function
         }
