@@ -21,6 +21,9 @@ import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility
 
 import { useRouter } from 'next/navigation';
 
+import useCheckValidMove from './boardUtils/useCheckValidMove';
+import useUpdateTime from './boardUtils/useUpdateTime';
+
 import {
   ICard,
   IBoardProps,
@@ -82,8 +85,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [wagerToken, setWagerToken] = useState('');
   const [wagerAmount, setWagerAmount] = useState('');
 
-  const [timePlayer0, setTimePlayer0] = useState(0);
-  const [timePlayer1, setTimePlayer1] = useState(0);
+  const [timePlayer0, setTimePlayer0] = useState<number>(0);
+  const [timePlayer1, setTimePlayer1] = useState<number>(0);
+  
   const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
@@ -94,6 +98,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   const router = useRouter();
 
+  useCheckValidMove(moves, CheckValidMove);
+  useUpdateTime(isPlayer0Turn, setTimePlayer0, setTimePlayer1);
 
   const {
     optionSquares,
@@ -416,36 +422,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     isGameGasless,
   ]);
 
-  /// Chess Move logic
-  // Check valid move with sc
-  useEffect(() => {
-    const callMoveVerification = async () => {
-      try {
-        await CheckValidMove(moves);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    callMoveVerification();
-  }, [moves]);
-
-  // UPDATE TIME useEffect
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    // determine whose turn it is and decrement the appropriate timer
-    timer = setInterval(() => {
-      if (isPlayer0Turn) {
-        setTimePlayer0((prevTime) => prevTime - 1);
-      } else {
-        setTimePlayer1((prevTime) => prevTime - 1);
-      }
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [isPlayer0Turn]);
 
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
