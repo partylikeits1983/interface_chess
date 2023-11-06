@@ -13,7 +13,7 @@ interface UseGameControlsProps {
   getLastMoveSourceSquare: (game: Chess, moveNumber: number) => void;
 }
 
-const useGameControls = ({
+const BackAndForwardGameControls = ({
   hasGameInitialized,
   moveNumber,
   numberOfGames,
@@ -107,4 +107,4 @@ const useGameControls = ({
   };
 };
 
-export default useGameControls;
+export default BackAndForwardGameControls;

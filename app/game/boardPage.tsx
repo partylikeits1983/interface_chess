@@ -16,8 +16,8 @@ import ForwardBackButtons from './forward-back-buttons';
 import opponentMoveNotification from 'ui/opponentMoveNotification';
 import { checkIfGasless } from '../api/gaslessAPI';
 
-import useGameControls from './boardUtils/useGameControls';
-import { moveExists } from './boardUtils/chessUtils'; // Utility functions
+import BackAndForwardGameControls from './boardUtils/gameControls';
+import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility functions
 
 import { useRouter } from 'next/navigation';
 
@@ -32,7 +32,6 @@ const {
   CheckValidMove,
   GetGameMoves,
   PlayMove,
-  IsPlayerWhite,
   GetPlayerTurn,
   GetNumberOfGames,
   GetWagerData,
@@ -48,7 +47,6 @@ import {
   Text,
   Spinner,
   Skeleton,
-  Spacer,
   Center,
   ChakraProvider,
   Tooltip,
@@ -72,7 +70,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [moves, setMoves] = useState<string[]>([]);
   const [moveNumber, setMoveNumber] = useState(0);
 
-  const [wagerAddress, setWagerAddress] = useState('');
+  // const [wagerAddress, setWagerAddress] = useState('');
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
@@ -89,8 +87,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
-  const [hasGameInitialized, setHasGameInitialized] = useState(false);
-
   const [isGameGasless, setIsGameGasless] = useState(false);
 
   const [isLoading, setLoading] = useState(true);
@@ -98,22 +94,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   const router = useRouter();
 
-  const {
-    handleBackGame,
-    handleForwardGame,
-    handleBackMove,
-    handleForwardMove,
-  } = useGameControls({
-    hasGameInitialized: true, // Replace with actual condition
-    moveNumber,
-    numberOfGames,
-    game,
-    setGameID,
-    setNumberOfGamesInfo,
-    setMoveNumber,
-    setGameFEN,
-    getLastMoveSourceSquare,
-  });
 
   const {
     optionSquares,
@@ -129,6 +109,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     makeAMove,
     onSquareClick,
     getMoveOptions,
+    handleBoardClick,
+    wagerAddress,
+    setWagerAddress,
+    handleChange,
+    onDrop,
+    getLastMoveSourceSquare
   } = BoardUtils(
     game,
     setGame,
@@ -141,6 +127,25 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerTurn,
     handleSubmitMove,
   );
+
+  const {
+    handleBackGame,
+    handleForwardGame,
+    handleBackMove,
+    handleForwardMove,
+  } = BackAndForwardGameControls({
+    hasGameInitialized: true, // Replace with actual condition
+    moveNumber,
+    numberOfGames,
+    game,
+    setGameID,
+    setNumberOfGamesInfo,
+    setMoveNumber,
+    setGameFEN,
+    getLastMoveSourceSquare,
+  });
+
+
 
   // Initialize board
   useEffect(() => {
@@ -442,46 +447,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
   }, [isPlayer0Turn]);
 
-  async function getLastMoveSourceSquare(
-    gameInstance: Chess,
-    moveNumber: number,
-  ) {
-    // Obtain all past moves from the passed gameInstance
-    const moves = gameInstance.history({ verbose: true });
-
-    // If there are no moves, return false.
-    if (moves.length === 0) {
-      return false;
-    }
-
-    // Get the last move from the moves array
-    const lastMove = moves[moveNumber];
-
-    // If there's no last move (e.g., moveNumber exceeds the move history), return false.
-    if (!lastMove) {
-      return false;
-    }
-
-    // The 'from' property indicates the source square of the move
-    const fromSquare = lastMove.from;
-    const toSquare = lastMove.to;
-
-    const highlightSquares: any = {};
-
-    // Highlight the source square with a light green
-    highlightSquares[fromSquare] = {
-      background: 'rgba(144, 238, 144, 0.4)', // light green
-    };
-
-    // Highlight the destination square with a slightly darker green
-    highlightSquares[toSquare] = {
-      background: 'rgba(0, 128, 0, 0.4)', // darker green
-    };
-
-    setMoveSquares(highlightSquares);
-
-    return { from: fromSquare, to: toSquare };
-  }
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
   async function handleSubmitMove(
@@ -509,261 +474,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       return false;
     }
   }
-
-  function numberToString(num: number): string {
-    return num.toLocaleString('fullwide', { useGrouping: false });
-  }
-
-  const handleBoardClick =
-    (address: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
-      // check if wager exists....
-      const wager: ICard = await GetWagerData(address);
-
-      // check if wager is not empty and not null
-      if (wager && Object.keys(wager).length !== 0) {
-        alertWarningFeedback(`Getting wager data: ${wager.matchAddress}`);
-        e.preventDefault(); // This may be optional, depending on your needs
-        router.push(`/game/${address}`);
-      } else {
-        alertWarningFeedback('ROUTER: Wager address not found');
-      }
-    };
-
-  // Setting wager address in input box
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    setWagerAddress(event.target.value);
-  }
-
-  /* 
-  useEffect(() => {
-    // This will only run once hasGameInitialized is set to true
-    const handleKeyDown = (event: KeyboardEvent) => {
-      console.log('Key pressed:', event.key);
-      switch (event.key) {
-        case 'ArrowLeft':
-          handleBackMove();
-          break;
-        case 'ArrowRight':
-          handleForwardMove();
-          break;
-        default:
-          break;
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [hasGameInitialized, moveNumber]);
-
-
-  const handleBackGame = () => {
-    setGameID((prevGameID) => {
-      const newGameID = prevGameID > 0 ? prevGameID - 1 : prevGameID;
-      const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
-      setNumberOfGamesInfo(gameNumberInfo);
-      return newGameID;
-    });
-  };
-
-  const handleForwardGame = () => {
-    // opponentMoveNotification('Your Turn to Move');
-    setGameID((prevGameID) => {
-      const newGameID =
-        prevGameID < numberOfGames - 1 ? prevGameID + 1 : prevGameID;
-      const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
-      setNumberOfGamesInfo(gameNumberInfo);
-      return newGameID;
-    });
-  };
-
-  const handleBackMove = () => {
-    const moves = game.history();
-    const tempGame = new Chess();
-
-    if (moveNumber >= 0) {
-      const newMoveNumber = moveNumber - 1;
-      setMoveNumber(newMoveNumber);
-      for (let i = 0; i <= newMoveNumber; i++) {
-        tempGame.move(moves[i]);
-      }
-      setGameFEN(tempGame.fen());
-      getLastMoveSourceSquare(tempGame, newMoveNumber);
-    }
-  };
-
-  const handleForwardMove = () => {
-    const moves = game.history();
-    const tempGame = new Chess();
-
-    if (moveNumber < moves.length - 1) {
-      const newMoveNumber = moveNumber + 1;
-      setMoveNumber(newMoveNumber);
-      for (let i = 0; i <= newMoveNumber; i++) {
-        tempGame.move(moves[i]);
-      }
-      setGameFEN(tempGame.fen());
-      getLastMoveSourceSquare(tempGame, newMoveNumber);
-    }
-  }; */
-
-  // ON DROP PIECE ON SQUARE
-  const onDrop = (sourceSquare: any, targetSquare: any) => {
-    setRightClickedSquares({});
-    setMoveFrom('');
-    setOptionSquares({});
-    setPotentialMoves([]);
-
-    const [move, wasCaptured] = makeAMove({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: 'q', // always promote to a queen for example simplicity
-    });
-
-    const moveString = sourceSquare + targetSquare;
-
-    // submit move to smart contract
-    handleSubmitMove(moveString, wasCaptured);
-
-    setPlayerTurn(false);
-
-    // illegal move
-    if (move === null) return false;
-
-    return true;
-  };
-  /* 
-  // CLICK TO MOVE
-  const [optionSquares, setOptionSquares] = useState({});
-  const [potentialMoves, setPotentialMoves] = useState<IMove[]>([]);
-  const [rightClickedSquares, setRightClickedSquares] = useState({});
-  const [moveFrom, setMoveFrom] = useState('');
-  const [moveSquares, setMoveSquares] = useState({});
-
-  // MAKE A MOVE LOGIC
-  const makeAMove = (move: any): [IMove | null, boolean] => {
-    setIsMoveInProgress(true);
-
-    const gameMoves = game.fen();
-    const gameCopy = new Chess();
-    gameCopy.load(gameMoves);
-
-    let result;
-    let wasCaptured = false;
-    try {
-      result = gameCopy.move(move);
-      setGame(gameCopy);
-
-      let MoveString = move.from + move.to;
-      setMoves([...moves, MoveString]);
-      setGameFEN(gameCopy.fen());
-      setLocalGame(gameCopy);
-      setMoveNumber(game.moves().length);
-
-      if (result && result.captured) {
-        wasCaptured = true;
-      }
-    } catch {
-      result = null;
-      console.log('Invalid move');
-    }
-
-    console.log(gameCopy.ascii());
-    setIsMoveInProgress(false);
-
-    return [result, wasCaptured]; // null if the move was illegal, the move object if the move was legal
-  };
-
-  // ON SQUARE CLICK BOARD
-  const onSquareClick = (square: any): void => {
-    // Make a move
-    setRightClickedSquares({});
-    setMoveFrom('');
-    setOptionSquares({});
-    setPotentialMoves([]);
-
-    function resetFirstMove(square: any) {
-      const hasOptions = getMoveOptions(square);
-      if (hasOptions) setMoveFrom(square);
-    }
-
-    // from square
-    if (!moveFrom) {
-      resetFirstMove(square);
-      return;
-    }
-
-    // prevent error when clicking twice on same square
-    if (moveFrom === square) {
-      return;
-    }
-
-    if (!moveExists(potentialMoves, moveFrom, square)) {
-      console.log("move doesn't exist");
-
-      return;
-    }
-
-    // attempt to make move
-    const gameMoves = game.fen();
-    const gameCopy = new Chess();
-    gameCopy.load(gameMoves);
-
-    const [move, wasCaptured] = makeAMove({
-      from: moveFrom,
-      to: square,
-      promotion: 'q', // always promote to a queen for example simplicity
-    });
-
-    // if invalid, setMoveFrom and getMoveOptions
-    if (move === null) {
-      resetFirstMove(square);
-      return;
-    }
-
-    // calling smart contract to send tx
-    const moveString = moveFrom + square;
-    handleSubmitMove(moveString, wasCaptured);
-
-    setPlayerTurn(false);
-    setMoveFrom('');
-    setOptionSquares({});
-    setPotentialMoves([]);
-  };
-
-  // GET MOVE OPTIONS ON CLICK
-  function getMoveOptions(square: any) {
-    const moves = game.moves({
-      square,
-      verbose: true,
-    });
-    if (moves.length === 0) {
-      return false;
-    }
-
-    const newSquares: any = {};
-    moves.map((move) => {
-      newSquares[move.to] = {
-        background:
-          game.get(move.to) &&
-          game.get(move.to).color !== game.get(square).color
-            ? 'radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)'
-            : 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',
-        borderRadius: '50%',
-      };
-      return move;
-    });
-    newSquares[square] = {
-      background: 'rgba(255, 255, 0, 0.4)',
-    };
-
-    setOptionSquares(newSquares);
-    setPotentialMoves(moves);
-
-    return true;
-  } */
 
   return (
     <ChakraProvider>
