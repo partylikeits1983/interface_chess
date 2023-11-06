@@ -53,25 +53,6 @@ import {
 } from '@chakra-ui/react';
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
-  numberOfGames: number;
-  isInProgress: boolean;
-  timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
-}
-
-interface BoardProps {
-  wager: string;
-}
-
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isGasLess, setIsGasLess] = useState(true);
 
@@ -299,6 +280,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setMoveSquares({});
         }
 
+        alert("HERE1");
         setGame(newGame);
         setGameFEN(newGame.fen());
         setLocalGame(newGame);
@@ -355,6 +337,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         for (let i = 0; i < movesArray.length; i++) {
           newGame.move(movesArray[i]);
         }
+
+        alert("HERE2");
         setGame(newGame);
         setMoveNumber(Number(movesArray.length) - 1);
         setGameFEN(newGame.fen());
@@ -483,6 +467,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     let wasCaptured = false;
     try {
       result = gameCopy.move(move);
+
+      alert("HERE3");
+
       setGame(gameCopy);
 
       let MoveString = move.from + move.to;
@@ -632,6 +619,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         moveSound.play();
 
         opponentMoveNotification('Your Turn to Move');
+
+        alert("HERE4");
+
         setGame(currentGame);
         setMoveNumber(currentGame.moves().length);
         setGameFEN(currentGame.fen());
