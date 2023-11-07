@@ -186,10 +186,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
 
   // Initialize board
-  // Edit this useEffect to check if isGasless is true,
-  // And if so, get the data from the websocket
-  // Make sure that the logic from other useEffect that gets Data from the websocket
-  // does not conflict with the new logic that you write.
   useEffect(() => {
     let isMounted = true;
 
@@ -224,12 +220,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             });
 
             updateState("222", true, newGame);
-
-/*             setGame(newGame);
-            setGameFEN(newGame.fen());
-            setLocalGame(newGame);
-            setMoveNumber(movesArray.length - 1);
-            getLastMoveSourceSquare(newGame, movesArray.length - 1); */
           }
         } else {
           // Establish WebSocket connection for gasless game
@@ -252,12 +242,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               });
 
               updateState("248", true, currentGame);
-
-              /*               
-              setGame(currentGame);
-              setGameFEN(currentGame.fen());
-              setMoveNumber(moves.length);
-              getLastMoveSourceSquare(currentGame, moves.length); */
             }
           });
 
@@ -283,30 +267,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       isMounted = false;
     };
   }, [wager, gameID, isGameGasless]);
-
-
-  // const 
-
-
-  const updateState = (source: string, _isPlayerTurnSC: boolean, currentGame: Chess) => {
-      const moveSound = new Audio('/sounds/Move.mp3');
-      moveSound.load();
-      moveSound.play();
-
-      opponentMoveNotification('Your Turn to Move');
-      alert(source);
-
-      setGame(currentGame);
-      setMoveNumber(currentGame.moves().length);
-      setGameFEN(currentGame.fen());
-      setPlayerTurn(_isPlayerTurnSC);
-      setPlayerTurnSC(_isPlayerTurnSC);
-
-      getLastMoveSourceSquare(currentGame, currentGame.moves().length - 1);
-      setIsPlayer0Turn(!isPlayer0Turn);
-
-      setLoading(false);
-  };
 
   // MOVE LISTENER - WebSocket
   useEffect(() => {
@@ -414,6 +374,26 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     isPlayerTurnSC,
     isGameGasless,
   ]);
+
+  const updateState = (source: string, _isPlayerTurnSC: boolean, currentGame: Chess) => {
+    const moveSound = new Audio('/sounds/Move.mp3');
+    moveSound.load();
+    moveSound.play();
+
+    opponentMoveNotification('Your Turn to Move');
+    // alert(source);
+
+    setGame(currentGame);
+    setMoveNumber(currentGame.moves().length);
+    setGameFEN(currentGame.fen());
+    setPlayerTurn(_isPlayerTurnSC);
+    setPlayerTurnSC(_isPlayerTurnSC);
+
+    getLastMoveSourceSquare(currentGame, currentGame.moves().length - 1);
+    setIsPlayer0Turn(!isPlayer0Turn);
+
+    setLoading(false);
+};
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
   async function handleSubmitMove(
