@@ -57,6 +57,9 @@ import {
 import { BoardUtils } from './boardUtils/boardUtils';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
+
+  const [hasPingedAPI, setHasPingedAPI] = useState(false);
+
   const [isMoveGasLess, setIsMoveGasLess] = useState(true);
 
   const [gameID, setGameID] = useState(0);
@@ -89,7 +92,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isGameGasless, setIsGameGasless] = useState(false);
 
   const [isLoading, setLoading] = useState(true);
-
 
   useCheckValidMove(moves, CheckValidMove);
   useUpdateTime(isPlayer0Turn, setTimePlayer0, setTimePlayer1);
@@ -143,7 +145,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     getLastMoveSourceSquare,
   });
 
-
   useEffect(() => {
     // Function to fetch game status
     const fetchGameStatus = async () => {
@@ -153,6 +154,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       } catch (err) {
         console.log(err);
       }
+      setHasPingedAPI(true);
     };
     fetchGameStatus();
 
@@ -180,7 +182,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   }
     // Call both functions
     asyncSetWagerAddress();
-  }, [wager]);
+  }, [wager, isGameGasless]);
 
 
   // Initialize board
@@ -192,10 +194,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     let isMounted = true;
 
     const asyncSetWagerAddress = async () => {
-      if (wager !== '') {
+      if (wager !== '' && hasPingedAPI === true) {
         setWagerAddress(wager);
 
-        if (!isGameGasless) {
+        if (isGameGasless === false) {
           const matchData = await GetWagerData(wager);
           setWagerAmount(
             ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
@@ -221,11 +223,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               newGame.move(move);
             });
 
-            setGame(newGame);
+            updateState("222", true, newGame);
+
+/*             setGame(newGame);
             setGameFEN(newGame.fen());
             setLocalGame(newGame);
             setMoveNumber(movesArray.length - 1);
-            getLastMoveSourceSquare(newGame, movesArray.length - 1);
+            getLastMoveSourceSquare(newGame, movesArray.length - 1); */
           }
         } else {
           // Establish WebSocket connection for gasless game
@@ -247,10 +251,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 currentGame.move(move);
               });
 
+              updateState("248", true, currentGame);
+
+              /*               
               setGame(currentGame);
               setGameFEN(currentGame.fen());
               setMoveNumber(moves.length);
-              getLastMoveSourceSquare(currentGame, moves.length);
+              getLastMoveSourceSquare(currentGame, moves.length); */
             }
           });
 
@@ -277,29 +284,33 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
   }, [wager, gameID, isGameGasless]);
 
+
+  // const 
+
+
+  const updateState = (source: string, _isPlayerTurnSC: boolean, currentGame: Chess) => {
+      const moveSound = new Audio('/sounds/Move.mp3');
+      moveSound.load();
+      moveSound.play();
+
+      opponentMoveNotification('Your Turn to Move');
+      alert(source);
+
+      setGame(currentGame);
+      setMoveNumber(currentGame.moves().length);
+      setGameFEN(currentGame.fen());
+      setPlayerTurn(_isPlayerTurnSC);
+      setPlayerTurnSC(_isPlayerTurnSC);
+
+      getLastMoveSourceSquare(currentGame, currentGame.moves().length - 1);
+      setIsPlayer0Turn(!isPlayer0Turn);
+
+      setLoading(false);
+  };
+
   // MOVE LISTENER - WebSocket
   useEffect(() => {
     let isMounted = true;
-
-    const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
-      if (isMounted) {
-        const moveSound = new Audio('/sounds/Move.mp3');
-        moveSound.load();
-        moveSound.play();
-
-        opponentMoveNotification('Your Turn to Move');
-        setGame(currentGame);
-        setMoveNumber(currentGame.moves().length);
-        setGameFEN(currentGame.fen());
-        setPlayerTurn(_isPlayerTurnSC);
-        setPlayerTurnSC(_isPlayerTurnSC);
-
-        getLastMoveSourceSquare(currentGame, currentGame.moves().length);
-        setIsPlayer0Turn(!isPlayer0Turn);
-
-        setLoading(false);
-      }
-    };
 
     // WebSocket connection is established when isGameGasless is true
     if (isGameGasless === true) {
@@ -330,7 +341,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           const isPlayer0Turn = moves.length % 2 === 0;
 
-          updateState(true, currentGame);
+          if (isMounted) {
+            updateState("333", true, currentGame);
+          }
         }
       });
 
@@ -352,24 +365,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   useEffect(() => {
     let isMounted = true;
     let interval: NodeJS.Timeout;
-
-    const updateState = (_isPlayerTurnSC: boolean, currentGame: Chess) => {
-      if (isMounted) {
-        const moveSound = new Audio('/sounds/Move.mp3');
-        moveSound.load();
-        moveSound.play();
-
-        opponentMoveNotification('Your Turn to Move');
-        setGame(currentGame);
-        setMoveNumber(currentGame.moves().length);
-        setGameFEN(currentGame.fen());
-        setPlayerTurn(_isPlayerTurnSC);
-        setPlayerTurnSC(_isPlayerTurnSC);
-
-        getLastMoveSourceSquare(currentGame, currentGame.moves().length);
-        setIsPlayer0Turn(!isPlayer0Turn);
-      }
-    };
 
     // Polling occurs when isGameGasless is strictly false
     if (isGameGasless === false) {
@@ -394,7 +389,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 localGame.fen() === currentGame.fen() ||
                 _isPlayerTurnSC !== isPlayerTurnSC
               ) {
-                updateState(_isPlayerTurnSC, currentGame);
+                if (isMounted) { 
+                  updateState("381", _isPlayerTurnSC, currentGame);
+                }
                 setTimePlayer0(timePlayer0);
                 setTimePlayer1(timePlayer1);
               }
