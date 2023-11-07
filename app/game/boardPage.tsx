@@ -57,7 +57,7 @@ import {
 import { BoardUtils } from './boardUtils/boardUtils';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
-  const [isGasLess, setIsGasLess] = useState(true);
+  const [isMoveGasLess, setIsMoveGasLess] = useState(true);
 
   const [gameID, setGameID] = useState(0);
 
@@ -69,7 +69,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [moves, setMoves] = useState<string[]>([]);
   const [moveNumber, setMoveNumber] = useState(0);
 
-  // const [wagerAddress, setWagerAddress] = useState('');
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
@@ -90,27 +89,25 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isGameGasless, setIsGameGasless] = useState(false);
 
   const [isLoading, setLoading] = useState(true);
-  // const [isMoveInProgress, setIsMoveInProgress] = useState(false);
 
-  const router = useRouter();
 
   useCheckValidMove(moves, CheckValidMove);
   useUpdateTime(isPlayer0Turn, setTimePlayer0, setTimePlayer1);
 
   const {
     optionSquares,
-    setOptionSquares,
-    potentialMoves,
-    setPotentialMoves,
+    //setOptionSquares,
+    // potentialMoves,
+    // setPotentialMoves,
     rightClickedSquares,
-    setRightClickedSquares,
-    moveFrom,
-    setMoveFrom,
+    // setRightClickedSquares,
+    // moveFrom,
+    // setMoveFrom,
     moveSquares,
-    setMoveSquares,
-    makeAMove,
+    // setMoveSquares,
+    // makeAMove,
     onSquareClick,
-    getMoveOptions,
+    // getMoveOptions,
     handleBoardClick,
     wagerAddress,
     setWagerAddress,
@@ -146,10 +143,26 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     getLastMoveSourceSquare,
   });
 
+
+  useEffect(() => {
+    // Function to fetch game status
+    const fetchGameStatus = async () => {
+      try {
+        const result: boolean = await checkIfGasless(wager);
+        setIsGameGasless(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchGameStatus();
+
+  }, [wager]);
+
   // Initialize board
   useEffect(() => {
     // Function to set wager address and game information
     const asyncSetWagerAddress = async () => {
+      if (!isGameGasless) {
       if (wager !== '') {
         try {
           const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
@@ -164,21 +177,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         }
       }
     };
-
-    // Function to fetch game status
-    const fetchGameStatus = async () => {
-      try {
-        const result: boolean = await checkIfGasless(wager);
-        setIsGameGasless(result);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
+  }
     // Call both functions
     asyncSetWagerAddress();
-    fetchGameStatus();
   }, [wager]);
+
 
   // Initialize board
   // Edit this useEffect to check if isGasless is true,
@@ -299,7 +302,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
 
     // WebSocket connection is established when isGameGasless is true
-    if (isGameGasless) {
+    if (isGameGasless === true) {
       const socket = io('https://api.chess.fish', {
         transports: ['websocket'],
         path: '/socket.io/',
@@ -431,7 +434,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         moveSound.play();
       }
 
-      let success = await PlayMove(isGasLess, gameFEN, wagerAddress, move);
+      let success = await PlayMove(isMoveGasLess, gameFEN, wagerAddress, move);
 
       setPlayerTurnSC(false);
 
@@ -542,8 +545,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 {/* added mb={3} here */}
                 <Text mr={2}>Turn off to submit move on chain</Text>
                 <Switch
-                  isChecked={isGasLess}
-                  onChange={() => setIsGasLess(!isGasLess)}
+                  isChecked={isMoveGasLess}
+                  onChange={() => setIsMoveGasLess(!isMoveGasLess)}
                 />{' '}
               </Box>
               <div style={{ marginTop: '10px' }}></div>

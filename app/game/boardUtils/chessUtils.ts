@@ -10,5 +10,5 @@ export function moveExists(
 }
 
 export function numberToString(num: number): string {
-    return num.toLocaleString('fullwide', { useGrouping: false });
-  }
+  return num.toLocaleString('fullwide', { useGrouping: false });
+}

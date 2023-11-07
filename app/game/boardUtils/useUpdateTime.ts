@@ -6,14 +6,14 @@ type SetTimeFunction = (updater: (prevTime: number) => number) => void;
 const useUpdateTime = (
   isPlayer0Turn: boolean,
   setTimePlayer0: SetTimeFunction,
-  setTimePlayer1: SetTimeFunction
+  setTimePlayer1: SetTimeFunction,
 ): void => {
   useEffect(() => {
     let timer: NodeJS.Timeout = setInterval(() => {
       if (isPlayer0Turn) {
-        setTimePlayer0(prevTime => prevTime - 1);
+        setTimePlayer0((prevTime) => prevTime - 1);
       } else {
-        setTimePlayer1(prevTime => prevTime - 1);
+        setTimePlayer1((prevTime) => prevTime - 1);
       }
     }, 1000);
 
