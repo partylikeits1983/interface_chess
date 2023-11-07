@@ -148,6 +148,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   useEffect(() => {
     // Function to fetch game status
     const fetchGameStatus = async () => {
+      setWagerAddress(wager);
       try {
         const result: boolean = await checkIfGasless(wager);
         setIsGameGasless(result);

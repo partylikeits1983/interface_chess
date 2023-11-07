@@ -1129,6 +1129,8 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
     try {
       const playerTurn = await chess.getPlayerMove(wagerAddress);
 
+      console.log('%cplayerTurn!', 'color: blue; font-style: italic; background-color: yellow; padding: 2px; border-radius: 2px; font-size: 1.5em;');
+
       let isPlayerTurn;
       if (Number(playerTurn) == Number(accounts[0])) {
         isPlayerTurn = true;
