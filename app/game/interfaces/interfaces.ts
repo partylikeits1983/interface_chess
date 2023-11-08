@@ -34,6 +34,8 @@ export interface IGameSocketData {
   gameFEN: string;
   player0: string;
   player1: string;
+  playerTurn: string;
+  player0isWhite: boolean;
   timeLimit: number;
   actualTimeRemainingSC: number;
   timeRemainingPlayer0: number;

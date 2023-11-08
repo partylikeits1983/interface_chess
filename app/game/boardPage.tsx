@@ -226,7 +226,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           }
         } else {
           // Establish WebSocket connection for gasless game
-          const socket = io('https://api.chess.fish', {
+/*           const socket = io('https://api.chess.fish', {
             transports: ['websocket'],
             path: '/socket.io/',
           });
@@ -239,6 +239,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           socket.on('gameUpdate', (data) => {
             if (isMounted) {
               const { moves } = data;
+
+              alert("INIT")
+
+
               const currentGame = new Chess();
               moves.forEach((move: string) => {
                 currentGame.move(move);
@@ -255,7 +259,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           // Clean up the socket connection when the component is unmounted
           return () => {
             socket.disconnect();
-          };
+          }; */
         }
         setLoading(false);
       } else {
@@ -294,6 +298,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           const {
             moves,
             gameFEN,
+            player0,
+            player1,
+            playerTurn,
             timeRemainingPlayer0,
             timeRemainingPlayer1,
             actualTimeRemainingSC,
@@ -302,11 +309,14 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           const currentGame = new Chess();
           moves.forEach((move: string) => currentGame.move(move));
 
-          const isPlayer0Turn = moves.length % 2 === 0;
+          const isPlayer0Turn = playerTurn === player0 ? true : false;
 
-          if (isMounted) {
-            updateState("333", true, currentGame);
-          }
+          setTimePlayer0(timeRemainingPlayer0);
+          setTimePlayer1(timeRemainingPlayer1);
+          setIsPlayer0Turn(isPlayer0Turn);
+          updateState("333", true, currentGame);
+          getLastMoveSourceSquare(currentGame, moves.length - 1);
+          
         }
       });
 
