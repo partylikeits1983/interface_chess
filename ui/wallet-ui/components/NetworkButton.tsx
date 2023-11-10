@@ -14,12 +14,10 @@ import { useStateManager } from '../../../app/api/sharedState';
 
 const NETWORK_NAMES: { [key: string]: string } = {
   0x1: 'Ethereum Mainnet',
-  0x89: 'Polygon Mainnet',
-  0xa4ec: 'Celo Mainnet',
+  0xa4b1: 'Arbitrum Mainnet',
   0x38: 'BSC',
-  0x13881: 'Mumbai Testnet',
-  0x2a: 'Kovan',
-  0xaef3: 'Alfajores Testnet',
+  0xaa36a7: 'Sepolia Testnet',
+  0x66eee: 'Arbitrum Testnet',
 };
 
 export default function NetworkButton(): JSX.Element {
@@ -36,8 +34,8 @@ export default function NetworkButton(): JSX.Element {
       case 'Mainnet':
         chainId = '0x1';
         break;
-      case 'Polygon':
-        chainId = '0x89';
+      case 'Arbitrum':
+        chainId = '0xa4b1';
         break;
       case 'Celo Mainnet':
         chainId = '0xa4ec';
@@ -45,11 +43,11 @@ export default function NetworkButton(): JSX.Element {
       case 'BSC':
         chainId = '0x38';
         break;
-      case 'Mumbai':
-        chainId = '0x13881';
+      case 'Sepolia Testnet':
+        chainId = '0xaa36a7';
         break;
-      case 'kovan':
-        chainId = '0x2a';
+      case 'Arbitrum Sepolia Testnet':
+        chainId = '0x66eee';
         break;
       case 'Alphajores Testnet':
         chainId = '0xaef3';
@@ -122,26 +120,18 @@ export default function NetworkButton(): JSX.Element {
         <div style={{ position: 'relative', zIndex: 100 }}>
           <MenuList>
             <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
-              Ethereum (coming soon)
+              Ethereum Mainnet (coming soon)
             </MenuItem>
-            <MenuItem onClick={() => handleNetworkChange('Polygon')}>
-              Polygon (coming soon)
-            </MenuItem>
-            <MenuItem onClick={() => handleNetworkChange('Celo Mainnet')}>
-              Celo (coming soon)
-            </MenuItem>
-
-            <MenuItem onClick={() => handleNetworkChange('Celo Mainnet')}>
+            <MenuItem onClick={() => handleNetworkChange('Arbitrum')}>
               Arbitrum (coming soon)
             </MenuItem>
-
             <MenuDivider />
 
-            <MenuItem onClick={() => handleNetworkChange('Mumbai')}>
-              Polygon Testnet
+            <MenuItem onClick={() => handleNetworkChange('Sepolia Testnet')}>
+              Sepolia Testnet
             </MenuItem>
-            <MenuItem onClick={() => handleNetworkChange('Alphajores Testnet')}>
-              Celo Testnet
+            <MenuItem onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}>
+              Arbitrum Sepolia Testnet
             </MenuItem>
           </MenuList>
         </div>
