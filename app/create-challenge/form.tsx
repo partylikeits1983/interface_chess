@@ -26,9 +26,9 @@ const {
   CreateWager,
   ApproveChessWagerContract,
   getChainId,
-} = require('../api/form');
+} = require('../../lib/api/form');
 
-import { tokenAddressesByChainID, options } from '../api/token-information';
+import { tokenAddressesByChainID, options } from '../../lib/api/token-information';
 import AutocompleteToken from './autocomplete-token';
 
 import AutocompletePlayer from './autocomplete-player';

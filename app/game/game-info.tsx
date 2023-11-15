@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import { getTokenDetails } from '#/app/api/token-information';
-import { useStateManager } from '#/app/api/sharedState';
+import { getTokenDetails } from '#/lib/api/token-information';
+import { useStateManager } from '#/lib/api/sharedState';
 
 import { CopyIcon } from '@chakra-ui/icons';
 import copyIconFeedback from 'ui/copyIconFeedback';

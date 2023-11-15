@@ -36,10 +36,10 @@ import {
   GetTournamentScore,
   GetIsTournamentEnded,
   PayoutTournament,
-} from '#/app/api/form';
+} from '#/lib/api/form';
 
-import { getTokenDetails } from '#/app/api/token-information';
-import { useStateManager } from '#/app/api/sharedState';
+import { getTokenDetails } from '#/lib/api/token-information';
+import { useStateManager } from '#/lib/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;

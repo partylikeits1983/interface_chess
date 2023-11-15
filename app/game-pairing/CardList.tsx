@@ -14,7 +14,7 @@ const {
   GetAllWagersForPairing,
   AcceptWagerAndApprove,
   AcceptWagerConditions,
-} = require('../api/form');
+} = require('../../lib/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 

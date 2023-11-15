@@ -25,9 +25,9 @@ const {
   CreateTournament,
   ApproveTournament,
   getChainId,
-} = require('../api/form');
+} = require('../../lib/api/form');
 
-import { tokenAddressesByChainID, options } from '../api/token-information';
+import { tokenAddressesByChainID, options } from '../../lib/api/token-information';
 import AutocompleteToken from './autocomplete-token';
 
 interface FormInputs {

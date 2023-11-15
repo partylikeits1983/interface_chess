@@ -17,7 +17,7 @@ const {
   GetWagerData,
   GetTimeRemaining,
   IsPlayerAddressWhite,
-} = require('../..//api/form');
+} = require('../../../lib/api/form');
 
 import { useRouter } from 'next/navigation';
 

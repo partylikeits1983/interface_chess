@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Text, Spinner } from '@chakra-ui/react';
 
-import { GetDividendBalances } from '#/app/api/form';
+import { GetDividendBalances } from '#/lib/api/form';
 
 const TokenIcons = [
   { symbol: 'DAI', iconSrc: 'tokens/dai.png' },

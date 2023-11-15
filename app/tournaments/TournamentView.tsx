@@ -23,7 +23,7 @@ import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import TournamentList from './TournamentCardList';
 import TournamentCard from './TournamentCard';
 
-import { getChainId, GetTournament, GetTournamentScore } from '#/app/api/form';
+import { getChainId, GetTournament, GetTournamentScore } from '#/lib/api/form';
 
 interface TournamentData {
   tournamentNonce: number;

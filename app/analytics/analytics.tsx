@@ -1,7 +1,7 @@
 'use client';
 
-import { GetAnalyticsData } from '#/app/api/form';
-import { GetAnalyticsDB, GetWagersDB } from '#/app/api/db-api';
+import { GetAnalyticsData } from '#/lib/api/form';
+import { GetAnalyticsDB, GetWagersDB } from '#/lib/api/db-api';
 
 import {
   ChakraProvider,
@@ -25,7 +25,7 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import React, { useEffect, useState, FC } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useStateManager } from '#/app/api/sharedState';
+import { useStateManager } from '#/lib/api/sharedState';
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
 interface AnalyticsProps {

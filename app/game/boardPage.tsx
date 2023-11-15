@@ -14,7 +14,7 @@ import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
 import ForwardBackButtons from './forward-back-buttons';
 import opponentMoveNotification from 'ui/opponentMoveNotification';
-import { checkIfGasless } from '../api/gaslessAPI';
+import { checkIfGasless } from '../../lib/api/gaslessAPI';
 
 import BackAndForwardGameControls from './boardUtils/gameControls';
 import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility functions
@@ -38,7 +38,7 @@ const {
   GetWagerData,
   GetTimeRemaining,
   IsPlayerAddressWhite,
-} = require('../api/form');
+} = require('../../lib/api/form');
 
 import {
   Input,

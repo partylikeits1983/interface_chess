@@ -8,7 +8,7 @@ import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
 
-const { AcceptWagerAndApprove, AcceptWagerConditions } = require('../api/form');
+const { AcceptWagerAndApprove, AcceptWagerConditions } = require('../../lib/api/form');
 
 const {
   GetGameMoves,
@@ -16,7 +16,7 @@ const {
   IsPlayerWhite,
   PayoutWager,
   CancelWager,
-} = require('../api/form');
+} = require('../../lib/api/form');
 
 interface CardSidePanelProps {
   card: Card; // Your Card type here

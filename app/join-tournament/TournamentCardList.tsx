@@ -12,12 +12,12 @@ import {
   Switch,
 } from '@chakra-ui/react';
 
-const { GetPendingTournaments } = require('../api/form');
-const { GetTournamentDataDB } = require('../api/db-api');
+const { GetPendingTournaments } = require('../../lib/api/form');
+const { GetTournamentDataDB } = require('lib/api/db-api');
 
 import TournamentCard from './TournamentCard';
 import CardFilterControls from './CardFilterControls';
-import { useStateManager } from '#/app/api/sharedState';
+import { useStateManager } from '#/lib/api/sharedState';
 
 interface TournamentData {
   tournamentNonce: number;

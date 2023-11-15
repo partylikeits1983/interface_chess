@@ -7,13 +7,13 @@ import { useRouter } from 'next/navigation';
 
 import { Box, Text, Spinner, Center, ChakraProvider } from '@chakra-ui/react';
 
-import { useStateManager } from '#/app/api/sharedState';
+import { useStateManager } from '#/lib/api/sharedState';
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 
 import TournamentList from './TournamentCardList';
 import TournamentCard from './TournamentCard';
 
-import { getChainId, GetTournament } from '#/app/api/form';
+import { getChainId, GetTournament } from '#/lib/api/form';
 
 interface TournamentData {
   tournamentNonce: number;
