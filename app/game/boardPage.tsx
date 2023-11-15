@@ -38,6 +38,9 @@ const {
   GetWagerData,
   GetTimeRemaining,
   IsPlayerAddressWhite,
+  getPlayerAddress,
+  GetWagerPlayers,
+  IsPlayerWhite,
 } = require('../../lib/api/form');
 
 import {
@@ -72,7 +75,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [moves, setMoves] = useState<string[]>([]);
   const [moveNumber, setMoveNumber] = useState(0);
 
-  const [isPlayerWhite, setPlayerColor] = useState('white');
+  const [isPlayerWhite, setPlayerColor] = useState(true);
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
 
@@ -165,11 +168,14 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   // Initialize board
   useEffect(() => {
+
     // Function to set wager address and game information
     const asyncSetWagerAddress = async () => {
-      if (!isGameGasless) {
+      // if (!isGameGasless) {
       if (wager !== '') {
         try {
+
+
           const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
           const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
             gameNumberData[1]
@@ -180,7 +186,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         } catch (err) {
           console.log(err);
         }
-      }
+      // }
     };
   }
     // Call both functions
@@ -195,6 +201,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     const asyncSetWagerAddress = async () => {
       if (wager !== '' && hasPingedAPI === true) {
         setWagerAddress(wager);
+
+        let isPlayerWhite = await IsPlayerWhite(wager);
+        setPlayerColor(isPlayerWhite);
 
         if (isGameGasless === false) {
           const matchData = await GetWagerData(wager);
@@ -224,46 +233,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
             updateState("222", true, newGame);
           }
-        } else {
-          // Establish WebSocket connection for gasless game
-/*           const socket = io('https://api.chess.fish', {
-            transports: ['websocket'],
-            path: '/socket.io/',
-          });
-
-          socket.on('connect', () => {
-            console.log('Connected to WebSocket server');
-            socket.emit('subscribeToGame', wager);
-          });
-
-          socket.on('gameUpdate', (data) => {
-            if (isMounted) {
-              const { moves } = data;
-
-              alert("INIT")
-
-
-              const currentGame = new Chess();
-              moves.forEach((move: string) => {
-                currentGame.move(move);
-              });
-
-              updateState("248", true, currentGame);
-            }
-          });
-
-          socket.on('disconnect', () => {
-            console.log('Disconnected from WebSocket server');
-          });
-
-          // Clean up the socket connection when the component is unmounted
-          return () => {
-            socket.disconnect();
-          }; */
-        }
+        } 
         setLoading(false);
       } else {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
@@ -314,6 +287,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setTimePlayer0(timeRemainingPlayer0);
           setTimePlayer1(timeRemainingPlayer1);
           setIsPlayer0Turn(isPlayer0Turn);
+          
           updateState("333", true, currentGame);
           getLastMoveSourceSquare(currentGame, moves.length - 1);
           
