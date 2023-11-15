@@ -279,6 +279,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setTimePlayer1(timeRemainingPlayer1);
           setIsPlayer0Turn(isPlayer0Turn);
 
+          setMoves(moves);
           updateState('333', true, currentGame);
           getLastMoveSourceSquare(currentGame, moves.length - 1);
           
@@ -394,7 +395,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         moveSound.play();
       }
 
-      let success = await PlayMove(isMoveGasLess, gameFEN, wagerAddress, move);
+      let moveNumber = moves.length;
+
+      // alert(moveNumber);
+
+      let success = await PlayMove(isMoveGasLess, gameFEN, moveNumber, wagerAddress, move);
 
       setPlayerTurnSC(false);
 

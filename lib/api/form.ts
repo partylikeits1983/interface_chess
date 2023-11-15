@@ -935,6 +935,7 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
 export const PlayMove = async (
   gasLess: boolean,
   gameFEN: string,
+  moveNumber: number,
   wagerAddress: string,
   move: string,
 ): Promise<Boolean> => {
@@ -953,9 +954,7 @@ export const PlayMove = async (
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // @dev set to the expiration of the wager
 
       const gameNumber = Number(await chess.getGameLength(wagerAddress));
-      const moveNumber = Number(
-        (await chess.getGameMoves(wagerAddress, gameNumber)).length,
-      );
+      
 
       const message = await chess.generateMoveMessage(
         wagerAddress,
@@ -1829,15 +1828,16 @@ export const SubmitVerifyMoves = async (data: any) => {
   try {
     console.log("HERE");
 
-    let res = chess.decodeMoveMessage(data.messages[0]);
+    let res = await chess.decodeMoveMessage(data.messages[0]);
 
     // wager, move, moveNumber, expiration
 
-
+    console.log(res);
     console.log(res.wager, res.move, res.moveNumber, res.expiration);
 
-    // const tx = await chess.verifyGameView(data.messages, data.signedMessages);
+    const tx = await chess.verifyGameView(data.messages, data.signedMessages);
 
+    await chess.verifyGameUpdateState(data.messages, data.signedMessages);
 
   } catch (error) {
     console.log(error);
