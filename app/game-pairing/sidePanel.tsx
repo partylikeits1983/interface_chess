@@ -8,7 +8,10 @@ import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
 
-const { AcceptWagerAndApprove, AcceptWagerConditions } = require('../../lib/api/form');
+const {
+  AcceptWagerAndApprove,
+  AcceptWagerConditions,
+} = require('../../lib/api/form');
 
 const {
   GetGameMoves,

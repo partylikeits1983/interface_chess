@@ -1,5 +1,7 @@
 const ethers = require('ethers');
 
+import { SubmitVerifyMoves } from "./form";
+
 export const postDataToRedis = async (
   key: string,
   value: any,
@@ -95,5 +97,21 @@ export const checkIfGasless = async (gameWager: string) => {
   } catch (error) {
     console.error('Error:', error);
     throw new Error('Failed to check if game is gasless.');
+  }
+};
+
+export const submitMoves = async (gameWager: string) => {
+  try {
+    const response = await fetch(
+      `https://api.chess.fish/signedMoves/${gameWager}`,
+    );
+    const data = await response.json();
+
+    await SubmitVerifyMoves(data);
+
+    console.log(data);
+  } catch (error) {
+    console.error('Error:', error);
+    throw new Error('Failed to sumbit signed moves');
   }
 };

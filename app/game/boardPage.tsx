@@ -14,7 +14,7 @@ import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
 import ForwardBackButtons from './forward-back-buttons';
 import opponentMoveNotification from 'ui/opponentMoveNotification';
-import { checkIfGasless } from '../../lib/api/gaslessAPI';
+import { checkIfGasless, submitMoves } from '../../lib/api/gaslessAPI';
 
 import BackAndForwardGameControls from './boardUtils/gameControls';
 import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility functions
@@ -24,10 +24,7 @@ import { useRouter } from 'next/navigation';
 import useCheckValidMove from './boardUtils/useCheckValidMove';
 import useUpdateTime from './boardUtils/useUpdateTime';
 
-import {
-  IBoardProps,
-  IGameSocketData,
-} from './interfaces/interfaces';
+import { IBoardProps, IGameSocketData } from './interfaces/interfaces';
 
 const {
   CheckValidMove,
@@ -60,7 +57,6 @@ import {
 import { BoardUtils } from './boardUtils/boardUtils';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
-
   const [hasPingedAPI, setHasPingedAPI] = useState(false);
 
   const [isMoveGasLess, setIsMoveGasLess] = useState(true);
@@ -88,7 +84,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   const [timePlayer0, setTimePlayer0] = useState<number>(0);
   const [timePlayer1, setTimePlayer1] = useState<number>(0);
-  
+
   const [isPlayer0Turn, setIsPlayer0Turn] = useState(false);
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
@@ -118,7 +114,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setWagerAddress,
     handleChange,
     onDrop,
-    getLastMoveSourceSquare
+    getLastMoveSourceSquare,
   } = BoardUtils(
     game,
     setGame,
@@ -163,19 +159,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setHasPingedAPI(true);
     };
     fetchGameStatus();
-
   }, [wager]);
 
   // Initialize board
   useEffect(() => {
-
     // Function to set wager address and game information
     const asyncSetWagerAddress = async () => {
       // if (!isGameGasless) {
       if (wager !== '') {
         try {
-
-
           const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
           const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
             gameNumberData[1]
@@ -186,13 +178,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         } catch (err) {
           console.log(err);
         }
-      // }
+        // }
+      }
     };
-  }
     // Call both functions
     asyncSetWagerAddress();
   }, [wager, isGameGasless]);
-
 
   // Initialize board
   useEffect(() => {
@@ -231,12 +222,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               newGame.move(move);
             });
 
-            updateState("222", true, newGame);
+            updateState('222', true, newGame);
           }
-        } 
+        }
         setLoading(false);
       } else {
-        // setLoading(false);
+        setLoading(false);
       }
     };
 
@@ -287,10 +278,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setTimePlayer0(timeRemainingPlayer0);
           setTimePlayer1(timeRemainingPlayer1);
           setIsPlayer0Turn(isPlayer0Turn);
-          
-          updateState("333", true, currentGame);
+
+          updateState('333', true, currentGame);
           getLastMoveSourceSquare(currentGame, moves.length - 1);
           
+          setLoading(false);
         }
       });
 
@@ -336,8 +328,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 localGame.fen() === currentGame.fen() ||
                 _isPlayerTurnSC !== isPlayerTurnSC
               ) {
-                if (isMounted) { 
-                  updateState("381", _isPlayerTurnSC, currentGame);
+                if (isMounted) {
+                  updateState('381', _isPlayerTurnSC, currentGame);
                 }
                 setTimePlayer0(timePlayer0);
                 setTimePlayer1(timePlayer1);
@@ -362,7 +354,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     isGameGasless,
   ]);
 
-  const updateState = (source: string, _isPlayerTurnSC: boolean, currentGame: Chess) => {
+  const updateState = (
+    source: string,
+    _isPlayerTurnSC: boolean,
+    currentGame: Chess,
+  ) => {
     const moveSound = new Audio('/sounds/Move.mp3');
     moveSound.load();
     moveSound.play();
@@ -380,7 +376,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setIsPlayer0Turn(!isPlayer0Turn);
 
     setLoading(false);
-};
+  };
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
   async function handleSubmitMove(
@@ -505,13 +501,19 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 alignItems="center"
                 mb={3}
               >
-                {' '}
-                {/* added mb={3} here */}
                 <Text mr={2}>Turn off to submit move on chain</Text>
                 <Switch
                   isChecked={isMoveGasLess}
                   onChange={() => setIsMoveGasLess(!isMoveGasLess)}
-                />{' '}
+                />
+                <Button
+                  ml="auto"
+                  colorScheme="green"
+                  onClick={() => submitMoves(wager)}
+                >
+                  Submit moves on chain
+                </Button>
+                {/* Button added here */}
               </Box>
               <div style={{ marginTop: '10px' }}></div>
               <Box p={3} border="0.5px solid white">

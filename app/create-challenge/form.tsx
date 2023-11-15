@@ -28,7 +28,10 @@ const {
   getChainId,
 } = require('../../lib/api/form');
 
-import { tokenAddressesByChainID, options } from '../../lib/api/token-information';
+import {
+  tokenAddressesByChainID,
+  options,
+} from '../../lib/api/token-information';
 import AutocompleteToken from './autocomplete-token';
 
 import AutocompletePlayer from './autocomplete-player';

@@ -2,7 +2,7 @@ const ethers = require('ethers');
 const { parseUnits } = require('ethers/lib/utils');
 import { CreateMatchType } from './types';
 
-const chessWagerABI = require('./contract-abi/ChessWagerABI');
+const chessWagerABI = require('./contract-abi/ChessWagerABI').abi;
 const moveVerificationABI = require('./contract-abi/MoveVerificationABI.json');
 const splitterABI = require('./contract-abi/SplitterABI');
 const crowdSaleABI = require('./contract-abi/CrowdSaleABI');
@@ -1144,7 +1144,10 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
     try {
       const playerTurn = await chess.getPlayerMove(wagerAddress);
 
-      console.log('%cplayerTurn!', 'color: blue; font-style: italic; background-color: yellow; padding: 2px; border-radius: 2px; font-size: 1.5em;');
+/*       console.log(
+        '%cplayerTurn!',
+        'color: blue; font-style: italic; background-color: yellow; padding: 2px; border-radius: 2px; font-size: 1.5em;',
+      ); */
 
       let isPlayerTurn;
       if (Number(playerTurn) == Number(accounts[0])) {
@@ -1811,5 +1814,33 @@ export const GetCanTournamentBegin = async (tournamentId: number) => {
     }
   } catch (error) {
     return false;
+  }
+};
+
+
+
+/// GASLESS MOVE SUBMIT
+export const SubmitVerifyMoves = async (data: any) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    console.log("HERE");
+
+    let res = chess.decodeMoveMessage(data.messages[0]);
+
+    // wager, move, moveNumber, expiration
+
+
+    console.log(res.wager, res.move, res.moveNumber, res.expiration);
+
+    // const tx = await chess.verifyGameView(data.messages, data.signedMessages);
+
+
+  } catch (error) {
+    console.log(error);
+    // return false;
   }
 };

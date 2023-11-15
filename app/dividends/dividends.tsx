@@ -28,7 +28,10 @@ import {
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 import AutocompleteToken from './autocomplete-token';
-import { tokenAddressesByChainID, options } from '../../lib/api/token-information';
+import {
+  tokenAddressesByChainID,
+  options,
+} from '../../lib/api/token-information';
 
 import TokenBalances from './tokenBalance';
 import CrowdSale from './crowdSale';

@@ -130,7 +130,9 @@ export default function NetworkButton(): JSX.Element {
             <MenuItem onClick={() => handleNetworkChange('Sepolia Testnet')}>
               Sepolia Testnet
             </MenuItem>
-            <MenuItem onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}>
+            <MenuItem
+              onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}
+            >
               Arbitrum Sepolia Testnet
             </MenuItem>
           </MenuList>
