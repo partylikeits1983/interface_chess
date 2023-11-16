@@ -1817,7 +1817,6 @@ export const GetCanTournamentBegin = async (tournamentId: number) => {
 };
 
 
-
 /// GASLESS MOVE SUBMIT
 export const SubmitVerifyMoves = async (data: any) => {
   await updateContractAddresses();

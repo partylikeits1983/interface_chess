@@ -364,7 +364,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     moveSound.load();
     moveSound.play();
 
-    opponentMoveNotification('Your Turn to Move');
+    // opponentMoveNotification('Your Turn to Move');
     // alert(source);
 
     setGame(currentGame);
