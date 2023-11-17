@@ -168,6 +168,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // if (!isGameGasless) {
       if (wager !== '') {
         try {
+          let isPlayerWhite = await IsPlayerWhite(wager);
+          setPlayerColor(isPlayerWhite);
+
           const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
           const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
             gameNumberData[1]
@@ -192,9 +195,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     const asyncSetWagerAddress = async () => {
       if (wager !== '' && hasPingedAPI === true) {
         setWagerAddress(wager);
-
-        let isPlayerWhite = await IsPlayerWhite(wager);
-        setPlayerColor(isPlayerWhite);
 
         if (isGameGasless === false) {
           const matchData = await GetWagerData(wager);
@@ -270,8 +270,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             actualTimeRemainingSC,
           } = data;
 
+          const gameLength = moves.length;
+
           const currentGame = new Chess();
-          moves.forEach((move: string) => currentGame.move(move));
+          moves[gameLength].forEach((move: string) => currentGame.move(move));
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
 
