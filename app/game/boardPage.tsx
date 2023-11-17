@@ -270,9 +270,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             actualTimeRemainingSC,
           } = data;
 
-          const gameLength = moves.length;
-
           const currentGame = new Chess();
+          const gameLength = moves.length - 1;
           moves[gameLength].forEach((move: string) => currentGame.move(move));
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
