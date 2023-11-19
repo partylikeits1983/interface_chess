@@ -284,7 +284,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           setMoves(moves[gameNumber]);
           updateState('333', true, currentGame);
-          getLastMoveSourceSquare(currentGame, moves.length - 1);
+
+          alert("NEW MOVE");
+          getLastMoveSourceSquare(currentGame, currentGame.moves.length - 1);
           
           setLoading(false);
         }
