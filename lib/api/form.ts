@@ -1816,25 +1816,21 @@ export const GetCanTournamentBegin = async (tournamentId: number) => {
 };
 
 /// GASLESS MOVE SUBMIT
-export const SubmitVerifyMoves = async (data: any) => {
+export const SubmitVerifyMoves = async (data: any, wager: string) => {
   await updateContractAddresses();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log('HERE');
+    const gameNumber = Number(await chess.getGameLength(wager));
 
-    let res = await chess.decodeMoveMessage(data.messages[0]);
+    let messages = data.messages[gameNumber];
+    let signedMessages = data.signedMessages[gameNumber];
+    
+    // const tx = await chess.verifyGameView(messages, signedMessages);
 
-    // wager, move, moveNumber, expiration
-
-    console.log(res);
-    console.log(res.wager, res.move, res.moveNumber, res.expiration);
-
-    const tx = await chess.verifyGameView(data.messages, data.signedMessages);
-
-    await chess.verifyGameUpdateState(data.messages, data.signedMessages);
+    await chess.verifyGameUpdateState(messages, signedMessages);
   } catch (error) {
     console.log(error);
     // return false;
