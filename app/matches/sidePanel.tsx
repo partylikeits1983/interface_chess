@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { Card } from '../types';
 import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
+import { checkIfGasless, getGameFen } from 'lib/api/gaslessAPI';
+
 import { Chess } from 'chess.js';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
@@ -38,7 +40,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
-  const [game, setGame] = useState(new Chess());
+  const [gameFEN, setGameFEN] = useState<string>('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
 
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [numberOfGames, setNumberOfGames] = useState('');
@@ -62,8 +64,12 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
 
   useEffect(() => {
     const getGameMoves = async () => {
+
+
       if (card.matchAddress != '') {
         setIsChessboardLoading(true);
+
+        let isGasLess = await checkIfGasless(card.matchAddress);
 
         const gameNumberData: Array<Number> = await GetNumberOfGames(
           card.matchAddress,
@@ -71,24 +77,34 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
         const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
         setNumberOfGames(gameNumber);
 
-        const movesArray = await GetGameMoves(
-          card.matchAddress,
-          gameNumberData[0],
-        );
-        const game = new Chess();
-
-        for (let i = 0; i < movesArray.length; i++) {
-          game.move(movesArray[i]);
-        }
-        setGame(game);
-
-        const isPlayerWhite = await IsPlayerWhite(card.matchAddress);
-        setPlayerColor(isPlayerWhite);
 
         const isTimeEnded = await IsWagerGameTimeEnded(card.matchAddress);
         setIsTimeEnded(isTimeEnded);
 
         setIsTournament(card.isTournament);
+
+        if (isGasLess) {
+          // ping API
+          const gameFen = await getGameFen(card.matchAddress);
+          setGameFEN(gameFen);
+
+        } else {
+          const movesArray = await GetGameMoves(
+            card.matchAddress,
+            gameNumberData[0],
+          );
+          const game = new Chess();
+  
+          for (let i = 0; i < movesArray.length; i++) {
+            game.move(movesArray[i]);
+          }
+          console.log(game.fen())
+          setGameFEN(String(game.fen()));
+  
+          const isPlayerWhite = await IsPlayerWhite(card.matchAddress);
+          setPlayerColor(isPlayerWhite);
+        }
+
 
         setIsChessboardLoading(false);
       } else {
@@ -166,7 +182,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           <Chessboard
             boardOrientation={isPlayerWhite ? 'white' : 'black'}
             arePiecesDraggable={false}
-            position={game.fen()}
+            position={gameFEN}
             boardWidth={300} // 100% to fill the box
           />
         )}

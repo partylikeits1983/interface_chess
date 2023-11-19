@@ -74,6 +74,20 @@ export const checkIfGasless = async (gameWager: string) => {
   }
 };
 
+export const getGameFen = async (gameWager: string) => {
+  try {
+    const response = await fetch(
+      `https://api.chess.fish/gameFen/${gameWager.toLowerCase()}`,
+    );
+    const data = await response.json();
+    const { gameFEN } = data;
+    return gameFEN;
+  } catch (error) {
+    console.error('Error:', error);
+    // throw new Error('Failed to get game fen');
+  }
+};
+
 interface ChessData {
   messages: string[][];
   signedMessages: string[][];
