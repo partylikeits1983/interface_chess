@@ -55,6 +55,7 @@ import {
 } from '@chakra-ui/react';
 
 import { BoardUtils } from './boardUtils/boardUtils';
+import { current } from 'tailwindcss/colors';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [hasPingedAPI, setHasPingedAPI] = useState(false);
@@ -274,7 +275,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           const currentGame = new Chess();
           const gameNumber = moves.length - 1;
-          moves[gameNumber].forEach((move: string) => currentGame.move(move));
+
+          for (let i = 0; i < moves[gameNumber].length; i++ ) {
+            currentGame.move(moves[gameNumber][i]);
+          }
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
 
@@ -285,8 +289,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setMoves(moves[gameNumber]);
           updateState('333', true, currentGame);
 
-          alert('NEW MOVE');
-          getLastMoveSourceSquare(currentGame, currentGame.moves.length - 1);
+          
+          getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
 
           setLoading(false);
         }
@@ -373,14 +377,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     // alert(source);
 
     setGame(currentGame);
-    setMoveNumber(currentGame.moves().length);
+    setMoveNumber(currentGame.history().length);
     setGameFEN(currentGame.fen());
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
     // setMoves(currentGame.moves);
 
-    getLastMoveSourceSquare(currentGame, currentGame.moves().length - 1);
     setIsPlayer0Turn(!isPlayer0Turn);
 
     setLoading(false);
