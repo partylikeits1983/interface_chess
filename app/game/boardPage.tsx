@@ -222,6 +222,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               newGame.move(move);
             });
 
+            setMoves(movesArray);
+
             updateState('222', true, newGame);
           }
         }
@@ -252,8 +254,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       socket.on('connect', () => {
         console.log('Connected to server');
-        socket.emit('getGameFen', wager);
-        socket.emit('subscribeToGame', wager);
+        socket.emit('getGameFen', wager.toLowerCase());
+        socket.emit('subscribeToGame', wager.toLowerCase());
       });
 
       socket.on('updateGameFen', (data) => {
@@ -271,8 +273,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           } = data;
 
           const currentGame = new Chess();
-          const gameLength = moves.length - 1;
-          moves[gameLength].forEach((move: string) => currentGame.move(move));
+          const gameNumber = moves.length - 1;
+          moves[gameNumber].forEach((move: string) => currentGame.move(move));
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
 
@@ -280,7 +282,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setTimePlayer1(timeRemainingPlayer1);
           setIsPlayer0Turn(isPlayer0Turn);
 
-          setMoves(moves);
+          setMoves(moves[gameNumber]);
           updateState('333', true, currentGame);
           getLastMoveSourceSquare(currentGame, moves.length - 1);
           
@@ -374,6 +376,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
+    // setMoves(currentGame.moves);
+
     getLastMoveSourceSquare(currentGame, currentGame.moves().length - 1);
     setIsPlayer0Turn(!isPlayer0Turn);
 
@@ -398,7 +402,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       let moveNumber = moves.length;
 
-      // alert(moveNumber);
+      alert(moveNumber);
 
       let success = await PlayMove(isMoveGasLess, gameFEN, moveNumber, wagerAddress, move);
 

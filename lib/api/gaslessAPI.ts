@@ -89,7 +89,7 @@ export const signTxPushToDB = async (
 export const checkIfGasless = async (gameWager: string) => {
   try {
     const response = await fetch(
-      `https://api.chess.fish/isGameGasless/${gameWager}`,
+      `https://api.chess.fish/isGameGasless/${gameWager.toLowerCase()}`,
     );
     const data = await response.json();
     const { isGasless } = data;
@@ -103,7 +103,7 @@ export const checkIfGasless = async (gameWager: string) => {
 export const submitMoves = async (gameWager: string) => {
   try {
     const response = await fetch(
-      `https://api.chess.fish/signedMoves/${gameWager}`,
+      `https://api.chess.fish/signedMoves/${gameWager.toLowerCase()}`,
     );
     const data = await response.json();
 
