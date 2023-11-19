@@ -230,7 +230,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                         cursor="pointer"
                         onClick={() =>
                           handleCopyAddress(
-                            typeof item.value === 'string' ? item.value : '',
+                            typeof item.value === 'string' ? card.matchAddress : '',
                           )
                         }
                       />

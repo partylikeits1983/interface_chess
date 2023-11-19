@@ -1833,6 +1833,5 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     await chess.verifyGameUpdateState(messages, signedMessages);
   } catch (error) {
     console.log(error);
-    // return false;
   }
 };
