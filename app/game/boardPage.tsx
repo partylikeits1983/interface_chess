@@ -285,9 +285,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setMoves(moves[gameNumber]);
           updateState('333', true, currentGame);
 
-          alert("NEW MOVE");
+          alert('NEW MOVE');
           getLastMoveSourceSquare(currentGame, currentGame.moves.length - 1);
-          
+
           setLoading(false);
         }
       });
@@ -406,7 +406,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       alert(moveNumber);
 
-      let success = await PlayMove(isMoveGasLess, gameFEN, moveNumber, wagerAddress, move);
+      let success = await PlayMove(
+        isMoveGasLess,
+        gameFEN,
+        moveNumber,
+        wagerAddress,
+        move,
+      );
 
       setPlayerTurnSC(false);
 

@@ -954,7 +954,6 @@ export const PlayMove = async (
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // @dev set to the expiration of the wager
 
       const gameNumber = Number(await chess.getGameLength(wagerAddress));
-      
 
       const message = await chess.generateMoveMessage(
         wagerAddress,
@@ -1143,7 +1142,7 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
     try {
       const playerTurn = await chess.getPlayerMove(wagerAddress);
 
-/*       console.log(
+      /*       console.log(
         '%cplayerTurn!',
         'color: blue; font-style: italic; background-color: yellow; padding: 2px; border-radius: 2px; font-size: 1.5em;',
       ); */
@@ -1816,7 +1815,6 @@ export const GetCanTournamentBegin = async (tournamentId: number) => {
   }
 };
 
-
 /// GASLESS MOVE SUBMIT
 export const SubmitVerifyMoves = async (data: any) => {
   await updateContractAddresses();
@@ -1825,7 +1823,7 @@ export const SubmitVerifyMoves = async (data: any) => {
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    console.log("HERE");
+    console.log('HERE');
 
     let res = await chess.decodeMoveMessage(data.messages[0]);
 
@@ -1837,7 +1835,6 @@ export const SubmitVerifyMoves = async (data: any) => {
     const tx = await chess.verifyGameView(data.messages, data.signedMessages);
 
     await chess.verifyGameUpdateState(data.messages, data.signedMessages);
-
   } catch (error) {
     console.log(error);
     // return false;

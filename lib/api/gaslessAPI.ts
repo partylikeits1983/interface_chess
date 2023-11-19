@@ -1,6 +1,6 @@
 const ethers = require('ethers');
 
-import { SubmitVerifyMoves } from "./form";
+import { SubmitVerifyMoves } from './form';
 
 export const postDataToRedis = async (
   key: string,
