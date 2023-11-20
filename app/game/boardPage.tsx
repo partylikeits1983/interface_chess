@@ -56,6 +56,7 @@ import {
 
 import { BoardUtils } from './boardUtils/boardUtils';
 import { current } from 'tailwindcss/colors';
+import { listeners } from 'process';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [hasPingedAPI, setHasPingedAPI] = useState(false);
@@ -162,6 +163,17 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     fetchGameStatus();
   }, [wager]);
 
+  async function updateGameInfo(wager: string): Promise<void> {
+    let isPlayerWhite = await IsPlayerWhite(wager);
+    setPlayerColor(isPlayerWhite);
+
+    const gameNumberData: Array<number> = await GetNumberOfGames(wager);
+    const gameNumber = `${Number(gameNumberData[0]) + 1} of ${gameNumberData[1]}`;
+    setGameID(Number(gameNumberData[0]));
+    setNumberOfGames(Number(gameNumberData[1]));
+    setNumberOfGamesInfo(gameNumber);
+}
+
   // Initialize board
   useEffect(() => {
     // Function to set wager address and game information
@@ -169,16 +181,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // if (!isGameGasless) {
       if (wager !== '') {
         try {
-          let isPlayerWhite = await IsPlayerWhite(wager);
-          setPlayerColor(isPlayerWhite);
-
-          const gameNumberData: Array<Number> = await GetNumberOfGames(wager);
-          const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
-            gameNumberData[1]
-          }`;
-          setGameID(Number(gameNumberData[0]));
-          setNumberOfGames(Number(gameNumberData[1]));
-          setNumberOfGamesInfo(gameNumber);
+          await updateGameInfo(wager);
         } catch (err) {
           console.log(err);
         }
@@ -273,11 +276,21 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             actualTimeRemainingSC,
           } = data;
 
-          const currentGame = new Chess();
+          console.log("data", moves);
+
+          let currentGame = new Chess();
           const gameNumber = moves.length - 1;
 
           for (let i = 0; i < moves[gameNumber].length; i++ ) {
             currentGame.move(moves[gameNumber][i]);
+          }
+
+          if (currentGame.isCheckmate()) {
+            currentGame = new Chess();
+            // alert("submit moves on chain");
+            // let newGameID = gameID + 1;
+            // setGameID(newGameID);
+            updateGameInfo(wager);
           }
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
