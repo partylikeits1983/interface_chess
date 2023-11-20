@@ -133,7 +133,7 @@ export default function Docs() {
     }
   };
 
-  const addMumbaiNetwork = async () => {
+  const addArbitrumSepolia = async () => {
     const provider = (window as any).ethereum;
 
     if (provider) {
@@ -142,15 +142,15 @@ export default function Docs() {
           method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: '0x13881',
-              chainName: 'Polygon Mumbai',
-              rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
+              chainId: '0x66eee',
+              chainName: 'Arbitrum Sepolia',
+              rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
               nativeCurrency: {
-                name: 'Matic',
-                symbol: 'MATIC',
+                name: 'ETH',
+                symbol: 'AETH',
                 decimals: 18,
               },
-              blockExplorerUrls: ['https://mumbai.polygonscan.com'],
+              blockExplorerUrls: ['https://sepolia.arbiscan.io/'],
             },
           ],
         });
@@ -239,12 +239,7 @@ export default function Docs() {
                   width="24px"
                   height="24px"
                 />
-                <Image
-                  src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Polygon_Blockchain_Matic_Logo.svg"
-                  width="24px"
-                  height="24px"
-                />
-                <Text ml={3}>Add Polygon to Metamask</Text>
+                <Text ml={3}>Add Arbitrum to Metamask</Text>
               </Box>
               <ChevronRightIcon boxSize={6} />
             </Flex>
@@ -264,76 +259,17 @@ export default function Docs() {
               borderColor: 'white',
             }}
             onClick={() => {
-              window.open('https://polygonscan.com/', '_blank');
+              window.open('https://arbiscan.io/', '_blank');
             }}
           >
             <Flex justify="space-between" align="center">
-              <Text>Polygon Block explorer</Text>
+              <Text>Arbitrum Block explorer</Text>
               <ChevronRightIcon boxSize={6} />
             </Flex>
           </Box>
         </Flex>
 
-        <Flex
-          justifyContent="center"
-          mt={4}
-          flexDirection={'row'}
-          align="center"
-        >
-          <Box
-            p={6}
-            bgColor="#08131c"
-            color="white"
-            borderRadius="md"
-            cursor="pointer"
-            borderColor="white"
-            borderWidth={0.5}
-            mr={5}
-            width="390px" // Set the width to 200 pixels
-            _hover={{
-              bgColor: 'gray.700',
-              borderColor: 'white',
-            }}
-            onClick={() => {
-              addCelo();
-            }}
-          >
-            <Flex justify="space-between" align="center">
-              <Box display="flex" alignItems="center">
-                <Image
-                  src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
-                  width="24px"
-                  height="24px"
-                />
-                <Text ml={3}>Add Celo Mainnet to Metamask</Text>
-              </Box>
-              <ChevronRightIcon boxSize={6} />
-            </Flex>
-          </Box>
 
-          <Box
-            p={6}
-            bgColor="#08131c"
-            color="white"
-            borderRadius="md"
-            cursor="pointer"
-            borderColor="white"
-            borderWidth={0.5}
-            width="250px" // Set the width to 200 pixels
-            _hover={{
-              bgColor: 'gray.700',
-              borderColor: 'white',
-            }}
-            onClick={() => {
-              window.open('https://faucet.celo.org/alfajores', '_blank');
-            }}
-          >
-            <Flex justify="space-between" align="center">
-              <Text>Celo Block Explorer</Text>
-              <ChevronRightIcon boxSize={6} />
-            </Flex>
-          </Box>
-        </Flex>
 
         <Flex
           justifyContent="center"
@@ -356,7 +292,7 @@ export default function Docs() {
               borderColor: 'white',
             }}
             onClick={() => {
-              addMumbaiNetwork();
+              addArbitrumSepolia();
             }}
           >
             <Flex justify="space-between" align="center">
@@ -366,7 +302,7 @@ export default function Docs() {
                   width="24px"
                   height="24px"
                 />
-                <Text ml={3}>Add Mumbai Testnet to Metamask</Text>
+                <Text ml={3}>Add Arbitrum Sepolia Testnet to Metamask</Text>
               </Box>
               <ChevronRightIcon boxSize={6} />
             </Flex>
@@ -395,66 +331,7 @@ export default function Docs() {
             </Flex>
           </Box>
         </Flex>
-        <Flex
-          justifyContent="center"
-          mt={4}
-          flexDirection={'row'}
-          align="center"
-        >
-          <Box
-            p={6}
-            bgColor="#08131c"
-            color="white"
-            borderRadius="md"
-            cursor="pointer"
-            borderColor="white"
-            borderWidth={0.5}
-            mr={5}
-            width="390px" // Set the width to 200 pixels
-            _hover={{
-              bgColor: 'gray.700',
-              borderColor: 'white',
-            }}
-            onClick={() => {
-              addAlfajoresNetwork();
-            }}
-          >
-            <Flex justify="space-between" align="center">
-              <Box display="flex" alignItems="center">
-                <Image
-                  src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
-                  width="24px"
-                  height="24px"
-                />
-                <Text ml={3}>Add Celo Testnet to Metamask</Text>
-              </Box>
-              <ChevronRightIcon boxSize={6} />
-            </Flex>
-          </Box>
 
-          <Box
-            p={6}
-            bgColor="#08131c"
-            color="white"
-            borderRadius="md"
-            cursor="pointer"
-            borderColor="white"
-            borderWidth={0.5}
-            width="250px" // Set the width to 200 pixels
-            _hover={{
-              bgColor: 'gray.700',
-              borderColor: 'white',
-            }}
-            onClick={() => {
-              window.open('https://faucet.celo.org/alfajores', '_blank');
-            }}
-          >
-            <Flex justify="space-between" align="center">
-              <Text>Celo Testnet Faucet</Text>
-              <ChevronRightIcon boxSize={6} />
-            </Flex>
-          </Box>
-        </Flex>
 
         <div style={{ height: '20px' }}></div>
 
