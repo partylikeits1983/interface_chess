@@ -247,6 +247,22 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
   }, [wager, gameID, isGameGasless]);
 
+  function isCheckmate(wager: string, game: Chess) {
+    updateGameInfo(wager);
+
+    getLastMoveSourceSquare(
+      game,
+      0,
+    );
+
+    let newGameID = gameID + 1;
+    setGameID(newGameID);
+
+    const checkmateSound = new Audio('/sounds/Move.mp3');
+    checkmateSound.load();
+    checkmateSound.play();
+  }
+
   // MOVE LISTENER - WebSocket
   useEffect(() => {
     let isMounted = true;
@@ -292,7 +308,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             // alert("submit moves on chain");
             // let newGameID = gameID + 1;
             // setGameID(newGameID);
-            updateGameInfo(wager);
+
+            // updateGameInfo(wager);
+            isCheckmate(wager, currentGame);
           }
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
