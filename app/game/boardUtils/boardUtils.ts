@@ -209,7 +209,7 @@ export const BoardUtils = (
   async function getLastMoveSourceSquare(
     gameInstance: Chess,
     moveNumber: number,
-  ) {    
+  ) {
     // Obtain all past moves from the passed gameInstance
     const moves = gameInstance.history({ verbose: true });
 

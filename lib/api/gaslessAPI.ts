@@ -101,16 +101,21 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
     const data: ChessData = await response.json();
 
     // Function to remove 'ONCHAIN' elements from an array
-    const removeOnchain = (arr: string[]): string[] => arr.filter(item => item !== "ONCHAIN");
+    const removeOnchain = (arr: string[]): string[] =>
+      arr.filter((item) => item !== 'ONCHAIN');
 
     // Processing 'messages'
     if (data.messages && Array.isArray(data.messages)) {
-      data.messages = data.messages.map(innerArray => removeOnchain(innerArray));
+      data.messages = data.messages.map((innerArray) =>
+        removeOnchain(innerArray),
+      );
     }
 
     // Processing 'signedMessages'
     if (data.signedMessages && Array.isArray(data.signedMessages)) {
-      data.signedMessages = data.signedMessages.map(innerArray => removeOnchain(innerArray));
+      data.signedMessages = data.signedMessages.map((innerArray) =>
+        removeOnchain(innerArray),
+      );
     }
 
     await SubmitVerifyMoves(data, gameWager);
@@ -121,4 +126,3 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
     throw new Error('Failed to submit signed moves');
   }
 };
-

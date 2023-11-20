@@ -168,11 +168,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerColor(isPlayerWhite);
 
     const gameNumberData: Array<number> = await GetNumberOfGames(wager);
-    const gameNumber = `${Number(gameNumberData[0]) + 1} of ${gameNumberData[1]}`;
+    const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
+      gameNumberData[1]
+    }`;
     setGameID(Number(gameNumberData[0]));
     setNumberOfGames(Number(gameNumberData[1]));
     setNumberOfGamesInfo(gameNumber);
-}
+  }
 
   // Initialize board
   useEffect(() => {
@@ -276,12 +278,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             actualTimeRemainingSC,
           } = data;
 
-          console.log("data", moves);
+          console.log('data', moves);
 
           let currentGame = new Chess();
           const gameNumber = moves.length - 1;
 
-          for (let i = 0; i < moves[gameNumber].length; i++ ) {
+          for (let i = 0; i < moves[gameNumber].length; i++) {
             currentGame.move(moves[gameNumber][i]);
           }
 
@@ -302,7 +304,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setMoves(moves[gameNumber]);
           updateState('333', true, currentGame);
 
-          getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
+          getLastMoveSourceSquare(
+            currentGame,
+            currentGame.history().length - 1,
+          );
 
           setLoading(false);
         }

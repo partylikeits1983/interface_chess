@@ -1827,7 +1827,7 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
 
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
-    
+
     // const tx = await chess.verifyGameView(messages, signedMessages);
 
     await chess.verifyGameUpdateState(messages, signedMessages);

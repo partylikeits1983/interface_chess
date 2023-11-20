@@ -40,7 +40,9 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
-  const [gameFEN, setGameFEN] = useState<string>('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+  const [gameFEN, setGameFEN] = useState<string>(
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+  );
 
   const [isPlayerWhite, setPlayerColor] = useState('white');
   const [numberOfGames, setNumberOfGames] = useState('');
@@ -64,8 +66,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
 
   useEffect(() => {
     const getGameMoves = async () => {
-
-
       if (card.matchAddress != '') {
         setIsChessboardLoading(true);
 
@@ -77,7 +77,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
         const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
         setNumberOfGames(gameNumber);
 
-
         const isTimeEnded = await IsWagerGameTimeEnded(card.matchAddress);
         setIsTimeEnded(isTimeEnded);
 
@@ -87,24 +86,22 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           // ping API
           const gameFen = await getGameFen(card.matchAddress);
           setGameFEN(gameFen);
-
         } else {
           const movesArray = await GetGameMoves(
             card.matchAddress,
             gameNumberData[0],
           );
           const game = new Chess();
-  
+
           for (let i = 0; i < movesArray.length; i++) {
             game.move(movesArray[i]);
           }
-          console.log(game.fen())
+          console.log(game.fen());
           setGameFEN(String(game.fen()));
-  
+
           const isPlayerWhite = await IsPlayerWhite(card.matchAddress);
           setPlayerColor(isPlayerWhite);
         }
-
 
         setIsChessboardLoading(false);
       } else {

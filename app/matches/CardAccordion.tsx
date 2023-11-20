@@ -215,43 +215,43 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                     </Text>
                   </Flex>
                   <Flex
-  alignItems="center"
-  justifyContent="flex-start"
-  width="50%"
->
-  {item.value}
-  {[
-    'Match Address',
-    'Opponent Address',
-    'Wager Token',
-  ].includes(item.label) && (
-    <CopyIcon
-      ml={2}
-      cursor="pointer"
-      onClick={() => {
-        let addressToCopy = '';
-        switch (item.label) {
-          case 'Match Address':
-            addressToCopy = card.matchAddress;
-            break;
-            case 'Opponent Address':
-              addressToCopy = Number(account) === Number(card.player0Address)
-                                ? card.player1Address
-                                : card.player0Address;
-              break;
-          case 'Wager Token':
-            // Assuming you have a similar property for Wager Token
-            addressToCopy = card.wagerToken; 
-            break;
-          default:
-            break;
-        }
-        handleCopyAddress(addressToCopy);
-      }}
-    />
-  )}
-</Flex>
-
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    width="50%"
+                  >
+                    {item.value}
+                    {[
+                      'Match Address',
+                      'Opponent Address',
+                      'Wager Token',
+                    ].includes(item.label) && (
+                      <CopyIcon
+                        ml={2}
+                        cursor="pointer"
+                        onClick={() => {
+                          let addressToCopy = '';
+                          switch (item.label) {
+                            case 'Match Address':
+                              addressToCopy = card.matchAddress;
+                              break;
+                            case 'Opponent Address':
+                              addressToCopy =
+                                Number(account) === Number(card.player0Address)
+                                  ? card.player1Address
+                                  : card.player0Address;
+                              break;
+                            case 'Wager Token':
+                              // Assuming you have a similar property for Wager Token
+                              addressToCopy = card.wagerToken;
+                              break;
+                            default:
+                              break;
+                          }
+                          handleCopyAddress(addressToCopy);
+                        }}
+                      />
+                    )}
+                  </Flex>
                 </Flex>
               ))}
             </div>
