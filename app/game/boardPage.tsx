@@ -19,12 +19,15 @@ import { checkIfGasless, submitMoves } from '../../lib/api/gaslessAPI';
 import BackAndForwardGameControls from './boardUtils/gameControls';
 import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility functions
 
-import { useRouter } from 'next/navigation';
 
 import useCheckValidMove from './boardUtils/useCheckValidMove';
 import useUpdateTime from './boardUtils/useUpdateTime';
 
 import { IBoardProps, IGameSocketData } from './interfaces/interfaces';
+
+import { useDisclosure } from '@chakra-ui/react';
+import SubmitMovesModal from './submitMovesModal';
+
 
 const {
   CheckValidMove,
@@ -92,7 +95,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   const [isGameGasless, setIsGameGasless] = useState(false);
 
+
+
   const [isLoading, setLoading] = useState(true);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useCheckValidMove(moves, CheckValidMove);
   useUpdateTime(isPlayer0Turn, setTimePlayer0, setTimePlayer1);
@@ -107,7 +114,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     // moveFrom,
     // setMoveFrom,
     moveSquares,
-    // setMoveSquares,
+    setMoveSquares,
     // makeAMove,
     onSquareClick,
     // getMoveOptions,
@@ -247,20 +254,14 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
   }, [wager, gameID, isGameGasless]);
 
-  function isCheckmate(wager: string, game: Chess) {
-    updateGameInfo(wager);
+  function isCheckmate(wager: string) {
 
-    getLastMoveSourceSquare(
-      game,
-      0,
-    );
+
+    setMoveSquares({});
+    updateGameInfo(wager);
 
     let newGameID = gameID + 1;
     setGameID(newGameID);
-
-    const checkmateSound = new Audio('/sounds/Move.mp3');
-    checkmateSound.load();
-    checkmateSound.play();
   }
 
   // MOVE LISTENER - WebSocket
@@ -280,7 +281,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         socket.emit('subscribeToGame', wager.toLowerCase());
       });
 
-      socket.on('updateGameFen', (data) => {
+      socket.on('updateGameFen', async (data) => {
         console.log('Received game data:', data);
         if (isMounted) {
           const {
@@ -294,8 +295,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             actualTimeRemainingSC,
           } = data;
 
-          console.log('data', moves);
-
           let currentGame = new Chess();
           const gameNumber = moves.length - 1;
 
@@ -305,12 +304,25 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           if (currentGame.isCheckmate()) {
             currentGame = new Chess();
-            // alert("submit moves on chain");
-            // let newGameID = gameID + 1;
-            // setGameID(newGameID);
+            isCheckmate(wager);
 
-            // updateGameInfo(wager);
-            isCheckmate(wager, currentGame);
+            let gameNumberData = await GetNumberOfGames(wager);
+            let gameNumberChain = Number(gameNumberData[0]);
+            let isSubmittedOnChain = gameNumberChain + 1 > gameNumber;
+
+            if (!isSubmittedOnChain) {
+              // play checkmate sound
+              const checkmateSound = new Audio('/sounds/Berserk.mp3');
+              checkmateSound.load();
+              checkmateSound.play();
+
+              onOpen();
+            } else {
+              // play start sound
+              const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
+              checkmateSound.load();
+              checkmateSound.play();
+            }
           }
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
@@ -608,6 +620,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           )}
         </>
       )}
+<SubmitMovesModal 
+  isOpen={isOpen} 
+  onClose={onClose} 
+  onSubmitMoves={submitMoves}
+  gameWager={wager}
+/>
     </ChakraProvider>
   );
 };

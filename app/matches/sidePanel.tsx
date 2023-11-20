@@ -57,12 +57,17 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const [isTimeEnded, setIsTimeEnded] = useState(false);
   const [isTournament, setIsTournament] = useState(false);
 
-  const router = useRouter();
+  // const router = useRouter();
 
-  const handleGoToMatch = (matchAddress: string) => {
+/*   const handleGoToMatch = (matchAddress: string) => {
     setLoadingGoToMatch(true);
     router.push(`/game/${matchAddress}`);
+  }; */
+  const handleGoToMatch = (matchAddress: string) => {
+    setLoadingGoToMatch(true); // Assuming this sets some loading state in your UI
+    window.location.href = `/game/${matchAddress}`;
   };
+  
 
   useEffect(() => {
     const getGameMoves = async () => {
