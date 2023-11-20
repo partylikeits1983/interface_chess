@@ -7,7 +7,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button
+  Button,
 } from '@chakra-ui/react';
 
 interface SubmitMovesModalProps {
@@ -21,28 +21,26 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
   isOpen,
   onClose,
   onSubmitMoves,
-  gameWager
+  gameWager,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent 
-        bg="black" 
-        color="white" 
-        border="1px" 
-        borderColor="white"
-      >
+      <ModalContent bg="black" color="white" border="1px" borderColor="white">
         <ModalHeader>Game Over</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           Checkmate! Please submit your moves on chain to complete the game.
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="green" onClick={() => {
-            onSubmitMoves(gameWager).then(() => {
-              onClose(); // Close the modal after submission
-            });
-          }}>
+          <Button
+            colorScheme="green"
+            onClick={() => {
+              onSubmitMoves(gameWager).then(() => {
+                onClose(); // Close the modal after submission
+              });
+            }}
+          >
             Submit moves on chain
           </Button>
         </ModalFooter>

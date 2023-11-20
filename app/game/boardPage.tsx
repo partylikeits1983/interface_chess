@@ -19,7 +19,6 @@ import { checkIfGasless, submitMoves } from '../../lib/api/gaslessAPI';
 import BackAndForwardGameControls from './boardUtils/gameControls';
 import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility functions
 
-
 import useCheckValidMove from './boardUtils/useCheckValidMove';
 import useUpdateTime from './boardUtils/useUpdateTime';
 
@@ -27,7 +26,6 @@ import { IBoardProps, IGameSocketData } from './interfaces/interfaces';
 
 import { useDisclosure } from '@chakra-ui/react';
 import SubmitMovesModal from './submitMovesModal';
-
 
 const {
   CheckValidMove,
@@ -94,8 +92,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
   const [isGameGasless, setIsGameGasless] = useState(false);
-
-
 
   const [isLoading, setLoading] = useState(true);
 
@@ -255,8 +251,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   }, [wager, gameID, isGameGasless]);
 
   function isCheckmate(wager: string) {
-
-
     setMoveSquares({});
     updateGameInfo(wager);
 
@@ -620,12 +614,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           )}
         </>
       )}
-<SubmitMovesModal 
-  isOpen={isOpen} 
-  onClose={onClose} 
-  onSubmitMoves={submitMoves}
-  gameWager={wager}
-/>
+      <SubmitMovesModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onSubmitMoves={submitMoves}
+        gameWager={wager}
+      />
     </ChakraProvider>
   );
 };

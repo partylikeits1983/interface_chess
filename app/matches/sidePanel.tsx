@@ -59,7 +59,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
 
   // const router = useRouter();
 
-/*   const handleGoToMatch = (matchAddress: string) => {
+  /*   const handleGoToMatch = (matchAddress: string) => {
     setLoadingGoToMatch(true);
     router.push(`/game/${matchAddress}`);
   }; */
@@ -67,7 +67,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     setLoadingGoToMatch(true); // Assuming this sets some loading state in your UI
     window.location.href = `/game/${matchAddress}`;
   };
-  
 
   useEffect(() => {
     const getGameMoves = async () => {

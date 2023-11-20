@@ -269,8 +269,6 @@ export default function Docs() {
           </Box>
         </Flex>
 
-
-
         <Flex
           justifyContent="center"
           mt={4}
@@ -331,7 +329,6 @@ export default function Docs() {
             </Flex>
           </Box>
         </Flex>
-
 
         <div style={{ height: '20px' }}></div>
 
