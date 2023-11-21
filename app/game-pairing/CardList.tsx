@@ -158,7 +158,7 @@ const CardList = () => {
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">
-            No matches in pool.
+            No matches in pairing pool.
           </Text>
         )}
       </Box>

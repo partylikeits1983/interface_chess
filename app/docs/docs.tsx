@@ -320,11 +320,11 @@ export default function Docs() {
               borderColor: 'white',
             }}
             onClick={() => {
-              window.open('https://faucet.polygon.technology/', '_blank');
+              window.open('https://sepolia.arbiscan.io/', '_blank');
             }}
           >
             <Flex justify="space-between" align="center">
-              <Text>Mumbai Testnet Faucet</Text>
+              <Text>Arbitrum Sepolia Explorer</Text>
               <ChevronRightIcon boxSize={6} />
             </Flex>
           </Box>
