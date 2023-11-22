@@ -94,6 +94,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isGameGasless, setIsGameGasless] = useState(false);
 
   const [isLoading, setLoading] = useState(true);
+  const [isGameInfoLoading, setIsGameInfoLoading] = useState(true);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -197,6 +198,28 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     asyncSetWagerAddress();
   }, [wager, isGameGasless]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const matchData = await GetWagerData(wager);
+        setWagerAmount(
+          ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
+        );
+        setWagerToken(matchData.wagerToken);
+        setTimeLimit(matchData.timeLimit);
+
+        setIsGameInfoLoading(false);
+
+        alert(matchData.wagerToken); // console logs correctly
+        alert(wagerToken); // doesn't console log
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [wager]);
+
   // Initialize board
   useEffect(() => {
     let isMounted = true;
@@ -205,13 +228,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       if (wager !== '' && hasPingedAPI === true) {
         setWagerAddress(wager);
 
-        if (isGameGasless === false) {
-          const matchData = await GetWagerData(wager);
-          setWagerAmount(
-            ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
-          );
-          setTimeLimit(matchData.timeLimit);
+        const matchData = await GetWagerData(wager);
+        setWagerAmount(
+          ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
+        );
 
+        setWagerToken(matchData.wagerToken);
+        setTimeLimit(matchData.timeLimit);
+
+        if (isGameGasless === false) {
           const [timePlayer0, timePlayer1, isPlayer0Turn] =
             await GetTimeRemaining(wager);
           setTimePlayer0(timePlayer0);
@@ -390,7 +415,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             console.error(error);
           }
         })();
-      }, 2000);
+      }, 3000);
     }
     return () => {
       clearInterval(interval); // Clear the interval when the component unmounts
@@ -604,17 +629,19 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 </Flex>
               </Box>
               <div style={{ marginTop: '10px' }}></div>
-              <GameInfo
-                wager={wager}
-                wagerToken={wagerToken}
-                wagerAmount={wagerAmount}
-                numberOfGames={numberOfGamesInfo}
-                timeLimit={timeLimit}
-                timePlayer0={timePlayer0}
-                timePlayer1={timePlayer1}
-                isPlayerTurn={isPlayerTurn}
-                isPlayer0White={isPlayer0White}
-              />
+              {!isGameInfoLoading && (
+                <GameInfo
+                  wager={wager}
+                  wagerToken={wagerToken}
+                  wagerAmount={wagerAmount}
+                  numberOfGames={numberOfGamesInfo}
+                  timeLimit={timeLimit}
+                  timePlayer0={timePlayer0}
+                  timePlayer1={timePlayer1}
+                  isPlayerTurn={isPlayerTurn}
+                  isPlayer0White={isPlayer0White}
+                />
+              )}
             </>
           )}
         </>

@@ -42,6 +42,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
   useEffect(() => {
     async function getScoreData() {
       setIsLoading(true);
+
       const detail = getTokenDetails(globalState.chainID, wagerToken);
       setTokenDetail(detail);
 
@@ -156,7 +157,6 @@ const GameInfo: React.FC<GameInfoProps> = ({
                   <th>Amount</th>
                   <th>Time Limit</th>
                   <th>Game</th>
-                  <th>Your Turn</th>
                 </tr>
               </thead>
               <tbody>
@@ -181,7 +181,6 @@ const GameInfo: React.FC<GameInfoProps> = ({
 
                   <td>{formatSecondsToTime(timeLimit.toString())}</td>
                   <td>{numberOfGames}</td>
-                  <td>{isPlayerTurn ? 'True' : 'False'}</td>
                 </tr>
               </tbody>
             </Table>
