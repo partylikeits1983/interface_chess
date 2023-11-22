@@ -33,6 +33,7 @@ import {
   ApproveTournament,
   JoinTournament,
   StartTournament,
+  HaveAllGamesBeenPlayedInTournament,
   GetTournamentScore,
   GetIsTournamentEnded,
   PayoutTournament,
@@ -88,6 +89,14 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         const data = await GetTournamentScore(card.tournamentNonce);
 
         const isEnded = await GetIsTournamentEnded(card.tournamentNonce);
+
+        const haveAllGamesBeenPlayed = await HaveAllGamesBeenPlayedInTournament(card.tournamentNonce);
+
+        // alert(haveAllGamesBeenPlayed);
+        if (haveAllGamesBeenPlayed) {
+          setIsTournamentEnded(true);
+        }
+
         if (isEnded) {
           setIsTournamentEnded(true);
         }

@@ -1728,6 +1728,42 @@ export const GetTournamentScore = async (tournamentId: number) => {
   return [[], []];
 };
 
+export const HaveAllGamesBeenPlayedInTournament = async (tournamentId: number): Promise<boolean> => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  try {
+    const tournamentScore = await tournament.viewTournamentScore(tournamentId);
+
+    if (!tournamentScore || tournamentScore.length === 0 || !tournamentScore[0] || !tournamentScore[1]) {
+      return false;
+    }
+
+    const numberOfPlayers = tournamentScore[0].length;
+    const tournamentData = await tournament.tournaments(tournamentId);
+    const numberOfGames = Number(tournamentData[1]);
+    const totalGames = (numberOfPlayers * (numberOfPlayers - 1) * numberOfGames) / 2;
+
+    // Convert win values to numbers and calculate the sum
+    let sumOfGamesPlayed = 0;
+
+    for (let i = 0; i < tournamentScore.length; i++) {
+      sumOfGamesPlayed += Number(tournamentScore[1][i]);
+    }
+
+
+    return sumOfGamesPlayed === totalGames;
+  } catch (error) {
+    console.error(error);
+  }
+  return false;
+};
+
+
 export const GetPlayerAddresses = async () => {
   await updateContractAddresses();
 
@@ -1773,6 +1809,8 @@ export const GetIsTournamentEnded = async (tournamentId: number) => {
     return false; // Fallback return value in case of error
   }
 };
+
+
 
 export const GetIsUserInTournament = async (tournamentId: number) => {
   await updateContractAddresses();

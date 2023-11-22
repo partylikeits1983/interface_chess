@@ -310,31 +310,47 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           let currentGame = new Chess();
           const gameNumber = moves.length - 1;
-
+          let lastMove = null;
+          
           for (let i = 0; i < moves[gameNumber].length; i++) {
-            currentGame.move(moves[gameNumber][i]);
+            lastMove = currentGame.move(moves[gameNumber][i]);
           }
-
+          
           if (currentGame.isCheckmate()) {
             currentGame = new Chess();
             isCheckmate(wager);
-
+          
             let gameNumberData = await GetNumberOfGames(wager);
             let gameNumberChain = Number(gameNumberData[0]);
             let isSubmittedOnChain = gameNumberChain + 1 > gameNumber;
-
+          
             if (!isSubmittedOnChain) {
               // play checkmate sound
               const checkmateSound = new Audio('/sounds/Berserk.mp3');
               checkmateSound.load();
               checkmateSound.play();
-
+          
               onOpen();
             } else {
               // play start sound
               const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
               checkmateSound.load();
               checkmateSound.play();
+
+              onOpen();
+            }
+          } else {
+            // Check if the last move had a piece captured
+            if (lastMove && lastMove.captured) {
+              // play capture sound
+              const captureSound = new Audio('/sounds/Capture.mp3'); // replace with your capture sound file
+              captureSound.load();
+              captureSound.play();
+            } else {
+              // play regular move sound
+              const moveSound = new Audio('/sounds/Move.mp3'); // replace with your move sound file
+              moveSound.load();
+              moveSound.play();
             }
           }
 
@@ -429,9 +445,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     _isPlayerTurnSC: boolean,
     currentGame: Chess,
   ) => {
-    const moveSound = new Audio('/sounds/Move.mp3');
-    moveSound.load();
-    moveSound.play();
+    // const moveSound = new Audio('/sounds/Move.mp3');
+    // moveSound.load();
+    // moveSound.play();
 
     // opponentMoveNotification('Your Turn to Move');
     console.log(source);
