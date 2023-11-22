@@ -289,6 +289,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             actualTimeRemainingSC,
           } = data;
 
+          alert('here');
+
           let currentGame = new Chess();
           const gameNumber = moves.length - 1;
 
@@ -418,6 +420,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     setGame(currentGame);
     setMoveNumber(currentGame.history().length);
+
+    alert("update");
+    alert(source);
+
     setGameFEN(currentGame.fen());
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
@@ -445,6 +451,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       let moveNumber = moves.length;
 
+      if (isMoveGasLess) {
+        setIsGameGasless(true);
+      }
+
       let success = await PlayMove(
         isMoveGasLess,
         gameFEN,
@@ -452,6 +462,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         wagerAddress,
         move,
       );
+
+      alert("post play move");
 
       setPlayerTurnSC(false);
 
