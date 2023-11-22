@@ -995,7 +995,7 @@ export const GetConnectedAccount = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   return signer;
-}
+};
 
 export const PlayMoveGasless = async (
   wagerAddress: string,

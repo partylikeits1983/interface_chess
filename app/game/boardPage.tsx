@@ -219,49 +219,55 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   useEffect(() => {
     let isMounted = true;
-  
+
     const initializeBoard = async () => {
       if (wager === '' || hasPingedAPI === false) {
         setLoading(false);
         return;
       }
-  
+
       setWagerAddress(wager);
       const matchData = await GetWagerData(wager);
-      setWagerAmount(ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18));
+      setWagerAmount(
+        ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
+      );
       setWagerToken(matchData.wagerToken);
       setTimeLimit(matchData.timeLimit);
-  
+
       let movesArray = [];
       let newGame = new Chess();
       if (gameID !== undefined) {
         movesArray = await GetGameMoves(wager, gameID);
         movesArray.forEach((move: any) => newGame.move(move));
       }
-  
+
       if (isGameGasless === false || movesArray.length === 0) {
-        const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(wager);
+        const [timePlayer0, timePlayer1, isPlayer0Turn] =
+          await GetTimeRemaining(wager);
         setTimePlayer0(timePlayer0);
         setTimePlayer1(timePlayer1);
         setIsPlayer0Turn(isPlayer0Turn);
       }
-  
+
       if (isGameGasless === false) {
-        const isPlayer0White = await IsPlayerAddressWhite(wager, matchData.player0Address);
+        const isPlayer0White = await IsPlayerAddressWhite(
+          wager,
+          matchData.player0Address,
+        );
         setIsPlayer0White(isPlayer0White);
         setMoves(movesArray);
         updateState('222', true, newGame);
       }
       setLoading(false);
     };
-  
+
     initializeBoard();
-  
+
     return () => {
       isMounted = false;
     };
   }, [wager, gameID, isGameGasless]);
-  
+
   function isCheckmate(wager: string) {
     setMoveSquares({});
     updateGameInfo(wager);
@@ -394,7 +400,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               ) {
                 if (isMounted) {
                   updateState('381', _isPlayerTurnSC, currentGame);
-                  
                 }
                 setTimePlayer0(timePlayer0);
                 setTimePlayer1(timePlayer1);
