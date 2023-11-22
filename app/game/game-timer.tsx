@@ -34,6 +34,8 @@ const GameTimer: React.FC<GameTimerProps> = ({
     return value.toString().padStart(2, '0');
   }
 
+  // alert(timePlayer0);
+
   return (
     <div>
       {wager !== '' && (

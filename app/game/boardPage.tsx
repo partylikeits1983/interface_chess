@@ -36,7 +36,7 @@ const {
   GetWagerData,
   GetTimeRemaining,
   IsPlayerAddressWhite,
-  getPlayerAddress,
+  GetConnectedAccount,
   GetWagerPlayers,
   IsPlayerWhite,
 } = require('../../lib/api/form');
@@ -209,9 +209,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setTimeLimit(matchData.timeLimit);
 
         setIsGameInfoLoading(false);
-
-        alert(matchData.wagerToken); // console logs correctly
-        alert(wagerToken); // doesn't console log
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -220,61 +217,52 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     fetchData();
   }, [wager]);
 
-  // Initialize board
   useEffect(() => {
     let isMounted = true;
-
-    const asyncSetWagerAddress = async () => {
-      if (wager !== '' && hasPingedAPI === true) {
-        setWagerAddress(wager);
-
-        const matchData = await GetWagerData(wager);
-        setWagerAmount(
-          ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
-        );
-
-        setWagerToken(matchData.wagerToken);
-        setTimeLimit(matchData.timeLimit);
-
-        if (isGameGasless === false) {
-          const [timePlayer0, timePlayer1, isPlayer0Turn] =
-            await GetTimeRemaining(wager);
-          setTimePlayer0(timePlayer0);
-          setTimePlayer1(timePlayer1);
-          setIsPlayer0Turn(isPlayer0Turn);
-
-          const isPlayer0White = await IsPlayerAddressWhite(
-            wager,
-            matchData.player0Address,
-          );
-          setIsPlayer0White(isPlayer0White);
-
-          if (gameID !== undefined) {
-            const movesArray = await GetGameMoves(wager, gameID);
-            const newGame = new Chess();
-            movesArray.forEach((move: any) => {
-              newGame.move(move);
-            });
-
-            setMoves(movesArray);
-
-            updateState('222', true, newGame);
-          }
-        }
+  
+    const initializeBoard = async () => {
+      if (wager === '' || hasPingedAPI === false) {
         setLoading(false);
-      } else {
-        setLoading(false);
+        return;
       }
+  
+      setWagerAddress(wager);
+      const matchData = await GetWagerData(wager);
+      setWagerAmount(ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18));
+      setWagerToken(matchData.wagerToken);
+      setTimeLimit(matchData.timeLimit);
+  
+      let movesArray = [];
+      if (gameID !== undefined) {
+        movesArray = await GetGameMoves(wager, gameID);
+        const newGame = new Chess();
+        movesArray.forEach((move: any) => newGame.move(move));
+        setMoves(movesArray);
+        updateState('222', true, newGame);
+      }
+  
+      if (isGameGasless === false || movesArray.length === 0) {
+        const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(wager);
+        setTimePlayer0(timePlayer0);
+        setTimePlayer1(timePlayer1);
+        setIsPlayer0Turn(isPlayer0Turn);
+      }
+  
+      if (isGameGasless === false) {
+        const isPlayer0White = await IsPlayerAddressWhite(wager, matchData.player0Address);
+        setIsPlayer0White(isPlayer0White);
+      }
+  
+      setLoading(false);
     };
-
-    asyncSetWagerAddress();
-
-    // Clean up for the useEffect hook itself
+  
+    initializeBoard();
+  
     return () => {
       isMounted = false;
     };
   }, [wager, gameID, isGameGasless]);
-
+  
   function isCheckmate(wager: string) {
     setMoveSquares({});
     updateGameInfo(wager);
@@ -309,6 +297,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             player0,
             player1,
             playerTurn,
+            timeLimit,
             timeRemainingPlayer0,
             timeRemainingPlayer1,
             actualTimeRemainingSC,
@@ -343,6 +332,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               checkmateSound.play();
             }
           }
+
+          // let player = await GetConnectedAccount();
 
           const isPlayer0Turn = playerTurn === player0 ? true : false;
 

@@ -10,6 +10,7 @@ const useUpdateTime = (
 ): void => {
   useEffect(() => {
     let timer: NodeJS.Timeout = setInterval(() => {
+      console.log(isPlayer0Turn);
       if (isPlayer0Turn) {
         setTimePlayer0((prevTime) => prevTime - 1);
       } else {
