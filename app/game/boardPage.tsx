@@ -252,7 +252,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setMoves(movesArray);
         updateState('222', true, newGame);
       }
-  
       setLoading(false);
     };
   
