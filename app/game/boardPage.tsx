@@ -233,12 +233,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setTimeLimit(matchData.timeLimit);
   
       let movesArray = [];
+      let newGame = new Chess();
       if (gameID !== undefined) {
         movesArray = await GetGameMoves(wager, gameID);
-        const newGame = new Chess();
         movesArray.forEach((move: any) => newGame.move(move));
-        setMoves(movesArray);
-        updateState('222', true, newGame);
       }
   
       if (isGameGasless === false || movesArray.length === 0) {
@@ -251,6 +249,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       if (isGameGasless === false) {
         const isPlayer0White = await IsPlayerAddressWhite(wager, matchData.player0Address);
         setIsPlayer0White(isPlayer0White);
+        setMoves(movesArray);
+        updateState('222', true, newGame);
       }
   
       setLoading(false);
@@ -333,8 +333,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             }
           }
 
-          // let player = await GetConnectedAccount();
-
           const isPlayer0Turn = playerTurn === player0 ? true : false;
 
           setTimePlayer0(timeRemainingPlayer0);
@@ -397,6 +395,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               ) {
                 if (isMounted) {
                   updateState('381', _isPlayerTurnSC, currentGame);
+                  
                 }
                 setTimePlayer0(timePlayer0);
                 setTimePlayer1(timePlayer1);
@@ -431,6 +430,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     moveSound.play();
 
     // opponentMoveNotification('Your Turn to Move');
+    console.log(source);
 
     setGame(currentGame);
     setMoveNumber(currentGame.history().length);
@@ -439,7 +439,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
-    setIsPlayer0Turn(!isPlayer0Turn);
+    // setIsPlayer0Turn(!isPlayer0Turn);
 
     setLoading(false);
   };
