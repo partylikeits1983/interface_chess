@@ -90,13 +90,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
         const isEnded = await GetIsTournamentEnded(card.tournamentNonce);
 
-        const haveAllGamesBeenPlayed = await HaveAllGamesBeenPlayedInTournament(card.tournamentNonce);
-
-        // alert(haveAllGamesBeenPlayed);
-        if (haveAllGamesBeenPlayed) {
-          setIsTournamentEnded(true);
-        }
-
         if (isEnded) {
           setIsTournamentEnded(true);
         }
@@ -208,12 +201,12 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
     {
-      label: 'Wager Time Limit',
+      label: 'Time Limit',
       value: formatDuration(Number(card.timeLimit)), // assuming formatDuration returns a string
     },
     { label: 'Player Limit', value: card.numberOfPlayers.toString() }, // convert to string
     {
-      label: 'End Time',
+      label: 'Ends In',
       value: timeUntilEndTime(card.startTime + card.timeLimit),
     },
   ];

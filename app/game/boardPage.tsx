@@ -311,25 +311,25 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           let currentGame = new Chess();
           const gameNumber = moves.length - 1;
           let lastMove = null;
-          
+
           for (let i = 0; i < moves[gameNumber].length; i++) {
             lastMove = currentGame.move(moves[gameNumber][i]);
           }
-          
+
           if (currentGame.isCheckmate()) {
             currentGame = new Chess();
             isCheckmate(wager);
-          
+
             let gameNumberData = await GetNumberOfGames(wager);
             let gameNumberChain = Number(gameNumberData[0]);
             let isSubmittedOnChain = gameNumberChain + 1 > gameNumber;
-          
+
             if (!isSubmittedOnChain) {
               // play checkmate sound
               const checkmateSound = new Audio('/sounds/Berserk.mp3');
               checkmateSound.load();
               checkmateSound.play();
-          
+
               onOpen();
             } else {
               // play start sound
