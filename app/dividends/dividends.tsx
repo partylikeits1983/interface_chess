@@ -190,11 +190,11 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
       <Text textAlign="center">
         <Link
-          href="https://mumbai.polygonscan.com/address/0x7a0d4Bb0C984eB68189d916D677cf0E0B8F5c240#tokentxns"
+          href="https://arbiscan.io/"
           isExternal
           color="green.500" // Styling the link blue
         >
-          PaymentSplitter Contract on Polygonscan <ExternalLinkIcon mx="2px" />
+          PaymentSplitter Contract on Arbiscan<ExternalLinkIcon mx="2px" />
         </Link>
       </Text>
 
