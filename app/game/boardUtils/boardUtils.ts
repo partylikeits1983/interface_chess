@@ -21,6 +21,72 @@ const {
 
 import { useRouter } from 'next/navigation';
 
+type Square =
+  | 'a1'
+  | 'a2'
+  | 'a3'
+  | 'a4'
+  | 'a5'
+  | 'a6'
+  | 'a7'
+  | 'a8'
+  | 'b1'
+  | 'b2'
+  | 'b3'
+  | 'b4'
+  | 'b5'
+  | 'b6'
+  | 'b7'
+  | 'b8'
+  | 'c1'
+  | 'c2'
+  | 'c3'
+  | 'c4'
+  | 'c5'
+  | 'c6'
+  | 'c7'
+  | 'c8'
+  | 'd1'
+  | 'd2'
+  | 'd3'
+  | 'd4'
+  | 'd5'
+  | 'd6'
+  | 'd7'
+  | 'd8'
+  | 'e1'
+  | 'e2'
+  | 'e3'
+  | 'e4'
+  | 'e5'
+  | 'e6'
+  | 'e7'
+  | 'e8'
+  | 'f1'
+  | 'f2'
+  | 'f3'
+  | 'f4'
+  | 'f5'
+  | 'f6'
+  | 'f7'
+  | 'f8'
+  | 'g1'
+  | 'g2'
+  | 'g3'
+  | 'g4'
+  | 'g5'
+  | 'g6'
+  | 'g7'
+  | 'g8'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'h7'
+  | 'h8';
+
 // CLICK TO MOVE
 export const BoardUtils = (
   game: any,
@@ -208,83 +274,75 @@ export const BoardUtils = (
     return true;
   };
 
-  type Square = 'a1' | 'a2' | 'a3' | 'a4' | 'a5' | 'a6' | 'a7' | 'a8' |
-              'b1' | 'b2' | 'b3' | 'b4' | 'b5' | 'b6' | 'b7' | 'b8' |
-              'c1' | 'c2' | 'c3' | 'c4' | 'c5' | 'c6' | 'c7' | 'c8' |
-              'd1' | 'd2' | 'd3' | 'd4' | 'd5' | 'd6' | 'd7' | 'd8' |
-              'e1' | 'e2' | 'e3' | 'e4' | 'e5' | 'e6' | 'e7' | 'e8' |
-              'f1' | 'f2' | 'f3' | 'f4' | 'f5' | 'f6' | 'f7' | 'f8' |
-              'g1' | 'g2' | 'g3' | 'g4' | 'g5' | 'g6' | 'g7' | 'g8' |
-              'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'h7' | 'h8';
+  async function getLastMoveSourceSquare(
+    gameInstance: Chess,
+    moveNumber: number,
+  ) {
+    // Obtain all past moves from the passed gameInstance
+    const moves = gameInstance.history({ verbose: true });
 
+    // If there are no moves, return false.
+    if (moves.length === 0) {
+      return false;
+    }
 
-              async function getLastMoveSourceSquare(
-                gameInstance: Chess,
-                moveNumber: number,
-              ) {
-                // Obtain all past moves from the passed gameInstance
-                const moves = gameInstance.history({ verbose: true });
-              
-                // If there are no moves, return false.
-                if (moves.length === 0) {
-                  return false;
-                }
-              
-                // Get the last move from the moves array
-                const lastMove = moves[moveNumber];
-              
-                // If there's no last move (e.g., moveNumber exceeds the move history), return false.
-                if (!lastMove) {
-                  return false;
-                }
-              
-                const fromSquare = lastMove.from;
-                const toSquare = lastMove.to;
-              
-                const highlightSquares: any = {};
-              
-                // Highlight the source square with a light green
-                highlightSquares[fromSquare] = {
-                  background: 'rgba(144, 238, 144, 0.4)', // light green
-                };
-              
-                // Highlight the destination square with a slightly darker green
-                highlightSquares[toSquare] = {
-                  background: 'rgba(0, 128, 0, 0.4)', // darker green
-                };
-              
-                // Check if the king is in check after the move
-                if (gameInstance.inCheck()) {
-                  // Iterate over all squares to find the king
-                  const ranks = ['1', '2', '3', '4', '5', '6', '7', '8'];
-                  const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-                  let kingPosition: Square | '' = '';
-              
-                  for (const file of files) {
-                    for (const rank of ranks) {
-                      const square: Square = file + rank as Square;
-                      const piece = gameInstance.get(square);
-                      if (piece && piece.type === 'k' && piece.color === gameInstance.turn()) {
-                        kingPosition = square;
-                        break;
-                      }
-                    }
-                    if (kingPosition) {
-                      // Highlight the king's square in red
-                      highlightSquares[kingPosition] = {
-                        background: 'rgba(255, 0, 0, 0.5)', // red
-                      };
-                      break;
-                    }
-                  }
-                }
-              
-                setMoveSquares(highlightSquares);
-              
-                return { from: fromSquare, to: toSquare };
-              }
-              
-  
+    // Get the last move from the moves array
+    const lastMove = moves[moveNumber];
+
+    // If there's no last move (e.g., moveNumber exceeds the move history), return false.
+    if (!lastMove) {
+      return false;
+    }
+
+    const fromSquare = lastMove.from;
+    const toSquare = lastMove.to;
+
+    const highlightSquares: any = {};
+
+    // Highlight the source square with a light green
+    highlightSquares[fromSquare] = {
+      background: 'rgba(144, 238, 144, 0.4)', // light green
+    };
+
+    // Highlight the destination square with a slightly darker green
+    highlightSquares[toSquare] = {
+      background: 'rgba(0, 128, 0, 0.4)', // darker green
+    };
+
+    // Check if the king is in check after the move
+    if (gameInstance.inCheck()) {
+      // Iterate over all squares to find the king
+      const ranks = ['1', '2', '3', '4', '5', '6', '7', '8'];
+      const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+      let kingPosition: Square | '' = '';
+
+      for (const file of files) {
+        for (const rank of ranks) {
+          const square: Square = (file + rank) as Square;
+          const piece = gameInstance.get(square);
+          if (
+            piece &&
+            piece.type === 'k' &&
+            piece.color === gameInstance.turn()
+          ) {
+            kingPosition = square;
+            break;
+          }
+        }
+        if (kingPosition) {
+          // Highlight the king's square in red
+          highlightSquares[kingPosition] = {
+            background: 'rgba(255, 0, 0, 0.5)', // red
+          };
+          break;
+        }
+      }
+    }
+
+    setMoveSquares(highlightSquares);
+
+    return { from: fromSquare, to: toSquare };
+  }
 
   return {
     optionSquares,

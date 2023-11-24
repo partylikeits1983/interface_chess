@@ -194,7 +194,8 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           isExternal
           color="green.500" // Styling the link blue
         >
-          PaymentSplitter Contract on Arbiscan<ExternalLinkIcon mx="2px" />
+          PaymentSplitter Contract on Arbiscan
+          <ExternalLinkIcon mx="2px" />
         </Link>
       </Text>
 

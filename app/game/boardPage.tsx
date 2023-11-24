@@ -455,9 +455,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
-
-
-
     setLoading(false);
   };
 
