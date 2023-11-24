@@ -445,21 +445,18 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     _isPlayerTurnSC: boolean,
     currentGame: Chess,
   ) => {
-    // const moveSound = new Audio('/sounds/Move.mp3');
-    // moveSound.load();
-    // moveSound.play();
-
-    // opponentMoveNotification('Your Turn to Move');
     console.log(source);
 
     setGame(currentGame);
     setMoveNumber(currentGame.history().length);
+    // setMoves(currentGame
 
     setGameFEN(currentGame.fen());
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
-    // setIsPlayer0Turn(!isPlayer0Turn);
+
+
 
     setLoading(false);
   };
@@ -495,6 +492,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       );
 
       setPlayerTurnSC(false);
+
+      // getLastMoveSourceSquare()
 
       return success;
     } catch (error) {

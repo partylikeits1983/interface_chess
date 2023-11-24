@@ -70,6 +70,8 @@ export const BoardUtils = (
 
     console.log(gameCopy.ascii());
 
+    getLastMoveSourceSquare(gameCopy, gameCopy.history.length);
+
     return [result, wasCaptured]; // null if the move was illegal, the move object if the move was legal
   };
 
