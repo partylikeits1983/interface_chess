@@ -38,6 +38,7 @@ const {
   IsPlayerAddressWhite,
   GetConnectedAccount,
   GetWagerPlayers,
+  setupProvider,
   IsPlayerWhite,
 } = require('../../lib/api/form');
 
@@ -60,6 +61,9 @@ import { current } from 'tailwindcss/colors';
 import { listeners } from 'process';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
+  // 
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+
   const [hasPingedAPI, setHasPingedAPI] = useState(false);
 
   const [isMoveGasLess, setIsMoveGasLess] = useState(true);
@@ -159,6 +163,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       try {
         const result: boolean = await checkIfGasless(wager);
         setIsGameGasless(result);
+
+        let { isWalletConnected } = await setupProvider();
+        setIsWalletConnected(isWalletConnected);
+        // alert(isWalletConnected); 
       } catch (err) {
         console.log(err);
       }
@@ -317,7 +325,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           }
 
           if (currentGame.isCheckmate()) {
-            currentGame = new Chess();
+            // currentGame = new Chess();
             isCheckmate(wager);
 
             let gameNumberData = await GetNumberOfGames(wager);
@@ -360,13 +368,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setTimePlayer1(timeRemainingPlayer1);
           setIsPlayer0Turn(isPlayer0Turn);
 
-          setMoves(moves[gameNumber]);
           updateState('333', true, currentGame);
 
-          getLastMoveSourceSquare(
-            currentGame,
-            currentGame.history().length - 1,
-          );
+
 
           setLoading(false);
         }
@@ -449,7 +453,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     setGame(currentGame);
     setMoveNumber(currentGame.history().length);
-    // setMoves(currentGame
+
+    console.log(currentGame.history());
+    console.log(currentGame.fen());
+    setMoves(currentGame.history());
+
+    getLastMoveSourceSquare(
+      currentGame,
+      currentGame.history().length - 1,
+    );
 
     setGameFEN(currentGame.fen());
     setPlayerTurn(_isPlayerTurnSC);

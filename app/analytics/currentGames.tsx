@@ -34,19 +34,28 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   // Board state
   const [moveSquares, setMoveSquare] = useState({});
 
+  const startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (useAPI) {
           // trying to ping GCP chess fish api
-          const addresses = await GetWagersDB(globalState.chainID);
-          const fendata = await GetWagersFenDB(globalState.chainID);
-          const [numberOfGames, numberOfWagers] = await GetAnalyticsDB(
-            globalState.chainID,
-          );
+          const gameData = await GetWagersFenDB(globalState.chainID);
 
-          setWagerAddresses(addresses);
-          setGames(fendata);
+          // Extract wagerAddresses and fenStrings from gameData
+
+// Filter out items where the fenString is the starting position
+const filteredGameData = gameData.filter(item => item.fenString !== startingFen);
+
+// Extract wagerAddresses and fenStrings from the filtered data
+const wagerAddresses = filteredGameData.map(item => item.wagerAddress);
+const fenStrings = filteredGameData.map(item => item.fenString);
+          
+          const [numberOfGames, numberOfWagers] = await GetAnalyticsDB(globalState.chainID);
+          
+          setWagerAddresses(wagerAddresses);
+          setGames(fenStrings);
 
           setTotalGames(numberOfGames);
           setTotalWagers(numberOfWagers);
@@ -128,7 +137,7 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   return (
     <>
       <Text color="white" marginBottom="0.5">
-        Latest Wagers
+        Latest Games
       </Text>
       <Flex wrap="wrap" justifyContent="center" w="100%">
         {Games.slice(0, 9).map((fen, index) => (

@@ -130,7 +130,7 @@ const updateContractAddresses = async (): Promise<void> => {
   }
 };
 
-const setupProvider = async () => {
+export const setupProvider = async () => {
   let provider, signer, accounts, isWalletConnected;
   const detectedProvider = await detectEthereumProvider();
 

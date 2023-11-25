@@ -6,7 +6,7 @@ const getAnalyticsMethod = '/analytics';
 const getLeaderboardMethod = '/leaderboard';
 const getTournamentMethod = '/tournaments';
 
-export async function GetWagersFenDB(chainId: number): Promise<string[]> {
+export async function GetWagersFenDB(chainId: number): Promise<{ wagerAddress: string; fenString: string; }[]> {
   const url = apiURL + getWagersFenMethod + '/' + chainId;
   try {
     const response = await fetch(url, { mode: 'cors' });
@@ -15,21 +15,21 @@ export async function GetWagersFenDB(chainId: number): Promise<string[]> {
     }
     const data = await response.json();
 
-    if (Array.isArray(data.fen_strings)) {
-      const fen_strings: string[] = data.fen_strings.map(
-        (fen_string: string) => fen_string,
-      );
-
-      return fen_strings;
+    if (Array.isArray(data.wagerAddresses) && Array.isArray(data.fenStrings)) {
+      // Combine wagerAddresses and fenStrings into an array of objects
+      return data.wagerAddresses.map((wagerAddress: string, index: number) => {
+        return { wagerAddress, fenString: data.fenStrings[index] };
+      });
     } else {
       throw new Error(
-        'GetWagersFenDB: Invalid response format: "wagers" field is not an array.',
+        'GetWagersFenDB: Invalid response format: Expected fields "wagerAddresses" and "fenStrings".',
       );
     }
   } catch (error) {
     throw new Error(`Error fetching wagers fen: ${error}`);
   }
 }
+
 
 export async function GetWagersDB(chainId: number): Promise<string[]> {
   const url = apiURL + getWagersMethod + '/' + chainId;
