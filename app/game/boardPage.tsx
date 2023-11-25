@@ -308,9 +308,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
-    alert("HERE");
-    console.log("MOVEs", moves);
-    // alert("")
+    console.log("MOVES", moves);
 
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
