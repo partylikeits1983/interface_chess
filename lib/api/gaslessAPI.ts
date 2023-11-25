@@ -131,3 +131,22 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
     throw new Error('Failed to submit signed moves');
   }
 };
+
+interface PlayerTurnData {
+  playerTurn: string;
+}
+
+export const getPlayerTurnAPI = async (
+  wagerAddress: string,
+): Promise<string> => {
+  try {
+    const response = await fetch(
+      `https://api.chess.fish/playerTurn/${wagerAddress.toLowerCase()}`,
+    );
+    const data: PlayerTurnData = await response.json();
+    return data.playerTurn;
+  } catch (error) {
+    console.error('Error:', error);
+    return '';
+  }
+};

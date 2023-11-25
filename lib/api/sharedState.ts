@@ -11,7 +11,7 @@ type State = {
 
 let listeners: React.Dispatch<React.SetStateAction<State>>[] = [];
 let state: State = {
-  chainID: 80001,
+  chainID: 421614,
   useAPI: false,
 };
 

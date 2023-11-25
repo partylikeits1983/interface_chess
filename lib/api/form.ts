@@ -15,7 +15,7 @@ import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 import detectEthereumProvider from '@metamask/detect-provider';
 
-import { submitMoves } from './gaslessAPI';
+import { submitMoves, getPlayerTurnAPI } from './gaslessAPI';
 
 interface ContractAddress {
   network: string;
@@ -485,13 +485,7 @@ export const GetAllWagers = async (): Promise<Card[]> => {
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
-      let isPlayerTurn;
-      const playerToMove = await chess.getPlayerMove(wagers[i]);
-      if (Number(accounts[0]) == Number(playerToMove)) {
-        isPlayerTurn = true;
-      } else {
-        isPlayerTurn = false;
-      }
+      let isPlayerTurn = await GetPlayerTurn(wagers[i]);
 
       const token = new ethers.Contract(wagerParams[2], ERC20ABI, signer);
       const decimals = await token.decimals();
@@ -1155,12 +1149,11 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 
   if (isWalletConnected) {
     try {
-      const playerTurn = await chess.getPlayerMove(wagerAddress);
+      let playerTurn = await getPlayerTurnAPI(wagerAddress);
 
-      /*       console.log(
-        '%cplayerTurn!',
-        'color: blue; font-style: italic; background-color: yellow; padding: 2px; border-radius: 2px; font-size: 1.5em;',
-      ); */
+      if (playerTurn === '') {
+        playerTurn = await chess.getPlayerMove(wagerAddress);
+      }
 
       let isPlayerTurn;
       if (Number(playerTurn) == Number(accounts[0])) {
@@ -1171,7 +1164,6 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 
       return isPlayerTurn;
     } catch (error) {
-      // alert(`In playerturn : ${wagerAddress} not found`);
       console.log(`in player turn function: invalid address ${wagerAddress}`);
       console.log(error);
       return false;

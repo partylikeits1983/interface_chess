@@ -109,7 +109,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         setTokenDetail(detail);
       } else {
         setIsTournamentEnded(false);
-        const detail = getTokenDetails(80001, card.token);
+        const detail = getTokenDetails(421614, card.token);
         setTokenDetail(detail);
       }
       setIsLoading(false);

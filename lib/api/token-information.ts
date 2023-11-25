@@ -52,7 +52,6 @@ const getTokenDetails = (
   chainID: number,
   address: string,
 ): TokenDetail | null => {
-  // const chainIDString = '80001'.toString();
   const chainIDString = chainID.toString();
 
   const chainData = tokenAddressesByChainID[chainIDString];

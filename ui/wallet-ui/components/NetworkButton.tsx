@@ -24,7 +24,7 @@ export default function NetworkButton(): JSX.Element {
   const [selectedNetwork, setSelectedNetwork] =
     useState<string>('Select Network');
 
-  const initialChainID = { chainID: 80001 };
+  const initialChainID = { chainID: 421614 };
   const [globalState, setGlobalState] = useStateManager(initialChainID);
 
   const handleNetworkChange = async (network: string): Promise<void> => {
