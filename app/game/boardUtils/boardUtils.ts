@@ -190,7 +190,10 @@ export const BoardUtils = (
 
     // calling smart contract to send tx
     const moveString = moveFrom + square;
-    handleSubmitMove(moveString, wasCaptured);
+
+    if (move != null) {
+      handleSubmitMove(moveString, wasCaptured);
+    }
 
     setPlayerTurn(false);
     setMoveFrom('');
@@ -264,7 +267,9 @@ export const BoardUtils = (
     const moveString = sourceSquare + targetSquare;
 
     // submit move to smart contract
-    handleSubmitMove(moveString, wasCaptured);
+    if (move != null) {
+      handleSubmitMove(moveString, wasCaptured);
+    }
 
     setPlayerTurn(false);
 

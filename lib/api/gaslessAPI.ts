@@ -89,6 +89,7 @@ export const getGameFen = async (gameWager: string) => {
 };
 
 interface ChessData {
+  moves: string[][];
   messages: string[][];
   signedMessages: string[][];
 }
@@ -103,6 +104,12 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
     // Function to remove 'ONCHAIN' elements from an array
     const removeOnchain = (arr: string[]): string[] =>
       arr.filter((item) => item !== 'ONCHAIN');
+
+      if (data.moves && Array.isArray(data.moves)) {
+        data.moves = data.moves.map((innerArray) =>
+          removeOnchain(innerArray),
+        );
+      }
 
     // Processing 'messages'
     if (data.messages && Array.isArray(data.messages)) {
