@@ -15,6 +15,8 @@ import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 import detectEthereumProvider from '@metamask/detect-provider';
 
+import { submitMoves } from './gaslessAPI';
+
 interface ContractAddress {
   network: string;
   chainID: number;
@@ -948,12 +950,11 @@ export const PlayMove = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
     const hex_move = await chess.moveToHex(move);
+    const gameNumber = Number(await chess.getGameLength(wagerAddress));
 
     if (gasLess) {
       const timeNow = Date.now();
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // @dev set to the expiration of the wager
-
-      const gameNumber = Number(await chess.getGameLength(wagerAddress));
 
       const message = await chess.generateMoveMessage(
         wagerAddress,
@@ -979,6 +980,14 @@ export const PlayMove = async (
         messageHash,
       );
     } else {
+      const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
+
+      const onChainMoveNumber = onChainMoves.length;
+
+      if (moveNumber != onChainMoveNumber) {
+        await submitMoves(wagerAddress);
+      }
+
       const tx = await chess.playMove(wagerAddress, hex_move);
       await tx.wait();
     }
@@ -1882,7 +1891,7 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     let signedMessages = data.signedMessages[gameNumber];
 
     // Remove elements from moves that match with onChainMoves
-    onChainMoves.forEach(onChainMove => {
+    onChainMoves.forEach((onChainMove) => {
       const index = moves.indexOf(onChainMove);
       if (index !== -1) {
         moves.splice(index, 1);
@@ -1896,7 +1905,7 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     data.messages[gameNumber] = messages;
     data.signedMessages[gameNumber] = signedMessages;
 
-    console.log("ONCHAIN", onChainMoves);
+    console.log('ONCHAIN', onChainMoves);
     console.log(moves);
 
     await chess.verifyGameUpdateState(messages, signedMessages);
@@ -1904,6 +1913,3 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     console.log(error);
   }
 };
-
-
-

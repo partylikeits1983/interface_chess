@@ -105,11 +105,9 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
     const removeOnchain = (arr: string[]): string[] =>
       arr.filter((item) => item !== 'ONCHAIN');
 
-      if (data.moves && Array.isArray(data.moves)) {
-        data.moves = data.moves.map((innerArray) =>
-          removeOnchain(innerArray),
-        );
-      }
+    if (data.moves && Array.isArray(data.moves)) {
+      data.moves = data.moves.map((innerArray) => removeOnchain(innerArray));
+    }
 
     // Processing 'messages'
     if (data.messages && Array.isArray(data.messages)) {
