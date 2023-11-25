@@ -12,6 +12,7 @@ import { signTxPushToDB } from './gaslessAPI';
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
+import alertSuccessSubmitMoves from '#/ui/alertSuccessSubmitMoves';
 
 import detectEthereumProvider from '@metamask/detect-provider';
 
@@ -1884,9 +1885,12 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     data.signedMessages[gameNumber] = signedMessages;
 
     console.log('ONCHAIN', onChainMoves);
-    console.log(moves);
+    console.log('db moves', moves);
 
     await chess.verifyGameUpdateState(messages, signedMessages);
+
+    alertSuccessSubmitMoves('Moves submitted on-chain'); 
+
   } catch (error) {
     console.log(error);
   }
