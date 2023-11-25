@@ -6,7 +6,9 @@ const getAnalyticsMethod = '/analytics';
 const getLeaderboardMethod = '/leaderboard';
 const getTournamentMethod = '/tournaments';
 
-export async function GetWagersFenDB(chainId: number): Promise<{ wagerAddress: string; fenString: string; }[]> {
+export async function GetWagersFenDB(
+  chainId: number,
+): Promise<{ wagerAddress: string; fenString: string }[]> {
   const url = apiURL + getWagersFenMethod + '/' + chainId;
   try {
     const response = await fetch(url, { mode: 'cors' });
@@ -29,7 +31,6 @@ export async function GetWagersFenDB(chainId: number): Promise<{ wagerAddress: s
     throw new Error(`Error fetching wagers fen: ${error}`);
   }
 }
-
 
 export async function GetWagersDB(chainId: number): Promise<string[]> {
   const url = apiURL + getWagersMethod + '/' + chainId;

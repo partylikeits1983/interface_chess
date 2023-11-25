@@ -57,11 +57,10 @@ import {
 } from '@chakra-ui/react';
 
 import { BoardUtils } from './boardUtils/boardUtils';
-import { current } from 'tailwindcss/colors';
-import { listeners } from 'process';
+import { useStateManager } from '#/lib/api/sharedState';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
-  // 
+  //
   const [isWalletConnected, setIsWalletConnected] = useState(false);
 
   const [hasPingedAPI, setHasPingedAPI] = useState(false);
@@ -166,7 +165,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
         let { isWalletConnected } = await setupProvider();
         setIsWalletConnected(isWalletConnected);
-        // alert(isWalletConnected); 
+
+        if (!isWalletConnected) {
+          setPlayerColor(true);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -195,7 +197,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // if (!isGameGasless) {
       if (wager !== '') {
         try {
-          await updateGameInfo(wager);
+          if (isWalletConnected) {
+            await updateGameInfo(wager);
+          }
         } catch (err) {
           console.log(err);
         }
@@ -278,11 +282,115 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   function isCheckmate(wager: string) {
     setMoveSquares({});
-    updateGameInfo(wager);
+
+    if (isWalletConnected) {
+      updateGameInfo(wager);
+    }
 
     let newGameID = gameID + 1;
     setGameID(newGameID);
   }
+
+  const handleUpdateUI = async (gameSocketData: IGameSocketData) => {
+    const {
+      wagerToken,
+      wagerAmount,
+      isTournament,
+      numberOfGames,
+      moves,
+      gameFEN,
+      player0,
+      player1,
+      playerTurn,
+      timeLimit,
+      timeRemainingPlayer0,
+      timeRemainingPlayer1,
+      actualTimeRemainingSC,
+    } = gameSocketData;
+
+    alert("HERE");
+    console.log("MOVEs", moves);
+    // alert("")
+
+    let currentGame = new Chess();
+    const gameNumber = moves.length - 1;
+    let lastMove = null;
+
+    for (let i = 0; i < moves[gameNumber].length; i++) {
+      lastMove = currentGame.move(moves[gameNumber][i]);
+    }
+
+    if (currentGame.isCheckmate()) {
+      // currentGame = new Chess();
+      isCheckmate(wager);
+
+      let gameNumberOnChain;
+      if (isWalletConnected === true) {
+        let gameNumberData = await GetNumberOfGames(wager);
+        gameNumberOnChain = Number(gameNumberData[0]);
+      } else {
+        gameNumberOnChain = gameNumber - 1;
+      }
+
+      let isSubmittedOnChain = gameNumberOnChain + 1 > gameNumber;
+
+      if (!isSubmittedOnChain) {
+        // play checkmate sound
+        const checkmateSound = new Audio('/sounds/Berserk.mp3');
+        checkmateSound.load();
+        checkmateSound.play();
+
+        if (isWalletConnected === true) {
+          onOpen();
+        }
+      } else {
+        // play start sound
+        const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
+        checkmateSound.load();
+        checkmateSound.play();
+
+        if (isWalletConnected === true) {
+          onOpen();
+        }
+      }
+    } else {
+      // Check if the last move had a piece captured
+      if (lastMove && lastMove.captured) {
+        // play capture sound
+        const captureSound = new Audio('/sounds/Capture.mp3'); // replace with your capture sound file
+        captureSound.load();
+        captureSound.play();
+      } else {
+        // play regular move sound
+        const moveSound = new Audio('/sounds/Move.mp3'); // replace with your move sound file
+        moveSound.load();
+        moveSound.play();
+      }
+    }
+
+    const isPlayer0Turn = playerTurn === player0 ? true : false;
+
+    setTimePlayer0(timeRemainingPlayer0);
+    setTimePlayer1(timeRemainingPlayer1);
+    setIsPlayer0Turn(isPlayer0Turn);
+
+    updateState('333', true, currentGame);
+
+    if (isWalletConnected === false) {
+      setPlayerColor(true);
+      setWagerAmount(ethers.utils.formatUnits(numberToString(wagerAmount), 18));
+      setWagerToken(wagerToken);
+      setTimeLimit(timeLimit);
+
+      setGameID(moves.length);
+      setNumberOfGames(numberOfGames);
+      const gameNumber = `${Number(moves.length) + 1} of ${numberOfGames}`;
+
+      setNumberOfGamesInfo(gameNumber);
+    }
+
+    setLoading(false);
+  };
 
   // MOVE LISTENER - WebSocket
   useEffect(() => {
@@ -304,75 +412,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       socket.on('updateGameFen', async (data) => {
         console.log('Received game data:', data);
         if (isMounted) {
-          const {
-            moves,
-            gameFEN,
-            player0,
-            player1,
-            playerTurn,
-            timeLimit,
-            timeRemainingPlayer0,
-            timeRemainingPlayer1,
-            actualTimeRemainingSC,
-          } = data;
-
-          let currentGame = new Chess();
-          const gameNumber = moves.length - 1;
-          let lastMove = null;
-
-          for (let i = 0; i < moves[gameNumber].length; i++) {
-            lastMove = currentGame.move(moves[gameNumber][i]);
-          }
-
-          if (currentGame.isCheckmate()) {
-            // currentGame = new Chess();
-            isCheckmate(wager);
-
-            let gameNumberData = await GetNumberOfGames(wager);
-            let gameNumberChain = Number(gameNumberData[0]);
-            let isSubmittedOnChain = gameNumberChain + 1 > gameNumber;
-
-            if (!isSubmittedOnChain) {
-              // play checkmate sound
-              const checkmateSound = new Audio('/sounds/Berserk.mp3');
-              checkmateSound.load();
-              checkmateSound.play();
-
-              onOpen();
-            } else {
-              // play start sound
-              const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
-              checkmateSound.load();
-              checkmateSound.play();
-
-              onOpen();
-            }
-          } else {
-            // Check if the last move had a piece captured
-            if (lastMove && lastMove.captured) {
-              // play capture sound
-              const captureSound = new Audio('/sounds/Capture.mp3'); // replace with your capture sound file
-              captureSound.load();
-              captureSound.play();
-            } else {
-              // play regular move sound
-              const moveSound = new Audio('/sounds/Move.mp3'); // replace with your move sound file
-              moveSound.load();
-              moveSound.play();
-            }
-          }
-
-          const isPlayer0Turn = playerTurn === player0 ? true : false;
-
-          setTimePlayer0(timeRemainingPlayer0);
-          setTimePlayer1(timeRemainingPlayer1);
-          setIsPlayer0Turn(isPlayer0Turn);
-
-          updateState('333', true, currentGame);
-
-
-
-          setLoading(false);
+          const gameSocketData: IGameSocketData = data;
+          await handleUpdateUI(gameSocketData);
         }
       });
 
@@ -388,7 +429,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     return () => {
       isMounted = false;
     };
-  }, [wager, isGameGasless]);
+  }, [wager, isGameGasless, isWalletConnected]);
 
   // MOVE LISTENER useEffect - Polling
   useEffect(() => {
@@ -458,10 +499,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     console.log(currentGame.fen());
     setMoves(currentGame.history());
 
-    getLastMoveSourceSquare(
-      currentGame,
-      currentGame.history().length - 1,
-    );
+    getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
 
     setGameFEN(currentGame.fen());
     setPlayerTurn(_isPlayerTurnSC);

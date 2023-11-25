@@ -34,7 +34,8 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   // Board state
   const [moveSquares, setMoveSquare] = useState({});
 
-  const startingFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+  const startingFen =
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,15 +46,21 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
 
           // Extract wagerAddresses and fenStrings from gameData
 
-// Filter out items where the fenString is the starting position
-const filteredGameData = gameData.filter(item => item.fenString !== startingFen);
+          // Filter out items where the fenString is the starting position
+          const filteredGameData = gameData.filter(
+            (item) => item.fenString !== startingFen,
+          );
 
-// Extract wagerAddresses and fenStrings from the filtered data
-const wagerAddresses = filteredGameData.map(item => item.wagerAddress);
-const fenStrings = filteredGameData.map(item => item.fenString);
-          
-          const [numberOfGames, numberOfWagers] = await GetAnalyticsDB(globalState.chainID);
-          
+          // Extract wagerAddresses and fenStrings from the filtered data
+          const wagerAddresses = filteredGameData.map(
+            (item) => item.wagerAddress,
+          );
+          const fenStrings = filteredGameData.map((item) => item.fenString);
+
+          const [numberOfGames, numberOfWagers] = await GetAnalyticsDB(
+            globalState.chainID,
+          );
+
           setWagerAddresses(wagerAddresses);
           setGames(fenStrings);
 

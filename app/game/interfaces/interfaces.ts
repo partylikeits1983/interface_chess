@@ -30,7 +30,11 @@ export interface IMove {
 }
 
 export interface IGameSocketData {
-  moves: string[];
+  wagerToken: string;
+  wagerAmount: number;
+  numberOfGames: number;
+  isTournament: boolean;
+  moves: [string[]];
   gameFEN: string;
   player0: string;
   player1: string;

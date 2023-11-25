@@ -131,7 +131,8 @@ const updateContractAddresses = async (): Promise<void> => {
 };
 
 export const setupProvider = async () => {
-  let provider, signer, accounts, isWalletConnected;
+  let provider, signer, accounts;
+  let isWalletConnected = false;
   const detectedProvider = await detectEthereumProvider();
 
   if (detectedProvider && detectedProvider.isMetaMask) {
