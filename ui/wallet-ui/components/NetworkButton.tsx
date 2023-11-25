@@ -14,7 +14,7 @@ import { useStateManager } from '../../../lib/api/sharedState';
 
 const NETWORK_NAMES: { [key: string]: string } = {
   0x1: 'Ethereum Mainnet',
-  0xa4b1: 'Arbitrum Mainnet',
+  0xa4b1: 'Arbitrum',
   0x38: 'BSC',
   0xaa36a7: 'Sepolia Testnet',
   0x66eee: 'Arbitrum Testnet',
@@ -90,8 +90,8 @@ export default function NetworkButton(): JSX.Element {
       };
       getConnectedNetwork();
     } else {
-      // default to mumbai
-      setSelectedNetwork(NETWORK_NAMES[0x13881]);
+      // default to arbitrum 
+      setSelectedNetwork(NETWORK_NAMES[0xa4b1]);
     }
   }, []);
 

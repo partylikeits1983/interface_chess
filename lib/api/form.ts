@@ -175,9 +175,6 @@ export const getChainId = async () => {
     const network = await provider.getNetwork();
     const chainId = network.chainId;
 
-    console.log('chain id');
-    console.log(chainId);
-
     return chainId;
   } catch (error) {
     console.log(' chain id ERROR');
@@ -245,10 +242,6 @@ export const GetDividendBalances = async () => {
     let usdt_bal = await usdt.balanceOf(DividendSplitter);
     let usdc_bal = await usdc.balanceOf(DividendSplitter);
     let dai_bal = await dai.balanceOf(DividendSplitter);
-
-    console.log('USDC', usdc_bal);
-    console.log(USDC);
-    console.log(DividendSplitter);
 
     wbtc_bal = ethers.utils.formatEther(wbtc_bal);
     weth_bal = ethers.utils.formatEther(weth_bal);
@@ -439,9 +432,6 @@ export const CreateWager = async (form: CreateMatchType) => {
     let maxTimePerMove = Number(form.timePerMove);
     let numberOfGames = Number(form.numberOfGames);
 
-    console.log(await token.balanceOf(accounts[0]));
-    console.log(player1, wagerToken, wager, maxTimePerMove, numberOfGames);
-
     const tx = await chess.createGameWager(
       player1,
       wagerToken,
@@ -563,8 +553,6 @@ export const GetAllWagersForPairing = async () => {
         pairingRoomWagers.push(card);
       }
     }
-
-    console.log('Pairing room wagers');
 
     return pairingRoomWagers;
   } catch (error) {
@@ -1309,9 +1297,6 @@ export const GetDividendData = async () => {
     );
 
     const totalSupply = ethers.utils.formatEther(await token.totalSupply(), 18);
-
-    console.log(userAmount);
-    console.log(totalSupply);
 
     const userPercent = (userAmount / totalSupply) * 100;
 

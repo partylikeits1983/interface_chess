@@ -160,6 +160,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     // Function to fetch game status
     const fetchGameStatus = async () => {
       try {
+        setLoading(true);
         const result: boolean = await checkIfGasless(wager);
         setIsGameGasless(result);
 
@@ -169,7 +170,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         if (!isWalletConnected) {
           setPlayerColor(true);
         }
+        
+
       } catch (err) {
+        // setLoading(false);
         console.log(err);
       }
       setHasPingedAPI(true);
@@ -197,9 +201,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // if (!isGameGasless) {
       if (wager !== '') {
         try {
+          setLoading(true);
           if (isWalletConnected) {
             await updateGameInfo(wager);
           }
+          // setLoading(false);
         } catch (err) {
           console.log(err);
         }
@@ -208,7 +214,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
     // Call both functions
     asyncSetWagerAddress();
-  }, [wager, isGameGasless]);
+  }, [wager, isGameGasless, isWalletConnected]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -234,7 +240,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     const initializeBoard = async () => {
       if (wager === '' || hasPingedAPI === false) {
-        setLoading(false);
+        // setLoading(false);
         return;
       }
 
