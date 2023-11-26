@@ -31,7 +31,7 @@ import { getTokenDetails } from '#/lib/api/token-information';
 
 import {
   getChainId,
-  ApproveTournament,
+  GetWagerAddressTournament,
   JoinTournament,
   ExitTournament,
   StartTournament,

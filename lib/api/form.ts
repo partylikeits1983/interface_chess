@@ -1520,17 +1520,13 @@ export const GetPendingTournaments = async () => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      console.log(tournament.address);
-      console.log(data);
-
-
-
       if (data.isInProgress === false) {
         const token = new ethers.Contract(data.token, ERC20ABI, signer);
         const tokenDecimals = await token.decimals();
-        const tokenAmount = ethers.utils.formatUnits(data.tokenAmount, tokenDecimals);
-
-        console.log(BigInt(data.timeLimit));
+        const tokenAmount = ethers.utils.formatUnits(
+          data.tokenAmount,
+          tokenDecimals,
+        );
 
         const tournamentData: TournamentData = {
           tournamentNonce: i,
@@ -1577,22 +1573,24 @@ export const GetInProgressTournaments = async () => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      const token = new ethers.Contract(data[2], ERC20ABI, signer);
+      const token = new ethers.Contract(data.token, ERC20ABI, signer);
       const tokenDecimals = await token.decimals();
-      const tokenAmount = ethers.utils.formatUnits(data[3], tokenDecimals);
-
+      const tokenAmount = ethers.utils.formatUnits(
+        data.tokenAmount,
+        tokenDecimals,
+      );
       const tournamentData: TournamentData = {
         tournamentNonce: i,
-        numberOfPlayers: Number(data[0]),
-        players: [],
-        numberOfGames: Number(data[1]),
-        token: data[2],
-        tokenAmount: Number(tokenAmount),
-        isInProgress: Boolean(data[4]),
-        startTime: Number(data[5]),
-        timeLimit: Number(data[6]),
-        isComplete: Boolean(data[7]),
-        isTournament: Boolean(data[8]),
+        numberOfPlayers: data.numberOfPlayers,
+        players: data.players,
+        numberOfGames: data.numberOfGames,
+        token: data.token,
+        tokenAmount: tokenAmount,
+        isInProgress: data.isInProgress,
+        startTime: Number(data.startTime),
+        timeLimit: Number(data.timeLimit),
+        isComplete: Boolean(data.isComplete),
+        isTournament: true,
       };
 
       const players = await tournament.getTournamentPlayers(i);
@@ -1780,6 +1778,25 @@ export const GetPlayerAddresses = async () => {
     const tournamentNonce = await tournament.tournamentNonce();
 
     const players = await tournament.getTournamentPlayers(tournamentNonce - 1);
+
+    return players;
+  } catch (error) {
+    // Handle error if needed
+  }
+};
+
+export const GetWagerAddressTournament = async (tournamentNonce: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
+  try {
+    const players = await tournament.getTournamentWagerAddresses(
+      tournamentNonce,
+    );
 
     return players;
   } catch (error) {

@@ -30,7 +30,7 @@ import copyIconFeedback from 'ui/copyIconFeedback';
 
 import {
   getChainId,
-  ApproveTournament,
+  GetWagerAddressTournament,
   JoinTournament,
   StartTournament,
   HaveAllGamesBeenPlayedInTournament,
@@ -73,6 +73,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   // State to store scores
   const [playerScores, setPlayerScores] = useState<PlayerScores>({});
 
+  const [wagerAddress, setWagerAddresses] = useState<string[]>([]);
+
   type TokenDetail = {
     label: string;
     image: string;
@@ -103,6 +105,11 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
         const chainData = await getChainId();
         setChainID(Number(chainData));
+
+        const wagerAddresses = await GetWagerAddressTournament(
+          card.tournamentNonce,
+        );
+        setWagerAddresses(wagerAddresses);
 
         // pass chainData not chainId... sigh
         const detail = getTokenDetails(chainData, card.token);
@@ -308,6 +315,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
               ) : (
                 <>
                   <Box width={['100%', '100%']} px={2}>
+                    {/* Player Addresses Table */}
                     <Box
                       bg="black"
                       p={3}
@@ -327,8 +335,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                               Address
                             </Td>
                             <Td color="white" fontWeight="bold">
-                              {' '}
-                              {/* Adding a title for the score */}
                               Score
                             </Td>
                           </Tr>
@@ -336,9 +342,56 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                         <Tbody>
                           {card.players.map((playerAddress, index) => (
                             <Tr key={index}>
-                              <Td color="white">{playerAddress}</Td>
+                              <Td color="white">
+                                <a
+                                  href={`https://arbiscan.io/address/${playerAddress}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: '#42ff72' }}
+                                >
+                                  {playerAddress}
+                                </a>
+                              </Td>
                               <Td color="white">
                                 {playerScores[playerAddress] || 'N/A'}
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
+
+                    {/* Wager Addresses Table */}
+                    <Box
+                      bg="black"
+                      p={3}
+                      rounded="md"
+                      my={3}
+                      border="1px solid white"
+                      maxHeight="150px"
+                      overflowY="auto"
+                    >
+                      <Text fontWeight="bold" color="white" fontSize="sm">
+                        Game Addresses
+                      </Text>
+                      <Table variant="simple" size="xs">
+                        <Thead>
+                          <Tr>
+                            <Td color="white" fontWeight="bold">
+                              Address
+                            </Td>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {wagerAddress.map((address, index) => (
+                            <Tr key={index}>
+                              <Td color="white">
+                                <a
+                                  href={`/game/${address}`}
+                                  style={{ color: '#42ff72' }}
+                                >
+                                  {address}
+                                </a>
                               </Td>
                             </Tr>
                           ))}
