@@ -1,6 +1,6 @@
 const ethers = require('ethers');
 
-import { SubmitVerifyMoves } from './form';
+import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
 export const signTxPushToDB = async (
   wagerAddress: string,
@@ -148,5 +148,43 @@ export const getPlayerTurnAPI = async (
   } catch (error) {
     console.error('Error:', error);
     return '';
+  }
+};
+
+
+export const DownloadMoves = async (gameWager: string) => {
+  try {
+    const response = await fetch(
+      `https://api.chess.fish/signedMoves/${gameWager.toLowerCase()}`,
+    );
+    const data: ChessData = await response.json();
+
+    // Function to remove 'ONCHAIN' elements from an array
+    const removeOnchain = (arr: string[]): string[] =>
+      arr.filter((item) => item !== 'ONCHAIN');
+
+    if (data.moves && Array.isArray(data.moves)) {
+      data.moves = data.moves.map((innerArray) => removeOnchain(innerArray));
+    }
+
+    // Processing 'messages'
+    if (data.messages && Array.isArray(data.messages)) {
+      data.messages = data.messages.map((innerArray) =>
+        removeOnchain(innerArray),
+      );
+    }
+
+    // Processing 'signedMessages'
+    if (data.signedMessages && Array.isArray(data.signedMessages)) {
+      data.signedMessages = data.signedMessages.map((innerArray) =>
+        removeOnchain(innerArray),
+      );
+    }
+
+    return await DownloadGaslessMoves(data, gameWager);
+
+  } catch (error) {
+    console.error('Error:', error);
+    throw new Error('Failed to download signed moves');
   }
 };

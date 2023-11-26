@@ -1895,3 +1895,44 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     console.log(error);
   }
 };
+
+export const DownloadGaslessMoves = async (data: any, wager: string) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  try {
+    const gameNumber = Number(await chess.getGameLength(wager));
+
+    // get game moves on chain
+    const onChainMoves = await GetGameMoves(wager, gameNumber);
+
+    // Initialize arrays for the current game
+    let moves = data.moves[gameNumber];
+    let messages = data.messages[gameNumber];
+    let signedMessages = data.signedMessages[gameNumber];
+
+    // Remove elements from moves that match with onChainMoves
+    onChainMoves.forEach((onChainMove) => {
+      const index = moves.indexOf(onChainMove);
+      if (index !== -1) {
+        moves.splice(index, 1);
+        messages.splice(index, 1);
+        signedMessages.splice(index, 1);
+      }
+    });
+
+    // Update data with the filtered arrays
+    data.moves[gameNumber] = moves;
+    data.messages[gameNumber] = messages;
+    data.signedMessages[gameNumber] = signedMessages;
+
+    return {messages, signedMessages};
+
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
