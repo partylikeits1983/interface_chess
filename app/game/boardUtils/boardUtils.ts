@@ -150,58 +150,57 @@ export const BoardUtils = (
   const onSquareClick = (square: any, arePiecesDragable: boolean): void => {
     // Make a move
     if (arePiecesDragable === true) {
+      setRightClickedSquares({});
+      setMoveFrom('');
+      setOptionSquares({});
+      setPotentialMoves([]);
 
-    setRightClickedSquares({});
-    setMoveFrom('');
-    setOptionSquares({});
-    setPotentialMoves([]);
+      // from square
+      if (!moveFrom) {
+        resetFirstMove(square);
+        return;
+      }
 
-    // from square
-    if (!moveFrom) {
-      resetFirstMove(square);
-      return;
+      // prevent error when clicking twice on same square
+      if (moveFrom === square) {
+        return;
+      }
+
+      if (!moveExists(potentialMoves, moveFrom, square)) {
+        console.log("move doesn't exist");
+
+        return;
+      }
+
+      // attempt to make move
+      const gameMoves = game.fen();
+      const gameCopy = new Chess();
+      gameCopy.load(gameMoves);
+
+      const [move, wasCaptured] = makeAMove({
+        from: moveFrom,
+        to: square,
+        promotion: 'q', // always promote to a queen for example simplicity
+      });
+
+      // if invalid, setMoveFrom and getMoveOptions
+      if (move === null) {
+        resetFirstMove(square);
+        return;
+      }
+
+      // calling smart contract to send tx
+      const moveString = moveFrom + square;
+
+      if (move != null) {
+        handleSubmitMove(moveString, wasCaptured);
+      }
+
+      setPlayerTurn(false);
+      setMoveFrom('');
+      setOptionSquares({});
+      setPotentialMoves([]);
     }
-
-    // prevent error when clicking twice on same square
-    if (moveFrom === square) {
-      return;
-    }
-
-    if (!moveExists(potentialMoves, moveFrom, square)) {
-      console.log("move doesn't exist");
-
-      return;
-    }
-
-    // attempt to make move
-    const gameMoves = game.fen();
-    const gameCopy = new Chess();
-    gameCopy.load(gameMoves);
-
-    const [move, wasCaptured] = makeAMove({
-      from: moveFrom,
-      to: square,
-      promotion: 'q', // always promote to a queen for example simplicity
-    });
-
-    // if invalid, setMoveFrom and getMoveOptions
-    if (move === null) {
-      resetFirstMove(square);
-      return;
-    }
-
-    // calling smart contract to send tx
-    const moveString = moveFrom + square;
-
-    if (move != null) {
-      handleSubmitMove(moveString, wasCaptured);
-    }
-
-    setPlayerTurn(false);
-    setMoveFrom('');
-    setOptionSquares({});
-    setPotentialMoves([]);
-  }
   };
 
   // GET MOVE OPTIONS ON CLICK

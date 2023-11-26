@@ -1408,7 +1408,6 @@ export const CreateTournament = async (params: TournamentParams) => {
   const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
 
   try {
-    alert(params.timeLimit);
     await tournament.createTournament(
       params.numberOfPlayers,
       params.numberOfGames,

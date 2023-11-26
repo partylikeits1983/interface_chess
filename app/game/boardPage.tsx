@@ -268,7 +268,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           wager,
           matchData.player0Address,
         );
-        const isPlayerTurn = await GetPlayerTurn(wager, false)
+        const isPlayerTurn = await GetPlayerTurn(wager, false);
         setArePiecesDraggable(isPlayerTurn);
 
         setIsPlayer0White(isPlayer0White);
@@ -515,7 +515,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
-    // setArePiecesDraggable(_isPlayerTurnSC); 
+    // setArePiecesDraggable(_isPlayerTurnSC);
 
     // setLoading(false);
   };
@@ -590,7 +590,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             <Chessboard
               boardOrientation={isPlayerWhite ? 'white' : 'black'}
               arePiecesDraggable={arePiecesDraggable}
-              onSquareClick={(square) => onSquareClick(square, arePiecesDraggable)}
+              onSquareClick={(square) =>
+                onSquareClick(square, arePiecesDraggable)
+              }
               animationDuration={70}
               onPieceDrop={onDrop}
               position={gameFEN}
