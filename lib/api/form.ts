@@ -1130,9 +1130,7 @@ export const IsPlayerAddressWhite = async (
   }
 };
 
-export const GetPlayerTurn = async (
-  wagerAddress: string,
-): Promise<boolean> => {
+export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 
   await updateContractAddresses();
