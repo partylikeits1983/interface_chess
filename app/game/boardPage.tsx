@@ -375,11 +375,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager, true);
       setArePiecesDraggable(isPlayerTurn);
+      setPlayerTurn(isPlayerTurn);
     }
+
+    let isPlayer0Turn = player0 === playerTurn ? true : false;
 
     setTimePlayer0(timeRemainingPlayer0);
     setTimePlayer1(timeRemainingPlayer1);
     setIsPlayer0Turn(isPlayer0Turn);
+    
 
     updateState('333', isPlayer0Turn, currentGame);
 
@@ -556,6 +560,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       );
 
       setPlayerTurnSC(false);
+      setPlayerTurn(false);
+      setIsPlayer0Turn(!isPlayer0Turn);
 
       // getLastMoveSourceSquare()
 

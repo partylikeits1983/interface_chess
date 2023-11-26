@@ -109,6 +109,7 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
       data.moves = data.moves.map((innerArray) => removeOnchain(innerArray));
     }
 
+    /*
     // Processing 'messages'
     if (data.messages && Array.isArray(data.messages)) {
       data.messages = data.messages.map((innerArray) =>
@@ -117,11 +118,12 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
     }
 
     // Processing 'signedMessages'
-    if (data.signedMessages && Array.isArray(data.signedMessages)) {
+     if (data.signedMessages && Array.isArray(data.signedMessages)) {
       data.signedMessages = data.signedMessages.map((innerArray) =>
         removeOnchain(innerArray),
       );
-    }
+    } 
+    */
 
     await SubmitVerifyMoves(data, gameWager);
 

@@ -1898,6 +1898,12 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
 
+    console.log('arrays');
+    console.log(onChainMoves);
+    console.log(moves);
+    console.log(messages);
+    console.log(signedMessages);
+
     // Remove elements from moves that match with onChainMoves
     onChainMoves.forEach((onChainMove) => {
       const index = moves.indexOf(onChainMove);
@@ -1913,12 +1919,10 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     data.messages[gameNumber] = messages;
     data.signedMessages[gameNumber] = signedMessages;
 
-    console.log('ONCHAIN', onChainMoves);
-    console.log('db moves', moves);
-
-    await chess.verifyGameUpdateState(messages, signedMessages);
-
-    alertSuccessSubmitMoves('Moves submitted on-chain');
+    if (messages.length !== 0 || signedMessages.length !== 0) {
+      await chess.verifyGameUpdateState(messages, signedMessages);
+      alertSuccessSubmitMoves('Moves submitted on-chain');
+    }
   } catch (error) {
     console.log(error);
   }
