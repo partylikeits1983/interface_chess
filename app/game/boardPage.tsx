@@ -105,6 +105,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isLoading, setLoading] = useState(true);
   const [isGameInfoLoading, setIsGameInfoLoading] = useState(true);
 
+  const [arePiecesDraggable, setArePiecesDraggable] = useState(false);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useCheckValidMove(moves, CheckValidMove);
@@ -112,18 +114,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   const {
     optionSquares,
-    //setOptionSquares,
-    // potentialMoves,
-    // setPotentialMoves,
     rightClickedSquares,
-    // setRightClickedSquares,
-    // moveFrom,
-    // setMoveFrom,
     moveSquares,
     setMoveSquares,
-    // makeAMove,
     onSquareClick,
-    // getMoveOptions,
     handleBoardClick,
     wagerAddress,
     setWagerAddress,
@@ -274,6 +268,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           wager,
           matchData.player0Address,
         );
+        const isPlayerTurn = await GetPlayerTurn(wager, false)
+        setArePiecesDraggable(isPlayerTurn);
+
         setIsPlayer0White(isPlayer0White);
         setMoves(movesArray);
         updateState('222', true, newGame);
@@ -374,13 +371,14 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       }
     }
 
-    const isPlayer0Turn = playerTurn === player0 ? true : false;
+    const isPlayerTurn = await GetPlayerTurn(wager, true);
+    setArePiecesDraggable(isPlayerTurn);
 
     setTimePlayer0(timeRemainingPlayer0);
     setTimePlayer1(timeRemainingPlayer1);
     setIsPlayer0Turn(isPlayer0Turn);
 
-    updateState('333', true, currentGame);
+    updateState('333', isPlayer0Turn, currentGame);
 
     if (isWalletConnected === false) {
       setPlayerColor(true);
@@ -470,6 +468,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               ) {
                 if (isMounted) {
                   updateState('381', _isPlayerTurnSC, currentGame);
+
+                  // this may not be needed...
+                  const isPlayerTurn = await GetPlayerTurn(wager, false);
+                  setArePiecesDraggable(isPlayerTurn);
                 }
                 setTimePlayer0(timePlayer0);
                 setTimePlayer1(timePlayer1);
@@ -512,6 +514,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setGameFEN(currentGame.fen());
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
+
+    // setArePiecesDraggable(_isPlayerTurnSC); 
 
     // setLoading(false);
   };
@@ -585,8 +589,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             {/* Adjust the number as needed */}
             <Chessboard
               boardOrientation={isPlayerWhite ? 'white' : 'black'}
-              arePiecesDraggable={true}
-              onSquareClick={onSquareClick}
+              arePiecesDraggable={arePiecesDraggable}
+              onSquareClick={(square) => onSquareClick(square, arePiecesDraggable)}
               animationDuration={70}
               onPieceDrop={onDrop}
               position={gameFEN}

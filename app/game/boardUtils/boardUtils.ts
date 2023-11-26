@@ -141,18 +141,20 @@ export const BoardUtils = (
     return [result, wasCaptured]; // null if the move was illegal, the move object if the move was legal
   };
 
+  function resetFirstMove(square: any) {
+    const hasOptions = getMoveOptions(square);
+    if (hasOptions) setMoveFrom(square);
+  }
+
   // ON SQUARE CLICK BOARD
-  const onSquareClick = (square: any): void => {
+  const onSquareClick = (square: any, arePiecesDragable: boolean): void => {
     // Make a move
+    if (arePiecesDragable === true) {
+
     setRightClickedSquares({});
     setMoveFrom('');
     setOptionSquares({});
     setPotentialMoves([]);
-
-    function resetFirstMove(square: any) {
-      const hasOptions = getMoveOptions(square);
-      if (hasOptions) setMoveFrom(square);
-    }
 
     // from square
     if (!moveFrom) {
@@ -199,6 +201,7 @@ export const BoardUtils = (
     setMoveFrom('');
     setOptionSquares({});
     setPotentialMoves([]);
+  }
   };
 
   // GET MOVE OPTIONS ON CLICK
