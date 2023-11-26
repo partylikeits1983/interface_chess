@@ -16,7 +16,7 @@ import alertSuccessSubmitMoves from '#/ui/alertSuccessSubmitMoves';
 
 import detectEthereumProvider from '@metamask/detect-provider';
 
-import { submitMoves, getPlayerTurnAPI } from './gaslessAPI';
+import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
 interface ContractAddress {
   network: string;
@@ -477,7 +477,7 @@ export const GetAllWagers = async (): Promise<Card[]> => {
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
-      let isPlayerTurn = await GetPlayerTurn(wagers[i], false);
+      let isPlayerTurn = await GetPlayerTurn(wagers[i]);
 
       const token = new ethers.Contract(wagerParams[2], ERC20ABI, signer);
       const decimals = await token.decimals();
@@ -1132,7 +1132,6 @@ export const IsPlayerAddressWhite = async (
 
 export const GetPlayerTurn = async (
   wagerAddress: string,
-  isGameGasless: boolean,
 ): Promise<boolean> => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 
@@ -1142,6 +1141,8 @@ export const GetPlayerTurn = async (
 
   if (isWalletConnected) {
     try {
+      let isGameGasless = await checkIfGasless(wagerAddress);
+
       let playerTurn;
       if (isGameGasless) {
         playerTurn = await getPlayerTurnAPI(wagerAddress);

@@ -313,8 +313,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
-    console.log('MOVES', moves);
-
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
     let lastMove = null;
@@ -408,13 +406,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       });
 
       socket.on('connect', () => {
-        console.log('Connected to server');
+        console.log('Connected to websocket');
         socket.emit('getGameFen', wager.toLowerCase());
         socket.emit('subscribeToGame', wager.toLowerCase());
       });
 
       socket.on('updateGameFen', async (data) => {
-        console.log('Received game data:', data);
+        // console.log('Received game data:', data);
         if (isMounted) {
           const gameSocketData: IGameSocketData = data;
           await handleUpdateUI(gameSocketData);
