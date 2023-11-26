@@ -56,8 +56,6 @@ const getTokenDetails = (
 
   const chainData = tokenAddressesByChainID[chainIDString];
 
-  console.log(chainIDString);
-  console.log(chainData);
   if (!chainData) return null; // Return null if chainID is not found
 
   // Find token name by address for the given chain ID

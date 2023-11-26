@@ -160,13 +160,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   });
 
   useEffect(() => {
-    // initialize
+
     setWagerAddress(wager);
 
     // Function to fetch game status
     const fetchGameStatus = async () => {
       try {
-        setLoading(true);
         const result: boolean = await checkIfGasless(wager);
         setIsGameGasless(result);
 
@@ -175,15 +174,16 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
         if (!isWalletConnected) {
           setPlayerColor(true);
+        } else {
+          updateGameInfo(wager);
         }
       } catch (err) {
-        // setLoading(false);
         console.log(err);
       }
       setHasPingedAPI(true);
     };
     fetchGameStatus();
-  }, [wager]);
+  }, []);
 
   async function updateGameInfo(wager: string): Promise<void> {
     let isPlayerWhite = await IsPlayerWhite(wager);
@@ -205,7 +205,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // if (!isGameGasless) {
       if (wager !== '') {
         try {
-          setLoading(true);
+          // setLoading(true);
           if (isWalletConnected) {
             await updateGameInfo(wager);
           }
@@ -218,7 +218,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
     // Call both functions
     asyncSetWagerAddress();
-  }, [wager, isGameGasless, isWalletConnected]);
+  }, [wager, isWalletConnected]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -279,7 +279,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setMoves(movesArray);
         updateState('222', true, newGame);
       }
-      // setLoading(false);
+      setLoading(false);
     };
 
     initializeBoard();
@@ -287,7 +287,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     return () => {
       isMounted = false;
     };
-  }, [wager, gameID, isGameGasless]);
+  }, [wager, isGameGasless, isWalletConnected]);
 
   function isCheckmate(wager: string) {
     setMoveSquares({});
@@ -506,8 +506,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setGame(currentGame);
     setMoveNumber(currentGame.history().length);
 
-    console.log(currentGame.history());
-    console.log(currentGame.fen());
     setMoves(currentGame.history());
 
     getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
@@ -516,7 +514,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
-    setLoading(false);
+    // setLoading(false);
   };
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
