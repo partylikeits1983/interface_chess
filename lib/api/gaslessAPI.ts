@@ -192,3 +192,25 @@ export const DownloadMoves = async (gameWager: string) => {
     throw new Error('Failed to download signed moves');
   }
 };
+
+export const GetGameNumberDB = async (gameWager: string): Promise<number> => {
+  try {
+    const response = await fetch(
+      `https://api.chess.fish/signedMoves/${gameWager.toLowerCase()}`,
+    );
+    const data: ChessData = await response.json();
+
+    // Function to remove 'ONCHAIN' elements from an array
+    const removeOnchain = (arr: string[]): string[] =>
+      arr.filter((item) => item !== 'ONCHAIN');
+
+    if (data.moves && Array.isArray(data.moves)) {
+      data.moves = data.moves.map((innerArray) => removeOnchain(innerArray));
+    }
+
+    return data.moves.length;
+  } catch (error) {
+    console.error('Error:', error);
+    return 0;
+  }
+};

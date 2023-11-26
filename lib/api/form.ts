@@ -1166,6 +1166,38 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
   }
 };
 
+
+export const GetPlayerTurnSC = async (wagerAddress: string): Promise<boolean> => {
+  let { signer, accounts, isWalletConnected } = await setupProvider();
+
+  await updateContractAddresses();
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+
+  if (isWalletConnected) {
+    try {
+
+      let playerTurn = await chess.getPlayerMove(wagerAddress);
+
+      let isPlayerTurn;
+      if (Number(playerTurn) == Number(accounts[0])) {
+        isPlayerTurn = true;
+      } else {
+        isPlayerTurn = false;
+      }
+
+      return isPlayerTurn;
+    } catch (error) {
+      console.log(`in player turn function: invalid address ${wagerAddress}`);
+      console.log(error);
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
+
+
 export const GetNumberOfGames = async (
   wagerAddress: string,
 ): Promise<number[]> => {
@@ -1195,6 +1227,25 @@ export const GetNumberOfGames = async (
     console.log(`getNumberOfGames function: invalid address ${wagerAddress}`);
     console.log(error);
     return [];
+  }
+};
+
+export const GetGameNumber = async (
+  wagerAddress: string,
+): Promise<number> => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+  try {
+    const gameNumber = Number(await chess.getGameLength(wagerAddress));
+
+    return gameNumber;
+  } catch (error) {
+    console.log(`getNumberOfGames function: invalid address ${wagerAddress}`);
+    console.log(error);
+    return 0;
   }
 };
 

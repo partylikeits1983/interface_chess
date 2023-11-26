@@ -1,4 +1,6 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
+
 import {
   Modal,
   ModalOverlay,
@@ -9,12 +11,16 @@ import {
   ModalCloseButton,
   Button,
 } from '@chakra-ui/react';
+import { GetGameNumber } from '#/lib/api/form';
+
+import { GetGameNumberDB } from '#/lib/api/gaslessAPI'; 
 
 interface SubmitMovesModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmitMoves: (gameWager: string) => Promise<void>;
   gameWager: string;
+  gameID: number;
 }
 
 const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
@@ -22,7 +28,11 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
   onClose,
   onSubmitMoves,
   gameWager,
+  gameID,
 }) => {
+
+  // const [hasGameBeenWrittenToSC, setHasGameBeenWrittenToSC] = useState(false);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />

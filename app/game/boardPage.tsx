@@ -38,6 +38,7 @@ const {
   GetGameMoves,
   PlayMove,
   GetPlayerTurn,
+  GetPlayerTurnSC,
   GetNumberOfGames,
   GetWagerData,
   GetTimeRemaining,
@@ -269,10 +270,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             wager,
             matchData.player0Address,
           );
-          const isPlayerTurn = await GetPlayerTurn(wager, false);
+          setIsPlayer0White(isPlayer0White);
+          const isPlayerTurn = await GetPlayerTurn(wager);
           setArePiecesDraggable(isPlayerTurn);
 
-          setIsPlayer0White(isPlayer0White);
           setMoves(movesArray);
           updateState('222', true, newGame);
         }
@@ -316,6 +317,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
+
+
+
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
     let lastMove = null;
@@ -324,8 +328,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       lastMove = currentGame.move(moves[gameNumber][i]);
     }
 
+    let isNewGame = false;
     if (currentGame.isCheckmate()) {
-      // currentGame = new Chess();
+      
       isCheckmate(wager);
 
       let gameNumberOnChain;
@@ -348,14 +353,16 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           onOpen();
         }
       } else {
+        // IF GAME IS SUBMITTED ON CHAIN!
+        isNewGame = true;
+
+        currentGame = new Chess();
+
         // play start sound
         const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
         checkmateSound.load();
         checkmateSound.play();
 
-        if (isWalletConnected === true) {
-          onOpen();
-        }
       }
     } else {
       // Check if the last move had a piece captured
@@ -373,17 +380,38 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     }
 
     if (isWalletConnected) {
-      const isPlayerTurn = await GetPlayerTurn(wager, true);
+      const isPlayerTurn = await GetPlayerTurn(wager);
       setArePiecesDraggable(isPlayerTurn);
       setPlayerTurn(isPlayerTurn);
     }
 
+    if (isNewGame) {
+      // only when server moves don't match with chain moves
+      const isPlayerTurn = await GetPlayerTurnSC(wager);
+      setPlayerTurn(isPlayerTurn);
+      setArePiecesDraggable(isPlayerTurn);
+      
+      const isPlayer0White = await IsPlayerAddressWhite(
+        wager,
+        player0,
+      );
+      setIsPlayer0White(isPlayer0White);
+
+      setTimePlayer0(timeRemainingPlayer0);
+      setTimePlayer1(timeRemainingPlayer1);     
+      
+      updateGameInfo(wager);
+
+
+      
+    } else {
     let isPlayer0Turn = player0 === playerTurn ? true : false;
 
     setTimePlayer0(timeRemainingPlayer0);
     setTimePlayer1(timeRemainingPlayer1);
     setIsPlayer0Turn(isPlayer0Turn);
     
+    setGameID(moves.length);
 
     updateState('333', isPlayer0Turn, currentGame);
 
@@ -394,13 +422,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setWagerToken(wagerToken);
       setTimeLimit(timeLimit);
 
-      setGameID(moves.length);
+      // normally handled by updateGameInfo
       setNumberOfGames(numberOfGames);
       const gameNumber = `${Number(moves.length) + 1} of ${numberOfGames}`;
-
       setNumberOfGamesInfo(gameNumber);
     }
-
+  }
     setLoading(false);
   };
 
@@ -454,8 +481,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         (async () => {
           try {
             const _isPlayerTurnSC = await GetPlayerTurn(
-              wagerAddress,
-              isGameGasless,
+              wagerAddress
             );
             const [timePlayer0, timePlayer1, isPlayer0Turn] =
               await GetTimeRemaining(wager);
@@ -478,7 +504,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                   updateState('381', _isPlayerTurnSC, currentGame);
 
                   // this may not be needed...
-                  const isPlayerTurn = await GetPlayerTurn(wager, false);
+                  const isPlayerTurn = await GetPlayerTurn(wager);
                   setArePiecesDraggable(isPlayerTurn);
                 }
                 setTimePlayer0(timePlayer0);
@@ -730,6 +756,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         onClose={onClose}
         onSubmitMoves={submitMoves}
         gameWager={wager}
+        gameID={gameID}
       />
     </ChakraProvider>
   );
