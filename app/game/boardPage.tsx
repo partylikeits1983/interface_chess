@@ -160,7 +160,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   });
 
   useEffect(() => {
-
     setWagerAddress(wager);
 
     // Function to fetch game status
