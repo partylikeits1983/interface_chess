@@ -236,6 +236,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     let isMounted = true;
 
     const initializeBoard = async () => {
+      if (!isWalletConnected) {
       if (wager === '' || hasPingedAPI === false) {
         return;
       }
@@ -276,6 +277,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         updateState('222', true, newGame);
       }
       setLoading(false);
+    }
+    setLoading(false);
     };
 
     initializeBoard();
@@ -369,8 +372,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       }
     }
 
+    if (isWalletConnected) {
     const isPlayerTurn = await GetPlayerTurn(wager, true);
     setArePiecesDraggable(isPlayerTurn);
+    }
 
     setTimePlayer0(timeRemainingPlayer0);
     setTimePlayer1(timeRemainingPlayer1);
@@ -379,6 +384,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     updateState('333', isPlayer0Turn, currentGame);
 
     if (isWalletConnected === false) {
+      setArePiecesDraggable(false);
       setPlayerColor(true);
       setWagerAmount(ethers.utils.formatUnits(numberToString(wagerAmount), 18));
       setWagerToken(wagerToken);
@@ -391,7 +397,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setNumberOfGamesInfo(gameNumber);
     }
 
-    // setLoading(false);
+    setLoading(false);
   };
 
   // MOVE LISTENER - WebSocket
@@ -439,7 +445,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     let interval: NodeJS.Timeout;
 
     // Polling occurs when isGameGasless is strictly false
-    if (isGameGasless === false) {
+    if (isGameGasless === false && isWalletConnected) {
       interval = setInterval(() => {
         (async () => {
           try {
@@ -482,6 +488,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         })();
       }, 3000);
     }
+    setLoading(false);
     return () => {
       clearInterval(interval); // Clear the interval when the component unmounts
       isMounted = false;
