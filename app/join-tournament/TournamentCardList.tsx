@@ -125,7 +125,7 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">
-            No tournaments in progress yet.
+            There are no open tournaments. Create a tournament! 
           </Text>
         )}
       </Box>
