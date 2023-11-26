@@ -1519,24 +1519,28 @@ export const GetPendingTournaments = async () => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      if (Boolean(data[4]) == false) {
-        const token = new ethers.Contract(data[2], ERC20ABI, signer);
+      // onsole.log(data);
+
+      if (data.isInProgress == false) {
+        const token = new ethers.Contract(data.token, ERC20ABI, signer);
         const tokenDecimals = await token.decimals();
         const tokenAmount = ethers.utils.formatUnits(data[3], tokenDecimals);
 
         const tournamentData: TournamentData = {
           tournamentNonce: i,
-          numberOfPlayers: Number(data[0]),
-          players: [],
-          numberOfGames: Number(data[1]),
-          token: data[2],
-          tokenAmount: Number(tokenAmount),
-          isInProgress: Boolean(data[4]),
-          startTime: Number(data[5]),
-          timeLimit: Number(data[6]),
-          isComplete: Boolean(data[7]),
-          isTournament: Boolean(data[8]),
+          numberOfPlayers: data.numberOfPlayers,
+          players: data.players,
+          numberOfGames: data.numberOfGames,
+          token: data.token,
+          tokenAmount: tokenAmount,
+          isInProgress: data.isInProgress,
+          startTime: Number(data.startTime),
+          timeLimit: Number(data.TimeLimit),
+          isComplete: Boolean(data.isComplete),
+          isTournament: true,
         };
+
+        console.log(tournamentData);
 
         const players = await tournament.getTournamentPlayers(i);
         tournamentData.players = players;
