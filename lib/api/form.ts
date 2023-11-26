@@ -3,10 +3,10 @@ const { parseUnits } = require('ethers/lib/utils');
 import { CreateMatchType } from './types';
 
 const chessWagerABI = require('./contract-abi/ChessWagerABI').abi;
-const moveVerificationABI = require('./contract-abi/MoveVerificationABI.json');
-const splitterABI = require('./contract-abi/SplitterABI');
-const crowdSaleABI = require('./contract-abi/CrowdSaleABI');
-const tournamentABI = require('./contract-abi/TournamentABI');
+const moveVerificationABI = require('./contract-abi/MoveVerificationABI').abi;
+const splitterABI = require('./contract-abi/SplitterABI').abi;
+const crowdSaleABI = require('./contract-abi/CrowdSaleABI').abi;
+const tournamentABI = require('./contract-abi/TournamentABI').abi;
 
 import { signTxPushToDB } from './gaslessAPI';
 
@@ -1404,6 +1404,7 @@ export const CreateTournament = async (params: TournamentParams) => {
   const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
 
   try {
+    alert(params.timeLimit);
     await tournament.createTournament(
       params.numberOfPlayers,
       params.numberOfGames,
@@ -1519,12 +1520,17 @@ export const GetPendingTournaments = async () => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      // onsole.log(data);
+      console.log(tournament.address);
+      console.log(data);
 
-      if (data.isInProgress == false) {
+
+
+      if (data.isInProgress === false) {
         const token = new ethers.Contract(data.token, ERC20ABI, signer);
         const tokenDecimals = await token.decimals();
-        const tokenAmount = ethers.utils.formatUnits(data[3], tokenDecimals);
+        const tokenAmount = ethers.utils.formatUnits(data.tokenAmount, tokenDecimals);
+
+        console.log(BigInt(data.timeLimit));
 
         const tournamentData: TournamentData = {
           tournamentNonce: i,
@@ -1535,7 +1541,7 @@ export const GetPendingTournaments = async () => {
           tokenAmount: tokenAmount,
           isInProgress: data.isInProgress,
           startTime: Number(data.startTime),
-          timeLimit: Number(data.TimeLimit),
+          timeLimit: Number(data.timeLimit),
           isComplete: Boolean(data.isComplete),
           isTournament: true,
         };
