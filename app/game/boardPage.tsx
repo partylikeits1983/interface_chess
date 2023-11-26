@@ -244,7 +244,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     const initializeBoard = async () => {
       if (wager === '' || hasPingedAPI === false) {
-        // setLoading(false);
         return;
       }
 
@@ -280,7 +279,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setMoves(movesArray);
         updateState('222', true, newGame);
       }
-      setLoading(false);
+      // setLoading(false);
     };
 
     initializeBoard();
@@ -397,7 +396,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setNumberOfGamesInfo(gameNumber);
     }
 
-    setLoading(false);
+    // setLoading(false);
   };
 
   // MOVE LISTENER - WebSocket
@@ -449,7 +448,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       interval = setInterval(() => {
         (async () => {
           try {
-            const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
+            const _isPlayerTurnSC = await GetPlayerTurn(
+              wagerAddress,
+              isGameGasless,
+            );
             const [timePlayer0, timePlayer1, isPlayer0Turn] =
               await GetTimeRemaining(wager);
 
@@ -474,6 +476,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 setTimePlayer1(timePlayer1);
               }
             }
+            setLoading(false);
           } catch (error) {
             console.error(error);
           }

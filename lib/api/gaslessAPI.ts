@@ -143,11 +143,15 @@ export const getPlayerTurnAPI = async (
     const response = await fetch(
       `https://api.chess.fish/playerTurn/${wagerAddress.toLowerCase()}`,
     );
+
+    if (response.status === 204) {
+      return '';
+    }
+
     const data: PlayerTurnData = await response.json();
     return data.playerTurn;
   } catch (error) {
-    console.error('Error:', error);
-    return '';
+    return ''; // Return an empty string in case of any error
   }
 };
 

@@ -1130,7 +1130,10 @@ export const IsPlayerAddressWhite = async (
   }
 };
 
-export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
+export const GetPlayerTurn = async (
+  wagerAddress: string,
+  isGameGasless: boolean,
+): Promise<boolean> => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 
   await updateContractAddresses();
@@ -1139,9 +1142,10 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 
   if (isWalletConnected) {
     try {
-      let playerTurn = await getPlayerTurnAPI(wagerAddress);
-
-      if (playerTurn === '') {
+      let playerTurn;
+      if (isGameGasless) {
+        playerTurn = await getPlayerTurnAPI(wagerAddress);
+      } else {
         playerTurn = await chess.getPlayerMove(wagerAddress);
       }
 
