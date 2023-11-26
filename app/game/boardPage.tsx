@@ -237,48 +237,48 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     const initializeBoard = async () => {
       if (!isWalletConnected) {
-      if (wager === '' || hasPingedAPI === false) {
-        return;
-      }
+        if (wager === '' || hasPingedAPI === false) {
+          return;
+        }
 
-      setWagerAddress(wager);
-      const matchData = await GetWagerData(wager);
-      setWagerAmount(
-        ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
-      );
-      setWagerToken(matchData.wagerToken);
-      setTimeLimit(matchData.timeLimit);
-
-      let movesArray = [];
-      let newGame = new Chess();
-      if (gameID !== undefined) {
-        movesArray = await GetGameMoves(wager, gameID);
-        movesArray.forEach((move: any) => newGame.move(move));
-      }
-
-      if (isGameGasless === false || movesArray.length === 0) {
-        const [timePlayer0, timePlayer1, isPlayer0Turn] =
-          await GetTimeRemaining(wager);
-        setTimePlayer0(timePlayer0);
-        setTimePlayer1(timePlayer1);
-        setIsPlayer0Turn(isPlayer0Turn);
-      }
-
-      if (isGameGasless === false) {
-        const isPlayer0White = await IsPlayerAddressWhite(
-          wager,
-          matchData.player0Address,
+        setWagerAddress(wager);
+        const matchData = await GetWagerData(wager);
+        setWagerAmount(
+          ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
         );
-        const isPlayerTurn = await GetPlayerTurn(wager, false);
-        setArePiecesDraggable(isPlayerTurn);
+        setWagerToken(matchData.wagerToken);
+        setTimeLimit(matchData.timeLimit);
 
-        setIsPlayer0White(isPlayer0White);
-        setMoves(movesArray);
-        updateState('222', true, newGame);
+        let movesArray = [];
+        let newGame = new Chess();
+        if (gameID !== undefined) {
+          movesArray = await GetGameMoves(wager, gameID);
+          movesArray.forEach((move: any) => newGame.move(move));
+        }
+
+        if (isGameGasless === false || movesArray.length === 0) {
+          const [timePlayer0, timePlayer1, isPlayer0Turn] =
+            await GetTimeRemaining(wager);
+          setTimePlayer0(timePlayer0);
+          setTimePlayer1(timePlayer1);
+          setIsPlayer0Turn(isPlayer0Turn);
+        }
+
+        if (isGameGasless === false) {
+          const isPlayer0White = await IsPlayerAddressWhite(
+            wager,
+            matchData.player0Address,
+          );
+          const isPlayerTurn = await GetPlayerTurn(wager, false);
+          setArePiecesDraggable(isPlayerTurn);
+
+          setIsPlayer0White(isPlayer0White);
+          setMoves(movesArray);
+          updateState('222', true, newGame);
+        }
+        setLoading(false);
       }
       setLoading(false);
-    }
-    setLoading(false);
     };
 
     initializeBoard();
@@ -373,8 +373,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     }
 
     if (isWalletConnected) {
-    const isPlayerTurn = await GetPlayerTurn(wager, true);
-    setArePiecesDraggable(isPlayerTurn);
+      const isPlayerTurn = await GetPlayerTurn(wager, true);
+      setArePiecesDraggable(isPlayerTurn);
     }
 
     setTimePlayer0(timeRemainingPlayer0);
