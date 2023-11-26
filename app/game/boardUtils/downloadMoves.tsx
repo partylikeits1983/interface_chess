@@ -1,9 +1,8 @@
 // MyComponent.tsx
 import React, { useState } from 'react';
 import { Button, ChakraProvider, Tooltip } from '@chakra-ui/react';
-import { DownloadIcon, LinkIcon } from '@chakra-ui/icons'; 
+import { DownloadIcon, LinkIcon } from '@chakra-ui/icons';
 import { checkIfGasless, submitMoves, DownloadMoves } from 'lib/api/gaslessAPI';
-
 
 interface DownloadMovesButtonProps {
   wager: string;
@@ -12,7 +11,8 @@ interface DownloadMovesButtonProps {
 const DownloadMovesButton: React.FC<DownloadMovesButtonProps> = ({ wager }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
-  const handleDownload = async (wager: string) => { // Make sure wagerAddress is available
+  const handleDownload = async (wager: string) => {
+    // Make sure wagerAddress is available
     try {
       const data = await DownloadMoves(wager); // Assuming this function returns a JSON object
       const json = JSON.stringify(data);
@@ -31,9 +31,9 @@ const DownloadMovesButton: React.FC<DownloadMovesButtonProps> = ({ wager }) => {
   };
 
   return (
-<>
-<style>
-  {`
+    <>
+      <style>
+        {`
     .small-screen-button {
       font-size: 14px; /* Default smaller font size */
     }
@@ -57,32 +57,31 @@ const DownloadMovesButton: React.FC<DownloadMovesButtonProps> = ({ wager }) => {
       justify-content: flex-end; /* Aligns buttons to the right */
     }
   `}
-</style>
+      </style>
 
-<div className="button-container">
-  <Button
-    className="small-screen-button"
-    colorScheme="green"
-    onClick={() => submitMoves(wager)}
-  >
-    Submit moves on chain
-    <LinkIcon ml={2} /> {/* Adjust the icon name and margin as needed */}
-  </Button>
+      <div className="button-container">
+        <Button
+          className="small-screen-button"
+          colorScheme="green"
+          onClick={() => submitMoves(wager)}
+        >
+          Submit moves on chain
+          <LinkIcon ml={2} /> {/* Adjust the icon name and margin as needed */}
+        </Button>
 
-  <Button
-  className="icon-button"
-  colorScheme="black"
-  onClick={() => handleDownload(wager)} // Updated onClick event handler
-  onMouseEnter={() => setIsHovered(true)}
-  onMouseLeave={() => setIsHovered(false)}
->
-      <Tooltip label="Download Moves" isOpen={isHovered}>
-        <DownloadIcon />
-      </Tooltip>
-    </Button>
-  </div>
-</>
-
+        <Button
+          className="icon-button"
+          colorScheme="black"
+          onClick={() => handleDownload(wager)} // Updated onClick event handler
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <Tooltip label="Download Moves" isOpen={isHovered}>
+            <DownloadIcon />
+          </Tooltip>
+        </Button>
+      </div>
+    </>
   );
 };
 

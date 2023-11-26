@@ -90,7 +90,7 @@ export default function NetworkButton(): JSX.Element {
       };
       getConnectedNetwork();
     } else {
-      // default to arbitrum 
+      // default to arbitrum
       setSelectedNetwork(NETWORK_NAMES[0xa4b1]);
     }
   }, []);

@@ -14,7 +14,11 @@ import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
 import ForwardBackButtons from './forward-back-buttons';
 import opponentMoveNotification from 'ui/opponentMoveNotification';
-import { checkIfGasless, submitMoves, DownloadMoves } from '../../lib/api/gaslessAPI';
+import {
+  checkIfGasless,
+  submitMoves,
+  DownloadMoves,
+} from '../../lib/api/gaslessAPI';
 
 import BackAndForwardGameControls from './boardUtils/gameControls';
 import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility functions
@@ -23,7 +27,6 @@ import useCheckValidMove from './boardUtils/useCheckValidMove';
 import useUpdateTime from './boardUtils/useUpdateTime';
 
 import { IBoardProps, IGameSocketData } from './interfaces/interfaces';
-
 
 import { useDisclosure } from '@chakra-ui/react';
 import SubmitMovesModal from './submitMovesModal';
@@ -43,7 +46,6 @@ const {
   GetWagerPlayers,
   setupProvider,
   IsPlayerWhite,
-
 } = require('../../lib/api/form');
 
 import {
@@ -174,8 +176,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         if (!isWalletConnected) {
           setPlayerColor(true);
         }
-        
-
       } catch (err) {
         // setLoading(false);
         console.log(err);
@@ -318,7 +318,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
-    console.log("MOVES", moves);
+    console.log('MOVES', moves);
 
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
@@ -557,8 +557,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     }
   }
 
-
-
   return (
     <ChakraProvider>
       {isLoading ? (
@@ -649,24 +647,23 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             <>
               {' '}
               <Box
-  p={3}
-  border="0.5px solid white"
-  display="flex"
-  alignItems="center"
-  justifyContent="space-between" // This spreads out the children
-  mb={3}
->
-<div style={{ display: 'flex', alignItems: 'center' }}>
-  <Text mr={2}>Turn off to submit move on chain</Text>
-  <Switch
-    isChecked={isMoveGasLess}
-    onChange={() => setIsMoveGasLess(!isMoveGasLess)}
-  />
-</div>
+                p={3}
+                border="0.5px solid white"
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between" // This spreads out the children
+                mb={3}
+              >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Text mr={2}>Turn off to submit move on chain</Text>
+                  <Switch
+                    isChecked={isMoveGasLess}
+                    onChange={() => setIsMoveGasLess(!isMoveGasLess)}
+                  />
+                </div>
 
-  {wager && <DownloadMovesButton wager={wager} />}
-</Box>
-
+                {wager && <DownloadMovesButton wager={wager} />}
+              </Box>
               <div style={{ marginTop: '10px' }}></div>
               <Box p={3} border="0.5px solid white">
                 <Flex

@@ -151,7 +151,6 @@ export const getPlayerTurnAPI = async (
   }
 };
 
-
 export const DownloadMoves = async (gameWager: string) => {
   try {
     const response = await fetch(
@@ -182,7 +181,6 @@ export const DownloadMoves = async (gameWager: string) => {
     }
 
     return await DownloadGaslessMoves(data, gameWager);
-
   } catch (error) {
     console.error('Error:', error);
     throw new Error('Failed to download signed moves');

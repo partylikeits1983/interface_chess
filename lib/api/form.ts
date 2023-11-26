@@ -1889,8 +1889,7 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
 
     await chess.verifyGameUpdateState(messages, signedMessages);
 
-    alertSuccessSubmitMoves('Moves submitted on-chain'); 
-
+    alertSuccessSubmitMoves('Moves submitted on-chain');
   } catch (error) {
     console.log(error);
   }
@@ -1928,11 +1927,9 @@ export const DownloadGaslessMoves = async (data: any, wager: string) => {
     data.messages[gameNumber] = messages;
     data.signedMessages[gameNumber] = signedMessages;
 
-    return {messages, signedMessages};
-
+    return { messages, signedMessages };
   } catch (error) {
     console.log(error);
     return null;
   }
 };
-
