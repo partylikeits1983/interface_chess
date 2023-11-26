@@ -477,7 +477,7 @@ export const GetAllWagers = async (): Promise<Card[]> => {
     for (let i = 0; i < wagers.length; i++) {
       const wagerParams = await chess.gameWagers(wagers[i]);
 
-      let isPlayerTurn = await GetPlayerTurn(wagers[i]);
+      let isPlayerTurn = await GetPlayerTurn(wagers[i], false);
 
       const token = new ethers.Contract(wagerParams[2], ERC20ABI, signer);
       const decimals = await token.decimals();
