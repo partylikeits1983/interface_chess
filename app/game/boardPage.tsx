@@ -218,25 +218,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     asyncSetWagerAddress();
   }, [wager, isWalletConnected]);
 
-  /*   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const matchData = await GetWagerData(wager);
-        setWagerAmount(
-          ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
-        );
-        setWagerToken(matchData.wagerToken);
-        setTimeLimit(matchData.timeLimit);
-
-        setIsGameInfoLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, [wager]); */
-
   useEffect(() => {
     const initializeBoard = async () => {
       if (isWalletConnected) {
@@ -276,6 +257,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             matchData.player0Address,
           );
           setIsPlayer0White(isPlayer0White);
+
           const isPlayerTurn = await GetPlayerTurn(wager);
           setArePiecesDraggable(isPlayerTurn);
 
@@ -300,6 +282,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setGameID(newGameID);
 
       const isPlayerTurn = await GetPlayerTurnSC(wager);
+
+      alert(`285 ${isPlayerTurn}`);
       setPlayerTurn(isPlayerTurn);
       setArePiecesDraggable(isPlayerTurn);
 
@@ -405,14 +389,19 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager);
       setArePiecesDraggable(isPlayerTurn);
+
+
+      alert(`394 ${isPlayerTurn}`);
       setPlayerTurn(isPlayerTurn);
     }
 
     // Handling new game state
     if (isNewGame) {
       const isPlayerTurn = await GetPlayerTurnSC(wager);
-      setPlayerTurn(isPlayerTurn);
-      setArePiecesDraggable(isPlayerTurn);
+
+      // alert(`403 ${isPlayerTurn}`);
+      // setPlayerTurn(isPlayerTurn);
+      // setArePiecesDraggable(isPlayerTurn);
 
       const isPlayer0White = await IsPlayerAddressWhite(wager, player0);
       setIsPlayer0White(isPlayer0White);
@@ -559,20 +548,23 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     currentGame: Chess,
   ) => {
     console.log(source);
+    if (currentGame.history().length !== 0) {
+      setGame(currentGame);
 
-    // first move glitch
+      setMoveNumber(currentGame.history().length);
+  
+      setMoves(currentGame.history());
+  
+      getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
+  
+      setGameFEN(currentGame.fen());
 
-    setGame(currentGame);
+      alert(`update state 564 ${isPlayerTurn}`);
+      setPlayerTurn(_isPlayerTurnSC);
+      setPlayerTurnSC(_isPlayerTurnSC);
+    // }
+    }
 
-    setMoveNumber(currentGame.history().length);
-
-    setMoves(currentGame.history());
-
-    getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
-
-    setGameFEN(currentGame.fen());
-    setPlayerTurn(_isPlayerTurnSC);
-    setPlayerTurnSC(_isPlayerTurnSC);
   };
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
@@ -606,6 +598,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       );
 
       setPlayerTurnSC(false);
+
+
+      alert(`605 ${isPlayerTurn}`);
       setPlayerTurn(false);
       setIsPlayer0Turn(!isPlayer0Turn);
 
