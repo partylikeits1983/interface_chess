@@ -1,6 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -10,11 +8,12 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
+  Spinner,
+  Flex,
+  Box
 } from '@chakra-ui/react';
-import { GetGameNumber } from '#/lib/api/form';
 
-import { GetGameNumberDB } from '#/lib/api/gaslessAPI';
-
+// Define the type for your props
 interface SubmitMovesModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,37 +33,57 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
   wereMovesSubmitted,
   setWereMovesSubmitted,
 }) => {
-  // const [hasGameBeenWrittenToSC, setHasGameBeenWrittenToSC] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent bg="black" color="white" border="1px" borderColor="white">
-        <ModalHeader>Game Over</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          Checkmate! Please submit your moves on chain to complete the game.
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            colorScheme="green"
-            onClick={() => {
-              onSubmitMoves(gameWager).then(() => {
-                setWereMovesSubmitted(true); // Update the state
-                onClose(); // Close the modal after submission
+<Modal isOpen={isOpen} onClose={onClose} isCentered>
+  <ModalOverlay />
+  <ModalContent bg="black" color="white" border="1px" borderColor="white">
+    <ModalHeader>Game Over</ModalHeader>
+    <ModalCloseButton />
+    <ModalBody>
+      Checkmate! Please submit your moves on chain to complete the game.
+    </ModalBody>
+    <ModalFooter>
+      <Flex width="100%" justifyContent="center" alignItems="center">
+        {/* Invisible Box to maintain layout */}
+        <Box width="40px" height="40px" marginRight="2" visibility="hidden" />
 
-                const newGameSound = new Audio('/sounds/GenericNotify.mp3');
-                newGameSound.load();
-                newGameSound.play();
-              });
-            }}
-          >
-            Submit moves on chain
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        <Button colorScheme="green" onClick={async () => {
+          setIsSubmitting(true); // Start submission
+          try {
+            await onSubmitMoves(gameWager);
+            setWereMovesSubmitted(true);
+            onClose();
+            const newGameSound = new Audio('/sounds/GenericNotify.mp3');
+            newGameSound.play();
+          } catch (error) {
+            console.error('Error during submit:', error);
+          } finally {
+            setIsSubmitting(false); // End submission regardless of outcome
+          }
+        }}>
+          Submit moves on chain
+        </Button>
+
+        {/* Spinner or invisible box to maintain symmetry */}
+        {isSubmitting ? (
+          <Spinner color="green.500" width="40px" height="40px" marginLeft="2" />
+        ) : (
+          <Box width="40px" height="40px" marginLeft="2" visibility="hidden" />
+        )}
+      </Flex>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
+
+
+
+
   );
 };
 
 export default SubmitMovesModal;
+
+
+

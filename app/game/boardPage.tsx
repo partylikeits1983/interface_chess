@@ -285,11 +285,32 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setLoading(false);
       }
       setLoading(false);
-      setWereMovesSubmitted(false);
     };
 
     initializeBoard();
   }, [hasPingedAPI]);
+
+  
+  // handles reseting the board after SubmitMovesModal
+  useEffect(() => {
+    const updateAfterMoveSubmit = async () => { 
+      let newGame = new Chess();
+      setGameFEN(newGame.fen());
+
+      let newGameID = gameID + 1;
+      setGameID(newGameID);
+
+      const isPlayerTurn = await GetPlayerTurnSC(wager);
+      setPlayerTurn(isPlayerTurn);
+      setArePiecesDraggable(isPlayerTurn);
+
+      updateGameInfo(wager);
+
+      setMoveSquares({});
+    }
+    updateAfterMoveSubmit();
+  }, [wereMovesSubmitted]);
+
 
   function isCheckmate(wager: string) {
     setMoveSquares({});
@@ -555,9 +576,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
 
-    // setArePiecesDraggable(_isPlayerTurnSC);
-
-    // setLoading(false);
   };
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
