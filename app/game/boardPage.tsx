@@ -301,6 +301,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       updateGameInfo(wager);
 
+      setMoveNumber(0);
+
       // board info
       setIsPlayer0White(!isPlayer0White);
 
@@ -382,9 +384,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         if (isWalletConnected === true) {
           onOpen();
         }
+        setMoveNumber(0);
       } else {
         isNewGame = true;
         currentGame = new Chess();
+        setMoveNumber(0);
+
       }
     } else {
       // Handle piece capture or regular move sound
@@ -423,6 +428,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       setTimePlayer0(timeRemainingPlayer0);
       setTimePlayer1(timeRemainingPlayer1);
+
+      setMoveNumber(0);
 
       updateGameInfo(wager);
     } else {
@@ -581,8 +588,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       setPlayerTurn(_isPlayerTurnSC);
       setPlayerTurnSC(_isPlayerTurnSC);
-
-
+    } else {
+      setMoveNumber(0);
     }
   };
 
@@ -615,6 +622,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         wagerAddress,
         move,
       );
+
+      console.log("MOVE NUMBER", moveNumber);
 
       setPlayerTurnSC(false);
 

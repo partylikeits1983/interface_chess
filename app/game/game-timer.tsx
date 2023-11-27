@@ -42,9 +42,6 @@ const GameTimer: React.FC<GameTimerProps> = ({
   {wager !== '' && (
     <div>
       <Text>
-        Current Turn: {isPlayer0Turn ? 'Player 0' : 'Player 1'}
-      </Text>
-      <Text>
         Time White ⚪{' '}
         <Text as="span" fontWeight="bold" style={{ width: '150px', display: 'inline-block' }}>
           {formatSecondsToTime(whiteTime)}
