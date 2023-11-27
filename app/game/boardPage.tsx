@@ -641,8 +641,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       setIsPlayer0Turn(!isPlayer0Turn);
 
-      // getLastMoveSourceSquare()
-
       return success;
     } catch (error) {
       console.log(error);
@@ -665,7 +663,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             top="40%"
             left="52%"
             transform="translate(-50%, -50%)"
-            flexDirection="column" // added this line
+            flexDirection="column"
           >
             <Spinner size="xl" />
             <Text mt={4}> Loading Game Data</Text>
@@ -675,7 +673,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         <>
           <Box position="relative" mt={5}>
             {' '}
-            {/* Adjust the number as needed */}
             <Chessboard
               boardOrientation={isPlayerWhite ? 'white' : 'black'}
               arePiecesDraggable={arePiecesDraggable}
@@ -693,7 +690,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             />
             <Box position="absolute" top="-12" right="0">
               {' '}
-              {/* Change top to "0" again */}
               <ForwardBackButtons
                 onBackMove={handleBackMove}
                 onForwardMove={handleForwardMove}
@@ -702,6 +698,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               />
             </Box>
           </Box>
+          
         </>
       )}
       <Box p={4}></Box>
@@ -734,7 +731,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       ) : (
         <>
           {isLoading && wager !== '' ? (
-            // Grey UI skeleton
             <>
               <Skeleton height="50px" startColor="gray.800" endColor="black" />
             </>
