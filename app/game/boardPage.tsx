@@ -367,12 +367,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       } else {
         isNewGame = true;
         currentGame = new Chess();
-
-
-
-        
       }
-
     } else {
       // Handle piece capture or regular move sound
       if (lastMove && lastMove.captured) {
@@ -387,7 +382,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         moveSound.play();
       }
     }
-  
     // Wallet connected state updates
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager);
