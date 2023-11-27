@@ -765,7 +765,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                     />
                   </Flex>
 
-                  <ScoreBoard wager={wager} numberOfGames={numberOfGamesInfo} />
+                  <ScoreBoard 
+                   wager={wager}
+                   numberOfGames={numberOfGamesInfo}
+                   isPlayer0White={isPlayer0White}
+                   />
                 </Flex>
               </Box>
               <div style={{ marginTop: '10px' }}></div>
