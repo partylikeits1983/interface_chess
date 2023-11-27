@@ -44,6 +44,7 @@ const {
   GetTimeRemaining,
   IsPlayerAddressWhite,
   GetConnectedAccount,
+  GetGameNumber,
   GetWagerPlayers,
   setupProvider,
   IsPlayerWhite,
@@ -65,6 +66,7 @@ import {
 
 import { BoardUtils } from './boardUtils/boardUtils';
 import { useStateManager } from '#/lib/api/sharedState';
+import { match } from 'assert';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
   //
@@ -160,8 +162,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     // Function to fetch game status
     const fetchGameStatus = async () => {
       try {
-        const result: boolean = await checkIfGasless(wager);
-        setIsGameGasless(result);
+        const isGameGasless: boolean = await checkIfGasless(wager);
+        setIsGameGasless(isGameGasless);
 
         let { isWalletConnected } = await setupProvider();
         setIsWalletConnected(isWalletConnected);
@@ -190,6 +192,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setGameID(Number(gameNumberData[0]));
     setNumberOfGames(Number(gameNumberData[1]));
     setNumberOfGamesInfo(gameNumber);
+
   }
 
   // Initialize board
@@ -202,6 +205,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           // setLoading(true);
           if (isWalletConnected) {
             await updateGameInfo(wager);
+            setIsGameInfoLoading(false);
           }
           // setLoading(false);
         } catch (err) {
@@ -214,7 +218,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     asyncSetWagerAddress();
   }, [wager, isWalletConnected]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     const fetchData = async () => {
       try {
         const matchData = await GetWagerData(wager);
@@ -231,13 +235,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
 
     fetchData();
-  }, [wager]);
+  }, [wager]); */
 
   useEffect(() => {
-    let isMounted = true;
-
     const initializeBoard = async () => {
-      if (!isWalletConnected) {
+      if (isWalletConnected) {
         if (wager === '' || hasPingedAPI === false) {
           return;
         }
@@ -252,8 +254,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
         let movesArray = [];
         let newGame = new Chess();
-        if (gameID !== undefined) {
-          movesArray = await GetGameMoves(wager, gameID);
+
+        let gameNumber = await GetGameNumber(wager);
+        setGameID(gameNumber);
+        if (gameNumber !== undefined) {
+          movesArray = await GetGameMoves(wager, gameNumber);
           movesArray.forEach((move: any) => newGame.move(move));
         }
 
@@ -284,10 +289,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     initializeBoard();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [wager, isGameGasless, isWalletConnected]);
+  }, [isGameGasless, hasPingedAPI]);
 
   function isCheckmate(wager: string) {
     setMoveSquares({});
@@ -301,6 +303,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   }
 
   const handleUpdateUI = async (gameSocketData: IGameSocketData) => {
+    // Destructuring data from gameSocketData
     const {
       wagerToken,
       wagerAmount,
@@ -316,23 +319,26 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       timeRemainingPlayer1,
       actualTimeRemainingSC,
     } = gameSocketData;
-
-
-
-
+  
+    // Initialize game state
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
     let lastMove = null;
 
+    console.log("MOVES", moves);
+  
+    // Process moves for the current game
     for (let i = 0; i < moves[gameNumber].length; i++) {
       lastMove = currentGame.move(moves[gameNumber][i]);
     }
-
+  
     let isNewGame = false;
+  
+    // Check for checkmate
     if (currentGame.isCheckmate()) {
-      
       isCheckmate(wager);
-
+  
+      // Chain integration logic
       let gameNumberOnChain;
       if (isWalletConnected === true) {
         let gameNumberData = await GetNumberOfGames(wager);
@@ -340,96 +346,99 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       } else {
         gameNumberOnChain = gameNumber - 1;
       }
+  
+      let isSubmittedOnChain = gameNumberOnChain > gameNumber;
 
-      let isSubmittedOnChain = gameNumberOnChain + 1 > gameNumber;
-
+      console.log("GAMENUMBER", gameNumber);
+      console.log("gameNUMBER ON CHAIN", gameNumberOnChain);
+      console.log(isSubmittedOnChain);
+  
+      // if not submitted on chain
       if (!isSubmittedOnChain) {
-        // play checkmate sound
-        const checkmateSound = new Audio('/sounds/Berserk.mp3');
-        checkmateSound.load();
-        checkmateSound.play();
-
-        if (isWalletConnected === true) {
-          onOpen();
-        }
-      } else {
-        // IF GAME IS SUBMITTED ON CHAIN!
-        isNewGame = true;
-
-        currentGame = new Chess();
-
-        // play start sound
+        // Play checkmate sound
         const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
         checkmateSound.load();
         checkmateSound.play();
 
+        // Wallet connected actions
+        if (isWalletConnected === true) {
+          onOpen();
+        }
+      } else {
+        isNewGame = true;
+        currentGame = new Chess();
+
+
+
+        
       }
+
     } else {
-      // Check if the last move had a piece captured
+      // Handle piece capture or regular move sound
       if (lastMove && lastMove.captured) {
-        // play capture sound
-        const captureSound = new Audio('/sounds/Capture.mp3'); // replace with your capture sound file
+        // Play capture sound
+        const captureSound = new Audio('/sounds/Capture.mp3');
         captureSound.load();
         captureSound.play();
       } else {
-        // play regular move sound
-        const moveSound = new Audio('/sounds/Move.mp3'); // replace with your move sound file
+        // Play move sound
+        const moveSound = new Audio('/sounds/Move.mp3');
         moveSound.load();
         moveSound.play();
       }
     }
-
+  
+    // Wallet connected state updates
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager);
       setArePiecesDraggable(isPlayerTurn);
       setPlayerTurn(isPlayerTurn);
     }
-
+  
+    // Handling new game state
     if (isNewGame) {
-      // only when server moves don't match with chain moves
       const isPlayerTurn = await GetPlayerTurnSC(wager);
       setPlayerTurn(isPlayerTurn);
       setArePiecesDraggable(isPlayerTurn);
-      
-      const isPlayer0White = await IsPlayerAddressWhite(
-        wager,
-        player0,
-      );
+  
+      const isPlayer0White = await IsPlayerAddressWhite(wager, player0);
       setIsPlayer0White(isPlayer0White);
-
+  
       setTimePlayer0(timeRemainingPlayer0);
-      setTimePlayer1(timeRemainingPlayer1);     
-      
+      setTimePlayer1(timeRemainingPlayer1);
+  
       updateGameInfo(wager);
-
-
-      
     } else {
-    let isPlayer0Turn = player0 === playerTurn ? true : false;
-
-    setTimePlayer0(timeRemainingPlayer0);
-    setTimePlayer1(timeRemainingPlayer1);
-    setIsPlayer0Turn(isPlayer0Turn);
-    
-    setGameID(moves.length);
-
-    updateState('333', isPlayer0Turn, currentGame);
-
-    if (isWalletConnected === false) {
-      setArePiecesDraggable(false);
-      setPlayerColor(true);
-      setWagerAmount(ethers.utils.formatUnits(numberToString(wagerAmount), 18));
-      setWagerToken(wagerToken);
-      setTimeLimit(timeLimit);
-
-      // normally handled by updateGameInfo
-      setNumberOfGames(numberOfGames);
-      const gameNumber = `${Number(moves.length) + 1} of ${numberOfGames}`;
-      setNumberOfGamesInfo(gameNumber);
+      // Regular game updates
+      let isPlayer0Turn = player0 === playerTurn ? true : false;
+  
+      setTimePlayer0(timeRemainingPlayer0);
+      setTimePlayer1(timeRemainingPlayer1);
+      setIsPlayer0Turn(isPlayer0Turn);
+  
+      setGameID(moves.length);
+  
+      updateState('333', isPlayer0Turn, currentGame);
+  
+      // Offline wallet handling
+      if (isWalletConnected === false) {
+        setArePiecesDraggable(false);
+        setPlayerColor(true);
+        setWagerAmount(ethers.utils.formatUnits(numberToString(wagerAmount), 18));
+        setWagerToken(wagerToken);
+        setTimeLimit(timeLimit);
+  
+        // Normally handled by updateGameInfo
+        setNumberOfGames(numberOfGames);
+        const gameNumber = `${Number(moves.length) + 1} of ${numberOfGames}`;
+        setNumberOfGamesInfo(gameNumber);
+      }
     }
-  }
+  
+    // Finalize UI update
     setLoading(false);
   };
+  
 
   // MOVE LISTENER - WebSocket
   useEffect(() => {
