@@ -268,9 +268,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           console.log('263', isPlayerTurn);
           setArePiecesDraggable(isPlayerTurn);
 
-          const isPlayer0Turn = await 
-
-          setMoves(movesArray);
+          const isPlayer0Turn = await setMoves(movesArray);
           updateState('222', true, newGame);
         }
         setLoading(false);
@@ -295,7 +293,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       setPlayerTurn(isPlayerTurn);
 
-      console.log('291', isPlayerTurn);
+      const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(
+        wager,
+      );
+      setTimePlayer0(timePlayer0);
+      setTimePlayer1(timePlayer1);
+
+      setIsPlayer0Turn(isPlayer0Turn);
 
       setArePiecesDraggable(isPlayerTurn);
 
@@ -389,7 +393,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         isNewGame = true;
         currentGame = new Chess();
         setMoveNumber(0);
-
       }
     } else {
       // Handle piece capture or regular move sound
@@ -408,6 +411,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     // Wallet connected state updates
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager);
+      // const isPlayer0
 
       console.log('396', isPlayerTurn);
 
@@ -418,7 +422,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     // Handling new game state
     if (isNewGame) {
-      const isPlayerTurn = await GetPlayerTurnSC(wager);
+      // const isPlayerTurn = await GetPlayerTurnSC(wager);
 
       // setPlayerTurn(isPlayerTurn);
       // setArePiecesDraggable(isPlayerTurn);
@@ -438,6 +442,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       setTimePlayer0(timeRemainingPlayer0);
       setTimePlayer1(timeRemainingPlayer1);
+
       setIsPlayer0Turn(isPlayer0Turn);
 
       setGameID(moves.length);
@@ -521,7 +526,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             const [timePlayer0, timePlayer1, isPlayer0Turn] =
               await GetTimeRemaining(wager);
 
-             setIsPlayer0Turn(isPlayer0Turn);
+            setIsPlayer0Turn(isPlayer0Turn);
 
             if (_isPlayerTurnSC !== isPlayerTurn) {
               const movesArray = await GetGameMoves(wager, gameID);
@@ -574,7 +579,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     _isPlayerTurnSC: boolean,
     currentGame: Chess,
   ) => {
-    console.log(source);
+    console.log('updateState', source, currentGame.isCheckmate());
+
+    if (currentGame.isCheckmate()) {
+      setMoveNumber(0);
+    }
+
     if (currentGame.history().length !== 0) {
       setGame(currentGame);
 
@@ -609,7 +619,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         moveSound.play();
       }
 
-      let moveNumber = moves.length;
+      // let moveNumber = moves.length;
 
       if (isMoveGasLess) {
         setIsGameGasless(true);
@@ -623,7 +633,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         move,
       );
 
-      console.log("MOVE NUMBER", moveNumber);
+      console.log('MOVE NUMBER', moveNumber);
 
       setPlayerTurnSC(false);
 
@@ -772,11 +782,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                     />
                   </Flex>
 
-                  <ScoreBoard 
-                   wager={wager}
-                   numberOfGames={numberOfGamesInfo}
-                   isPlayer0White={isPlayer0White}
-                   />
+                  <ScoreBoard
+                    wager={wager}
+                    numberOfGames={numberOfGamesInfo}
+                    isPlayer0White={isPlayer0White}
+                  />
                 </Flex>
               </Box>
               <div style={{ marginTop: '10px' }}></div>

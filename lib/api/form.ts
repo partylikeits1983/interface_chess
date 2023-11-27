@@ -701,6 +701,29 @@ export const GetWagerStatus = async (
   }
 };
 
+export const GetIsWagerComplete = async (
+  wagerAddress: string,
+): Promise<boolean> => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  try {
+    const wagerData = await chess.gameWagers(wagerAddress);
+
+    if (wagerData.isComplete) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    // alert(`Get game moves: ${wagerAddress} not found`);
+    console.log(error);
+    return false;
+  }
+};
+
 interface WagerPlayerAddresses {
   player0Address: string;
   player1Address: string;
@@ -1104,7 +1127,9 @@ export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
   }
 };
 
-export const IsPlayer0White = async (wagerAddress: string): Promise<boolean> => {
+export const IsPlayer0White = async (
+  wagerAddress: string,
+): Promise<boolean> => {
   let { signer, isWalletConnected } = await setupProvider();
 
   await updateContractAddresses();
@@ -1116,10 +1141,7 @@ export const IsPlayer0White = async (wagerAddress: string): Promise<boolean> => 
 
       const player0 = wagerData.player0;
 
-      const isPlayerWhite = await chess.isPlayerWhite(
-        wagerAddress,
-        player0,
-      );
+      const isPlayerWhite = await chess.isPlayerWhite(wagerAddress, player0);
 
       return isPlayerWhite;
     } catch (error) {
