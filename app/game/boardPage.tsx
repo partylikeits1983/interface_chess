@@ -111,6 +111,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [arePiecesDraggable, setArePiecesDraggable] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [wereMovesSubmitted, setWereMovesSubmitted] = useState(false);
 
   useCheckValidMove(moves, CheckValidMove);
   useUpdateTime(isPlayer0Turn, setTimePlayer0, setTimePlayer1);
@@ -192,7 +193,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setGameID(Number(gameNumberData[0]));
     setNumberOfGames(Number(gameNumberData[1]));
     setNumberOfGamesInfo(gameNumber);
-
   }
 
   // Initialize board
@@ -218,7 +218,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     asyncSetWagerAddress();
   }, [wager, isWalletConnected]);
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     const fetchData = async () => {
       try {
         const matchData = await GetWagerData(wager);
@@ -285,11 +285,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setLoading(false);
       }
       setLoading(false);
+      setWereMovesSubmitted(false);
     };
 
     initializeBoard();
-
-  }, [isGameGasless, hasPingedAPI]);
+  }, [hasPingedAPI]);
 
   function isCheckmate(wager: string) {
     setMoveSquares({});
@@ -319,25 +319,25 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       timeRemainingPlayer1,
       actualTimeRemainingSC,
     } = gameSocketData;
-  
+
     // Initialize game state
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
     let lastMove = null;
 
-    console.log("MOVES", moves);
-  
+    console.log('MOVES', moves);
+
     // Process moves for the current game
     for (let i = 0; i < moves[gameNumber].length; i++) {
       lastMove = currentGame.move(moves[gameNumber][i]);
     }
-  
+
     let isNewGame = false;
-  
+
     // Check for checkmate
     if (currentGame.isCheckmate()) {
       isCheckmate(wager);
-  
+
       // Chain integration logic
       let gameNumberOnChain;
       if (isWalletConnected === true) {
@@ -346,13 +346,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       } else {
         gameNumberOnChain = gameNumber - 1;
       }
-  
+
       let isSubmittedOnChain = gameNumberOnChain > gameNumber;
 
-      console.log("GAMENUMBER", gameNumber);
-      console.log("gameNUMBER ON CHAIN", gameNumberOnChain);
+      console.log('GAMENUMBER', gameNumber);
+      console.log('gameNUMBER ON CHAIN', gameNumberOnChain);
       console.log(isSubmittedOnChain);
-  
+
       // if not submitted on chain
       if (!isSubmittedOnChain) {
         // Play checkmate sound
@@ -388,51 +388,52 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setArePiecesDraggable(isPlayerTurn);
       setPlayerTurn(isPlayerTurn);
     }
-  
+
     // Handling new game state
     if (isNewGame) {
       const isPlayerTurn = await GetPlayerTurnSC(wager);
       setPlayerTurn(isPlayerTurn);
       setArePiecesDraggable(isPlayerTurn);
-  
+
       const isPlayer0White = await IsPlayerAddressWhite(wager, player0);
       setIsPlayer0White(isPlayer0White);
-  
+
       setTimePlayer0(timeRemainingPlayer0);
       setTimePlayer1(timeRemainingPlayer1);
-  
+
       updateGameInfo(wager);
     } else {
       // Regular game updates
       let isPlayer0Turn = player0 === playerTurn ? true : false;
-  
+
       setTimePlayer0(timeRemainingPlayer0);
       setTimePlayer1(timeRemainingPlayer1);
       setIsPlayer0Turn(isPlayer0Turn);
-  
+
       setGameID(moves.length);
-  
+
       updateState('333', isPlayer0Turn, currentGame);
-  
+
       // Offline wallet handling
       if (isWalletConnected === false) {
         setArePiecesDraggable(false);
         setPlayerColor(true);
-        setWagerAmount(ethers.utils.formatUnits(numberToString(wagerAmount), 18));
+        setWagerAmount(
+          ethers.utils.formatUnits(numberToString(wagerAmount), 18),
+        );
         setWagerToken(wagerToken);
         setTimeLimit(timeLimit);
-  
+
         // Normally handled by updateGameInfo
         setNumberOfGames(numberOfGames);
         const gameNumber = `${Number(moves.length) + 1} of ${numberOfGames}`;
         setNumberOfGamesInfo(gameNumber);
       }
     }
-  
+
     // Finalize UI update
     setLoading(false);
   };
-  
 
   // MOVE LISTENER - WebSocket
   useEffect(() => {
@@ -483,9 +484,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       interval = setInterval(() => {
         (async () => {
           try {
-            const _isPlayerTurnSC = await GetPlayerTurn(
-              wagerAddress
-            );
+            const _isPlayerTurnSC = await GetPlayerTurn(wagerAddress);
             const [timePlayer0, timePlayer1, isPlayer0Turn] =
               await GetTimeRemaining(wager);
 
@@ -542,7 +541,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   ) => {
     console.log(source);
 
+    // first move glitch
+
     setGame(currentGame);
+
     setMoveNumber(currentGame.history().length);
 
     setMoves(currentGame.history());
@@ -760,6 +762,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         onSubmitMoves={submitMoves}
         gameWager={wager}
         gameID={gameID}
+        wereMovesSubmitted={wereMovesSubmitted}
+        setWereMovesSubmitted={setWereMovesSubmitted}
       />
     </ChakraProvider>
   );

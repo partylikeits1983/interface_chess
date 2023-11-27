@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { GetGameNumber } from '#/lib/api/form';
 
-import { GetGameNumberDB } from '#/lib/api/gaslessAPI'; 
+import { GetGameNumberDB } from '#/lib/api/gaslessAPI';
 
 interface SubmitMovesModalProps {
   isOpen: boolean;
@@ -21,6 +21,8 @@ interface SubmitMovesModalProps {
   onSubmitMoves: (gameWager: string) => Promise<void>;
   gameWager: string;
   gameID: number;
+  wereMovesSubmitted: boolean;
+  setWereMovesSubmitted: (value: boolean) => void;
 }
 
 const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
@@ -29,8 +31,9 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
   onSubmitMoves,
   gameWager,
   gameID,
+  wereMovesSubmitted,
+  setWereMovesSubmitted,
 }) => {
-
   // const [hasGameBeenWrittenToSC, setHasGameBeenWrittenToSC] = useState(false);
 
   return (
@@ -47,7 +50,12 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
             colorScheme="green"
             onClick={() => {
               onSubmitMoves(gameWager).then(() => {
+                setWereMovesSubmitted(true); // Update the state
                 onClose(); // Close the modal after submission
+
+                const newGameSound = new Audio('/sounds/GenericNotify.mp3');
+                newGameSound.load();
+                newGameSound.play();
               });
             }}
           >

@@ -1166,8 +1166,9 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
   }
 };
 
-
-export const GetPlayerTurnSC = async (wagerAddress: string): Promise<boolean> => {
+export const GetPlayerTurnSC = async (
+  wagerAddress: string,
+): Promise<boolean> => {
   let { signer, accounts, isWalletConnected } = await setupProvider();
 
   await updateContractAddresses();
@@ -1176,7 +1177,6 @@ export const GetPlayerTurnSC = async (wagerAddress: string): Promise<boolean> =>
 
   if (isWalletConnected) {
     try {
-
       let playerTurn = await chess.getPlayerMove(wagerAddress);
 
       let isPlayerTurn;
@@ -1196,7 +1196,6 @@ export const GetPlayerTurnSC = async (wagerAddress: string): Promise<boolean> =>
     return false;
   }
 };
-
 
 export const GetNumberOfGames = async (
   wagerAddress: string,
@@ -1230,9 +1229,7 @@ export const GetNumberOfGames = async (
   }
 };
 
-export const GetGameNumber = async (
-  wagerAddress: string,
-): Promise<number> => {
+export const GetGameNumber = async (wagerAddress: string): Promise<number> => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -1971,7 +1968,9 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     data.signedMessages[gameNumber] = signedMessages;
 
     if (messages.length !== 0 || signedMessages.length !== 0) {
-      await chess.verifyGameUpdateState(messages, signedMessages);
+      let tx = await chess.verifyGameUpdateState(messages, signedMessages);
+      await tx.wait();
+
       alertSuccessSubmitMoves('Moves submitted on-chain');
     }
   } catch (error) {
