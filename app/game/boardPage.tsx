@@ -290,10 +290,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     initializeBoard();
   }, [hasPingedAPI]);
 
-  
   // handles reseting the board after SubmitMovesModal
   useEffect(() => {
-    const updateAfterMoveSubmit = async () => { 
+    const updateAfterMoveSubmit = async () => {
       let newGame = new Chess();
       setGameFEN(newGame.fen());
 
@@ -307,10 +306,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       updateGameInfo(wager);
 
       setMoveSquares({});
-    }
+    };
     updateAfterMoveSubmit();
   }, [wereMovesSubmitted]);
-
 
   function isCheckmate(wager: string) {
     setMoveSquares({});
@@ -575,7 +573,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setGameFEN(currentGame.fen());
     setPlayerTurn(_isPlayerTurnSC);
     setPlayerTurnSC(_isPlayerTurnSC);
-
   };
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
