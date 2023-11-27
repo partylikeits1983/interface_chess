@@ -76,7 +76,7 @@ const DownloadMovesButton: React.FC<DownloadMovesButtonProps> = ({ wager }) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <Tooltip label="Download Moves" isOpen={isHovered}>
+          <Tooltip label="Download Gasless Move Data" isOpen={isHovered}>
             <DownloadIcon />
           </Tooltip>
         </Button>

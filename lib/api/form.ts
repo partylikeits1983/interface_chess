@@ -1104,6 +1104,37 @@ export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
   }
 };
 
+export const IsPlayer0White = async (wagerAddress: string): Promise<boolean> => {
+  let { signer, isWalletConnected } = await setupProvider();
+
+  await updateContractAddresses();
+
+  if (isWalletConnected) {
+    const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+    try {
+      const wagerData = await chess.gameWagers(wagerAddress);
+
+      const player0 = wagerData.player0;
+
+      const isPlayerWhite = await chess.isPlayerWhite(
+        wagerAddress,
+        player0,
+      );
+
+      return isPlayerWhite;
+    } catch (error) {
+      // alert(`wager address: ${wagerAddress} not found`);
+      console.log(`isPlayerWhite invalid address ${wagerAddress}`);
+      console.log(error);
+
+      // alertWarningFeedback('Wager address not found');
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
+
 export const IsPlayerAddressWhite = async (
   wagerAddress: string,
   playerAddress: string,

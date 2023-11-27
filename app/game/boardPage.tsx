@@ -46,9 +46,9 @@ const {
   GetConnectedAccount,
   GetGameNumber,
   GetWagerPlayers,
+  IsPlayer0White,
   setupProvider,
   IsPlayerWhite,
-  UpdateWagerStateTime, // dev
 } = require('../../lib/api/form');
 
 import {
@@ -87,7 +87,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [moves, setMoves] = useState<string[]>([]);
   const [moveNumber, setMoveNumber] = useState(0);
 
-  const [isPlayerWhite, setPlayerColor] = useState(true);
+  const [isPlayerWhite, setPlayerColorWhite] = useState(true);
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
 
@@ -171,7 +171,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setIsWalletConnected(isWalletConnected);
 
         if (!isWalletConnected) {
-          setPlayerColor(true);
+          setPlayerColorWhite(true);
         } else {
           updateGameInfo(wager);
         }
@@ -185,7 +185,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   async function updateGameInfo(wager: string): Promise<void> {
     let isPlayerWhite = await IsPlayerWhite(wager);
-    setPlayerColor(isPlayerWhite);
+    setPlayerColorWhite(isPlayerWhite);
+
+    let isPlayer0White = await IsPlayer0White(wager);
+    setIsPlayer0White(isPlayer0White);
 
     const gameNumberData: Array<number> = await GetNumberOfGames(wager);
     const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
@@ -294,6 +297,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setArePiecesDraggable(isPlayerTurn);
 
       updateGameInfo(wager);
+
+      // board info
+      setIsPlayer0White(!isPlayer0White);
 
       setMoveSquares({});
     };
@@ -434,7 +440,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         console.log('434', false);
 
         setArePiecesDraggable(false);
-        setPlayerColor(true);
+        setPlayerColorWhite(true);
+
+        // @dev set decimals to decimal amount in erc20
         setWagerAmount(
           ethers.utils.formatUnits(numberToString(wagerAmount), 18),
         );
