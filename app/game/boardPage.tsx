@@ -260,7 +260,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           const isPlayerTurn = await GetPlayerTurn(wager);
 
-          console.log("263", isPlayerTurn)
+          console.log('263', isPlayerTurn);
           setArePiecesDraggable(isPlayerTurn);
 
           setMoves(movesArray);
@@ -288,7 +288,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       setPlayerTurn(isPlayerTurn);
 
-      console.log("291", isPlayerTurn)
+      console.log('291', isPlayerTurn);
 
       setArePiecesDraggable(isPlayerTurn);
 
@@ -394,10 +394,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager);
 
-      console.log("396", isPlayerTurn)
+      console.log('396', isPlayerTurn);
 
       setArePiecesDraggable(isPlayerTurn);
-
 
       setPlayerTurn(isPlayerTurn);
     }
@@ -431,8 +430,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       // Offline wallet handling
       if (isWalletConnected === false) {
-
-        console.log("434", false)
+        console.log('434', false);
 
         setArePiecesDraggable(false);
         setPlayerColor(true);
@@ -526,7 +524,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                   // this may not be needed...
                   const isPlayerTurn = await GetPlayerTurn(wager);
 
-                  console.log("528", isPlayerTurn)
+                  console.log('528', isPlayerTurn);
                   setArePiecesDraggable(isPlayerTurn);
                 }
                 setTimePlayer0(timePlayer0);
@@ -564,21 +562,17 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setGame(currentGame);
 
       setMoveNumber(currentGame.history().length);
-  
+
       setMoves(currentGame.history());
-  
+
       getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
-  
+
       setGameFEN(currentGame.fen());
-
-      
-
 
       setPlayerTurn(_isPlayerTurnSC);
       setPlayerTurnSC(_isPlayerTurnSC);
-    // }
+      // }
     }
-
   };
 
   // HANDLE SUBMIT MOVE - depends on isGasLess
@@ -612,7 +606,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       );
 
       setPlayerTurnSC(false);
-
 
       setPlayerTurn(false);
       setIsPlayer0Turn(!isPlayer0Turn);
