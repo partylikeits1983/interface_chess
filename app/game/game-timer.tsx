@@ -36,39 +36,40 @@ const GameTimer: React.FC<GameTimerProps> = ({
   const blackTime = isPlayer0White ? timePlayer1 : timePlayer0;
 
   return (
+<div>
+  {wager !== '' && (
     <div>
-      {wager !== '' && (
-        <div>
-          <Text>
-            Current Turn: {isPlayer0Turn ? 'Player 0' : 'Player 1'}
-          </Text>
-          <Text>
-            Time White ⚪{' '}
-            <Text as="span" fontWeight="bold">
-              {formatSecondsToTime(whiteTime)}
-            </Text>
-          </Text>
-          <Progress
-            size="sm"
-            colorScheme="green"
-            bg="gray"
-            value={whiteTime / timeLimit * 100}
-          />
-          <Text>
-            Time Black ⚫{' '}
-            <Text as="span" fontWeight="bold">
-              {formatSecondsToTime(blackTime)}
-            </Text>
-          </Text>
-          <Progress
-            size="sm"
-            colorScheme="green"
-            bg="gray"
-            value={blackTime / timeLimit * 100}
-          />
-        </div>
-      )}
+      <Text>
+        Current Turn: {isPlayer0Turn ? 'Player 0' : 'Player 1'}
+      </Text>
+      <Text>
+        Time White ⚪{' '}
+        <Text as="span" fontWeight="bold" style={{ width: '150px', display: 'inline-block' }}>
+          {formatSecondsToTime(whiteTime)}
+        </Text>
+      </Text>
+      <Progress
+        size="sm"
+        colorScheme="green"
+        bg="gray"
+        value={whiteTime / timeLimit * 100}
+      />
+      <Text>
+        Time Black ⚫{' '}
+        <Text as="span" fontWeight="bold" style={{ width: '150px', display: 'inline-block' }}>
+          {formatSecondsToTime(blackTime)}
+        </Text>
+      </Text>
+      <Progress
+        size="sm"
+        colorScheme="green"
+        bg="gray"
+        value={blackTime / timeLimit * 100}
+      />
     </div>
+  )}
+</div>
+
   );
 };
 
