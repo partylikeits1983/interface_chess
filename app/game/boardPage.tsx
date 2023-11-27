@@ -237,8 +237,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setWagerToken(matchData.wagerToken);
         setTimeLimit(matchData.timeLimit);
 
-
-
         let movesArray = [];
         let newGame = new Chess();
 
@@ -249,11 +247,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           movesArray.forEach((move: any) => newGame.move(move));
         }
 
-        if (isGameGasless === false || movesArray.length === 0) {
+        if (isGameGasless === false && movesArray.length === 0) {
           const [timePlayer0, timePlayer1, isPlayer0Turn] =
             await GetTimeRemaining(wager);
           setTimePlayer0(timePlayer0);
           setTimePlayer1(timePlayer1);
+
           setIsPlayer0Turn(isPlayer0Turn);
         }
 
@@ -268,6 +267,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           console.log('263', isPlayerTurn);
           setArePiecesDraggable(isPlayerTurn);
+
+          const isPlayer0Turn = await 
 
           setMoves(movesArray);
           updateState('222', true, newGame);
@@ -414,7 +415,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     if (isNewGame) {
       const isPlayerTurn = await GetPlayerTurnSC(wager);
 
-      // alert(`403 ${isPlayerTurn}`);
       // setPlayerTurn(isPlayerTurn);
       // setArePiecesDraggable(isPlayerTurn);
 
@@ -433,10 +433,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setTimePlayer1(timeRemainingPlayer1);
       setIsPlayer0Turn(isPlayer0Turn);
 
-      // alert(isPlayer0Turn);
-
       setGameID(moves.length);
-
       updateState('333', isPlayer0Turn, currentGame);
 
       // Offline wallet handling
@@ -517,7 +514,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             const [timePlayer0, timePlayer1, isPlayer0Turn] =
               await GetTimeRemaining(wager);
 
-            setIsPlayer0Turn(isPlayer0Turn);
+             setIsPlayer0Turn(isPlayer0Turn);
 
             if (_isPlayerTurnSC !== isPlayerTurn) {
               const movesArray = await GetGameMoves(wager, gameID);
@@ -622,6 +619,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setPlayerTurnSC(false);
 
       setPlayerTurn(false);
+
       setIsPlayer0Turn(!isPlayer0Turn);
 
       // getLastMoveSourceSquare()

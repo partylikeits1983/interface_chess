@@ -35,6 +35,8 @@ const GameTimer: React.FC<GameTimerProps> = ({
   const whiteTime = isPlayer0White ? timePlayer0 : timePlayer1;
   const blackTime = isPlayer0White ? timePlayer1 : timePlayer0;
 
+
+  console.log("GAME TIMER", isPlayer0White, isPlayer0Turn );
   return (
 <div>
   {wager !== '' && (
