@@ -786,6 +786,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                     wager={wager}
                     numberOfGames={numberOfGamesInfo}
                     isPlayer0White={isPlayer0White}
+                    gameNumber={gameID}
                   />
                 </Flex>
               </Box>

@@ -27,6 +27,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
   wagerAmount,
   numberOfGames,
   timeLimit,
+
 }) => {
   const [globalState, setGlobalState] = useStateManager();
 
