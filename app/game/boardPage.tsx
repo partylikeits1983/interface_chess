@@ -259,6 +259,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setIsPlayer0White(isPlayer0White);
 
           const isPlayerTurn = await GetPlayerTurn(wager);
+
+          console.log("263", isPlayerTurn)
           setArePiecesDraggable(isPlayerTurn);
 
           setMoves(movesArray);
@@ -277,14 +279,17 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     const updateAfterMoveSubmit = async () => {
       let newGame = new Chess();
       setGameFEN(newGame.fen());
+      setGame(newGame);
 
       let newGameID = gameID + 1;
       setGameID(newGameID);
 
       const isPlayerTurn = await GetPlayerTurnSC(wager);
 
-      alert(`285 ${isPlayerTurn}`);
       setPlayerTurn(isPlayerTurn);
+
+      console.log("291", isPlayerTurn)
+
       setArePiecesDraggable(isPlayerTurn);
 
       updateGameInfo(wager);
@@ -388,10 +393,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     // Wallet connected state updates
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager);
+
+      console.log("396", isPlayerTurn)
+
       setArePiecesDraggable(isPlayerTurn);
 
 
-      alert(`394 ${isPlayerTurn}`);
       setPlayerTurn(isPlayerTurn);
     }
 
@@ -424,6 +431,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       // Offline wallet handling
       if (isWalletConnected === false) {
+
+        console.log("434", false)
+
         setArePiecesDraggable(false);
         setPlayerColor(true);
         setWagerAmount(
@@ -515,6 +525,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
                   // this may not be needed...
                   const isPlayerTurn = await GetPlayerTurn(wager);
+
+                  console.log("528", isPlayerTurn)
                   setArePiecesDraggable(isPlayerTurn);
                 }
                 setTimePlayer0(timePlayer0);
@@ -559,7 +571,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   
       setGameFEN(currentGame.fen());
 
-      alert(`update state 564 ${isPlayerTurn}`);
+      
+
+
       setPlayerTurn(_isPlayerTurnSC);
       setPlayerTurnSC(_isPlayerTurnSC);
     // }
@@ -600,7 +614,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setPlayerTurnSC(false);
 
 
-      alert(`605 ${isPlayerTurn}`);
       setPlayerTurn(false);
       setIsPlayer0Turn(!isPlayer0Turn);
 
