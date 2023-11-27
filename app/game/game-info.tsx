@@ -12,14 +12,9 @@ interface GameInfoProps {
   wagerAmount: string;
   numberOfGames: string;
   timeLimit: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
-  isPlayer0White: boolean;
 }
 
 import { Table, Flex, Text, Box } from '@chakra-ui/react';
-import { globalAgent } from 'http';
 
 type TokenDetail = {
   label: string;
@@ -32,7 +27,6 @@ const GameInfo: React.FC<GameInfoProps> = ({
   wagerAmount,
   numberOfGames,
   timeLimit,
-  isPlayerTurn,
 }) => {
   const [globalState, setGlobalState] = useStateManager();
 

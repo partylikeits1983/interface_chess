@@ -5,8 +5,8 @@ interface GameTimerProps {
   timeLimit: number;
   timePlayer0: number;
   timePlayer1: number;
-  isPlayerTurn: boolean;
   isPlayer0White: boolean;
+  isPlayer0Turn: boolean;
 }
 
 import { Text, Progress } from '@chakra-ui/react';
@@ -17,9 +17,10 @@ const GameTimer: React.FC<GameTimerProps> = ({
   timePlayer0,
   timePlayer1,
   isPlayer0White,
+  isPlayer0Turn
+
 }) => {
-  function formatSecondsToTime(secondsString: string): string {
-    const seconds = parseInt(secondsString, 10);
+  function formatSecondsToTime(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
@@ -34,78 +35,43 @@ const GameTimer: React.FC<GameTimerProps> = ({
     return value.toString().padStart(2, '0');
   }
 
-  // alert(isPlayer0White);
-
   return (
+<div>
+  {wager !== '' && (
     <div>
-      {wager !== '' && (
-        <div>
-          {isPlayer0White ? (
-            <>
-              <Text>
-                Time White ⚪{' '}
-                <Text as="span" fontWeight="bold">
-                  {formatSecondsToTime(
-                    timePlayer0 > 0 ? timePlayer0.toString() : '0',
-                  )}
-                </Text>
-              </Text>
-              <Progress
-                size="sm"
-                colorScheme="green"
-                bg="gray"
-                value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}
-              />
-              <Text>
-                Time Black ⚫{' '}
-                <Text as="span" fontWeight="bold">
-                  {formatSecondsToTime(
-                    timePlayer1 > 0 ? timePlayer1.toString() : '0',
-                  )}
-                </Text>
-              </Text>
-              <Progress
-                size="sm"
-                colorScheme="green"
-                bg="gray"
-                value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
-              />
-            </>
-          ) : (
-            <>
-              <Text>
-                Time White ⚪{' '}
-                <Text as="span" fontWeight="bold">
-                  {formatSecondsToTime(
-                    timePlayer1 > 0 ? timePlayer1.toString() : '0',
-                  )}
-                </Text>
-              </Text>
-              <Progress
-                size="sm"
-                colorScheme="green"
-                bg="gray"
-                value={timePlayer1 > 0 ? (timePlayer1 / timeLimit) * 100 : 0}
-              />
-              <Text>
-                Time Black ⚫{' '}
-                <Text as="span" fontWeight="bold">
-                  {formatSecondsToTime(
-                    timePlayer0 > 0 ? timePlayer0.toString() : '0',
-                  )}
-                </Text>
-              </Text>
-              <Progress
-                size="sm"
-                colorScheme="green"
-                bg="gray"
-                value={timePlayer0 > 0 ? (timePlayer0 / timeLimit) * 100 : 0}
-              />
-            </>
-          )}
-        </div>
-      )}
+      <Text>
+        Current Turn: {isPlayer0Turn ? 'Player 0' : 'Player 1'}
+      </Text>
+      <Text>
+        Time White ⚪{' '}
+        <Text as="span" fontWeight="bold">
+          {/* Display and count down White's time */}
+          {formatSecondsToTime((isPlayer0Turn && !isPlayer0White) || (!isPlayer0Turn && isPlayer0White) ? timePlayer0 : timePlayer1)}
+        </Text>
+      </Text>
+      <Progress
+        size="sm"
+        colorScheme="green"
+        bg="gray"
+        value={((isPlayer0Turn && !isPlayer0White) || (!isPlayer0Turn && isPlayer0White) ? timePlayer0 : timePlayer1) / timeLimit * 100}
+      />
+      <Text>
+        Time Black ⚫{' '}
+        <Text as="span" fontWeight="bold">
+          {/* Display and count down Black's time */}
+          {formatSecondsToTime((isPlayer0Turn && isPlayer0White) || (!isPlayer0Turn && !isPlayer0White) ? timePlayer1 : timePlayer0)}
+        </Text>
+      </Text>
+      <Progress
+        size="sm"
+        colorScheme="green"
+        bg="gray"
+        value={((isPlayer0Turn && isPlayer0White) || (!isPlayer0Turn && !isPlayer0White) ? timePlayer1 : timePlayer0) / timeLimit * 100}
+      />
     </div>
+  )}
+</div>
+
   );
 };
 export default GameTimer;

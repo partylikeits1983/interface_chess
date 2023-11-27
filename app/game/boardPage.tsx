@@ -237,6 +237,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setWagerToken(matchData.wagerToken);
         setTimeLimit(matchData.timeLimit);
 
+
+
         let movesArray = [];
         let newGame = new Chess();
 
@@ -431,6 +433,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setTimePlayer1(timeRemainingPlayer1);
       setIsPlayer0Turn(isPlayer0Turn);
 
+      // alert(isPlayer0Turn);
+
       setGameID(moves.length);
 
       updateState('333', isPlayer0Turn, currentGame);
@@ -580,7 +584,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       setPlayerTurn(_isPlayerTurnSC);
       setPlayerTurnSC(_isPlayerTurnSC);
-      // }
+
+
     }
   };
 
@@ -755,8 +760,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                       timeLimit={timeLimit}
                       timePlayer0={timePlayer0}
                       timePlayer1={timePlayer1}
-                      isPlayerTurn={isPlayerTurn}
                       isPlayer0White={isPlayer0White}
+                      isPlayer0Turn={isPlayer0Turn}
                     />
                   </Flex>
 
@@ -771,10 +776,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                   wagerAmount={wagerAmount}
                   numberOfGames={numberOfGamesInfo}
                   timeLimit={timeLimit}
-                  timePlayer0={timePlayer0}
-                  timePlayer1={timePlayer1}
-                  isPlayerTurn={isPlayerTurn}
-                  isPlayer0White={isPlayer0White}
                 />
               )}
             </>
