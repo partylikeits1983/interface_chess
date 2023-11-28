@@ -70,13 +70,10 @@ import { useStateManager } from '#/lib/api/sharedState';
 import { match } from 'assert';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
-  //
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-
   const [hasPingedAPI, setHasPingedAPI] = useState(false);
 
   const [isMoveGasLess, setIsMoveGasLess] = useState(true);
-
   const [gameID, setGameID] = useState(0);
 
   const [game, setGame] = useState(new Chess());
@@ -150,7 +147,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     hasGameInitialized: true, // Replace with actual condition
     moveNumber,
     numberOfGames,
+    wager,
     game,
+    setMoveSquares,
+    setMoves,
+    setGame,
     setGameID,
     setNumberOfGamesInfo,
     setMoveNumber,
@@ -268,7 +269,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           console.log('263', isPlayerTurn);
           setArePiecesDraggable(isPlayerTurn);
 
-          const isPlayer0Turn = await setMoves(movesArray);
+          // const isPlayer0Turn = await setMoves(movesArray);
           updateState('222', true, newGame);
         }
         setLoading(false);
@@ -314,6 +315,31 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     };
     updateAfterMoveSubmit();
   }, [wereMovesSubmitted]);
+
+/*   // Handles forward back games => this can be in a boardUtils/boardUtils.ts
+  useEffect(() => {
+    const updateBoard = async () => {
+      console.log('GAME ID', gameID);
+      const movesArray = await GetGameMoves(wager, gameID);
+      const currentGame = new Chess();
+
+      console.log(movesArray);
+
+      if (movesArray.length > 0) {
+        for (let i = 0; i < movesArray.length; i++) {
+          currentGame.move(movesArray[i]);
+        }
+        getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
+      } else {
+        setMoveSquares({});
+      }
+      console.log(currentGame.ascii());
+      setGame(currentGame);
+      setMoves(currentGame.history());
+      setGameFEN(currentGame.fen());
+    };
+    updateBoard();
+  }, [gameID]); */
 
   function isCheckmate(wager: string) {
     setMoveSquares({});
@@ -411,12 +437,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     // Wallet connected state updates
     if (isWalletConnected) {
       const isPlayerTurn = await GetPlayerTurn(wager);
-      // const isPlayer0
-
-      console.log('396', isPlayerTurn);
-
       setArePiecesDraggable(isPlayerTurn);
-
       setPlayerTurn(isPlayerTurn);
     }
 
@@ -558,7 +579,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             console.error(error);
           }
         })();
-      }, 3000);
+      }, 5000);
     }
     setLoading(false);
     return () => {
@@ -636,9 +657,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       console.log('MOVE NUMBER', moveNumber);
 
       setPlayerTurnSC(false);
-
       setPlayerTurn(false);
-
       setIsPlayer0Turn(!isPlayer0Turn);
 
       return success;
@@ -698,7 +717,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               />
             </Box>
           </Box>
-          
         </>
       )}
       <Box p={4}></Box>

@@ -1,11 +1,19 @@
 import { useEffect } from 'react';
 import { Chess } from 'chess.js'; // Assuming 'chess.js' is the library you're using
 
+import { GetGameMoves, GetGameNumber } from '#/lib/api/form';
+
 interface UseGameControlsProps {
   hasGameInitialized: boolean;
   moveNumber: number;
   numberOfGames: number;
+
+  wager: string;
   game: Chess;
+
+  setMoveSquares: React.Dispatch<React.SetStateAction<object>>;
+  setMoves: React.Dispatch<React.SetStateAction<string[]>>;
+  setGame: React.Dispatch<React.SetStateAction<Chess>>;
   setGameID: React.Dispatch<React.SetStateAction<number>>;
   setNumberOfGamesInfo: React.Dispatch<React.SetStateAction<string>>;
   setMoveNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -17,7 +25,11 @@ const BackAndForwardGameControls = ({
   hasGameInitialized,
   moveNumber,
   numberOfGames,
+  wager,
   game,
+  setMoveSquares,
+  setMoves,
+  setGame,
   setGameID,
   setNumberOfGamesInfo,
   setMoveNumber,
@@ -50,7 +62,51 @@ const BackAndForwardGameControls = ({
     };
   }, [hasGameInitialized, moveNumber]);
 
+  const updateBoard = async (newGameID: number) => {
+    console.log('GAME ID', newGameID);
+
+    // const gameNumber = await GetGameNumber(wager);
+    const movesArray = await GetGameMoves(wager, newGameID);
+    const currentGame = new Chess();
+
+    console.log(movesArray);
+
+    if (movesArray.length > 0) {
+      for (let i = 0; i < movesArray.length; i++) {
+        currentGame.move(movesArray[i]);
+      }
+      getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
+    } else {
+      setMoveSquares({});
+    }
+    console.log(currentGame.ascii());
+    setGame(currentGame);
+    setMoves(currentGame.history());
+    setGameFEN(currentGame.fen());
+  };
+
   const handleBackGame = () => {
+    setGameID((prevGameID) => {
+      const newGameID = prevGameID > 0 ? prevGameID - 1 : prevGameID;
+      const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
+      setNumberOfGamesInfo(gameNumberInfo);
+      updateBoard(newGameID);
+      return newGameID;
+    });
+  };
+
+  const handleForwardGame = () => {
+    setGameID((prevGameID) => {
+      const newGameID =
+        prevGameID < numberOfGames - 1 ? prevGameID + 1 : prevGameID;
+      const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
+      setNumberOfGamesInfo(gameNumberInfo);
+      updateBoard(newGameID);
+      return newGameID;
+    });
+  };
+
+  /*   const handleBackGame = () => {
     setGameID((prevGameID) => {
       const newGameID = prevGameID > 0 ? prevGameID - 1 : prevGameID;
       const gameNumberInfo = `${newGameID + 1} of ${numberOfGames}`;
@@ -67,7 +123,7 @@ const BackAndForwardGameControls = ({
       setNumberOfGamesInfo(gameNumberInfo);
       return newGameID;
     });
-  };
+  }; */
 
   const handleBackMove = () => {
     const moves = game.history();

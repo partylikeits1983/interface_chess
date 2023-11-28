@@ -11,7 +11,11 @@ interface ScoreBoardProps {
 
 import { Box, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 
-const ScoreBoard: React.FC<ScoreBoardProps> = ({ wager, isPlayer0White, gameNumber }) => {
+const ScoreBoard: React.FC<ScoreBoardProps> = ({
+  wager,
+  isPlayer0White,
+  gameNumber,
+}) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [player0Address, setPlayer0Address] = useState('');
   const [player1Address, setPlayer1Address] = useState('');
