@@ -140,7 +140,7 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 fontSize="sm"
                 display="flex"
                 alignItems="center"
-                href={`https://sepolia.arbiscan.io/address/${account}`}
+                href={`https://goerli.arbiscan.io/address/${account}`}
                 isExternal
                 color="gray.400"
                 ml={6}
