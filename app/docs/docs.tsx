@@ -64,7 +64,11 @@ export default function Docs() {
     }
   };
 
-  const addCelo = async () => {
+
+
+
+
+  const addArbitrumGoerli = async () => {
     const provider = (window as any).ethereum;
 
     if (provider) {
@@ -73,90 +77,21 @@ export default function Docs() {
           method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: '0xa4ec',
-              chainName: 'Celo Mainnet',
-              rpcUrls: ['https://rpc.ankr.com/celo'],
+              chainId: '0x66eed',
+              chainName: 'Arbitrum Goerli',
+              rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
               nativeCurrency: {
-                name: 'Celo',
-                symbol: 'CELO',
+                name: 'AGOR',
+                symbol: 'AGOR',
                 decimals: 18,
               },
-              blockExplorerUrls: ['https://explorer.celo.org/mainnet/'],
+              blockExplorerUrls: ['https://goerli.arbiscan.io'],
             },
           ],
         });
       } catch (error) {
         console.error(
-          'An error occurred while trying to switch to the Celo network:',
-          error,
-        );
-      }
-    } else {
-      console.log(
-        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
-      );
-    }
-  };
-
-  // testnets
-  const addAlfajoresNetwork = async () => {
-    const provider = (window as any).ethereum;
-
-    if (provider) {
-      try {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: '0xaef3',
-              chainName: 'Alfajores Testnet',
-              rpcUrls: ['https://alfajores-forno.celo-testnet.org'],
-              nativeCurrency: {
-                name: 'Celo',
-                symbol: 'A-CELO',
-                decimals: 18,
-              },
-              blockExplorerUrls: ['https://explorer.celo.org/alfajores'],
-            },
-          ],
-        });
-      } catch (error) {
-        console.error(
-          'An error occurred while trying to switch to the Alfajores network:',
-          error,
-        );
-      }
-    } else {
-      console.log(
-        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
-      );
-    }
-  };
-
-  const addArbitrumSepolia = async () => {
-    const provider = (window as any).ethereum;
-
-    if (provider) {
-      try {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: '0x66eee',
-              chainName: 'Arbitrum Sepolia',
-              rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
-              nativeCurrency: {
-                name: 'ETH',
-                symbol: 'AETH',
-                decimals: 18,
-              },
-              blockExplorerUrls: ['https://sepolia.arbiscan.io/'],
-            },
-          ],
-        });
-      } catch (error) {
-        console.error(
-          'An error occurred while trying to switch to the Polygon Mumbai network:',
+          'An error occurred while trying to switch to the Arbitrum Goerli network:',
           error,
         );
       }
@@ -290,7 +225,7 @@ export default function Docs() {
               borderColor: 'white',
             }}
             onClick={() => {
-              addArbitrumSepolia();
+              addArbitrumGoerli();
             }}
           >
             <Flex justify="space-between" align="center">

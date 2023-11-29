@@ -9,15 +9,15 @@ import {
 } from '@chakra-ui/react';
 
 import { ethers } from 'ethers';
-
 import { useStateManager } from '../../../lib/api/sharedState';
+
+import { addArbitrumOne, addArbitrumGoerli } from './AddNetwork';
 
 const NETWORK_NAMES: { [key: string]: string } = {
   0x1: 'Ethereum Mainnet',
   0xa4b1: 'Arbitrum',
   0x38: 'BSC',
   0xaa36a7: 'Sepolia Testnet',
-  0x66eee: 'Arbitrum Sepolia Testnet',
   0x66eed: 'Arbitrum Goerli Testnet',
 };
 
@@ -53,31 +53,42 @@ export default function NetworkButton(): JSX.Element {
       case 'Alphajores Testnet':
         chainId = '0xaef3';
         break;
-      // add more cases if you have other networks
       default:
         console.log('Network not recognized');
         return;
     }
 
-    // Check if MetaMask is installed
     if (typeof window.ethereum !== 'undefined') {
       try {
-        // Call Metamask API to change the network
-        if (window.ethereum) {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          // Call Metamask API to change the network
+          if (window.ethereum) {
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-          // Access the `ethereum` object through the provider
-          await provider.send('wallet_switchEthereumChain', [{ chainId }]);
+              // Access the `ethereum` object through the provider
+              await provider.send('wallet_switchEthereumChain', [{ chainId }]);
 
-          // Once the network switch is confirmed, reload the page
-          window.location.reload();
-        }
+              // Once the network switch is confirmed, reload the page
+              window.location.reload();
+          }
       } catch (error) {
-        console.error(error);
+          if (network === 'Arbitrum Goerli Testnet') {
+              // If the error is due to the network not being available in MetaMask
+              console.error("Network not available in MetaMask, adding network...");
+              await addArbitrumGoerli();
+              window.location.reload();
+          } else if (network === 'Arbitrum') {
+            console.error("Network not available in MetaMask, adding network...");
+            await addArbitrumOne();
+            window.location.reload();
+          }
+          
+          else {
+              console.error(error);
+          }
       }
-    } else {
+  } else {
       console.log('Please install MetaMask!');
-    }
+  }
   };
 
   useEffect(() => {
