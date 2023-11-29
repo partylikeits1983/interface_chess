@@ -64,10 +64,6 @@ export default function Docs() {
     }
   };
 
-
-
-
-
   const addArbitrumGoerli = async () => {
     const provider = (window as any).ethereum;
 

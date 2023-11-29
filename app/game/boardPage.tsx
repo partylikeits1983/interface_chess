@@ -283,40 +283,44 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   // handles reseting the board after SubmitMovesModal
   useEffect(() => {
     const updateAfterMoveSubmit = async () => {
-      let newGame = new Chess();
-      setGameFEN(newGame.fen());
-      setGame(newGame);
+      if (isWalletConnected) {
+        if (wager !== '' || hasPingedAPI === true) {
+          let newGame = new Chess();
+          setGameFEN(newGame.fen());
+          setGame(newGame);
 
-      let newGameID = gameID + 1;
-      setGameID(newGameID);
+          let newGameID = gameID + 1;
+          setGameID(newGameID);
 
-      const isPlayerTurn = await GetPlayerTurnSC(wager);
+          const isPlayerTurn = await GetPlayerTurnSC(wager);
 
-      setPlayerTurn(isPlayerTurn);
+          setPlayerTurn(isPlayerTurn);
 
-      const [timePlayer0, timePlayer1, isPlayer0Turn] = await GetTimeRemaining(
-        wager,
-      );
-      setTimePlayer0(timePlayer0);
-      setTimePlayer1(timePlayer1);
+          const [timePlayer0, timePlayer1, isPlayer0Turn] =
+            await GetTimeRemaining(wager);
+          setTimePlayer0(timePlayer0);
+          setTimePlayer1(timePlayer1);
 
-      setIsPlayer0Turn(isPlayer0Turn);
+          setIsPlayer0Turn(isPlayer0Turn);
 
-      setArePiecesDraggable(isPlayerTurn);
+          setArePiecesDraggable(isPlayerTurn);
 
-      updateGameInfo(wager);
+          updateGameInfo(wager);
 
-      setMoveNumber(0);
+          console.log('309');
+          setMoveNumber(0);
 
-      // board info
-      setIsPlayer0White(!isPlayer0White);
+          // board info
+          setIsPlayer0White(!isPlayer0White);
 
-      setMoveSquares({});
+          setMoveSquares({});
+        }
+      }
     };
     updateAfterMoveSubmit();
   }, [wereMovesSubmitted]);
 
-/*   // Handles forward back games => this can be in a boardUtils/boardUtils.ts
+  /*   // Handles forward back games => this can be in a boardUtils/boardUtils.ts
   useEffect(() => {
     const updateBoard = async () => {
       console.log('GAME ID', gameID);
@@ -414,10 +418,14 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         if (isWalletConnected === true) {
           onOpen();
         }
+        console.log('418');
         setMoveNumber(0);
       } else {
         isNewGame = true;
         currentGame = new Chess();
+
+        console.log('424');
+
         setMoveNumber(0);
       }
     } else {
@@ -454,6 +462,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setTimePlayer0(timeRemainingPlayer0);
       setTimePlayer1(timeRemainingPlayer1);
 
+      console.log('462');
+
       setMoveNumber(0);
 
       updateGameInfo(wager);
@@ -467,6 +477,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setIsPlayer0Turn(isPlayer0Turn);
 
       setGameID(moves.length);
+
       updateState('333', isPlayer0Turn, currentGame);
 
       // Offline wallet handling
@@ -604,6 +615,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     console.log('updateState', source, currentGame.isCheckmate());
 
     if (currentGame.isCheckmate()) {
+      console.log('615');
+
       setMoveNumber(0);
     }
 
@@ -621,6 +634,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setPlayerTurn(_isPlayerTurnSC);
       setPlayerTurnSC(_isPlayerTurnSC);
     } else {
+      console.log('634');
+
       setMoveNumber(0);
     }
   };
@@ -647,6 +662,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setIsGameGasless(true);
       }
 
+      console.log('MOVE NUMBER', moveNumber);
+
       let success = await PlayMove(
         isMoveGasLess,
         gameFEN,
@@ -654,8 +671,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         wagerAddress,
         move,
       );
-
-      console.log('MOVE NUMBER', moveNumber);
 
       setPlayerTurnSC(false);
       setPlayerTurn(false);

@@ -124,7 +124,7 @@ export const BoardUtils = (
       setMoves([...moves, MoveString]);
       setGameFEN(gameCopy.fen());
       setLocalGame(gameCopy);
-      setMoveNumber(game.moves().length);
+      setMoveNumber(game.history().length);
 
       if (result && result.captured) {
         wasCaptured = true;
