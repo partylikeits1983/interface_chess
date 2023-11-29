@@ -512,7 +512,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       });
 
       socket.on('updateGameFen', async (data) => {
-        // console.log('Received game data:', data);
+        // alert("RECIEVE DATA")
+        console.log('Received game data:', data);
         if (isMounted) {
           const gameSocketData: IGameSocketData = data;
           await handleUpdateUI(gameSocketData);

@@ -17,7 +17,8 @@ const NETWORK_NAMES: { [key: string]: string } = {
   0xa4b1: 'Arbitrum',
   0x38: 'BSC',
   0xaa36a7: 'Sepolia Testnet',
-  0x66eee: 'Arbitrum Testnet',
+  0x66eee: 'Arbitrum Sepolia Testnet',
+  0x66eed: 'Arbitrum Goerli Testnet',
 };
 
 export default function NetworkButton(): JSX.Element {
@@ -46,8 +47,8 @@ export default function NetworkButton(): JSX.Element {
       case 'Sepolia Testnet':
         chainId = '0xaa36a7';
         break;
-      case 'Arbitrum Sepolia Testnet':
-        chainId = '0x66eee';
+      case 'Arbitrum Goerli Testnet':
+        chainId = '0x66eed';
         break;
       case 'Alphajores Testnet':
         chainId = '0xaef3';
@@ -130,11 +131,13 @@ export default function NetworkButton(): JSX.Element {
             <MenuItem onClick={() => handleNetworkChange('Sepolia Testnet')}>
               Sepolia Testnet
             </MenuItem>
+
             <MenuItem
-              onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}
+              onClick={() => handleNetworkChange('Arbitrum Goerli Testnet')}
             >
-              Arbitrum Sepolia Testnet
+              Arbitrum Goerli Testnet
             </MenuItem>
+
           </MenuList>
         </div>
       </Menu>
