@@ -60,35 +60,33 @@ export default function NetworkButton(): JSX.Element {
 
     if (typeof window.ethereum !== 'undefined') {
       try {
-          // Call Metamask API to change the network
-          if (window.ethereum) {
-              const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // Call Metamask API to change the network
+        if (window.ethereum) {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-              // Access the `ethereum` object through the provider
-              await provider.send('wallet_switchEthereumChain', [{ chainId }]);
+          // Access the `ethereum` object through the provider
+          await provider.send('wallet_switchEthereumChain', [{ chainId }]);
 
-              // Once the network switch is confirmed, reload the page
-              window.location.reload();
-          }
+          // Once the network switch is confirmed, reload the page
+          window.location.reload();
+        }
       } catch (error) {
-          if (network === 'Arbitrum Goerli Testnet') {
-              // If the error is due to the network not being available in MetaMask
-              console.error("Network not available in MetaMask, adding network...");
-              await addArbitrumGoerli();
-              window.location.reload();
-          } else if (network === 'Arbitrum') {
-            console.error("Network not available in MetaMask, adding network...");
-            await addArbitrumOne();
-            window.location.reload();
-          }
-          
-          else {
-              console.error(error);
-          }
+        if (network === 'Arbitrum Goerli Testnet') {
+          // If the error is due to the network not being available in MetaMask
+          console.error('Network not available in MetaMask, adding network...');
+          await addArbitrumGoerli();
+          window.location.reload();
+        } else if (network === 'Arbitrum') {
+          console.error('Network not available in MetaMask, adding network...');
+          await addArbitrumOne();
+          window.location.reload();
+        } else {
+          console.error(error);
+        }
       }
-  } else {
+    } else {
       console.log('Please install MetaMask!');
-  }
+    }
   };
 
   useEffect(() => {
@@ -148,7 +146,6 @@ export default function NetworkButton(): JSX.Element {
             >
               Arbitrum Goerli Testnet
             </MenuItem>
-
           </MenuList>
         </div>
       </Menu>

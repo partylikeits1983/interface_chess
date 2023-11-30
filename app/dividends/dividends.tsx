@@ -190,7 +190,7 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
       <Text textAlign="center">
         <Link
-          href="https://arbiscan.io/"
+          href="https://goerli.arbiscan.io/address/0xfc7d5f236428a14a6bd5424331c925285e6336c9"
           isExternal
           color="green.500" // Styling the link blue
         >

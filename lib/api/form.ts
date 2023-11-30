@@ -237,6 +237,8 @@ export const GetDividendBalances = async () => {
   const usdc = new ethers.Contract(USDC, ERC20ABI, signer);
   const dai = new ethers.Contract(DAI, ERC20ABI, signer);
 
+  console.log(DividendSplitter);
+
   try {
     let wbtc_bal = await wbtc.balanceOf(DividendSplitter);
     let weth_bal = await weth.balanceOf(DividendSplitter);
