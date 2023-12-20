@@ -4,6 +4,7 @@ import { CreateMatchType } from './types';
 
 const chessWagerABI = require('./contract-abi/ChessWagerABI').abi;
 const moveVerificationABI = require('./contract-abi/MoveVerificationABI').abi;
+const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi; 
 const splitterABI = require('./contract-abi/SplitterABI').abi;
 const crowdSaleABI = require('./contract-abi/CrowdSaleABI').abi;
 const tournamentABI = require('./contract-abi/TournamentABI').abi;
@@ -25,6 +26,7 @@ interface ContractAddress {
   chessFishToken: string;
   dividendSplitter: string;
   moveVerification: string;
+  gaslessGame: string;
   chessWager: string;
   crowdSale: string;
   tournament: string;
@@ -64,7 +66,7 @@ const addresses = JSON.parse(jsonString); // Parse the JSON string
 
 let ChessAddress = addresses[0].chess;
 let VerificationAddress = addresses[0].moveVerification;
-// let tokenAddress = addresses[0].token;
+let GaslessGameAddress = addresses[0].gaslessGame;
 let ChessToken = addresses[0].chessFishToken;
 let DividendSplitter = addresses[0].dividendSplitter;
 let CrowdSale = addresses[0].crowdSale;
@@ -116,6 +118,7 @@ const updateContractAddresses = async (): Promise<void> => {
   if (matchingChain) {
     ChessAddress = matchingChain.chessWager;
     VerificationAddress = matchingChain.moveVerification;
+    GaslessGameAddress = matchingChain.gaslessGame; 
     ChessToken = matchingChain.chessFishToken;
     DividendSplitter = matchingChain.dividendSplitter;
     CrowdSale = matchingChain.crowdSale;
@@ -157,7 +160,7 @@ export const setupProvider = async () => {
   // If provider is not set (either window.ethereum is not available or user rejected the connection)
   // then use the custom JSON-RPC provider
   if (!detectedProvider) {
-    const customRpcUrl = 'https://rpc-mumbai.maticvigil.com';
+    const customRpcUrl = 'https://sepolia-rollup.arbitrum.io/rpc';
     provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
     signer = provider;
     accounts = undefined;
@@ -428,6 +431,7 @@ export const CreateWager = async (form: CreateMatchType) => {
     signer,
   );
   const decimals = await token.decimals();
+
   try {
     const player1 = form.player1.toString();
     const wagerToken = form.wagerToken.toString();
@@ -957,37 +961,55 @@ export const PlayMove = async (
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const gaslessGame = new ethers.Contract(GaslessGameAddress, gaslessGameABI, signer);
   try {
     const hex_move = await chess.moveToHex(move);
     const gameNumber = Number(await chess.getGameLength(wagerAddress));
 
     if (gasLess) {
       const timeNow = Date.now();
-      const timeStamp = Math.floor(timeNow / 1000) + 86400 * 2; // @dev set to the expiration of the wager
+      const timeStamp = Math.floor(timeNow / 1000) + 86400 * 3; // @dev set to the expiration of the wager
+  
+      const messageData = {
+        wagerAddress: wagerAddress,
+        gameNumber: gameNumber,
+        moveNumber: moveNumber,
+        move: hex_move,
+        expiration: timeStamp,
+      };
+      const message = await gaslessGame.encodeMoveMessage(messageData);
+      
+      const network = await provider.getNetwork();
+      const chainId = network.chainId;
 
-      const message = await chess.generateMoveMessage(
-        wagerAddress,
-        hex_move,
-        moveNumber,
-        timeStamp,
-      );
-      const messageHash = await chess.getMessageHash(
-        wagerAddress,
-        hex_move,
-        moveNumber,
-        timeStamp,
-      );
+      const domain = {
+        chainId: chainId, // replace with the chain ID on frontend
+        name: "ChessFish", 
+        verifyingContract: gaslessGame.address, 
+        version: "1", // version
+      };
+  
+      const types = {
+        GaslessMove: [
+          { name: "wagerAddress", type: "address" },
+          { name: "gameNumber", type: "uint" },
+          { name: "moveNumber", type: "uint" },
+          { name: "move", type: "uint16" },
+          { name: "expiration", type: "uint" },
+        ],
+      };
 
+      console.log("MESSAGE", message);
+  
       await signTxPushToDB(
-        wagerAddress,
-        move,
-        hex_move,
-        gameFEN,
-        moveNumber,
-        gameNumber,
+        domain, 
+        types,
+        messageData,
         message,
-        messageHash,
+
       );
+
+
     } else {
       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
 

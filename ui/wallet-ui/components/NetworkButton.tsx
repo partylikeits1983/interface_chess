@@ -11,14 +11,14 @@ import {
 import { ethers } from 'ethers';
 import { useStateManager } from '../../../lib/api/sharedState';
 
-import { addArbitrumOne, addArbitrumGoerli } from './AddNetwork';
+import { addArbitrumOne, addArbitrumSepolia } from './AddNetwork';
 
 const NETWORK_NAMES: { [key: string]: string } = {
   0x1: 'Ethereum Mainnet',
   0xa4b1: 'Arbitrum',
   0x38: 'BSC',
   0xaa36a7: 'Sepolia Testnet',
-  0x66eed: 'Arbitrum Goerli Testnet',
+  0x66eee: 'Arbitrum Sepolia Testnet',
 };
 
 export default function NetworkButton(): JSX.Element {
@@ -47,9 +47,9 @@ export default function NetworkButton(): JSX.Element {
       case 'Sepolia Testnet':
         chainId = '0xaa36a7';
         break;
-      case 'Arbitrum Goerli Testnet':
-        chainId = '0x66eed';
-        break;
+      case 'Arbitrum Sepolia Testnet':
+          chainId = '0x66eee';
+          break;
       case 'Alphajores Testnet':
         chainId = '0xaef3';
         break;
@@ -71,10 +71,10 @@ export default function NetworkButton(): JSX.Element {
           window.location.reload();
         }
       } catch (error) {
-        if (network === 'Arbitrum Goerli Testnet') {
+        if (network === 'Arbitrum Sepolia Testnet') {
           // If the error is due to the network not being available in MetaMask
           console.error('Network not available in MetaMask, adding network...');
-          await addArbitrumGoerli();
+          await addArbitrumSepolia();
           window.location.reload();
         } else if (network === 'Arbitrum') {
           console.error('Network not available in MetaMask, adding network...');
@@ -142,9 +142,9 @@ export default function NetworkButton(): JSX.Element {
             </MenuItem>
 
             <MenuItem
-              onClick={() => handleNetworkChange('Arbitrum Goerli Testnet')}
+              onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}
             >
-              Arbitrum Goerli Testnet
+              Arbitrum Sepolia Testnet
             </MenuItem>
           </MenuList>
         </div>

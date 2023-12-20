@@ -2,15 +2,15 @@ const ethers = require('ethers');
 
 import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
+
+
+
+
 export const signTxPushToDB = async (
-  wagerAddress: string,
-  move: string,
-  hex_move: string,
-  gameFEN: string,
-  moveNumber: number,
-  gameNumber: number,
-  message: string,
-  messageHash: string,
+  domain: any,
+  types: any,
+  messageData: any,
+  message: string,  
 ) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -20,23 +20,20 @@ export const signTxPushToDB = async (
   const chainId = network.chainId;
 
   try {
-    const signerAddress = accounts[0];
-    const signedMessage = await signer.signMessage(
-      ethers.utils.arrayify(messageHash),
-    );
+    // const signerAddress = accounts[0];
+    console.log("in sign tx");
 
-    const rawData = JSON.stringify({
-      wagerAddress: wagerAddress,
-      move: move,
-      hex_move: hex_move,
-      gameFEN: gameFEN,
-      moveNumber: moveNumber,
-      gameNumber: gameNumber,
+		// typed signature data
+    
+    const signature = await signer._signTypedData(domain, types, messageData);
+
+
+    const data = {
+      messageData: messageData,
       message: message,
-      messageHash: messageHash,
-      signedMessage: signedMessage,
-      signerAddress: signerAddress,
-    });
+      signature: signature
+    }
+    const rawData = JSON.stringify(data);
 
     // Include chainId in the request URL
     const response = await fetch(`https://api.chess.fish/move/${chainId}`, {

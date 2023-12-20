@@ -64,7 +64,7 @@ export default function Docs() {
     }
   };
 
-  const addArbitrumGoerli = async () => {
+  const addArbitrumSepolia = async () => {
     const provider = (window as any).ethereum;
 
     if (provider) {
@@ -74,20 +74,20 @@ export default function Docs() {
           params: [
             {
               chainId: '0x66eed',
-              chainName: 'Arbitrum Goerli',
-              rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
+              chainName: 'Arbitrum addArbitrumSepolia',
+              rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
               nativeCurrency: {
                 name: 'AGOR',
                 symbol: 'AGOR',
                 decimals: 18,
               },
-              blockExplorerUrls: ['https://goerli.arbiscan.io'],
+              blockExplorerUrls: ['https://sepolia.arbiscan.io'],
             },
           ],
         });
       } catch (error) {
         console.error(
-          'An error occurred while trying to switch to the Arbitrum Goerli network:',
+          'An error occurred while trying to switch to the Arbitrum Sepolia network:',
           error,
         );
       }
@@ -221,7 +221,7 @@ export default function Docs() {
               borderColor: 'white',
             }}
             onClick={() => {
-              addArbitrumGoerli();
+              addArbitrumSepolia();
             }}
           >
             <Flex justify="space-between" align="center">

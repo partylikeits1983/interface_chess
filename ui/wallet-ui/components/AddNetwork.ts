@@ -32,7 +32,7 @@ export const addArbitrumOne = async () => {
   }
 };
 
-export const addArbitrumGoerli = async () => {
+export const addArbitrumSepolia = async () => {
   const provider = (window as any).ethereum;
 
   if (provider) {
@@ -41,21 +41,21 @@ export const addArbitrumGoerli = async () => {
         method: 'wallet_addEthereumChain',
         params: [
           {
-            chainId: '0x66eed',
-            chainName: 'Arbitrum Goerli',
-            rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
+            chainId: '0x66eee',
+            chainName: 'Arbitrum Sepolia',
+            rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
             nativeCurrency: {
-              name: 'AGOR',
-              symbol: 'AGOR',
+              name: 'AETH',
+              symbol: 'AETH',
               decimals: 18,
             },
-            blockExplorerUrls: ['https://goerli.arbiscan.io'],
+            blockExplorerUrls: ['https://sepolia.arbiscan.io'],
           },
         ],
       });
     } catch (error) {
       console.error(
-        'An error occurred while trying to switch to the Arbitrum Goerli network:',
+        'An error occurred while trying to switch to the Arbitrum Sepolia network:',
         error,
       );
     }
