@@ -19,7 +19,8 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
-import { domain, types } from './signatureConstants';
+import { domain, moveTypes, delegationTypes } from './signatureConstants';
+import { createDelegation } from './delegatedWallet';
 
 interface ContractAddress {
   network: string;
@@ -969,12 +970,23 @@ export const PlayMove = async (
     gaslessGameABI,
     signer,
   );
+  
+
 
   try {
     const hex_move = await chess.moveToHex(move);
     const gameNumber = Number(await chess.getGameLength(wagerAddress));
 
     if (isGasLess) {
+      if (isDelegated) {
+      try {
+        // get return values and post to server
+        await createDelegation(chainId, GaslessGameAddress, wagerAddress);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
       const timeNow = Date.now();
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 3; // @dev set to the expiration of the wager
 
@@ -995,7 +1007,7 @@ export const PlayMove = async (
       await signTxPushToDB(
         isDelegated,
         domain,
-        types,
+        moveTypes,
         messageData,
         message,
         move,

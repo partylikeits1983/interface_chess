@@ -5,7 +5,7 @@ export const domain = {
   version: '1',
 };
 
-export const types = {
+export const moveTypes = {
   GaslessMove: [
     { name: 'wagerAddress', type: 'address' },
     { name: 'gameNumber', type: 'uint' },
@@ -13,4 +13,18 @@ export const types = {
     { name: 'move', type: 'uint16' },
     { name: 'expiration', type: 'uint' },
   ],
+};
+
+export const delegationTypes = {
+    Delegation: [
+        { name: "delegatorAddress", type: "address" },
+        { name: "delegatedAddress", type: "address" },
+        { name: "wagerAddress", type: "address" },
+    ],
+};
+
+export const walletGenerationTypes = {
+    WalletGeneration: [
+        { name: "wagerAddress", type: "address" },
+    ],
 };
