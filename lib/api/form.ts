@@ -957,8 +957,11 @@ export const PlayMove = async (
   move: string,
 ): Promise<Boolean> => {
   await updateContractAddresses();
-
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  const network = await provider.getNetwork();
+  const chainId = network.chainId;
+
   const signer = provider.getSigner();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
@@ -979,21 +982,16 @@ export const PlayMove = async (
         wagerAddress: wagerAddress,
         gameNumber: gameNumber,
         moveNumber: moveNumber,
-        move: hex_move,
+        hex_move: hex_move,
         expiration: timeStamp,
       };
 
       const message = await gaslessGame.encodeMoveMessage(messageData);
 
-      const network = await provider.getNetwork();
-      const chainId = network.chainId;
-
       domain.chainId = chainId;
       domain.verifyingContract = gaslessGame.address;
 
-      console.log('MESSAGE', message);
-
-      await signTxPushToDB(isDelegated, domain, types, messageData, message);
+      await signTxPushToDB(isDelegated, domain, types, messageData, message, move);
     } else {
       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
 
