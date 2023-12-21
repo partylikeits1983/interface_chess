@@ -19,6 +19,8 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
+import { domain, types } from './signatureConstants';
+
 interface ContractAddress {
   network: string;
   chainID: number;
@@ -948,8 +950,8 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
 };
 
 export const PlayMove = async (
-  gasLess: boolean,
-  gameFEN: string,
+  isGasLess: boolean,
+  isDelegated: boolean,
   moveNumber: number,
   wagerAddress: string,
   move: string,
@@ -958,7 +960,6 @@ export const PlayMove = async (
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   const gaslessGame = new ethers.Contract(GaslessGameAddress, gaslessGameABI, signer);
@@ -966,7 +967,7 @@ export const PlayMove = async (
     const hex_move = await chess.moveToHex(move);
     const gameNumber = Number(await chess.getGameLength(wagerAddress));
 
-    if (gasLess) {
+    if (isGasLess) {
       const timeNow = Date.now();
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 3; // @dev set to the expiration of the wager
   
@@ -977,36 +978,23 @@ export const PlayMove = async (
         move: hex_move,
         expiration: timeStamp,
       };
+
       const message = await gaslessGame.encodeMoveMessage(messageData);
       
       const network = await provider.getNetwork();
       const chainId = network.chainId;
 
-      const domain = {
-        chainId: chainId, // replace with the chain ID on frontend
-        name: "ChessFish", 
-        verifyingContract: gaslessGame.address, 
-        version: "1", // version
-      };
-  
-      const types = {
-        GaslessMove: [
-          { name: "wagerAddress", type: "address" },
-          { name: "gameNumber", type: "uint" },
-          { name: "moveNumber", type: "uint" },
-          { name: "move", type: "uint16" },
-          { name: "expiration", type: "uint" },
-        ],
-      };
+      domain.chainId = chainId;
+      domain.verifyingContract = gaslessGame.address;
 
       console.log("MESSAGE", message);
   
       await signTxPushToDB(
+        isDelegated,
         domain, 
         types,
         messageData,
         message,
-
       );
 
 

@@ -666,7 +666,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       let success = await PlayMove(
         isMoveGasLess,
-        gameFEN,
+        true, // is delegated
         moveNumber,
         wagerAddress,
         move,

@@ -3,39 +3,53 @@ const ethers = require('ethers');
 import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
 
-
-
-
 export const signTxPushToDB = async (
+  isDelegated: boolean,
   domain: any,
   types: any,
   messageData: any,
   message: string,  
 ) => {
+  console.log("Function start");
+
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
+
+  console.log("Provider initialized");
+
+  // Request account access if needed
   const accounts = await provider.send('eth_requestAccounts', []);
+  console.log("Accounts:", accounts);
+
+  const signer = provider.getSigner();
+  console.log("Signer obtained");
+
+  // Get the address of the signer
+  const signerAddress = await signer.getAddress();
+  console.log("Signer Address:", signerAddress);
 
   const network = await provider.getNetwork();
   const chainId = network.chainId;
+  console.log("Network:", network);
 
   try {
-    // const signerAddress = accounts[0];
-    console.log("in sign tx");
-
-		// typed signature data
-    
-    const signature = await signer._signTypedData(domain, types, messageData);
-
+    console.log("Attempting to sign message");
+    // Typed signature data
+    const signedMessage = await signer._signTypedData(domain, types, messageData);
 
     const data = {
       messageData: messageData,
       message: message,
-      signature: signature
+      signedMessage: signedMessage,
+      signerAddress: accounts[0], // Save the first signer address
+      isDelegated: isDelegated
     }
-    const rawData = JSON.stringify(data);
+    
+    console.log("DATA", data);
+  }
 
-    // Include chainId in the request URL
+    // const rawData = JSON.stringify(data);
+
+/*     // Include chainId in the request URL
     const response = await fetch(`https://api.chess.fish/move/${chainId}`, {
       method: 'POST',
       headers: {
@@ -44,6 +58,8 @@ export const signTxPushToDB = async (
       body: rawData,
     });
 
+
+
     const responseBody = await response.json();
     if (response.ok) {
       return true;
@@ -51,7 +67,10 @@ export const signTxPushToDB = async (
       console.error(responseBody.error);
       return false;
     }
-  } catch (error) {
+  }
+ */
+
+   catch (error) {
     console.log(error);
     return false;
   }
