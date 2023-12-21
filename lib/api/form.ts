@@ -961,7 +961,6 @@ export const PlayMove = async (
 
   const network = await provider.getNetwork();
   const chainId = network.chainId;
-
   const signer = provider.getSigner();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
@@ -970,6 +969,7 @@ export const PlayMove = async (
     gaslessGameABI,
     signer,
   );
+
   try {
     const hex_move = await chess.moveToHex(move);
     const gameNumber = Number(await chess.getGameLength(wagerAddress));
@@ -992,9 +992,14 @@ export const PlayMove = async (
       domain.chainId = chainId;
       domain.verifyingContract = gaslessGame.address;
 
-      alert(move)
-
-      await signTxPushToDB(isDelegated, domain, types, messageData, message, move);
+      await signTxPushToDB(
+        isDelegated,
+        domain,
+        types,
+        messageData,
+        message,
+        move,
+      );
     } else {
       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
 

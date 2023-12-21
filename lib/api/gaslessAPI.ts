@@ -8,7 +8,7 @@ export const signTxPushToDB = async (
   types: any,
   messageData: any,
   message: string,
-  move: string
+  move: string,
 ) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -37,7 +37,7 @@ export const signTxPushToDB = async (
       messageData: messageData,
       message: message,
       signedMessage: signedMessage,
-      signerAddress: signerAddress, 
+      signerAddress: signerAddress,
     };
 
     console.log('DATA', data);
