@@ -32,11 +32,12 @@ export const signTxPushToDB = async (
     );
 
     const data = {
+      isDelegated: isDelegated,
+      move: move,
       messageData: messageData,
       message: message,
       signedMessage: signedMessage,
       signerAddress: signerAddress, 
-      isDelegated: isDelegated,
     };
 
     console.log('DATA', data);

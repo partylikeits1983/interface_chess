@@ -982,14 +982,17 @@ export const PlayMove = async (
         wagerAddress: wagerAddress,
         gameNumber: gameNumber,
         moveNumber: moveNumber,
-        hex_move: hex_move,
+        move: hex_move,
         expiration: timeStamp,
       };
 
+      console.log(gaslessGame.address);
       const message = await gaslessGame.encodeMoveMessage(messageData);
 
       domain.chainId = chainId;
       domain.verifyingContract = gaslessGame.address;
+
+      alert(move)
 
       await signTxPushToDB(isDelegated, domain, types, messageData, message, move);
     } else {
