@@ -48,8 +48,8 @@ export default function NetworkButton(): JSX.Element {
         chainId = '0xaa36a7';
         break;
       case 'Arbitrum Sepolia Testnet':
-          chainId = '0x66eee';
-          break;
+        chainId = '0x66eee';
+        break;
       case 'Alphajores Testnet':
         chainId = '0xaef3';
         break;

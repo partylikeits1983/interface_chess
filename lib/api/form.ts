@@ -4,7 +4,7 @@ import { CreateMatchType } from './types';
 
 const chessWagerABI = require('./contract-abi/ChessWagerABI').abi;
 const moveVerificationABI = require('./contract-abi/MoveVerificationABI').abi;
-const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi; 
+const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
 const splitterABI = require('./contract-abi/SplitterABI').abi;
 const crowdSaleABI = require('./contract-abi/CrowdSaleABI').abi;
 const tournamentABI = require('./contract-abi/TournamentABI').abi;
@@ -120,7 +120,7 @@ const updateContractAddresses = async (): Promise<void> => {
   if (matchingChain) {
     ChessAddress = matchingChain.chessWager;
     VerificationAddress = matchingChain.moveVerification;
-    GaslessGameAddress = matchingChain.gaslessGame; 
+    GaslessGameAddress = matchingChain.gaslessGame;
     ChessToken = matchingChain.chessFishToken;
     DividendSplitter = matchingChain.dividendSplitter;
     CrowdSale = matchingChain.crowdSale;
@@ -962,7 +962,11 @@ export const PlayMove = async (
   const signer = provider.getSigner();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
-  const gaslessGame = new ethers.Contract(GaslessGameAddress, gaslessGameABI, signer);
+  const gaslessGame = new ethers.Contract(
+    GaslessGameAddress,
+    gaslessGameABI,
+    signer,
+  );
   try {
     const hex_move = await chess.moveToHex(move);
     const gameNumber = Number(await chess.getGameLength(wagerAddress));
@@ -970,7 +974,7 @@ export const PlayMove = async (
     if (isGasLess) {
       const timeNow = Date.now();
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 3; // @dev set to the expiration of the wager
-  
+
       const messageData = {
         wagerAddress: wagerAddress,
         gameNumber: gameNumber,
@@ -980,24 +984,16 @@ export const PlayMove = async (
       };
 
       const message = await gaslessGame.encodeMoveMessage(messageData);
-      
+
       const network = await provider.getNetwork();
       const chainId = network.chainId;
 
       domain.chainId = chainId;
       domain.verifyingContract = gaslessGame.address;
 
-      console.log("MESSAGE", message);
-  
-      await signTxPushToDB(
-        isDelegated,
-        domain, 
-        types,
-        messageData,
-        message,
-      );
+      console.log('MESSAGE', message);
 
-
+      await signTxPushToDB(isDelegated, domain, types, messageData, message);
     } else {
       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
 
