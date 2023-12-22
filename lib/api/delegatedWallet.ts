@@ -1,9 +1,7 @@
-import crypto from 'crypto';
+// import crypto from 'crypto';
 
-import { encrypt } from 'eth-sig-util';
-
-import { ethers, Signer } from 'ethers';
-
+import { encrypt } from '@metamask/eth-sig-util';
+import { ethers } from 'ethers';
 import { stringifiableToHex } from './utils';
 
 import {
@@ -13,6 +11,9 @@ import {
 } from './signatureConstants';
 
 const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
+
+const LOCAL_STORAGE_KEY_PREFIX = 'delegation-';
+const ENCRYPTION_KEY_STORAGE_KEY = 'userEncryptionKey';
 
 // Generating a new deterministic wallet based upon the
 // wagerAddress and the hash of the user signature of the wagerAddress
@@ -98,40 +99,53 @@ export const createDelegation = async (
   };
 };
 
-const LOCAL_STORAGE_KEY_PREFIX = 'delegation-';
-const ENCRYPTION_KEY_STORAGE_KEY = 'userEncryptionKey';
 
 // Function to get or ask for the encryption key
 async function getOrAskForEncryptionKey(provider: any): Promise<string> {
-  let encryptionKey = localStorage.getItem(ENCRYPTION_KEY_STORAGE_KEY);
-  if (!encryptionKey) {
-    encryptionKey = await provider.request({
-      method: 'eth_getEncryptionPublicKey',
-      params: [provider.selectedAddress],
-    });
-    // Ensure encryptionKey is not null before setting it to localStorage
-    if (encryptionKey) {
-      localStorage.setItem(ENCRYPTION_KEY_STORAGE_KEY, encryptionKey);
-    } else {
-      // Handle the case where encryptionKey is null
-      throw new Error('Encryption key could not be retrieved');
+    let encryptionKey = localStorage.getItem(ENCRYPTION_KEY_STORAGE_KEY);
+
+    console.log("encryptionKey from storage:", encryptionKey);
+    if (!encryptionKey) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const signerAddress = await signer.getAddress();        
+
+        try {
+            encryptionKey = await provider.send(
+                'eth_getEncryptionPublicKey',
+                [signerAddress],
+            );
+
+            // console.log("encryptionKey from request:", encryptionKey);
+
+            // Check for falsy values (null, undefined, empty string, etc.)
+            if (!encryptionKey) {
+                throw new Error('Encryption key could not be retrieved');
+            } else {
+                localStorage.setItem(ENCRYPTION_KEY_STORAGE_KEY, encryptionKey);
+            }
+        } catch (error) {
+            console.error("Error getting encryption key:", error);
+            alert("Error occurred while getting encryption key");
+            throw error; // Re-throw the error to handle it elsewhere if needed
+        }
     }
-  }
-  return encryptionKey;
+    console.log("encryptionKey", encryptionKey);
+    return encryptionKey;
 }
 
-// Function to encrypt data
 function encryptData(encryptionKey: string, data: any): string {
   if (!encryptionKey) {
     throw new Error('Invalid encryption key');
   }
-  return stringifiableToHex(
-    encrypt(
-      encryptionKey,
-      { data: JSON.stringify(data) },
-      'x25519-xsalsa20-poly1305',
-    ),
-  );
+
+  const encryptedData = encrypt({
+    publicKey: encryptionKey,
+    data: JSON.stringify(data),
+    version: 'x25519-xsalsa20-poly1305',
+  });
+
+  return stringifiableToHex(encryptedData.toString());
 }
 
 // Function to decrypt data
@@ -144,11 +158,11 @@ async function decryptData(provider: any, encryptedData: string): Promise<any> {
 }
 
 export const getDelegation = async (
-  provider: any, // assuming the provider is passed in as an argument
   chainId: number,
   gaslessGameAddress: string,
   wagerAddress: string,
 ): Promise<{ signature: string; signedDelegationData: string }> => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
   // Step 1: Check for encryption key and encrypt/decrypt as necessary
   const encryptionKey = await getOrAskForEncryptionKey(provider);
   const localStorageKey = `${LOCAL_STORAGE_KEY_PREFIX}${wagerAddress}`;

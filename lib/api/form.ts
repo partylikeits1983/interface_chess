@@ -20,7 +20,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
 import { domain, moveTypes, delegationTypes } from './signatureConstants';
-import { createDelegation } from './delegatedWallet';
+import { createDelegation, getDelegation } from './delegatedWallet';
 
 interface ContractAddress {
   network: string;
@@ -979,7 +979,7 @@ export const PlayMove = async (
       if (isDelegated) {
         try {
           // get return values and post to server
-          await createDelegation(chainId, GaslessGameAddress, wagerAddress);
+          await getDelegation(chainId, GaslessGameAddress, wagerAddress);
         } catch (error) {
           console.log(error);
         }

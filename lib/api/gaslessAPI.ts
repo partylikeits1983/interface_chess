@@ -12,10 +12,6 @@ export const signTxPushToDB = async (
   move: string,
 ) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-  // Request account access if needed
-  // const accounts = await provider.send('eth_requestAccounts', []);
-
   const signer = provider.getSigner();
 
   // Get the address of the signer
@@ -26,7 +22,6 @@ export const signTxPushToDB = async (
 
   try {
     // Typed signature data
-
     domain.chainId = chainId;
     domain.verifyingContract = gaslessGameAddress;
 
