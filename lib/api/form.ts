@@ -1010,7 +1010,6 @@ export const PlayMove = async (
       );
     } else {
       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
-
       const onChainMoveNumber = onChainMoves.length;
 
       if (moveNumber != onChainMoveNumber) {

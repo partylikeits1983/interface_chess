@@ -1,8 +1,8 @@
 // import crypto from 'crypto';
 
-import { encrypt } from '@metamask/eth-sig-util';
+import { encrypt, EthEncryptedData } from '@metamask/eth-sig-util';
 import { ethers } from 'ethers';
-import { stringifiableToHex } from './utils';
+import { hexToStringifiable } from './utils';
 
 import {
   domain,
@@ -99,63 +99,80 @@ export const createDelegation = async (
   };
 };
 
-
 // Function to get or ask for the encryption key
 async function getOrAskForEncryptionKey(provider: any): Promise<string> {
-    let encryptionKey = localStorage.getItem(ENCRYPTION_KEY_STORAGE_KEY);
+  let encryptionKey = localStorage.getItem(ENCRYPTION_KEY_STORAGE_KEY);
 
-    console.log("encryptionKey from storage:", encryptionKey);
-    if (!encryptionKey) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const signerAddress = await signer.getAddress();        
+  console.log('encryptionKey from storage:', encryptionKey);
+  if (!encryptionKey) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const signerAddress = await signer.getAddress();
 
-        try {
-            encryptionKey = await provider.send(
-                'eth_getEncryptionPublicKey',
-                [signerAddress],
-            );
+    try {
+      encryptionKey = await provider.send('eth_getEncryptionPublicKey', [
+        signerAddress,
+      ]);
 
-            // console.log("encryptionKey from request:", encryptionKey);
+      console.log('encryptionKey from request:', encryptionKey);
 
-            // Check for falsy values (null, undefined, empty string, etc.)
-            if (!encryptionKey) {
-                throw new Error('Encryption key could not be retrieved');
-            } else {
-                localStorage.setItem(ENCRYPTION_KEY_STORAGE_KEY, encryptionKey);
-            }
-        } catch (error) {
-            console.error("Error getting encryption key:", error);
-            alert("Error occurred while getting encryption key");
-            throw error; // Re-throw the error to handle it elsewhere if needed
-        }
+      // Check for falsy values (null, undefined, empty string, etc.)
+      if (!encryptionKey) {
+        throw new Error('Encryption key could not be retrieved');
+      } else {
+        localStorage.setItem(ENCRYPTION_KEY_STORAGE_KEY, encryptionKey);
+      }
+    } catch (error) {
+      console.error('Error getting encryption key:', error);
+      alert('Error occurred while getting encryption key');
+      throw error; // Re-throw the error to handle it elsewhere if needed
     }
-    console.log("encryptionKey", encryptionKey);
-    return encryptionKey;
+  }
+  console.log('encryptionKey', encryptionKey);
+  return encryptionKey;
 }
+
+export const stringifiableToHex = (value: string) => {
+    return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
+};
 
 function encryptData(encryptionKey: string, data: any): string {
-  if (!encryptionKey) {
-    throw new Error('Invalid encryption key');
+    const encryptedData = encrypt({
+      data: JSON.stringify(data),
+      publicKey: encryptionKey,
+      version: 'x25519-xsalsa20-poly1305',
+    });
+  
+    // Convert ciphertext to hex string
+    const ciphertextHex = stringifiableToHex(encryptedData.ciphertext);
+  
+    console.log('ENCRYPTED', ciphertextHex);
+  
+    return ciphertextHex; // Return the hex string instead of the encrypted data object
   }
-
-  const encryptedData = encrypt({
-    publicKey: encryptionKey,
-    data: JSON.stringify(data),
-    version: 'x25519-xsalsa20-poly1305',
-  });
-
-  return stringifiableToHex(encryptedData.toString());
-}
+  
 
 // Function to decrypt data
-async function decryptData(provider: any, encryptedData: string): Promise<any> {
-  const decryptedData = await provider.request({
-    method: 'eth_decrypt',
-    params: [encryptedData, provider.selectedAddress],
-  });
-  return JSON.parse(decryptedData);
-}
+async function decryptData(provider: any, ciphertextHex: string): Promise<any> {
+    const accounts = await provider.send('eth_requestAccounts', []);
+  
+    /// @dev not working ... 
+    console.log("cipherText", ciphertextHex);
+    try {
+      // Decrypt using the hex string
+      const decryptedData = await provider.send('eth_decrypt', [
+        ciphertextHex, // Ensure it's a hex string
+        accounts[0],
+      ]);
+  
+      return JSON.parse(decryptedData);
+    } catch (error) {
+      console.error('Decryption error', error);
+      throw error; // Re-throw the error for further handling if necessary
+    }
+  }
+  
+  
 
 export const getDelegation = async (
   chainId: number,
@@ -169,9 +186,11 @@ export const getDelegation = async (
   const encryptedDelegationData = localStorage.getItem(localStorageKey);
   let delegationData = null;
 
+  console.log('encryptedDelegationData', encryptedDelegationData);
   // Decrypt if data exists
   if (encryptedDelegationData) {
-    delegationData = await decryptData(provider, encryptedDelegationData);
+    const encryptedDelegation = JSON.parse(encryptedDelegationData);
+    delegationData = await decryptData(provider, encryptedDelegation);
   } else {
     // Step 2: If delegation data doesn't exist, call createDelegation
     delegationData = await createDelegation(
@@ -181,8 +200,11 @@ export const getDelegation = async (
     );
 
     // Step 3: Encrypt and save the delegation data in local storage
-    const encryptedData = encryptData(encryptionKey, delegationData);
-    localStorage.setItem(localStorageKey, encryptedData);
+    const encryptedData: string = encryptData(
+      encryptionKey,
+      delegationData,
+    );
+    localStorage.setItem(localStorageKey, JSON.stringify(encryptedData));
   }
 
   return delegationData;
