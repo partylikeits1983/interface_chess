@@ -16,15 +16,13 @@ export const moveTypes = {
 };
 
 export const delegationTypes = {
-    Delegation: [
-        { name: "delegatorAddress", type: "address" },
-        { name: "delegatedAddress", type: "address" },
-        { name: "wagerAddress", type: "address" },
-    ],
+  Delegation: [
+    { name: 'delegatorAddress', type: 'address' },
+    { name: 'delegatedAddress', type: 'address' },
+    { name: 'wagerAddress', type: 'address' },
+  ],
 };
 
 export const walletGenerationTypes = {
-    WalletGeneration: [
-        { name: "wagerAddress", type: "address" },
-    ],
+  WalletGeneration: [{ name: 'wagerAddress', type: 'address' }],
 };

@@ -970,8 +970,6 @@ export const PlayMove = async (
     gaslessGameABI,
     signer,
   );
-  
-
 
   try {
     const hex_move = await chess.moveToHex(move);
@@ -979,18 +977,18 @@ export const PlayMove = async (
 
     if (isGasLess) {
       if (isDelegated) {
-      try {
-        // get return values and post to server
-        await createDelegation(chainId, GaslessGameAddress, wagerAddress);
-      } catch (error) {
-        console.log(error);
+        try {
+          // get return values and post to server
+          await createDelegation(chainId, GaslessGameAddress, wagerAddress);
+        } catch (error) {
+          console.log(error);
+        }
       }
-    }
 
       const timeNow = Date.now();
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 3; // @dev set to the expiration of the wager
 
-      const messageData = {
+      const moveMessageData = {
         wagerAddress: wagerAddress,
         gameNumber: gameNumber,
         moveNumber: moveNumber,
@@ -999,17 +997,15 @@ export const PlayMove = async (
       };
 
       console.log(gaslessGame.address);
-      const message = await gaslessGame.encodeMoveMessage(messageData);
-
-      domain.chainId = chainId;
-      domain.verifyingContract = gaslessGame.address;
+      const encodedMoveMessage = await gaslessGame.encodeMoveMessage(
+        moveMessageData,
+      );
 
       await signTxPushToDB(
         isDelegated,
-        domain,
-        moveTypes,
-        messageData,
-        message,
+        GaslessGameAddress,
+        moveMessageData,
+        encodedMoveMessage,
         move,
       );
     } else {

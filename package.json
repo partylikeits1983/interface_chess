@@ -30,6 +30,7 @@
     "@heroicons/react": "1.0.6",
     "@lingui/macro": "4.0.0",
     "@metamask/detect-provider": "2.0.0",
+    "@metamask/eth-sig-util": "7.0.1",
     "@metamask/jazzicon": "2.0.0",
     "@metamask/sdk": "0.3.0",
     "@metamask/types": "1.1.0",

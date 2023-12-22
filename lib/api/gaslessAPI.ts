@@ -2,10 +2,11 @@ const ethers = require('ethers');
 
 import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
+import { domain, moveTypes } from './signatureConstants';
+
 export const signTxPushToDB = async (
   isDelegated: boolean,
-  domain: any,
-  types: any,
+  gaslessGameAddress: string,
   messageData: any,
   message: string,
   move: string,
@@ -13,7 +14,7 @@ export const signTxPushToDB = async (
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   // Request account access if needed
-  const accounts = await provider.send('eth_requestAccounts', []);
+  // const accounts = await provider.send('eth_requestAccounts', []);
 
   const signer = provider.getSigner();
 
@@ -25,9 +26,13 @@ export const signTxPushToDB = async (
 
   try {
     // Typed signature data
-    const signedMessage = await signer._signTypedData(
+
+    domain.chainId = chainId;
+    domain.verifyingContract = gaslessGameAddress;
+
+    const signedMoveMessage = await signer._signTypedData(
       domain,
-      types,
+      moveTypes,
       messageData,
     );
 
@@ -36,7 +41,7 @@ export const signTxPushToDB = async (
       move: move,
       messageData: messageData,
       message: message,
-      signedMessage: signedMessage,
+      signedMoveMessage: signedMoveMessage,
       signerAddress: signerAddress,
     };
 
