@@ -19,10 +19,11 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
+import { DelegationAndWallet } from './types';
 import { domain, moveTypes, delegationTypes } from './signatureConstants';
 import { createDelegation, getDelegation } from './delegatedWallet';
 
-import { moveToHex } from "./utils";
+import { moveToHex } from './utils';
 
 interface ContractAddress {
   network: string;
@@ -952,6 +953,25 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   }
 };
 
+
+interface GaslessMove {
+    wagerAddress: string; // Ethereum address as a hex string
+    gameNumber: number;
+    moveNumber: number;
+    move: number; // Assuming uint16 can be represented as a regular number in JS
+    expiration: number;
+}
+
+function encodeMoveMessage(move: GaslessMove): string {
+    const abiCoder = new ethers.utils.AbiCoder();
+    return abiCoder.encode(
+        ["address", "uint256", "uint256", "uint16", "uint256"],
+        [move.wagerAddress, move.gameNumber, move.moveNumber, move.move, move.expiration]
+    );
+}
+
+
+
 export const PlayMove = async (
   isGasLess: boolean,
   isDelegated: boolean,
@@ -976,14 +996,19 @@ export const PlayMove = async (
   try {
     // const hex_move = await chess.moveToHex(move);
     // const gameNumber = Number(await chess.getGameLength(wagerAddress));
-    let hex_move = moveToHex(move); 
-    let gameNumber = GetGameNumber(wagerAddress); 
+    let hex_move = moveToHex(move);
+    let gameNumber = await GetGameNumber(wagerAddress);
 
     if (isGasLess) {
+      let delegationAndWallet;
       if (isDelegated) {
         try {
           // get return values and post to server
-          await getDelegation(chainId, GaslessGameAddress, wagerAddress);
+          delegationAndWallet = await getDelegation(
+            chainId,
+            GaslessGameAddress,
+            wagerAddress,
+          );
         } catch (error) {
           console.log(error);
         }
@@ -992,7 +1017,7 @@ export const PlayMove = async (
       const timeNow = Date.now();
       const timeStamp = Math.floor(timeNow / 1000) + 86400 * 3; // @dev set to the expiration of the wager
 
-      const moveMessageData = {
+      const moveMessageData: GaslessMove = {
         wagerAddress: wagerAddress,
         gameNumber: gameNumber,
         moveNumber: moveNumber,
@@ -1000,20 +1025,30 @@ export const PlayMove = async (
         expiration: timeStamp,
       };
 
-      console.log(gaslessGame.address);
+      const encodedMoveMessage = encodeMoveMessage(moveMessageData);
+
+      /*
       const encodedMoveMessage = await gaslessGame.encodeMoveMessage(
         moveMessageData,
       );
+      */
 
-      await signTxPushToDB(
-        isDelegated,
-        GaslessGameAddress,
-        moveMessageData,
-        encodedMoveMessage,
-        move,
-      );
+      if (delegationAndWallet) {
+        await signTxPushToDB(
+          isDelegated,
+          delegationAndWallet,
+          GaslessGameAddress,
+          moveMessageData,
+          encodedMoveMessage,
+          move,
+        );
+      } else {
+        console.error("DELEGATION NOT DEFINED");
+      }
+
+
     } else {
-/*       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
+      /*       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
       const onChainMoveNumber = onChainMoves.length;
 
       if (moveNumber != onChainMoveNumber) {

@@ -9,6 +9,8 @@ import {
   walletGenerationTypes,
 } from './signatureConstants';
 
+import { DelegationAndWallet } from './types';
+
 const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
 
 const LOCAL_STORAGE_KEY_PREFIX = 'delegation-';
@@ -20,7 +22,7 @@ export const generateWallet = async (
   chainId: number,
   gaslessGameAddress: string,
   wagerAddress: string,
-): Promise<ethers.Signer> => {
+): Promise<ethers.Wallet> => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   let signer = provider.getSigner();
 
@@ -47,6 +49,30 @@ export const generateWallet = async (
   return deterministicWallet;
 };
 
+interface Delegation {
+    delegatorAddress: string;
+    delegatedAddress: string;
+    wagerAddress: string;
+}
+
+interface SignedDelegation {
+    delegation: Delegation;
+    signature: string; // Assuming signature is a hex string
+}
+
+function encodeSignedDelegation(delegation: Delegation, signature: string): string {
+    const abiCoder = new ethers.utils.AbiCoder();
+    const signedDelegation: SignedDelegation = {
+        delegation,
+        signature
+    };
+
+    return abiCoder.encode(
+        ["tuple(address delegatorAddress, address delegatedAddress, address wagerAddress)", "bytes"],
+        [signedDelegation.delegation, ethers.utils.arrayify(signedDelegation.signature)]
+    );
+}
+
 export const createDelegation = async (
   chainId: number,
   gaslessGameAddress: string,
@@ -56,14 +82,14 @@ export const createDelegation = async (
   const signer = provider.getSigner();
   const signerAddress = await signer.getAddress();
 
-  const gaslessGame = new ethers.Contract(
+/*   const gaslessGame = new ethers.Contract(
     gaslessGameAddress,
     gaslessGameABI,
     signer,
-  );
+  ); */
 
   // 1) create random wallet
-  const delegatedSigner = await generateWallet(
+  const delegatedSigner: ethers.Wallet = await generateWallet(
     chainId,
     gaslessGameAddress,
     wagerAddress,
@@ -86,16 +112,25 @@ export const createDelegation = async (
     delegationTypes,
     message,
   );
-  const signedDelegationData = await gaslessGame.encodeSignedDelegation(
+  // 5) Delegation abstraction
+    /*   
+    const signedDelegationData = await gaslessGame.encodeSignedDelegation(
     message,
     signature,
-  );
+  ); 
+*/
+  const signedDelegationData = encodeSignedDelegation(message, signature);
 
-  // 5) return the signature and signed delegation data
-  return {
-    signature,
-    signedDelegationData,
+  const delegationAndWallet: DelegationAndWallet = {
+    delegationSignature: signature, // sig for backend
+    signedDelegationData: signedDelegationData, // delegation abstraction for sc
+    delegatedWalletMnemonic: delegatedSigner.mnemonic.phrase, // created wallet for frontend signatures
   };
+
+  console.log("delegated wallet", delegatedSigner.getAddress());
+
+  // 6) return delegationAndWallet
+  return delegationAndWallet;
 };
 
 // Function to get or ask for the encryption key
@@ -130,55 +165,67 @@ async function getOrAskForEncryptionKey(provider: any): Promise<string> {
 }
 
 export const stringifiableToHex = (value: string) => {
-    return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
+  return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
 };
 
-function encryptData(encryptionKey: string, data: any): string {
-    const encryptedData = encrypt({
-      publicKey: encryptionKey,
-      data: JSON.stringify(data),
-      version: 'x25519-xsalsa20-poly1305',
-    });
+function encryptData(encryptionKey: string, data: DelegationAndWallet): string {
 
-    let encryptedDataString = JSON.stringify(encryptedData);
-  
-    return encryptedDataString; // Return the hex string instead of the encrypted data object
-  }
-  
+  console.log("ENCRYPTING", data);
+
+  const encryptedData = encrypt({
+    publicKey: encryptionKey,
+    data: JSON.stringify(data),
+    version: 'x25519-xsalsa20-poly1305',
+  });
+
+  let encryptedDataString = JSON.stringify(encryptedData);
+
+  return encryptedDataString; // Return the hex string instead of the encrypted data object
+}
 
 // Function to decrypt data
-async function decryptData(provider: any, encryptedData: EthEncryptedData): Promise<any> {
-    const accounts = await provider.send('eth_requestAccounts', []);
+async function decryptData(
+  provider: any,
+  encryptedData: EthEncryptedData,
+): Promise<DelegationAndWallet> {
+  const accounts = await provider.send('eth_requestAccounts', []);
 
-    try {
-      // Decrypt using the hex string
-      const decryptedData = await provider.send('eth_decrypt', [
-        encryptedData,
-        accounts[0],
-      ]);
+  try {
+    // Decrypt using the hex string
+    const decryptedData = JSON.parse(await provider.send('eth_decrypt', [
+      JSON.stringify(encryptedData),
+      accounts[0],
+    ]));
 
-      return JSON.parse(decryptedData);
-    } catch (error) {
-      console.error('Decryption error', error);
-      throw error; // Re-throw the error for further handling if necessary
-    }
+    console.log("DECRYPTED", decryptedData);
+
+    return decryptedData;
+  } catch (error) {
+    console.error('Decryption error', error);
+    throw error; // Re-throw the error for further handling if necessary
   }
+}
+
 
 export const getDelegation = async (
   chainId: number,
   gaslessGameAddress: string,
   wagerAddress: string,
-): Promise<{ signature: string; signedDelegationData: string }> => {
+): Promise<DelegationAndWallet> => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   // Step 1: Check for encryption key and encrypt/decrypt as necessary
   const encryptionKey = await getOrAskForEncryptionKey(provider);
   const localStorageKey = `${LOCAL_STORAGE_KEY_PREFIX}${wagerAddress}`;
   const encryptedDelegationData = localStorage.getItem(localStorageKey);
-  let delegationData = null;
+  let delegationData: DelegationAndWallet;
+
+  console.log("encryptedDelegationData", encryptedDelegationData);
 
   // Decrypt if data exists
   if (encryptedDelegationData) {
-    const encryptedDelegation: EthEncryptedData= JSON.parse(encryptedDelegationData);
+    const encryptedDelegation: EthEncryptedData = JSON.parse(
+      encryptedDelegationData,
+    );
     delegationData = await decryptData(provider, encryptedDelegation);
   } else {
     // Step 2: If delegation data doesn't exist, call createDelegation
@@ -189,14 +236,11 @@ export const getDelegation = async (
     );
 
     // Step 3: Encrypt and save the delegation data in local storage
-    const encryptedData: string = encryptData(
-      encryptionKey,
-      delegationData,
-    );
-    localStorage.setItem(localStorageKey, JSON.stringify(encryptedData));
+    const encryptedData: string = encryptData(encryptionKey, delegationData);
+    localStorage.setItem(localStorageKey, encryptedData);
   }
 
-  console.log("DelegationData", delegationData);
+  console.log('DelegationData', delegationData);
 
   return delegationData;
 };

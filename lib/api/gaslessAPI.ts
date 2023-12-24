@@ -1,21 +1,35 @@
-const ethers = require('ethers');
-
+import {ethers, Signer} from "ethers";
 import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
 import { domain, moveTypes } from './signatureConstants';
 
+import { DelegationAndWallet } from './types';
+
 export const signTxPushToDB = async (
   isDelegated: boolean,
+  delegationAndWallet: DelegationAndWallet,
   gaslessGameAddress: string,
   messageData: any,
   message: string,
   move: string,
 ) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
 
-  // Get the address of the signer
-  const signerAddress = await signer.getAddress();
+  let signer: ethers.Wallet | ethers.providers.JsonRpcSigner;
+  let signerAddress;
+
+  if (isDelegated) {
+    signer = ethers.Wallet.fromMnemonic(delegationAndWallet.delegatedWalletMnemonic);
+    signerAddress = signer.getAddress();
+  } else {
+    signer = provider.getSigner();
+    signerAddress = signer.getAddress();
+  }
+
+  console.log("HERE");
+  // signerAddress = await signer.getAddress();
+  console.log(signerAddress);
+
 
   const network = await provider.getNetwork();
   const chainId = network.chainId;
@@ -31,8 +45,15 @@ export const signTxPushToDB = async (
       messageData,
     );
 
+    // don't send wallet to server
+    const delegationData = {
+      delegationSignature: delegationAndWallet.delegationSignature,
+      signedDelegationData: delegationAndWallet.signedDelegationData,
+    };
+
     const data = {
       isDelegated: isDelegated,
+      delegationData: delegationData,
       move: move,
       messageData: messageData,
       message: message,
