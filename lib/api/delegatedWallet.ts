@@ -2,7 +2,6 @@
 
 import { encrypt, EthEncryptedData } from '@metamask/eth-sig-util';
 import { ethers } from 'ethers';
-import { hexToStringifiable } from './utils';
 
 import {
   domain,
@@ -177,7 +176,6 @@ export const getDelegation = async (
   const encryptedDelegationData = localStorage.getItem(localStorageKey);
   let delegationData = null;
 
-  console.log('encryptedDelegationData', encryptedDelegationData);
   // Decrypt if data exists
   if (encryptedDelegationData) {
     const encryptedDelegation: EthEncryptedData= JSON.parse(encryptedDelegationData);

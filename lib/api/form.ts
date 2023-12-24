@@ -22,6 +22,8 @@ import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 import { domain, moveTypes, delegationTypes } from './signatureConstants';
 import { createDelegation, getDelegation } from './delegatedWallet';
 
+import { moveToHex } from "./utils";
+
 interface ContractAddress {
   network: string;
   chainID: number;
@@ -974,6 +976,8 @@ export const PlayMove = async (
   try {
     // const hex_move = await chess.moveToHex(move);
     // const gameNumber = Number(await chess.getGameLength(wagerAddress));
+    let hex_move = moveToHex(move); 
+    let gameNumber = GetGameNumber(wagerAddress); 
 
     if (isGasLess) {
       if (isDelegated) {
@@ -990,9 +994,9 @@ export const PlayMove = async (
 
       const moveMessageData = {
         wagerAddress: wagerAddress,
-        gameNumber: 0, // gameNumber,
+        gameNumber: gameNumber,
         moveNumber: moveNumber,
-        move: 0, // hex_move,
+        move: hex_move,
         expiration: timeStamp,
       };
 
