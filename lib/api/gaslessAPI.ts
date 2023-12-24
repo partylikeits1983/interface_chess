@@ -1,4 +1,4 @@
-import {ethers, Signer} from "ethers";
+import { ethers, Signer } from 'ethers';
 import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
 import { domain, moveTypes } from './signatureConstants';
@@ -19,17 +19,14 @@ export const signTxPushToDB = async (
   let signerAddress;
 
   if (isDelegated) {
-    signer = ethers.Wallet.fromMnemonic(delegationAndWallet.delegatedWalletMnemonic);
+    signer = ethers.Wallet.fromMnemonic(
+      delegationAndWallet.delegatedWalletMnemonic,
+    );
     signerAddress = signer.getAddress();
   } else {
     signer = provider.getSigner();
     signerAddress = signer.getAddress();
   }
-
-  console.log("HERE");
-  // signerAddress = await signer.getAddress();
-  console.log(signerAddress);
-
 
   const network = await provider.getNetwork();
   const chainId = network.chainId;

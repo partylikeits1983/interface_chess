@@ -953,24 +953,27 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   }
 };
 
-
 interface GaslessMove {
-    wagerAddress: string; // Ethereum address as a hex string
-    gameNumber: number;
-    moveNumber: number;
-    move: number; // Assuming uint16 can be represented as a regular number in JS
-    expiration: number;
+  wagerAddress: string; // Ethereum address as a hex string
+  gameNumber: number;
+  moveNumber: number;
+  move: number; // Assuming uint16 can be represented as a regular number in JS
+  expiration: number;
 }
 
 function encodeMoveMessage(move: GaslessMove): string {
-    const abiCoder = new ethers.utils.AbiCoder();
-    return abiCoder.encode(
-        ["address", "uint256", "uint256", "uint16", "uint256"],
-        [move.wagerAddress, move.gameNumber, move.moveNumber, move.move, move.expiration]
-    );
+  const abiCoder = new ethers.utils.AbiCoder();
+  return abiCoder.encode(
+    ['address', 'uint256', 'uint256', 'uint16', 'uint256'],
+    [
+      move.wagerAddress,
+      move.gameNumber,
+      move.moveNumber,
+      move.move,
+      move.expiration,
+    ],
+  );
 }
-
-
 
 export const PlayMove = async (
   isGasLess: boolean,
@@ -1043,10 +1046,8 @@ export const PlayMove = async (
           move,
         );
       } else {
-        console.error("DELEGATION NOT DEFINED");
+        console.error('DELEGATION NOT DEFINED');
       }
-
-
     } else {
       /*       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
       const onChainMoveNumber = onChainMoves.length;
