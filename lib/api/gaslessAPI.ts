@@ -28,6 +28,7 @@ export const signTxPushToDB = async (
     signerAddress = signer.getAddress();
   }
 
+  
   const network = await provider.getNetwork();
   const chainId = network.chainId;
 
