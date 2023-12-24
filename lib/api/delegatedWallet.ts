@@ -11,7 +11,7 @@ import {
 
 import { DelegationAndWallet } from './types';
 
-const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
+// const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
 
 const LOCAL_STORAGE_KEY_PREFIX = 'delegation-';
 const ENCRYPTION_KEY_STORAGE_KEY = 'userEncryptionKey';
