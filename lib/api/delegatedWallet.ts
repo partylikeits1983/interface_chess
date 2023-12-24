@@ -114,8 +114,6 @@ async function getOrAskForEncryptionKey(provider: any): Promise<string> {
         signerAddress,
       ]);
 
-      console.log('encryptionKey from request:', encryptionKey);
-
       // Check for falsy values (null, undefined, empty string, etc.)
       if (!encryptionKey) {
         throw new Error('Encryption key could not be retrieved');
@@ -138,41 +136,34 @@ export const stringifiableToHex = (value: string) => {
 
 function encryptData(encryptionKey: string, data: any): string {
     const encryptedData = encrypt({
-      data: JSON.stringify(data),
       publicKey: encryptionKey,
+      data: JSON.stringify(data),
       version: 'x25519-xsalsa20-poly1305',
     });
+
+    let encryptedDataString = JSON.stringify(encryptedData);
   
-    // Convert ciphertext to hex string
-    const ciphertextHex = stringifiableToHex(encryptedData.ciphertext);
-  
-    console.log('ENCRYPTED', ciphertextHex);
-  
-    return ciphertextHex; // Return the hex string instead of the encrypted data object
+    return encryptedDataString; // Return the hex string instead of the encrypted data object
   }
   
 
 // Function to decrypt data
-async function decryptData(provider: any, ciphertextHex: string): Promise<any> {
+async function decryptData(provider: any, encryptedData: EthEncryptedData): Promise<any> {
     const accounts = await provider.send('eth_requestAccounts', []);
-  
-    /// @dev not working ... 
-    console.log("cipherText", ciphertextHex);
+
     try {
       // Decrypt using the hex string
       const decryptedData = await provider.send('eth_decrypt', [
-        ciphertextHex, // Ensure it's a hex string
+        encryptedData,
         accounts[0],
       ]);
-  
+
       return JSON.parse(decryptedData);
     } catch (error) {
       console.error('Decryption error', error);
       throw error; // Re-throw the error for further handling if necessary
     }
   }
-  
-  
 
 export const getDelegation = async (
   chainId: number,
@@ -189,7 +180,7 @@ export const getDelegation = async (
   console.log('encryptedDelegationData', encryptedDelegationData);
   // Decrypt if data exists
   if (encryptedDelegationData) {
-    const encryptedDelegation = JSON.parse(encryptedDelegationData);
+    const encryptedDelegation: EthEncryptedData= JSON.parse(encryptedDelegationData);
     delegationData = await decryptData(provider, encryptedDelegation);
   } else {
     // Step 2: If delegation data doesn't exist, call createDelegation
@@ -206,6 +197,8 @@ export const getDelegation = async (
     );
     localStorage.setItem(localStorageKey, JSON.stringify(encryptedData));
   }
+
+  console.log("DelegationData", delegationData);
 
   return delegationData;
 };

@@ -972,8 +972,8 @@ export const PlayMove = async (
   );
 
   try {
-    const hex_move = await chess.moveToHex(move);
-    const gameNumber = Number(await chess.getGameLength(wagerAddress));
+    // const hex_move = await chess.moveToHex(move);
+    // const gameNumber = Number(await chess.getGameLength(wagerAddress));
 
     if (isGasLess) {
       if (isDelegated) {
@@ -990,9 +990,9 @@ export const PlayMove = async (
 
       const moveMessageData = {
         wagerAddress: wagerAddress,
-        gameNumber: gameNumber,
+        gameNumber: 0, // gameNumber,
         moveNumber: moveNumber,
-        move: hex_move,
+        move: 0, // hex_move,
         expiration: timeStamp,
       };
 
@@ -1009,15 +1009,15 @@ export const PlayMove = async (
         move,
       );
     } else {
-      const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
+/*       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
       const onChainMoveNumber = onChainMoves.length;
 
       if (moveNumber != onChainMoveNumber) {
         await submitMoves(wagerAddress);
       }
 
-      const tx = await chess.playMove(wagerAddress, hex_move);
-      await tx.wait();
+      // const tx = await chess.playMove(wagerAddress, hex_move);
+      await tx.wait(); */
     }
 
     return true;
