@@ -42,7 +42,7 @@ export const signTxPushToDB = async (
       messageData,
     );
 
-    // don't send wallet to server
+    // do not send wallet to server
     const delegationData = {
       delegationSignature: delegationAndWallet.delegationSignature,
       signedDelegationData: delegationAndWallet.signedDelegationData,

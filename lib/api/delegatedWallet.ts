@@ -91,12 +91,6 @@ export const createDelegation = async (
   const signer = provider.getSigner();
   const signerAddress = await signer.getAddress();
 
-  /*   const gaslessGame = new ethers.Contract(
-    gaslessGameAddress,
-    gaslessGameABI,
-    signer,
-  ); */
-
   // 1) create random wallet
   const delegatedSigner: ethers.Wallet = await generateWallet(
     chainId,
@@ -122,12 +116,6 @@ export const createDelegation = async (
     message,
   );
   // 5) Delegation abstraction
-  /*   
-    const signedDelegationData = await gaslessGame.encodeSignedDelegation(
-    message,
-    signature,
-  ); 
-*/
   const signedDelegationData = encodeSignedDelegation(message, signature);
 
   const delegationAndWallet: DelegationAndWallet = {
