@@ -4,7 +4,7 @@ import { CreateMatchType } from './types';
 
 const chessWagerABI = require('./contract-abi/ChessWagerABI').abi;
 const moveVerificationABI = require('./contract-abi/MoveVerificationABI').abi;
-const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
+const gaslessGameABI = require('./contract-abi/GaslessGameABI').abi;
 const splitterABI = require('./contract-abi/SplitterABI').abi;
 const crowdSaleABI = require('./contract-abi/CrowdSaleABI').abi;
 const tournamentABI = require('./contract-abi/TournamentABI').abi;
