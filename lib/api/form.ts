@@ -19,7 +19,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
-import { DelegationAndWallet, GaslessMove, DelegationData,  } from './types';
+import { DelegationAndWallet, GaslessMove, DelegationData } from './types';
 import { domain, moveTypes, delegationTypes } from './signatureConstants';
 import { createDelegation, getDelegation } from './delegatedWallet';
 
@@ -952,8 +952,6 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
     // throw error; // Throw the error so that the caller can handle it
   }
 };
-
-
 
 function encodeMoveMessage(move: GaslessMove): string {
   const abiCoder = new ethers.utils.AbiCoder();

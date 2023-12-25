@@ -6,7 +6,7 @@ export type CreateMatchType = {
   wagerAmount: BigInt;
   timePerMove: number;
   numberOfGames: number;
-}
+};
 
 export type DelegationAndWallet = {
   delegationMessage: Delegation;
@@ -32,13 +32,13 @@ export type GaslessMove = {
   moveNumber: number;
   move: number; // Assuming uint16 can be represented as a regular number in JS
   expiration: number;
-}
+};
 
 export type DelegationData = {
-  delegationMessage: Delegation,
+  delegationMessage: Delegation;
   delegationSignature: string;
   encodedDelegationAndSig: string;
-}
+};
 
 export type GaslessMoveDataPOST = {
   isDelegated: boolean;
@@ -48,4 +48,4 @@ export type GaslessMoveDataPOST = {
   move: string;
   signedMoveMessage: string;
   signerAddress: string;
-} 
+};

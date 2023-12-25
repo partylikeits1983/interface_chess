@@ -2,7 +2,12 @@ import { ethers, Signer } from 'ethers';
 import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
 import { domain, moveTypes } from './signatureConstants';
-import { DelegationAndWallet, GaslessMove, DelegationData, GaslessMoveDataPOST,  } from './types';
+import {
+  DelegationAndWallet,
+  GaslessMove,
+  DelegationData,
+  GaslessMoveDataPOST,
+} from './types';
 
 export const signTxPushToDB = async (
   isDelegated: boolean,

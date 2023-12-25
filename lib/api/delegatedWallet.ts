@@ -9,7 +9,7 @@ import {
   walletGenerationTypes,
 } from './signatureConstants';
 
-import { DelegationAndWallet, SignedDelegation, Delegation  } from './types';
+import { DelegationAndWallet, SignedDelegation, Delegation } from './types';
 
 // const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
 
@@ -105,7 +105,10 @@ export const createDelegation = async (
     delegationMessage,
   );
   // 5) Delegation abstraction
-  const encodedDelegationAndSig = encodeDelegationAndSig(delegationMessage, signature);
+  const encodedDelegationAndSig = encodeDelegationAndSig(
+    delegationMessage,
+    signature,
+  );
 
   const delegationAndWallet: DelegationAndWallet = {
     delegationMessage: delegationMessage, // easy sig verification w/o decode on backend
