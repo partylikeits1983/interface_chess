@@ -9,7 +9,7 @@ import {
   walletGenerationTypes,
 } from './signatureConstants';
 
-import { DelegationAndWallet } from './types';
+import { DelegationAndWallet, SignedDelegation, Delegation  } from './types';
 
 // const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
 
@@ -49,18 +49,7 @@ export const generateWallet = async (
   return deterministicWallet;
 };
 
-interface Delegation {
-  delegatorAddress: string;
-  delegatedAddress: string;
-  wagerAddress: string;
-}
-
-interface SignedDelegation {
-  delegation: Delegation;
-  signature: string; // Assuming signature is a hex string
-}
-
-function encodeSignedDelegation(
+function encodeDelegationAndSig(
   delegation: Delegation,
   signature: string,
 ): string {
@@ -100,7 +89,7 @@ export const createDelegation = async (
   const delegatedSignerAddress = await delegatedSigner.getAddress();
 
   // 2) create deletation type
-  const message = {
+  const delegationMessage: Delegation = {
     delegatorAddress: signerAddress,
     delegatedAddress: delegatedSignerAddress,
     wagerAddress: wagerAddress,
@@ -113,14 +102,15 @@ export const createDelegation = async (
   const signature = await signer._signTypedData(
     domain,
     delegationTypes,
-    message,
+    delegationMessage,
   );
   // 5) Delegation abstraction
-  const signedDelegationData = encodeSignedDelegation(message, signature);
+  const encodedDelegationAndSig = encodeDelegationAndSig(delegationMessage, signature);
 
   const delegationAndWallet: DelegationAndWallet = {
-    delegationSignature: signature, // sig for backend
-    signedDelegationData: signedDelegationData, // delegation abstraction for sc
+    delegationMessage: delegationMessage, // easy sig verification w/o decode on backend
+    delegationSignature: signature, // sig for backend // redundant
+    encodedDelegationAndSig: encodedDelegationAndSig, // delegation abstraction for sc
     delegatedWalletMnemonic: delegatedSigner.mnemonic.phrase, // created wallet for frontend signatures
   };
 

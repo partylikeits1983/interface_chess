@@ -2,66 +2,66 @@ import { ethers, Signer } from 'ethers';
 import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
 
 import { domain, moveTypes } from './signatureConstants';
-
-import { DelegationAndWallet } from './types';
+import { DelegationAndWallet, GaslessMove, DelegationData, GaslessMoveDataPOST,  } from './types';
 
 export const signTxPushToDB = async (
   isDelegated: boolean,
   delegationAndWallet: DelegationAndWallet,
-  gaslessGameAddress: string,
-  messageData: any,
-  message: string,
-  move: string,
+  GaslessGameAddress: string,
+  moveMessageData: GaslessMove,
+  encodedMoveMessage: string,
+  algebraeicMove: string,
 ) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   let signer: ethers.Wallet | ethers.providers.JsonRpcSigner;
-  let signerAddress;
+  let signerAddress: string;
 
+  // set to true for v1
   if (isDelegated) {
     signer = ethers.Wallet.fromMnemonic(
       delegationAndWallet.delegatedWalletMnemonic,
     );
-    signerAddress = signer.getAddress();
+    signerAddress = await signer.getAddress();
   } else {
     signer = provider.getSigner();
-    signerAddress = signer.getAddress();
+    signerAddress = await signer.getAddress();
   }
 
-  
   const network = await provider.getNetwork();
   const chainId = network.chainId;
 
   try {
     // Typed signature data
     domain.chainId = chainId;
-    domain.verifyingContract = gaslessGameAddress;
+    domain.verifyingContract = GaslessGameAddress;
 
     const signedMoveMessage = await signer._signTypedData(
       domain,
       moveTypes,
-      messageData,
+      moveMessageData,
     );
 
     // do not send wallet to server
-    const delegationData = {
+    const delegationData: DelegationData = {
+      delegationMessage: delegationAndWallet.delegationMessage,
       delegationSignature: delegationAndWallet.delegationSignature,
-      signedDelegationData: delegationAndWallet.signedDelegationData,
+      encodedDelegationAndSig: delegationAndWallet.encodedDelegationAndSig,
     };
 
-    const data = {
+    const postData: GaslessMoveDataPOST = {
       isDelegated: isDelegated,
       delegationData: delegationData,
-      move: move,
-      messageData: messageData,
-      message: message,
+      moveMessageData: moveMessageData,
+      encodedMoveMessage: encodedMoveMessage, // encoded moveMessageData
+      move: algebraeicMove,
       signedMoveMessage: signedMoveMessage,
       signerAddress: signerAddress,
     };
 
-    console.log('DATA', data);
+    console.log('DATA', postData);
 
-    const rawData = JSON.stringify(data);
+    const rawData = JSON.stringify(postData);
 
     // Include chainId in the request URL
     const response = await fetch(`https://api.chess.fish/move/${chainId}`, {

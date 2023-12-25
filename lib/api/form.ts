@@ -19,7 +19,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
-import { DelegationAndWallet } from './types';
+import { DelegationAndWallet, GaslessMove, DelegationData,  } from './types';
 import { domain, moveTypes, delegationTypes } from './signatureConstants';
 import { createDelegation, getDelegation } from './delegatedWallet';
 
@@ -953,13 +953,7 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   }
 };
 
-interface GaslessMove {
-  wagerAddress: string; // Ethereum address as a hex string
-  gameNumber: number;
-  moveNumber: number;
-  move: number; // Assuming uint16 can be represented as a regular number in JS
-  expiration: number;
-}
+
 
 function encodeMoveMessage(move: GaslessMove): string {
   const abiCoder = new ethers.utils.AbiCoder();
@@ -1004,6 +998,7 @@ export const PlayMove = async (
 
     if (isGasLess) {
       let delegationAndWallet;
+      // isDelegated is set to true for v1
       if (isDelegated) {
         try {
           // get return values and post to server
@@ -1030,12 +1025,6 @@ export const PlayMove = async (
 
       const encodedMoveMessage = encodeMoveMessage(moveMessageData);
 
-      /*
-      const encodedMoveMessage = await gaslessGame.encodeMoveMessage(
-        moveMessageData,
-      );
-      */
-
       if (delegationAndWallet) {
         await signTxPushToDB(
           isDelegated,
@@ -1049,15 +1038,15 @@ export const PlayMove = async (
         console.error('DELEGATION NOT DEFINED');
       }
     } else {
-      /*       const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
+      const onChainMoves = await chess.getGameMoves(wagerAddress, gameNumber);
       const onChainMoveNumber = onChainMoves.length;
 
       if (moveNumber != onChainMoveNumber) {
         await submitMoves(wagerAddress);
       }
 
-      // const tx = await chess.playMove(wagerAddress, hex_move);
-      await tx.wait(); */
+      const tx = await chess.playMove(wagerAddress, hex_move);
+      await tx.wait();
     }
 
     return true;
