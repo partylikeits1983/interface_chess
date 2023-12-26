@@ -64,10 +64,7 @@ function encodeDelegationAndSig(
       'tuple(address delegatorAddress, address delegatedAddress, address wagerAddress)',
       'bytes',
     ],
-    [
-      signedDelegation.delegation,
-     signedDelegation.signature,
-    ],
+    [signedDelegation.delegation, signedDelegation.signature],
   );
 }
 
@@ -234,15 +231,23 @@ export const getDelegation = async (
 
   // Step 2: Decrypt if data exists, else create new
   if (encryptedDelegationData) {
-    const encryptedDelegation: EthEncryptedData = JSON.parse(encryptedDelegationData);
-    tempDelegationAndWalletData = await decryptData(provider, encryptedDelegation);
+    const encryptedDelegation: EthEncryptedData = JSON.parse(
+      encryptedDelegationData,
+    );
+    tempDelegationAndWalletData = await decryptData(
+      provider,
+      encryptedDelegation,
+    );
   } else {
     tempDelegationAndWalletData = await createDelegation(
       chainId,
       gaslessGameAddress,
       wagerAddress,
     );
-    const encryptedData: string = encryptData(encryptionKey, tempDelegationAndWalletData);
+    const encryptedData: string = encryptData(
+      encryptionKey,
+      tempDelegationAndWalletData,
+    );
     localStorage.setItem(localStorageKey, encryptedData);
   }
 
@@ -254,5 +259,3 @@ export const getDelegation = async (
 export const clearDelegationCache = () => {
   tempDelegationAndWalletData = null;
 };
-
-

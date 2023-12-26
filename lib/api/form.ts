@@ -2092,8 +2092,11 @@ export const SubmitVerifyMovesDelegated = async (data: any, wager: string) => {
     // get game moves on chain
     const onChainMoves = await GetGameMoves(wager, gameNumber);
 
-    // Get encoded delegations 
-    const delegations = [data.delegations[0].encodedDelegationAndSig, data.delegations[1].encodedDelegationAndSig]
+    // Get encoded delegations
+    const delegations = [
+      data.delegations[0].encodedDelegationAndSig,
+      data.delegations[1].encodedDelegationAndSig,
+    ];
 
     // Initialize arrays for the current game
     let moves = data.moves[gameNumber];
@@ -2101,7 +2104,7 @@ export const SubmitVerifyMovesDelegated = async (data: any, wager: string) => {
     let signedMessages = data.signedMessages[gameNumber];
 
     console.log('arrays');
-/*     console.log(onChainMoves);
+    /*     console.log(onChainMoves);
     console.log(moves);
     console.log(messages);
     console.log(signedMessages); */
@@ -2122,8 +2125,12 @@ export const SubmitVerifyMovesDelegated = async (data: any, wager: string) => {
     data.messages[gameNumber] = messages;
     data.signedMessages[gameNumber] = signedMessages;
 
-    if (messages.length !== 0 || signedMessages.length !== 0) {  
-      let tx = await chess.verifyGameUpdateStateDelegated(delegations, messages, signedMessages);
+    if (messages.length !== 0 || signedMessages.length !== 0) {
+      let tx = await chess.verifyGameUpdateStateDelegated(
+        delegations,
+        messages,
+        signedMessages,
+      );
       await tx.wait();
 
       alertSuccessSubmitMoves('Moves submitted on-chain');
@@ -2132,7 +2139,6 @@ export const SubmitVerifyMovesDelegated = async (data: any, wager: string) => {
     console.log(error);
   }
 };
-
 
 export const DownloadGaslessMoves = async (data: any, wager: string) => {
   await updateContractAddresses();
