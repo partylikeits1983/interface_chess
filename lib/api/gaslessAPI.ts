@@ -1,5 +1,5 @@
 import { ethers, Signer } from 'ethers';
-import { SubmitVerifyMoves, DownloadGaslessMoves } from './form';
+import { SubmitVerifyMoves, DownloadGaslessMoves, SubmitVerifyMovesDelegated } from './form';
 
 import { domain, moveTypes } from './signatureConstants';
 import {
@@ -119,9 +119,11 @@ export const getGameFen = async (gameWager: string) => {
 };
 
 interface ChessData {
+  delegations: string[] | null;
   moves: string[][];
   messages: string[][];
   signedMessages: string[][];
+  
 }
 
 export const submitMoves = async (gameWager: string): Promise<void> => {
@@ -137,6 +139,12 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
 
     if (data.moves && Array.isArray(data.moves)) {
       data.moves = data.moves.map((innerArray) => removeOnchain(innerArray));
+    }
+
+    let isDelegated = false;
+    // Check for 'delegations' array
+    if (data.delegations && Array.isArray(data.delegations)) {
+      isDelegated = true;
     }
 
     /*
@@ -155,7 +163,11 @@ export const submitMoves = async (gameWager: string): Promise<void> => {
     } 
     */
 
+   if (isDelegated) {
+    await SubmitVerifyMovesDelegated(data, gameWager)
+   } else {
     await SubmitVerifyMoves(data, gameWager);
+   }
 
     console.log(data);
   } catch (error) {

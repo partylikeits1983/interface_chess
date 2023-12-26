@@ -66,10 +66,25 @@ function encodeDelegationAndSig(
     ],
     [
       signedDelegation.delegation,
-      ethers.utils.arrayify(signedDelegation.signature),
+     signedDelegation.signature,
     ],
   );
 }
+
+/* function encodeDelegationAndSig(delegation: Delegation, signature: ethers.utils.BytesLike): string {
+    const abiCoder = new ethers.utils.AbiCoder();
+  
+    // Encode the delegation and signature
+    const encodedData = abiCoder.encode(
+      ["tuple(address delegatorAddress, address delegatedAddress, address wagerAddress)", "bytes"],
+      [delegation, signature]
+    );
+  
+    // Prepend the offset for dynamic data (0x20) to the encoded data
+    const offset = '0x0000000000000000000000000000000000000000000000000000000000000020';
+    return offset + encodedData.substring(2); // Remove '0x' from encodedData
+  }
+   */
 
 export const createDelegation = async (
   chainId: number,
@@ -197,40 +212,47 @@ async function decryptData(
   }
 }
 
+// Global variable declaration
+let tempDelegationAndWalletData: DelegationAndWallet | null = null;
+
 export const getDelegation = async (
   chainId: number,
   gaslessGameAddress: string,
   wagerAddress: string,
 ): Promise<DelegationAndWallet> => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // Step 1: Check for encryption key and encrypt/decrypt as necessary
+
+  // Step 1: Check if the delegationAndWalletData is already available
+  if (tempDelegationAndWalletData) {
+    console.log('Returning cached data');
+    return tempDelegationAndWalletData;
+  }
+
   const encryptionKey = await getOrAskForEncryptionKey(provider);
   const localStorageKey = `${LOCAL_STORAGE_KEY_PREFIX}${wagerAddress}`;
   const encryptedDelegationData = localStorage.getItem(localStorageKey);
-  let delegationData: DelegationAndWallet;
 
-  console.log('encryptedDelegationData', encryptedDelegationData);
-
-  // Decrypt if data exists
+  // Step 2: Decrypt if data exists, else create new
   if (encryptedDelegationData) {
-    const encryptedDelegation: EthEncryptedData = JSON.parse(
-      encryptedDelegationData,
-    );
-    delegationData = await decryptData(provider, encryptedDelegation);
+    const encryptedDelegation: EthEncryptedData = JSON.parse(encryptedDelegationData);
+    tempDelegationAndWalletData = await decryptData(provider, encryptedDelegation);
   } else {
-    // Step 2: If delegation data doesn't exist, call createDelegation
-    delegationData = await createDelegation(
+    tempDelegationAndWalletData = await createDelegation(
       chainId,
       gaslessGameAddress,
       wagerAddress,
     );
-
-    // Step 3: Encrypt and save the delegation data in local storage
-    const encryptedData: string = encryptData(encryptionKey, delegationData);
+    const encryptedData: string = encryptData(encryptionKey, tempDelegationAndWalletData);
     localStorage.setItem(localStorageKey, encryptedData);
   }
 
-  console.log('DelegationData', delegationData);
-
-  return delegationData;
+  console.log('DelegationData', tempDelegationAndWalletData);
+  return tempDelegationAndWalletData;
 };
+
+// Optional: Function to clear the cached data
+export const clearDelegationCache = () => {
+  tempDelegationAndWalletData = null;
+};
+
+
