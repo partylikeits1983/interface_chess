@@ -21,7 +21,13 @@ import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
 import { DelegationAndWallet, GaslessMove, DelegationData } from './types';
 import { domain, moveTypes, delegationTypes } from './signatureConstants';
-import { createDelegation, getDelegation, getOrAskForEncryptionKey, LOCAL_STORAGE_KEY_PREFIX, ENCRYPTION_KEY_STORAGE_KEY } from './delegatedWallet';
+import {
+  createDelegation,
+  getDelegation,
+  getOrAskForEncryptionKey,
+  LOCAL_STORAGE_KEY_PREFIX,
+  ENCRYPTION_KEY_STORAGE_KEY,
+} from './delegatedWallet';
 
 import { moveToHex } from './utils';
 
@@ -967,31 +973,33 @@ function encodeMoveMessage(move: GaslessMove): string {
   );
 }
 
-export const GetDelegationFirstMove = async (wagerAddress: string) => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-  const network = await provider.getNetwork();
-  const chainId = network.chainId;
-
+export const IsEncryptionKeyAvailable = async () => {
   let encryptionKey = localStorage.getItem(ENCRYPTION_KEY_STORAGE_KEY);
   if (!encryptionKey) {
-    // modal pops explaining why we need encryption key
-    await getOrAskForEncryptionKey(provider);
+    return false;
+  } else {
+    return true;
   }
+};
 
+export const GetEncryptionKey = async () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  await getOrAskForEncryptionKey(provider);
+};
+
+export const IsDelegationAvailable = async (wagerAddress: string) => {
   const localStorageKey = `${LOCAL_STORAGE_KEY_PREFIX}${wagerAddress}`;
   const encryptedDelegationData = localStorage.getItem(localStorageKey);
   if (!encryptedDelegationData) {
-    // modal pops up explaining why wee need delegation data
-    await getDelegation(
-      chainId,
-      GaslessGameAddress,
-      wagerAddress,
-    );
+    return false;
+  } else {
+    return true;
   }
-}
+};
 
-
+export const GetDelegation = async (wagerAddress: string) => {
+  await getDelegation(GaslessGameAddress, wagerAddress);
+};
 
 export const PlayMove = async (
   isGasLess: boolean,

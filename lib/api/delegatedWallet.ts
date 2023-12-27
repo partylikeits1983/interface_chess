@@ -12,8 +12,6 @@ import {
 import { DelegationAndWallet, SignedDelegation, Delegation } from './types';
 
 // const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
-import delegationWalletModal from '#/ui/delegationWalletModal';
-
 
 export const LOCAL_STORAGE_KEY_PREFIX = 'delegation-';
 export const ENCRYPTION_KEY_STORAGE_KEY = 'userEncryptionKey';
@@ -70,20 +68,26 @@ export const generateWallet = async (
   );
 } */
 
- function encodeDelegationAndSig(delegation: Delegation, signature: ethers.utils.BytesLike): string {
-    const abiCoder = new ethers.utils.AbiCoder();
-  
-    // Encode the delegation and signature
-    const encodedData = abiCoder.encode(
-      ["tuple(address delegatorAddress, address delegatedAddress, address wagerAddress)", "bytes"],
-      [delegation, signature]
-    );
-  
-    // Prepend the offset for dynamic data (0x20) to the encoded data
-    const offset = '0x0000000000000000000000000000000000000000000000000000000000000020';
-    return offset + encodedData.substring(2); // Remove '0x' from encodedData
-  }
-   
+function encodeDelegationAndSig(
+  delegation: Delegation,
+  signature: ethers.utils.BytesLike,
+): string {
+  const abiCoder = new ethers.utils.AbiCoder();
+
+  // Encode the delegation and signature
+  const encodedData = abiCoder.encode(
+    [
+      'tuple(address delegatorAddress, address delegatedAddress, address wagerAddress)',
+      'bytes',
+    ],
+    [delegation, signature],
+  );
+
+  // Prepend the offset for dynamic data (0x20) to the encoded data
+  const offset =
+    '0x0000000000000000000000000000000000000000000000000000000000000020';
+  return offset + encodedData.substring(2); // Remove '0x' from encodedData
+}
 
 export const createDelegation = async (
   chainId: number,
@@ -215,11 +219,12 @@ async function decryptData(
 let tempDelegationAndWalletData: DelegationAndWallet | null = null;
 
 export const getDelegation = async (
-  chainId: number,
   gaslessGameAddress: string,
   wagerAddress: string,
 ): Promise<DelegationAndWallet> => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const network = await provider.getNetwork();
+  const chainId = network.chainId;
 
   // Step 1: Check if the delegationAndWalletData is already available
   if (tempDelegationAndWalletData) {

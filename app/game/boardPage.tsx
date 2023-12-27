@@ -30,6 +30,7 @@ import { IBoardProps, IGameSocketData } from './interfaces/interfaces';
 
 import { useDisclosure } from '@chakra-ui/react';
 import SubmitMovesModal from './submitMovesModal';
+import SignatureModal from './signatureModal';
 
 import DownloadMovesButton from './boardUtils/downloadMoves';
 
@@ -320,31 +321,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     updateAfterMoveSubmit();
   }, [wereMovesSubmitted]);
 
-  /*   // Handles forward back games => this can be in a boardUtils/boardUtils.ts
-  useEffect(() => {
-    const updateBoard = async () => {
-      console.log('GAME ID', gameID);
-      const movesArray = await GetGameMoves(wager, gameID);
-      const currentGame = new Chess();
-
-      console.log(movesArray);
-
-      if (movesArray.length > 0) {
-        for (let i = 0; i < movesArray.length; i++) {
-          currentGame.move(movesArray[i]);
-        }
-        getLastMoveSourceSquare(currentGame, currentGame.history().length - 1);
-      } else {
-        setMoveSquares({});
-      }
-      console.log(currentGame.ascii());
-      setGame(currentGame);
-      setMoves(currentGame.history());
-      setGameFEN(currentGame.fen());
-    };
-    updateBoard();
-  }, [gameID]); */
-
   function isCheckmate(wager: string) {
     setMoveSquares({});
 
@@ -380,8 +356,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     const gameNumber = moves.length - 1;
     let lastMove = null;
 
-    console.log('MOVES', moves);
-
     // Process moves for the current game
     for (let i = 0; i < moves[gameNumber].length; i++) {
       lastMove = currentGame.move(moves[gameNumber][i]);
@@ -404,10 +378,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       let isSubmittedOnChain = gameNumberOnChain > gameNumber;
 
-      console.log('GAMENUMBER', gameNumber);
-      console.log('gameNUMBER ON CHAIN', gameNumberOnChain);
-      console.log(isSubmittedOnChain);
-
       // if not submitted on chain
       if (!isSubmittedOnChain) {
         // Play checkmate sound
@@ -419,14 +389,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         if (isWalletConnected === true) {
           onOpen();
         }
-        console.log('418');
         setMoveNumber(0);
       } else {
         isNewGame = true;
         currentGame = new Chess();
-
-        console.log('424');
-
         setMoveNumber(0);
       }
     } else {
@@ -460,16 +426,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       const isPlayer0White = await IsPlayerAddressWhite(wager, player0);
       setIsPlayer0White(isPlayer0White);
 
-      const actualTimeRemaining0 = timeRemainingPlayer0 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
-      const actualTimeRemaining1 = timeRemainingPlayer1 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
-
-      console.log("TIMEREMAINING", timeLastUpdated, timeRemainingPlayer0, Math.floor(Date.now() / 1000), actualTimeRemaining0);
-      
+      const actualTimeRemaining0 =
+        timeRemainingPlayer0 -
+        (Math.floor(Date.now() / 1000) - timeLastUpdated);
+      const actualTimeRemaining1 =
+        timeRemainingPlayer1 -
+        (Math.floor(Date.now() / 1000) - timeLastUpdated);
 
       setTimePlayer0(actualTimeRemaining0);
       setTimePlayer1(actualTimeRemaining1);
-
-      console.log('462');
 
       setMoveNumber(0);
 
@@ -478,11 +443,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // Regular game updates
       let isPlayer0Turn = player0 === playerTurn ? true : false;
 
-      const actualTimeRemaining0 = timeRemainingPlayer0 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
-      const actualTimeRemaining1 = timeRemainingPlayer1 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
+      const actualTimeRemaining0 =
+        timeRemainingPlayer0 -
+        (Math.floor(Date.now() / 1000) - timeLastUpdated);
+      const actualTimeRemaining1 =
+        timeRemainingPlayer1 -
+        (Math.floor(Date.now() / 1000) - timeLastUpdated);
 
-      console.log("TIMEREMAINING", timeLastUpdated, timeRemainingPlayer0, Math.floor(Date.now() / 1000), actualTimeRemaining0);
-      
       setTimePlayer0(actualTimeRemaining0);
       setTimePlayer1(actualTimeRemaining1);
 
@@ -494,8 +461,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
       // Offline wallet handling
       if (isWalletConnected === false) {
-        console.log('434', false);
-
         setArePiecesDraggable(false);
         setPlayerColorWhite(true);
 
@@ -591,7 +556,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                   // this may not be needed...
                   const isPlayerTurn = await GetPlayerTurn(wager);
 
-                  console.log('528', isPlayerTurn);
                   setArePiecesDraggable(isPlayerTurn);
                 }
                 setTimePlayer0(timePlayer0);
@@ -627,8 +591,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     console.log('updateState', source, currentGame.isCheckmate());
 
     if (currentGame.isCheckmate()) {
-      console.log('615');
-
       setMoveNumber(0);
     }
 
@@ -646,8 +608,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setPlayerTurn(_isPlayerTurnSC);
       setPlayerTurnSC(_isPlayerTurnSC);
     } else {
-      console.log('634');
-
       setMoveNumber(0);
     }
   };
@@ -852,6 +812,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         onSubmitMoves={submitMoves}
         gameWager={wager}
         gameID={gameID}
+        wereMovesSubmitted={wereMovesSubmitted}
+        setWereMovesSubmitted={setWereMovesSubmitted}
+      />
+
+      <SignatureModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onSubmitMoves={submitMoves}
+        gameWager={wager}
         wereMovesSubmitted={wereMovesSubmitted}
         setWereMovesSubmitted={setWereMovesSubmitted}
       />
