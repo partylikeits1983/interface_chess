@@ -164,7 +164,6 @@ export async function getOrAskForEncryptionKey(provider: any): Promise<string> {
       }
     } catch (error) {
       console.error('Error getting encryption key:', error);
-      alert('Error occurred while getting encryption key');
       throw error; // Re-throw the error to handle it elsewhere if needed
     }
   }
