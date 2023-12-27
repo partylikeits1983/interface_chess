@@ -29,72 +29,73 @@ interface SignatureModalProps {
 }
 
 const SignatureModal: React.FC<SignatureModalProps> = ({
-    isOpen,
-    onClose,
-    gameWager,
-  }) => {
-    const [isEncryptionKeyAvailable, setIsEncryptionKeyAvailable] =
-      useState(true);
-    const [isDelegationAvailable, setIsDelegationAvailable] = useState(true);
-    const [delegationCompleted, setDelegationCompleted] = useState(false); // New state for tracking delegation completion
-    const [initialOpen, setInitialOpen] = useState(isOpen);
- 
-    useEffect(() => {
-      const checkAvailability = async () => {
-        const isSignerInWagerAddress = await IsSignerInWagerAddress(gameWager);
-  
-        if (isSignerInWagerAddress) {
-          const encryptionKeyAvailable = await IsEncryptionKeyAvailable();
-          setIsEncryptionKeyAvailable(encryptionKeyAvailable);
-  
-          if (!encryptionKeyAvailable) {
-            await GetEncryptionKey();
-          }
-  
-          const delegationAvailable = await IsDelegationAvailable(gameWager);
-          setIsDelegationAvailable(delegationAvailable);
-  
-          if (!delegationAvailable) {
-            try {
-                await GetDelegation(gameWager);
-                onClose(); // Directly close the modal after successful completion
-                setDelegationCompleted(true); // Set to true after GetDelegation call
-            } catch (error) {
-                setDelegationCompleted(false); // Set to true after GetDelegation call
-            }
-          }
-        } else {
-          console.log('Signer not in game');
+  isOpen,
+  onClose,
+  gameWager,
+}) => {
+  const [isEncryptionKeyAvailable, setIsEncryptionKeyAvailable] =
+    useState(true);
+  const [isDelegationAvailable, setIsDelegationAvailable] = useState(true);
+  const [delegationCompleted, setDelegationCompleted] = useState(false); // New state for tracking delegation completion
+  const [initialOpen, setInitialOpen] = useState(isOpen);
+
+  useEffect(() => {
+    const checkAvailability = async () => {
+      const isSignerInWagerAddress = await IsSignerInWagerAddress(gameWager);
+
+      if (isSignerInWagerAddress) {
+        const encryptionKeyAvailable = await IsEncryptionKeyAvailable();
+        setIsEncryptionKeyAvailable(encryptionKeyAvailable);
+
+        if (!encryptionKeyAvailable) {
+          await GetEncryptionKey();
         }
-      };
-  
-      checkAvailability();
-    }, [gameWager]);
-  
-    useEffect(() => {
-        if (delegationCompleted) {
-          onClose();
+
+        const delegationAvailable = await IsDelegationAvailable(gameWager);
+        setIsDelegationAvailable(delegationAvailable);
+
+        if (!delegationAvailable) {
+          try {
+            await GetDelegation(gameWager);
+            onClose(); // Directly close the modal after successful completion
+            setDelegationCompleted(true); // Set to true after GetDelegation call
+          } catch (error) {
+            setDelegationCompleted(false); // Set to true after GetDelegation call
+          }
         }
-      }, [delegationCompleted, onClose]);
-    
-      // Logic to determine if the modal should be open
-      const shouldModalBeOpen = initialOpen && (!isEncryptionKeyAvailable || !isDelegationAvailable);
-    
-      // Logic to handle closing the modal
-      const handleModalClose = () => {
-        onClose();
-        setInitialOpen(false); // Close the modal and update initialOpen state
-      };
+      } else {
+        console.log('Signer not in game');
+      }
+    };
+
+    checkAvailability();
+  }, [gameWager]);
+
+  useEffect(() => {
+    if (delegationCompleted) {
+      onClose();
+    }
+  }, [delegationCompleted, onClose]);
+
+  // Logic to determine if the modal should be open
+  const shouldModalBeOpen =
+    initialOpen && (!isEncryptionKeyAvailable || !isDelegationAvailable);
+
+  // Logic to handle closing the modal
+  const handleModalClose = () => {
+    onClose();
+    setInitialOpen(false); // Close the modal and update initialOpen state
+  };
 
   return (
     <Modal isOpen={shouldModalBeOpen} onClose={handleModalClose} isCentered>
-    <ModalOverlay />
+      <ModalOverlay />
       <ModalContent
         bg="black"
         color="white"
         border="1px"
         borderColor="white"
-        maxWidth="lg" 
+        maxWidth="lg"
       >
         <ModalHeader>Game Initialization</ModalHeader>
         <ModalCloseButton />
@@ -106,7 +107,7 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
                   1. Share your public encryption key. 🔑
                 </Text>
                 <Text fontSize="md" width="full" fontStyle="italic">
-                  Sharing your public key ensures secure storage of game data 
+                  Sharing your public key ensures secure storage of game data
                 </Text>
               </Box>
             ) : null}
