@@ -371,6 +371,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       timeLimit,
       timeRemainingPlayer0,
       timeRemainingPlayer1,
+      timeLastUpdated,
       actualTimeRemainingSC,
     } = gameSocketData;
 
@@ -459,8 +460,14 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       const isPlayer0White = await IsPlayerAddressWhite(wager, player0);
       setIsPlayer0White(isPlayer0White);
 
-      setTimePlayer0(timeRemainingPlayer0);
-      setTimePlayer1(timeRemainingPlayer1);
+      const actualTimeRemaining0 = timeRemainingPlayer0 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
+      const actualTimeRemaining1 = timeRemainingPlayer1 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
+
+      console.log("TIMEREMAINING", timeLastUpdated, timeRemainingPlayer0, Math.floor(Date.now() / 1000), actualTimeRemaining0);
+      
+
+      setTimePlayer0(actualTimeRemaining0);
+      setTimePlayer1(actualTimeRemaining1);
 
       console.log('462');
 
@@ -471,8 +478,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // Regular game updates
       let isPlayer0Turn = player0 === playerTurn ? true : false;
 
-      setTimePlayer0(timeRemainingPlayer0);
-      setTimePlayer1(timeRemainingPlayer1);
+      const actualTimeRemaining0 = timeRemainingPlayer0 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
+      const actualTimeRemaining1 = timeRemainingPlayer1 - (Math.floor(Date.now() / 1000) - timeLastUpdated);
+
+      console.log("TIMEREMAINING", timeLastUpdated, timeRemainingPlayer0, Math.floor(Date.now() / 1000), actualTimeRemaining0);
+      
+      setTimePlayer0(actualTimeRemaining0);
+      setTimePlayer1(actualTimeRemaining1);
 
       setIsPlayer0Turn(isPlayer0Turn);
 

@@ -44,5 +44,6 @@ export interface IGameSocketData {
   actualTimeRemainingSC: number;
   timeRemainingPlayer0: number;
   timeRemainingPlayer1: number;
+  timeLastUpdated: number;
   isGasless: boolean;
 }

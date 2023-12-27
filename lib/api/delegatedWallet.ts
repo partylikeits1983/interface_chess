@@ -12,9 +12,11 @@ import {
 import { DelegationAndWallet, SignedDelegation, Delegation } from './types';
 
 // const gaslessGameABI = require('./contract-abi/gaslessGameABI').abi;
+import delegationWalletModal from '#/ui/delegationWalletModal';
 
-const LOCAL_STORAGE_KEY_PREFIX = 'delegation-';
-const ENCRYPTION_KEY_STORAGE_KEY = 'userEncryptionKey';
+
+export const LOCAL_STORAGE_KEY_PREFIX = 'delegation-';
+export const ENCRYPTION_KEY_STORAGE_KEY = 'userEncryptionKey';
 
 // Generating a new deterministic wallet based upon the
 // wagerAddress and the hash of the user signature of the wagerAddress
@@ -49,7 +51,7 @@ export const generateWallet = async (
   return deterministicWallet;
 };
 
-function encodeDelegationAndSig(
+/* function encodeDelegationAndSig(
   delegation: Delegation,
   signature: string,
 ): string {
@@ -66,9 +68,9 @@ function encodeDelegationAndSig(
     ],
     [signedDelegation.delegation, signedDelegation.signature],
   );
-}
+} */
 
-/* function encodeDelegationAndSig(delegation: Delegation, signature: ethers.utils.BytesLike): string {
+ function encodeDelegationAndSig(delegation: Delegation, signature: ethers.utils.BytesLike): string {
     const abiCoder = new ethers.utils.AbiCoder();
   
     // Encode the delegation and signature
@@ -81,7 +83,7 @@ function encodeDelegationAndSig(
     const offset = '0x0000000000000000000000000000000000000000000000000000000000000020';
     return offset + encodedData.substring(2); // Remove '0x' from encodedData
   }
-   */
+   
 
 export const createDelegation = async (
   chainId: number,
@@ -136,7 +138,7 @@ export const createDelegation = async (
 };
 
 // Function to get or ask for the encryption key
-async function getOrAskForEncryptionKey(provider: any): Promise<string> {
+export async function getOrAskForEncryptionKey(provider: any): Promise<string> {
   let encryptionKey = localStorage.getItem(ENCRYPTION_KEY_STORAGE_KEY);
 
   console.log('encryptionKey from storage:', encryptionKey);
