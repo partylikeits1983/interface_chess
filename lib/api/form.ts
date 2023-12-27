@@ -1035,7 +1035,6 @@ export const PlayMove = async (
         try {
           // get return values and post to server
           delegationAndWallet = await getDelegation(
-            chainId,
             GaslessGameAddress,
             wagerAddress,
           );
@@ -1150,7 +1149,6 @@ export const PayoutWager = async (wagerAddress: string) => {
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
@@ -1235,6 +1233,28 @@ export const IsPlayer0White = async (
       return false;
     }
   } else {
+    return false;
+  }
+};
+
+export const IsSignerInWagerAddress = async (wagerAddress: string) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
+
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+
+  try {
+    const data = await chess.gameWagers(wagerAddress);
+
+    const player0 = data.player0.toLowerCase();
+    const player1 = data.player1.toLowerCase();
+    const connectedAccount = accounts[0].toLowerCase();
+
+    return connectedAccount === player0 || connectedAccount === player1;
+  } catch (error) {
+    console.error('Error checking wager address:', error);
     return false;
   }
 };

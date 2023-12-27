@@ -111,6 +111,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [wereMovesSubmitted, setWereMovesSubmitted] = useState(false);
+  // const [doesDele]
 
   useCheckValidMove(moves, CheckValidMove);
   useUpdateTime(isPlayer0Turn, setTimePlayer0, setTimePlayer1);
@@ -817,12 +818,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       />
 
       <SignatureModal
-        isOpen={isOpen}
+        isOpen={true}
         onClose={onClose}
         onSubmitMoves={submitMoves}
         gameWager={wager}
-        wereMovesSubmitted={wereMovesSubmitted}
-        setWereMovesSubmitted={setWereMovesSubmitted}
       />
     </ChakraProvider>
   );
