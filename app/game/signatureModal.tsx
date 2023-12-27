@@ -55,8 +55,13 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
           setIsDelegationAvailable(delegationAvailable);
   
           if (!delegationAvailable) {
-            await GetDelegation(gameWager);
-            setDelegationCompleted(true); // Set to true after GetDelegation call
+            try {
+                await GetDelegation(gameWager);
+                onClose(); // Directly close the modal after successful completion
+                setDelegationCompleted(true); // Set to true after GetDelegation call
+            } catch (error) {
+                setDelegationCompleted(false); // Set to true after GetDelegation call
+            }
           }
         } else {
           console.log('Signer not in game');
@@ -101,7 +106,7 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
                   1. Share your public encryption key. 🔑
                 </Text>
                 <Text fontSize="md" width="full" fontStyle="italic">
-                  Ensures secure communication.
+                  Sharing your public key ensures secure storage of game data 
                 </Text>
               </Box>
             ) : null}
@@ -113,7 +118,7 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
                     wallet signer. 🔏
                   </Text>
                   <Text fontSize="md" width="full" fontStyle="italic">
-                    This ensures a more seamless gameplay experience
+                    This ensures a seamless gameplay experience
                   </Text>
                 </Box>
                 <Box>

@@ -46,7 +46,7 @@ const {
   IsPlayerAddressWhite,
   GetConnectedAccount,
   GetGameNumber,
-  GetWagerPlayers,
+  GetIsWagerComplete,
   IsPlayer0White,
   setupProvider,
   IsPlayerWhite,
@@ -103,6 +103,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isPlayer0White, setIsPlayer0White] = useState(false);
 
   const [isGameGasless, setIsGameGasless] = useState(false);
+  const [isWagerComplete, setIsWagercomplete] = useState(false);
 
   const [isLoading, setLoading] = useState(true);
   const [isGameInfoLoading, setIsGameInfoLoading] = useState(true);
@@ -114,7 +115,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   // const [doesDele]
 
   useCheckValidMove(moves, CheckValidMove);
-  useUpdateTime(isPlayer0Turn, setTimePlayer0, setTimePlayer1);
+  useUpdateTime(isWagerComplete, isPlayer0Turn, setTimePlayer0, setTimePlayer1);
 
   const {
     optionSquares,
@@ -200,6 +201,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setGameID(Number(gameNumberData[0]));
     setNumberOfGames(Number(gameNumberData[1]));
     setNumberOfGamesInfo(gameNumber);
+
+    const isWagerComplete = await GetIsWagerComplete(wagerAddress);
+    setIsWagercomplete(isWagerComplete);
   }
 
   // Initialize board

@@ -736,7 +736,6 @@ export const GetIsWagerComplete = async (
       return false;
     }
   } catch (error) {
-    // alert(`Get game moves: ${wagerAddress} not found`);
     console.log(error);
     return false;
   }

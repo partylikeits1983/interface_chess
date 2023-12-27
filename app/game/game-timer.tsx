@@ -19,12 +19,9 @@ const GameTimer: React.FC<GameTimerProps> = ({
   isPlayer0Turn,
 }) => {
   function formatSecondsToTime(seconds: number): string {
-    // Ensure that the time doesn't go below zero
-    const timeInSeconds = Math.max(0, seconds);
-
-    const hours = Math.floor(timeInSeconds / 3600);
-    const minutes = Math.floor((timeInSeconds % 3600) / 60);
-    const remainingSeconds = timeInSeconds % 60;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
 
     const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(
       remainingSeconds,
@@ -40,10 +37,7 @@ const GameTimer: React.FC<GameTimerProps> = ({
   const whiteTime = isPlayer0White ? timePlayer0 : timePlayer1;
   const blackTime = isPlayer0White ? timePlayer1 : timePlayer0;
 
-  // Ensuring the progress value doesn't go below zero
-  const whiteProgressValue = Math.max(0, (whiteTime / timeLimit) * 100);
-  const blackProgressValue = Math.max(0, (blackTime / timeLimit) * 100);
-
+  // console.log("GAME TIMER", isPlayer0White, isPlayer0Turn );
   return (
     <div>
       {wager !== '' && (
@@ -62,7 +56,7 @@ const GameTimer: React.FC<GameTimerProps> = ({
             size="sm"
             colorScheme="green"
             bg="gray"
-            value={whiteProgressValue}
+            value={(whiteTime / timeLimit) * 100}
           />
           <Text>
             Time Black ⚫{' '}
@@ -78,7 +72,7 @@ const GameTimer: React.FC<GameTimerProps> = ({
             size="sm"
             colorScheme="green"
             bg="gray"
-            value={blackProgressValue}
+            value={(blackTime / timeLimit) * 100}
           />
         </div>
       )}
