@@ -419,15 +419,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       const isPlayerTurn = await GetPlayerTurn(wager);
       setArePiecesDraggable(isPlayerTurn);
       setPlayerTurn(isPlayerTurn);
+
+      console.log("PLAYER TURN", isPlayerTurn);
     }
 
     // Handling new game state
     if (isNewGame) {
-      // const isPlayerTurn = await GetPlayerTurnSC(wager);
-
-      // setPlayerTurn(isPlayerTurn);
-      // setArePiecesDraggable(isPlayerTurn);
-
       const isPlayer0White = await IsPlayerAddressWhite(wager, player0);
       setIsPlayer0White(isPlayer0White);
 
@@ -446,6 +443,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       updateGameInfo(wager);
     } else {
       // Regular game updates
+      console.log(player0, playerTurn);
+
       let isPlayer0Turn = player0 === playerTurn ? true : false;
 
       const actualTimeRemaining0 =

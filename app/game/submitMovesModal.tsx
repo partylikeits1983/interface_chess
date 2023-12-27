@@ -23,6 +23,7 @@ import {
   GetWagerStatus,
   GetIsWagerComplete,
   GetWagerPlayers,
+  GetGameNumber
 } from '#/lib/api/form';
 
 // Define the type for your props
@@ -66,14 +67,31 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
       if (isWagerComplete) {
         const [winsPlayer0, winsPlayer1] = await GetWagerStatus(gameWager);
         setWagerStatus({ winsPlayer0, winsPlayer1 });
-
+  
         const [player0, player1] = await GetWagerPlayers(gameWager);
         setWagerPlayers({ player0, player1 });
       }
     };
-
+  
+    const checkGameNumber = async () => {
+      const currentGameID = await GetGameNumber(gameWager);
+      if (currentGameID > gameID) {
+        setWereMovesSubmitted(true);
+        onClose();
+        const newGameSound = new Audio('/sounds/GenericNotify.mp3');
+        newGameSound.play();      }
+    };
+  
     checkWagerCompletion();
-  }, [gameWager]);
+  
+    const intervalId = setInterval(() => {
+      checkGameNumber();
+    }, 10000);
+  
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [gameWager, gameID, onClose]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
