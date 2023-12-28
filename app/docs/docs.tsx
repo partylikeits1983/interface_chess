@@ -101,7 +101,7 @@ export default function Docs() {
   return (
     <ChakraProvider>
       <Flex flexDirection="column" alignItems="center">
-        <Box mb={2} position="relative" width="500px" height="500px">
+        <Box mb={2} position="relative" width="250px" height="250px">
           {!loaded && (
             <Box
               position="absolute"
@@ -114,7 +114,7 @@ export default function Docs() {
           )}
           <img
             ref={imgRef}
-            src="/chessDark__50.png"
+            src="/ChessFishLogo.png"
             alt="Placeholder Image"
             width={500}
             height={500}

@@ -137,7 +137,7 @@ export default function ChallengeForm() {
 
   return (
     <ChakraProvider>
-      <Box mx="auto">
+  <Box mx="auto" width={{ base: "85%", md: "85%", lg: "85%" }}>  {/* Adjust width as needed */}
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <FormControl>

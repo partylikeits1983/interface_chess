@@ -355,7 +355,7 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
 
-    const card: Card = {
+    const data: Card = {
       matchAddress: wagerAddress,
       player0Address: wagerParams[0],
       player1Address: wagerParams[1],
@@ -372,16 +372,14 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
       isComplete: Boolean(wagerParams.isComplete),
     };
 
-    const token = new ethers.Contract(card.wagerToken, ERC20ABI, signer);
+    const token = new ethers.Contract(data.wagerToken, ERC20ABI, signer);
 
-    const value = await token.approve(ChessAddress, wagerParams[3].toString());
-    await value.wait();
-    // const allowance = await token.allowance(accounts[0], ChessAddress);
-
-    // alert('success' + allowance);
+    if (data.wagerAmount > 0) {
+      const value = await token.approve(ChessAddress, data.wagerAmount.toString());
+      await value.wait();
+    }
 
     return {
-      value: value,
       success: true,
       status: '✅ Check out your transaction on Etherscan',
     };
@@ -2229,5 +2227,20 @@ export const DownloadGaslessMoves = async (data: any, wager: string) => {
   } catch (error) {
     console.log(error);
     return null;
+  }
+};
+
+export const GetCurrentBlock = async () => {
+  await updateContractAddresses();
+  // Use this RPC URL: https://arb1.arbitrum.io/rpc
+  const provider = new ethers.providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc');
+  try {
+    const blockNumber = await provider.getBlockNumber();
+    console.log('Current Block Number:', blockNumber);
+
+    return blockNumber;
+  } catch (error) {
+    console.error('Error fetching current block:', error);
+    throw error; // Rethrow the error for handling upstream
   }
 };
