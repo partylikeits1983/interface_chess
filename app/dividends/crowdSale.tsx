@@ -29,7 +29,7 @@ function CrowdSale() {
   const [hasMounted, setHasMounted] = useState(false);
   // Helper Functions
   const getInitialCountdown = () => {
-    const endDate = new Date(new Date().getFullYear(), 10, 15);
+    const endDate = new Date(2024, 1, 25);
     const currentTime = new Date().getTime();
     const endTime = endDate.getTime();
     return Math.floor((endTime - currentTime) / 1000);
@@ -80,7 +80,7 @@ function CrowdSale() {
     if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
       setTokenAmount(inputValue);
       const valueAsNumber = parseFloat(inputValue) || 0;
-      setReceivedTokens(Number((valueAsNumber * 2).toFixed(5)));
+      setReceivedTokens(Number((valueAsNumber * (1/2.718)).toFixed(5))); // Calculate the number of CFSH tokens
     }
   };
 
@@ -115,7 +115,7 @@ function CrowdSale() {
           Ends in: {countdownDisplay}
         </Text>
         <Text textAlign="center" fontSize="lg">
-          1 USDC = 2 CFSH tokens
+          1 CFSH = 2.718 USDC
         </Text>
         <VStack spacing={3} alignItems="center">
           <Text fontSize="md">
