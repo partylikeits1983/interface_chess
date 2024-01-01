@@ -94,7 +94,7 @@ const AutocompletePlayer: React.FC<AutocompleteProps> = ({
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           placeholder="Type player address..."
-        />
+          autoComplete="off"        />
         <InputRightElement>
           <Box
             display="flex"

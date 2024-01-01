@@ -17,7 +17,9 @@ import {
   SliderThumb,
   VStack,
   Tooltip,
+  extendTheme
 } from '@chakra-ui/react';
+
 
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
@@ -36,6 +38,24 @@ import AutocompleteToken from './autocomplete-token';
 
 import AutocompletePlayer from './autocomplete-player';
 import pairingOptions from './autocomplete-player-options';
+
+const theme = extendTheme({
+  components: {
+    FormLabel: {
+      baseStyle: {
+        fontSize: "lg", // You can adjust the size as needed
+      },
+    },
+    Input: {
+      baseStyle: {
+        field: {
+          fontSize: "md", // You can adjust the size as needed
+        },
+      },
+    },
+    // You can add similar customizations for other components that contain text
+  },
+});
 
 interface FormInputs {
   player1: string;
@@ -136,7 +156,7 @@ export default function ChallengeForm() {
   };
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
   <Box mx="auto" width={{ base: "85%", md: "85%", lg: "85%" }}>  {/* Adjust width as needed */}
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
@@ -167,7 +187,7 @@ export default function ChallengeForm() {
               <FormLabel>
                 Player Address{' '}
                 <Tooltip
-                  label="Enter the address of the player or type 'anonymous pairing'"
+                  label="Enter the address of the player or select 'anonymous pairing'"
                   aria-label="Player Address Tooltip"
                   placement="right"
                 >

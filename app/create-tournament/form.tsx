@@ -16,6 +16,7 @@ import {
   SliderThumb,
   VStack,
   Tooltip,
+  extendTheme
 } from '@chakra-ui/react';
 
 import { InfoOutlineIcon } from '@chakra-ui/icons';
@@ -32,6 +33,24 @@ import {
   options,
 } from '../../lib/api/token-information';
 import AutocompleteToken from './autocomplete-token';
+
+const theme = extendTheme({
+  components: {
+    FormLabel: {
+      baseStyle: {
+        fontSize: "lg", // You can adjust the size as needed
+      },
+    },
+    Input: {
+      baseStyle: {
+        field: {
+          fontSize: "md", // You can adjust the size as needed
+        },
+      },
+    },
+    // You can add similar customizations for other components that contain text
+  },
+});
 
 interface FormInputs {
   numberOfPlayers: number;
@@ -130,8 +149,7 @@ export default function ChallengeForm() {
   };
 
   return (
-    <ChakraProvider>
-  <Box mx="auto" width={{ base: "85%", md: "85%", lg: "85%" }}>  {/* Adjust width as needed */}
+    <ChakraProvider theme={theme}>  <Box mx="auto" width={{ base: "85%", md: "85%", lg: "85%" }}>  {/* Adjust width as needed */}
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <FormControl>
