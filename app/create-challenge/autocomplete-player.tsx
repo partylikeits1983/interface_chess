@@ -33,6 +33,7 @@ const AutocompletePlayer: React.FC<AutocompleteProps> = ({
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
   const [showOptions, setShowOptions] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null); // Added input reference
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -41,21 +42,19 @@ const AutocompletePlayer: React.FC<AutocompleteProps> = ({
     onChange(value);
 
     if (!value) {
-      // if input value is empty, clear selected option
       setSelectedOption(null);
+      setFilteredOptions(options); // Show all options when input is empty
+    } else {
+      setFilteredOptions(
+        options.filter((option) =>
+          option.label.toLowerCase().includes(value.toLowerCase()),
+        ),
+      );
     }
-
-    setFilteredOptions(
-      options.filter((option) =>
-        option.label.toLowerCase().startsWith(value.toLowerCase()),
-      ),
-    );
     setShowOptions(true);
   };
 
   const handleOptionClick = (option: Option) => {
-    console.log(option);
-
     setInputValue(option.label);
     setSelectedOption(option);
     setShowOptions(false);
@@ -65,10 +64,17 @@ const AutocompletePlayer: React.FC<AutocompleteProps> = ({
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
+      !dropdownRef.current.contains(event.target as Node) &&
+      inputRef.current &&
+      !inputRef.current.contains(event.target as Node)
     ) {
       setShowOptions(false);
     }
+  };
+
+  const handleInputFocus = () => {
+    setFilteredOptions(options); // Show all options when input is focused
+    setShowOptions(true);
   };
 
   useEffect(() => {
@@ -82,9 +88,11 @@ const AutocompletePlayer: React.FC<AutocompleteProps> = ({
     <Box position="relative">
       <InputGroup>
         <Input
+          ref={inputRef}
           type="text"
           value={inputValue}
           onChange={handleInputChange}
+          onFocus={handleInputFocus}
           placeholder="Type player address..."
         />
         <InputRightElement>
