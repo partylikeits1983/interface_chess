@@ -847,7 +847,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       <SignatureModal
         isOpen={true}
         onClose={onClose}
-        onSubmitMoves={submitMoves}
         gameWager={wager}
       />
     </ChakraProvider>

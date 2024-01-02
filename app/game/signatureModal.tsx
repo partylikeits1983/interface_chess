@@ -24,7 +24,6 @@ import {
 interface SignatureModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmitMoves: (gameWager: string) => Promise<void>;
   gameWager: string;
 }
 
@@ -57,8 +56,11 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
         if (!delegationAvailable) {
           try {
             await GetDelegation(gameWager);
-            onClose(); // Directly close the modal after successful completion
             setDelegationCompleted(true); // Set to true after GetDelegation call
+
+  
+            handleModalClose();
+
           } catch (error) {
             setDelegationCompleted(false); // Set to true after GetDelegation call
           }
@@ -73,6 +75,7 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
 
   useEffect(() => {
     if (delegationCompleted) {
+      handleModalClose()
       onClose();
     }
   }, [delegationCompleted, onClose]);
