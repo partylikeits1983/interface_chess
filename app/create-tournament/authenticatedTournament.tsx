@@ -60,14 +60,13 @@ const Recipients: React.FC<RecipientsProps> = ({
       <FormControl display="flex" alignItems="center" mb={4}>
         <FormLabel htmlFor="email-alerts" mb="0">
           Specify player addresses{' '}
-
           <Tooltip
-                      label="Specify the player addresses in the tournament. Minimum 3 players, maximum 25 players"
-                      aria-label="Number of games tooltip"
-                      placement="right"
-                    >
-                      <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
-                    </Tooltip>
+            label="Specify the player addresses in the tournament. Minimum 3 players, maximum 25 players"
+            aria-label="Number of games tooltip"
+            placement="right"
+          >
+            <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+          </Tooltip>
         </FormLabel>
         <Switch colorScheme="green" onChange={handleAuthSwitchChange} />
       </FormControl>
@@ -77,15 +76,13 @@ const Recipients: React.FC<RecipientsProps> = ({
           <FormControl display="flex" alignItems="center" mb={4}>
             <FormLabel htmlFor="creator-join" mb="0">
               Creator Joining{' '}
-
               <Tooltip
-                    label="Turn on if you want to join"
-                    aria-label="Number of games tooltip"
-                    placement="right"
-                    >
-                      <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
-                    </Tooltip>
-
+                label="Turn on if you want to join"
+                aria-label="Number of games tooltip"
+                placement="right"
+              >
+                <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+              </Tooltip>
             </FormLabel>
             <Switch
               id="creator-join"
@@ -94,9 +91,7 @@ const Recipients: React.FC<RecipientsProps> = ({
               onChange={handleCreatorSwitchChange}
             />
           </FormControl>
-          <FormLabel>
-          Authenticated Player List 
-          </FormLabel>
+          <FormLabel>Authenticated Player List</FormLabel>
           <textarea
             spellCheck="false"
             value={textValue}

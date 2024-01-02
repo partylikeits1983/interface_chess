@@ -1623,9 +1623,6 @@ export const CreateTournamentAuthed = async (
   params: TournamentParamsAuthed,
 ) => {
   await updateContractAddresses();
-
-  console.log('AUTHED', params);
-
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
@@ -1643,9 +1640,11 @@ export const CreateTournamentAuthed = async (
   const decimals = await token.decimals();
   const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
 
-    if (amountAdjusted == 0) {
-      alertWarningFeedback("Amount must be greater than 0 for authenticated tournaments")
-    }
+  if (amountAdjusted == 0) {
+    alertWarningFeedback(
+      'Amount must be greater than 0 for authenticated tournaments',
+    );
+  }
 
   try {
     await tournament.createTournamentWithSpecificPlayers(
