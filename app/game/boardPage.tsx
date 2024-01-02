@@ -367,8 +367,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
-    // onClose();
-
     // Initialize game state
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
