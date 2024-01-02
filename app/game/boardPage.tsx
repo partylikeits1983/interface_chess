@@ -249,9 +249,17 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
         let gameNumber = await GetGameNumber(wager);
         setGameID(gameNumber);
+
         if (gameNumber !== undefined) {
           movesArray = await GetGameMoves(wager, gameNumber);
-          movesArray.forEach((move: any) => newGame.move(move));
+          for (let i = 0; i < movesArray.length; i++) {
+            const from = movesArray[i].slice(0,2);
+            const to = movesArray[i].slice(2,4);
+            const promotion = 'q'
+            const move = {from: from, to: to, promotion: promotion};
+            newGame.move(move);
+            console.log("move", move);
+          }
         }
 
         if (isGameGasless === false && movesArray.length === 0) {
@@ -274,6 +282,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
           console.log('263', isPlayerTurn);
           setArePiecesDraggable(isPlayerTurn);
+
+          newGame.fen();
 
           // const isPlayer0Turn = await setMoves(movesArray);
           updateState('222', true, newGame);
@@ -356,6 +366,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
+    // closing submit moves modal
+    setWereMovesSubmitted(true);
+
     // Initialize game state
     let currentGame = new Chess();
     const gameNumber = moves.length - 1;
@@ -363,7 +376,14 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     // Process moves for the current game
     for (let i = 0; i < moves[gameNumber].length; i++) {
-      lastMove = currentGame.move(moves[gameNumber][i]);
+      const from = moves[gameNumber][i].slice(0,2);
+      const to = moves[gameNumber][i].slice(2,4);
+      const promotion = 'q'
+      const move = {from: from, to: to, promotion: promotion};
+
+      console.log(move);
+
+      lastMove = currentGame.move(move);
     }
 
     let isNewGame = false;
@@ -547,7 +567,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
               const currentGame = new Chess();
 
               for (let i = 0; i < movesArray.length; i++) {
-                currentGame.move(movesArray[i]);
+                const from = movesArray[i].slice(0, 2);
+                const to = movesArray[i].slice(2, 4);
+                const promotion = 'q';
+                const moveType = { from: from, to: to, promotion: promotion };
+        
+                currentGame.move(moveType);
               }
 
               if (
@@ -593,6 +618,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     currentGame: Chess,
   ) => {
     console.log('updateState', source, currentGame.isCheckmate());
+
+
 
     if (currentGame.isCheckmate()) {
       setMoveNumber(0);

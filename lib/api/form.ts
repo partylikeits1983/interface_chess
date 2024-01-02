@@ -469,6 +469,9 @@ export const CreateWager = async (form: CreateMatchType) => {
       status: '✅ Check out your transaction on Etherscan',
     };
   } catch (error) {
+    console.log(form.wagerToken);
+    alertWarningFeedback('Approve Tokens First');
+
     return {
       success: false,
       // @ts-ignore
@@ -666,22 +669,21 @@ export const GetGameMoves = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    // const gameID = 0;
-    // alert(gameID)
-
+    console.log("GET GAME MOVES");
     const data = await chess.getGameMoves(wagerAddress, gameID);
     const hexMoves = data.moves;
 
     const algebraeicMoves = [];
     for (let i = 0; i < hexMoves.length; i++) {
       const algebraeicMove = hexToMove(hexMoves[i]);
+
       algebraeicMoves.push(algebraeicMove);
     }
 
     return algebraeicMoves;
   } catch (error) {
     // alert(`Get game moves: ${wagerAddress} not found`);
-    console.log(error);
+    console.log("GetGameMoves error", error);
     return [];
   }
 };
