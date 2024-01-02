@@ -24,6 +24,7 @@ import { InfoOutlineIcon } from '@chakra-ui/icons';
 const { ethers } = require('ethers');
 const {
   CreateTournament,
+  CreateTournamentAuthed,
   ApproveTournament,
   getChainId,
 } = require('../../lib/api/form');
@@ -33,6 +34,7 @@ import {
   options,
 } from '../../lib/api/token-information';
 import AutocompleteToken from './autocomplete-token';
+import Recipients from './authenticatedTournament';
 
 const theme = extendTheme({
   components: {
@@ -67,6 +69,12 @@ export default function ChallengeForm() {
 
   const [chainID, setChainID] = useState<string>('1');
   const [tokenOptions, setTokenOptions] = useState<any[]>([]); // default empty array
+
+  const [playersTest, setPlayersText] = useState('');
+
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [authedPlayers, setAuthedPlayers] = useState<string[]>([]);
+  const [shouldCreatorJoin, setShouldCreatorJoin] = useState(false);
 
   useEffect(() => {
     // Inner async function to fetch chainID
@@ -105,7 +113,17 @@ export default function ChallengeForm() {
 
   const HandleClickCreateTournament = async () => {
     setIsLoadingCreateTournament(true);
-    await CreateTournament(formInputs);
+    if (authedPlayers.length > 0) {
+      const formInputsAuthed = {
+        authedPlayers,
+        ...formInputs,
+        shouldCreatorJoin,
+      };
+
+      await CreateTournamentAuthed(formInputsAuthed);
+    } else {
+      await CreateTournament(formInputs);
+    }
     setIsLoadingCreateTournament(false);
   };
 
@@ -201,28 +219,39 @@ export default function ChallengeForm() {
               />
             </FormControl>
 
-            <FormControl>
-              <FormLabel>
-                Number of Players{' '}
-                <Tooltip
-                  label="Set the maximum number of players in the tournament. Minimum 3 players, maximum 25 players"
-                  aria-label="Number of games tooltip"
-                  placement="right"
-                >
-                  <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
-                </Tooltip>
-              </FormLabel>
+            <Recipients
+              initialTextValue={playersTest}
+              isAuthed={isAuthed}
+              setIsAuthed={setIsAuthed}
+              setAuthedPlayers={setAuthedPlayers}
+              setShouldCreatorJoin={setShouldCreatorJoin} // pass the setter function
+            />
 
-              <Input
-                type="number"
-                name="numberOfPlayers"
-                value={formInputs.numberOfPlayers}
-                onChange={handleInputChange}
-                required
-                width="100%"
-                min={0}
-              />
-            </FormControl>
+            {!isAuthed && (
+              <>
+                <FormControl>
+                  <FormLabel>
+                    Number of Players{' '}
+                    <Tooltip
+                      label="Set the maximum number of players in the tournament. Minimum 3 players, maximum 25 players"
+                      aria-label="Number of games tooltip"
+                      placement="right"
+                    >
+                      <Box as={InfoOutlineIcon} ml={0} mb={1.5} />
+                    </Tooltip>
+                  </FormLabel>
+                  <Input
+                    type="number"
+                    name="numberOfPlayers"
+                    value={formInputs.numberOfPlayers}
+                    onChange={handleInputChange}
+                    required
+                    width="100%"
+                    min={0}
+                  />
+                </FormControl>
+              </>
+            )}
 
             <FormControl>
               <FormLabel>

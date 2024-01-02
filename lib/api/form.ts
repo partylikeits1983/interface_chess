@@ -1609,6 +1609,57 @@ export const CreateTournament = async (params: TournamentParams) => {
   }
 };
 
+interface TournamentParamsAuthed {
+  numberOfPlayers: number;
+  wagerToken: string;
+  wagerAmount: number;
+  numberOfGames: number;
+  timeLimit: number;
+  specificPlayers: string[];
+  creatorToJoin: boolean;
+}
+
+export const CreateTournamentAuthed = async (
+  params: TournamentParamsAuthed,
+) => {
+  await updateContractAddresses();
+
+  console.log('AUTHED', params);
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tournament = new ethers.Contract(
+    Tournament.toString(),
+    tournamentABI,
+    signer,
+  );
+  const token = new ethers.Contract(
+    params.wagerToken.toString(),
+    ERC20ABI,
+    signer,
+  );
+
+  const decimals = await token.decimals();
+  const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
+
+  try {
+    await tournament.createTournamentWithSpecificPlayers(
+      params.specificPlayers,
+      params.numberOfGames,
+      params.wagerToken,
+      amountAdjusted,
+      params.timeLimit,
+      params.creatorToJoin,
+    );
+
+    alertSuccessFeedback('Tournament Created!');
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const JoinTournament = async (
   tokenAddress: string,
   amount: number,

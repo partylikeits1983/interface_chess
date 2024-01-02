@@ -34,8 +34,11 @@ function CrowdSale() {
 
   const [receivedTokens, setReceivedTokens] = useState<number>(0);
   const tokensSold = useMemo(() => {
-    const soldIncludingInput = tokensForSale - Number(CFSHbalance) + Number(receivedTokens);
-    return soldIncludingInput > tokensForSale ? tokensForSale : soldIncludingInput;
+    const soldIncludingInput =
+      tokensForSale - Number(CFSHbalance) + Number(receivedTokens);
+    return soldIncludingInput > tokensForSale
+      ? tokensForSale
+      : soldIncludingInput;
   }, [CFSHbalance, receivedTokens]);
 
   const remainingTokens = useMemo(() => {
@@ -89,7 +92,7 @@ function CrowdSale() {
   }, []);
 
   // Handlers
-/*   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /*   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
       setTokenAmount(inputValue);
@@ -125,74 +128,98 @@ function CrowdSale() {
   // Render
   return (
     <>
-  <Box mt={5} borderWidth="1px" borderColor="white" borderRadius="md" padding="3">
-    <Text textAlign="center" fontWeight="bold" fontSize="xl">
-      LIMITED TIME CROWDSALE
-    </Text>
-    <Text textAlign="center" fontSize="lg" color="green" fontFamily="Courier">
-      Ends in: {countdownDisplay}
-    </Text>
-    <Text textAlign="center" fontSize="lg">
-      1 CFSH = 2.718 USDC
-    </Text>
+      <Box
+        mt={5}
+        borderWidth="1px"
+        borderColor="white"
+        borderRadius="md"
+        padding="3"
+      >
+        <Text textAlign="center" fontWeight="bold" fontSize="xl">
+          LIMITED TIME CROWDSALE
+        </Text>
+        <Text
+          textAlign="center"
+          fontSize="lg"
+          color="green"
+          fontFamily="Courier"
+        >
+          Ends in: {countdownDisplay}
+        </Text>
+        <Text textAlign="center" fontSize="lg">
+          1 CFSH = 2.718 USDC
+        </Text>
 
-    {/* Display CFSH Balance and Pie Chart */}
-    <VStack spacing={3} alignItems="center">
-  <Text fontSize="md" fontWeight="bold">
-    CFSH Tokens Remaining: {CFSHbalance}
-  </Text>
+        {/* Display CFSH Balance and Pie Chart */}
+        <VStack spacing={3} alignItems="center">
+          <Text fontSize="md" fontWeight="bold">
+            CFSH Tokens Remaining: {CFSHbalance}
+          </Text>
 
-  {/* Pie Chart in a Smaller Container */}
-  <Box width="50%" height="50%" style={{ marginBottom: '24px' }}>
-    {isLoading ? (
-      <Flex justifyContent="center" alignItems="center" height="100%">
-        <Spinner /> {/* Display Spinner while loading */}
-      </Flex>
-    ) : (
-      <Pie
-        data={{
-          labels: ['Remaining', 'Sold'],
-          datasets: [{
-            data: [remainingTokens, tokensSold],
-            backgroundColor: ['#008000', '#000000'], // Green for remaining, Black for sold
-            hoverBackgroundColor: ['#008000', '#000000']
-          }]
-        }}
-      />
-    )}
-  </Box>
-</VStack>
+          {/* Pie Chart in a Smaller Container */}
+          <Box width="50%" height="50%" style={{ marginBottom: '24px' }}>
+            {isLoading ? (
+              <Flex justifyContent="center" alignItems="center" height="100%">
+                <Spinner /> {/* Display Spinner while loading */}
+              </Flex>
+            ) : (
+              <Pie
+                data={{
+                  labels: ['Remaining', 'Sold'],
+                  datasets: [
+                    {
+                      data: [remainingTokens, tokensSold],
+                      backgroundColor: ['#008000', '#000000'], // Green for remaining, Black for sold
+                      hoverBackgroundColor: ['#008000', '#000000'],
+                    },
+                  ],
+                }}
+              />
+            )}
+          </Box>
+        </VStack>
 
+        {/* End of Display CFSH Balance and Pie Chart */}
 
-    {/* End of Display CFSH Balance and Pie Chart */}
-
-    <Box width={['95%', '90%', '80%', '60%']} mx="auto" textAlign="center"> {/* Center align the text */}
-      <Input
-        value={tokenAmount}
-        placeholder="Enter USDC amount"
-        onChange={handleTokenAmountChange}
-      />
-      <Text fontSize="md" mt={3}> {/* Add margin top for spacing and center alignment */}
-        You will receive: {receivedTokens} CFSH tokens
-      </Text>
-      <Button colorScheme="green" mt={3} width="100%" onClick={() => getCrowdsaleTokens(tokenAmount)}>
-        Get Tokens
-      </Button>
-      {isLoadingGetTokens && (
-        <Flex justifyContent="center" alignItems="center" mt={3}>
-          <Spinner />
-        </Flex>
-      )}
-      <Flex justifyContent="center" mt={3}>
-        <Link href="https://sepolia.arbiscan.io/address/0xfc7d5f236428a14a6bd5424331c925285e6336c9" isExternal color="green.500">
-          CrowdSale Contract on Arbiscan
-          <ExternalLinkIcon mx="2px" />
-        </Link>
-      </Flex>
-    </Box>
-  </Box>
-</>
-
+        <Box width={['95%', '90%', '80%', '60%']} mx="auto" textAlign="center">
+          {' '}
+          {/* Center align the text */}
+          <Input
+            value={tokenAmount}
+            placeholder="Enter USDC amount"
+            onChange={handleTokenAmountChange}
+          />
+          <Text fontSize="md" mt={3}>
+            {' '}
+            {/* Add margin top for spacing and center alignment */}
+            You will receive: {receivedTokens} CFSH tokens
+          </Text>
+          <Button
+            colorScheme="green"
+            mt={3}
+            width="100%"
+            onClick={() => getCrowdsaleTokens(tokenAmount)}
+          >
+            Get Tokens
+          </Button>
+          {isLoadingGetTokens && (
+            <Flex justifyContent="center" alignItems="center" mt={3}>
+              <Spinner />
+            </Flex>
+          )}
+          <Flex justifyContent="center" mt={3}>
+            <Link
+              href="https://sepolia.arbiscan.io/address/0xfc7d5f236428a14a6bd5424331c925285e6336c9"
+              isExternal
+              color="green.500"
+            >
+              CrowdSale Contract on Arbiscan
+              <ExternalLinkIcon mx="2px" />
+            </Link>
+          </Flex>
+        </Box>
+      </Box>
+    </>
   );
 }
 
