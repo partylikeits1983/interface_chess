@@ -1,6 +1,8 @@
 'use-client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 import { getCrowdSaleBalance, GetChessFishTokens } from '#/lib/api/form';
 
@@ -23,11 +25,22 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 function CrowdSale() {
   // State Declarations
+  const tokensForSale = 300000;
+
   const [CFSHbalance, setCFSHBalance] = useState('');
   const [tokenAmount, setTokenAmount] = useState<string>('');
-  const [receivedTokens, setReceivedTokens] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [hasMounted, setHasMounted] = useState(false);
+
+  const [receivedTokens, setReceivedTokens] = useState<number>(0);
+  const tokensSold = useMemo(() => {
+    const soldIncludingInput = tokensForSale - Number(CFSHbalance) + Number(receivedTokens);
+    return soldIncludingInput > tokensForSale ? tokensForSale : soldIncludingInput;
+  }, [CFSHbalance, receivedTokens]);
+
+  const remainingTokens = useMemo(() => {
+    return tokensForSale - tokensSold;
+  }, [tokensSold]);
   // Helper Functions
   const getInitialCountdown = () => {
     const endDate = new Date(2024, 1, 25);
@@ -76,6 +89,21 @@ function CrowdSale() {
   }, []);
 
   // Handlers
+/*   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
+      setTokenAmount(inputValue);
+      const valueAsNumber = parseFloat(inputValue) || 0;
+
+      // Calculate the maximum number of tokens that can be received
+      const maxTokensAvailable = Number(CFSHbalance) / 2.718;
+      const requestedTokens = Number((valueAsNumber * (1 / 2.718)).toFixed(5));
+      const actualTokensToReceive = requestedTokens < maxTokensAvailable ? requestedTokens : maxTokensAvailable;
+
+      setReceivedTokens(actualTokensToReceive); // Use the actual tokens to receive
+    }
+  }; */
+
   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
@@ -97,45 +125,57 @@ function CrowdSale() {
   // Render
   return (
     <>
-  <Box
-    mt={5}
-    borderWidth="1px"
-    borderColor="white"
-    borderRadius="md"
-    padding="3"
-  >
+  <Box mt={5} borderWidth="1px" borderColor="white" borderRadius="md" padding="3">
     <Text textAlign="center" fontWeight="bold" fontSize="xl">
       LIMITED TIME CROWDSALE
     </Text>
-
-    <Text
-      textAlign="center"
-      fontSize="lg"
-      color="green"
-      fontFamily="Courier"
-    >
+    <Text textAlign="center" fontSize="lg" color="green" fontFamily="Courier">
       Ends in: {countdownDisplay}
     </Text>
     <Text textAlign="center" fontSize="lg">
       1 CFSH = 2.718 USDC
     </Text>
+
+    {/* Display CFSH Balance and Pie Chart */}
     <VStack spacing={3} alignItems="center">
-      <Text fontSize="md">
-        You will receive: {receivedTokens} CFSH tokens
-      </Text>
-    </VStack>
-    <Box width={['95%', '90%', '80%', '60%']} mx="auto">
+  <Text fontSize="md" fontWeight="bold">
+    CFSH Tokens Remaining: {CFSHbalance}
+  </Text>
+
+  {/* Pie Chart in a Smaller Container */}
+  <Box width="50%" height="50%" style={{ marginBottom: '24px' }}>
+    {isLoading ? (
+      <Flex justifyContent="center" alignItems="center" height="100%">
+        <Spinner /> {/* Display Spinner while loading */}
+      </Flex>
+    ) : (
+      <Pie
+        data={{
+          labels: ['Remaining', 'Sold'],
+          datasets: [{
+            data: [remainingTokens, tokensSold],
+            backgroundColor: ['#008000', '#000000'], // Green for remaining, Black for sold
+            hoverBackgroundColor: ['#008000', '#000000']
+          }]
+        }}
+      />
+    )}
+  </Box>
+</VStack>
+
+
+    {/* End of Display CFSH Balance and Pie Chart */}
+
+    <Box width={['95%', '90%', '80%', '60%']} mx="auto" textAlign="center"> {/* Center align the text */}
       <Input
         value={tokenAmount}
         placeholder="Enter USDC amount"
         onChange={handleTokenAmountChange}
       />
-      <Button
-        colorScheme="green"
-        mt={3}
-        width="100%"
-        onClick={() => getCrowdsaleTokens(tokenAmount)}
-      >
+      <Text fontSize="md" mt={3}> {/* Add margin top for spacing and center alignment */}
+        You will receive: {receivedTokens} CFSH tokens
+      </Text>
+      <Button colorScheme="green" mt={3} width="100%" onClick={() => getCrowdsaleTokens(tokenAmount)}>
         Get Tokens
       </Button>
       {isLoadingGetTokens && (
@@ -144,11 +184,7 @@ function CrowdSale() {
         </Flex>
       )}
       <Flex justifyContent="center" mt={3}>
-        <Link
-          href="https://sepolia.arbiscan.io/address/0xfc7d5f236428a14a6bd5424331c925285e6336c9"
-          isExternal
-          color="green.500"
-        >
+        <Link href="https://sepolia.arbiscan.io/address/0xfc7d5f236428a14a6bd5424331c925285e6336c9" isExternal color="green.500">
           CrowdSale Contract on Arbiscan
           <ExternalLinkIcon mx="2px" />
         </Link>
@@ -156,7 +192,6 @@ function CrowdSale() {
     </Box>
   </Box>
 </>
-
 
   );
 }
