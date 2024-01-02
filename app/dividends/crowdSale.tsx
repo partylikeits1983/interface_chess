@@ -14,11 +14,12 @@ import {
   Button,
   Box,
   Input,
-  Link,
   VStack,
   Spinner,
+  Link,
 } from '@chakra-ui/react';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 function CrowdSale() {
   // State Declarations
@@ -96,54 +97,67 @@ function CrowdSale() {
   // Render
   return (
     <>
-      <Box
-        mt={5}
-        borderWidth="1px"
-        borderColor="white"
-        borderRadius="md"
-        padding="3"
+  <Box
+    mt={5}
+    borderWidth="1px"
+    borderColor="white"
+    borderRadius="md"
+    padding="3"
+  >
+    <Text textAlign="center" fontWeight="bold" fontSize="xl">
+      LIMITED TIME CROWDSALE
+    </Text>
+
+    <Text
+      textAlign="center"
+      fontSize="lg"
+      color="green"
+      fontFamily="Courier"
+    >
+      Ends in: {countdownDisplay}
+    </Text>
+    <Text textAlign="center" fontSize="lg">
+      1 CFSH = 2.718 USDC
+    </Text>
+    <VStack spacing={3} alignItems="center">
+      <Text fontSize="md">
+        You will receive: {receivedTokens} CFSH tokens
+      </Text>
+    </VStack>
+    <Box width={['95%', '90%', '80%', '60%']} mx="auto">
+      <Input
+        value={tokenAmount}
+        placeholder="Enter USDC amount"
+        onChange={handleTokenAmountChange}
+      />
+      <Button
+        colorScheme="green"
+        mt={3}
+        width="100%"
+        onClick={() => getCrowdsaleTokens(tokenAmount)}
       >
-        <Text textAlign="center" fontWeight="bold" fontSize="xl">
-          LIMITED TIME CROWDSALE
-        </Text>
-        <Text
-          textAlign="center"
-          fontSize="lg"
-          color="green"
-          fontFamily="Courier"
+        Get Tokens
+      </Button>
+      {isLoadingGetTokens && (
+        <Flex justifyContent="center" alignItems="center" mt={3}>
+          <Spinner />
+        </Flex>
+      )}
+      <Flex justifyContent="center" mt={3}>
+        <Link
+          href="https://sepolia.arbiscan.io/address/0xfc7d5f236428a14a6bd5424331c925285e6336c9"
+          isExternal
+          color="green.500"
         >
-          Ends in: {countdownDisplay}
-        </Text>
-        <Text textAlign="center" fontSize="lg">
-          1 CFSH = 2.718 USDC
-        </Text>
-        <VStack spacing={3} alignItems="center">
-          <Text fontSize="md">
-            You will receive: {receivedTokens} CFSH tokens
-          </Text>
-        </VStack>
-        <Box width={['95%', '90%', '80%', '60%']} mx="auto">
-          <Input
-            value={tokenAmount}
-            placeholder="Enter USDC amount"
-            onChange={handleTokenAmountChange}
-          />
-          <Button
-            colorScheme="green"
-            mt={3}
-            width="100%"
-            onClick={() => getCrowdsaleTokens(tokenAmount)}
-          >
-            Get Tokens
-          </Button>
-          {isLoadingGetTokens && (
-            <Flex justifyContent="center" alignItems="center" mt={3}>
-              <Spinner />
-            </Flex>
-          )}{' '}
-        </Box>
-      </Box>
-    </>
+          CrowdSale Contract on Arbiscan
+          <ExternalLinkIcon mx="2px" />
+        </Link>
+      </Flex>
+    </Box>
+  </Box>
+</>
+
+
   );
 }
 
