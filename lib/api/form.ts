@@ -1643,19 +1643,24 @@ export const CreateTournamentAuthed = async (
   const decimals = await token.decimals();
   const amountAdjusted = ethers.utils.parseUnits(params.wagerAmount, decimals);
 
+    if (amountAdjusted == 0) {
+      alertWarningFeedback("Amount must be greater than 0 for authenticated tournaments")
+    }
+
   try {
     await tournament.createTournamentWithSpecificPlayers(
       params.specificPlayers,
-      params.numberOfGames,
-      params.wagerToken,
-      amountAdjusted,
-      params.timeLimit,
-      params.creatorToJoin,
+      params.numberOfGames.toString(),
+      params.wagerToken.toString(),
+      amountAdjusted.toString(),
+      params.timeLimit.toString(),
+      params.creatorToJoin.toString(),
     );
 
     alertSuccessFeedback('Tournament Created!');
     return true;
   } catch (error) {
+    console.log(error);
     return false;
   }
 };

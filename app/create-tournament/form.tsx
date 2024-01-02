@@ -115,9 +115,9 @@ export default function ChallengeForm() {
     setIsLoadingCreateTournament(true);
     if (authedPlayers.length > 0) {
       const formInputsAuthed = {
-        authedPlayers,
+        specificPlayers: authedPlayers,
         ...formInputs,
-        shouldCreatorJoin,
+        creatorToJoin: shouldCreatorJoin,
       };
 
       await CreateTournamentAuthed(formInputsAuthed);
