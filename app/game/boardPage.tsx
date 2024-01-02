@@ -367,7 +367,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     } = gameSocketData;
 
     // closing submit moves modal
-    setWereMovesSubmitted(true);
+    onClose();
 
     // Initialize game state
     let currentGame = new Chess();
@@ -380,8 +380,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       const to = moves[gameNumber][i].slice(2,4);
       const promotion = 'q'
       const move = {from: from, to: to, promotion: promotion};
-
-      console.log(move);
 
       lastMove = currentGame.move(move);
     }
