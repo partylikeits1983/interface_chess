@@ -366,7 +366,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
-    // closing submit moves modal
     onClose();
 
     // Initialize game state
