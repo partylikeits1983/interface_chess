@@ -373,7 +373,10 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
     const token = new ethers.Contract(data.wagerToken, ERC20ABI, signer);
 
     if (data.wagerAmount > 0) {
-      const value = await token.approve(ChessAddress, data.wagerAmount.toString());
+      const value = await token.approve(
+        ChessAddress,
+        data.wagerAmount.toString(),
+      );
       await value.wait();
     }
 
@@ -667,7 +670,7 @@ export const GetGameMoves = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    console.log("GET GAME MOVES");
+    console.log('GET GAME MOVES');
     const data = await chess.getGameMoves(wagerAddress, gameID);
     const hexMoves = data.moves;
 
@@ -681,7 +684,7 @@ export const GetGameMoves = async (
     return algebraeicMoves;
   } catch (error) {
     // alert(`Get game moves: ${wagerAddress} not found`);
-    console.log("GetGameMoves error", error);
+    console.log('GetGameMoves error', error);
     return [];
   }
 };
@@ -2080,7 +2083,7 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
 
-/*     console.log('arrays');
+    /*     console.log('arrays');
     console.log(onChainMoves);
     console.log(moves);
     console.log(messages);
@@ -2136,7 +2139,7 @@ export const SubmitVerifyMovesDelegated = async (data: any, wager: string) => {
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
 
-   //  console.log('arrays');
+    //  console.log('arrays');
     /*     console.log(onChainMoves);
     console.log(moves);
     console.log(messages);
@@ -2215,7 +2218,9 @@ export const DownloadGaslessMoves = async (data: any, wager: string) => {
 export const GetCurrentBlock = async () => {
   await updateContractAddresses();
   // Use this RPC URL: https://arb1.arbitrum.io/rpc
-  const provider = new ethers.providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc');
+  const provider = new ethers.providers.JsonRpcProvider(
+    'https://arb1.arbitrum.io/rpc',
+  );
   try {
     const blockNumber = await provider.getBlockNumber();
     console.log('Current Block Number:', blockNumber);

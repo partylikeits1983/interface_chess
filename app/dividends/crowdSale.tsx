@@ -80,7 +80,7 @@ function CrowdSale() {
     if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
       setTokenAmount(inputValue);
       const valueAsNumber = parseFloat(inputValue) || 0;
-      setReceivedTokens(Number((valueAsNumber * (1/2.718)).toFixed(5))); // Calculate the number of CFSH tokens
+      setReceivedTokens(Number((valueAsNumber * (1 / 2.718)).toFixed(5))); // Calculate the number of CFSH tokens
     }
   };
 

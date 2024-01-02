@@ -93,7 +93,7 @@ const AutocompleteToken: React.FC<AutocompleteProps> = ({
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           placeholder="Type to search token or paste address"
-          autoComplete="off" 
+          autoComplete="off"
         />
         <InputRightElement>
           <Box

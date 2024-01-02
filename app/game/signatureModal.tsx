@@ -58,7 +58,6 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
             await GetDelegation(gameWager);
             setDelegationCompleted(true); // Set to true after GetDelegation call
             handleModalClose();
-
           } catch (error) {
             setDelegationCompleted(false); // Set to true after GetDelegation call
           }
@@ -73,7 +72,7 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
 
   useEffect(() => {
     if (delegationCompleted) {
-      handleModalClose()
+      handleModalClose();
       onClose();
     }
   }, [delegationCompleted, onClose]);

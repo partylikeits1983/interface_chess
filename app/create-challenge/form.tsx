@@ -17,9 +17,8 @@ import {
   SliderThumb,
   VStack,
   Tooltip,
-  extendTheme
+  extendTheme,
 } from '@chakra-ui/react';
-
 
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
@@ -43,13 +42,13 @@ const theme = extendTheme({
   components: {
     FormLabel: {
       baseStyle: {
-        fontSize: "lg", // You can adjust the size as needed
+        fontSize: 'lg', // You can adjust the size as needed
       },
     },
     Input: {
       baseStyle: {
         field: {
-          fontSize: "md", // You can adjust the size as needed
+          fontSize: 'md', // You can adjust the size as needed
         },
       },
     },
@@ -157,7 +156,9 @@ export default function ChallengeForm() {
 
   return (
     <ChakraProvider theme={theme}>
-  <Box mx="auto" width={{ base: "85%", md: "85%", lg: "85%" }}>  {/* Adjust width as needed */}
+      <Box mx="auto" width={{ base: '85%', md: '85%', lg: '85%' }}>
+        {' '}
+        {/* Adjust width as needed */}
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <FormControl>

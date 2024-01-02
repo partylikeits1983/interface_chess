@@ -69,6 +69,7 @@ import {
 import { BoardUtils } from './boardUtils/boardUtils';
 import { useStateManager } from '#/lib/api/sharedState';
 import { match } from 'assert';
+import { current } from 'tailwindcss/colors';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
@@ -253,12 +254,12 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         if (gameNumber !== undefined) {
           movesArray = await GetGameMoves(wager, gameNumber);
           for (let i = 0; i < movesArray.length; i++) {
-            const from = movesArray[i].slice(0,2);
-            const to = movesArray[i].slice(2,4);
-            const promotion = 'q'
-            const move = {from: from, to: to, promotion: promotion};
+            const from = movesArray[i].slice(0, 2);
+            const to = movesArray[i].slice(2, 4);
+            const promotion = 'q';
+            const move = { from: from, to: to, promotion: promotion };
             newGame.move(move);
-            console.log("move", move);
+            console.log('move', move);
           }
         }
 
@@ -366,7 +367,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       actualTimeRemainingSC,
     } = gameSocketData;
 
-    onClose();
+    // onClose();
 
     // Initialize game state
     let currentGame = new Chess();
@@ -375,10 +376,10 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     // Process moves for the current game
     for (let i = 0; i < moves[gameNumber].length; i++) {
-      const from = moves[gameNumber][i].slice(0,2);
-      const to = moves[gameNumber][i].slice(2,4);
-      const promotion = 'q'
-      const move = {from: from, to: to, promotion: promotion};
+      const from = moves[gameNumber][i].slice(0, 2);
+      const to = moves[gameNumber][i].slice(2, 4);
+      const promotion = 'q';
+      const move = { from: from, to: to, promotion: promotion };
 
       lastMove = currentGame.move(move);
     }
@@ -399,6 +400,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       }
 
       let isSubmittedOnChain = gameNumberOnChain > gameNumber;
+
+      console.log('IS SUBMITTED', isSubmittedOnChain);
 
       // if not submitted on chain
       if (!isSubmittedOnChain) {
@@ -437,7 +440,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setArePiecesDraggable(isPlayerTurn);
       setPlayerTurn(isPlayerTurn);
 
-      console.log("PLAYER TURN", isPlayerTurn);
+      console.log('PLAYER TURN', isPlayerTurn);
     }
 
     // Handling new game state
@@ -477,6 +480,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       setIsPlayer0Turn(isPlayer0Turn);
 
       setGameID(moves.length);
+
+      if (currentGame.history().length > moves[gameNumber].length) {
+        console.log(
+          'DATA UI UPDATE',
+          currentGame.history().length,
+          moves[gameNumber].length,
+        );
+        onClose();
+      }
 
       updateState('333', isPlayer0Turn, currentGame);
 
@@ -568,7 +580,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 const to = movesArray[i].slice(2, 4);
                 const promotion = 'q';
                 const moveType = { from: from, to: to, promotion: promotion };
-        
+
                 currentGame.move(moveType);
               }
 
@@ -615,8 +627,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     currentGame: Chess,
   ) => {
     console.log('updateState', source, currentGame.isCheckmate());
-
-
 
     if (currentGame.isCheckmate()) {
       setMoveNumber(0);
@@ -844,11 +854,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setWereMovesSubmitted={setWereMovesSubmitted}
       />
 
-      <SignatureModal
-        isOpen={true}
-        onClose={onClose}
-        gameWager={wager}
-      />
+      <SignatureModal isOpen={true} onClose={onClose} gameWager={wager} />
     </ChakraProvider>
   );
 };
