@@ -135,9 +135,6 @@ export const createDelegation = async (
     delegatedWalletMnemonic: delegatedSigner.mnemonic.phrase, // created wallet for frontend signatures
   };
 
-  console.log('delegated wallet', delegatedSigner.getAddress());
-
-  // 6) return delegationAndWallet
   return delegationAndWallet;
 };
 
@@ -145,7 +142,6 @@ export const createDelegation = async (
 export async function getOrAskForEncryptionKey(provider: any): Promise<string> {
   let encryptionKey = localStorage.getItem(ENCRYPTION_KEY_STORAGE_KEY);
 
-  console.log('encryptionKey from storage:', encryptionKey);
   if (!encryptionKey) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
@@ -167,7 +163,6 @@ export async function getOrAskForEncryptionKey(provider: any): Promise<string> {
       throw error; // Re-throw the error to handle it elsewhere if needed
     }
   }
-  console.log('encryptionKey', encryptionKey);
   return encryptionKey;
 }
 
@@ -176,8 +171,6 @@ export const stringifiableToHex = (value: string) => {
 };
 
 function encryptData(encryptionKey: string, data: DelegationAndWallet): string {
-  console.log('ENCRYPTING', data);
-
   const encryptedData = encrypt({
     publicKey: encryptionKey,
     data: JSON.stringify(data),
@@ -205,8 +198,6 @@ async function decryptData(
       ]),
     );
 
-    console.log('DECRYPTED', decryptedData);
-
     return decryptedData;
   } catch (error) {
     console.error('Decryption error', error);
@@ -227,7 +218,6 @@ export const getDelegation = async (
 
   // Step 1: Check if the delegationAndWalletData is already available
   if (tempDelegationAndWalletData) {
-    console.log('Returning cached data');
     return tempDelegationAndWalletData;
   }
 
@@ -257,7 +247,6 @@ export const getDelegation = async (
     localStorage.setItem(localStorageKey, encryptedData);
   }
 
-  console.log('DelegationData', tempDelegationAndWalletData);
   return tempDelegationAndWalletData;
 };
 

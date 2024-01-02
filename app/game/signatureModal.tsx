@@ -57,8 +57,6 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
           try {
             await GetDelegation(gameWager);
             setDelegationCompleted(true); // Set to true after GetDelegation call
-
-  
             handleModalClose();
 
           } catch (error) {

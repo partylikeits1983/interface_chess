@@ -158,7 +158,6 @@ export const setupProvider = async () => {
       signer = provider.getSigner();
       accounts = await provider.listAccounts();
       await provider.send('eth_requestAccounts', []);
-      // console.log('Web3 provider is set');
       isWalletConnected = true;
     } catch (error) {
       console.error('User rejected the connection request.', error);
@@ -177,7 +176,6 @@ export const setupProvider = async () => {
     signer = provider;
     accounts = undefined;
     isWalletConnected = false;
-    // console.log('JSON-RPC provider is set - Form.ts');
   }
 
   return { provider, signer, accounts, isWalletConnected };
@@ -1135,9 +1133,7 @@ export const PlayMoveGasless = async (
 
     return true;
   } catch (error) {
-    // alert(`wager address: ${wagerAddress} not found`);
     console.log(`playMove: invalid address ${wagerAddress}`);
-
     console.log(error);
     return false;
   }
@@ -1194,11 +1190,8 @@ export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
 
       return isPlayerWhite;
     } catch (error) {
-      // alert(`wager address: ${wagerAddress} not found`);
       console.log(`isPlayerWhite invalid address ${wagerAddress}`);
       console.log(error);
-
-      // alertWarningFeedback('Wager address not found');
       return false;
     }
   } else {
@@ -1224,11 +1217,8 @@ export const IsPlayer0White = async (
 
       return isPlayerWhite;
     } catch (error) {
-      // alert(`wager address: ${wagerAddress} not found`);
       console.log(`isPlayerWhite invalid address ${wagerAddress}`);
       console.log(error);
-
-      // alertWarningFeedback('Wager address not found');
       return false;
     }
   } else {
@@ -1275,7 +1265,6 @@ export const IsPlayerAddressWhite = async (
 
     return isPlayerWhite;
   } catch (error) {
-    // alert(`wager address: ${wagerAddress} not found`);
     console.log(
       `isPlayerAddressWhite function: invalid address ${wagerAddress}`,
     );
@@ -1470,8 +1459,6 @@ export const GetLeaderboardData = async (): Promise<{
 export const PayoutDividends = async (tokenAddress: string) => {
   await updateContractAddresses();
 
-  // alert(tokenAddress);
-
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
@@ -1494,7 +1481,6 @@ export const GetDividendData = async () => {
   const accounts = await provider.send('eth_requestAccounts', []);
 
   const token = new ethers.Contract(ChessToken, ERC20ABI, signer);
-  // alert("HERE")
 
   try {
     const userAmount = ethers.utils.formatEther(
@@ -1539,8 +1525,6 @@ export const GetChessFishTokens = async (amountIn: string) => {
   await updateContractAddresses();
 
   const amount = ethers.utils.parseUnits(amountIn, 6);
-  console.log(amountIn);
-  console.log(amount);
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -1591,8 +1575,6 @@ export const CreateTournament = async (params: TournamentParams) => {
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-
-  console.log(params);
 
   const tournament = new ethers.Contract(
     Tournament.toString(),
@@ -1745,8 +1727,6 @@ export const GetPendingTournaments = async () => {
           isComplete: Boolean(data.isComplete),
           isTournament: true,
         };
-
-        console.log(tournamentData);
 
         const players = await tournament.getTournamentPlayers(i);
         tournamentData.players = players;
@@ -2100,11 +2080,11 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
 
-    console.log('arrays');
+/*     console.log('arrays');
     console.log(onChainMoves);
     console.log(moves);
     console.log(messages);
-    console.log(signedMessages);
+    console.log(signedMessages); */
 
     // Remove elements from moves that match with onChainMoves
     onChainMoves.forEach((onChainMove) => {
@@ -2156,12 +2136,12 @@ export const SubmitVerifyMovesDelegated = async (data: any, wager: string) => {
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
 
-    console.log('arrays');
+   //  console.log('arrays');
     /*     console.log(onChainMoves);
     console.log(moves);
     console.log(messages);
     console.log(signedMessages); */
-    console.log(delegations);
+    // console.log(delegations);
 
     // Remove elements from moves that match with onChainMoves
     onChainMoves.forEach((onChainMove) => {
