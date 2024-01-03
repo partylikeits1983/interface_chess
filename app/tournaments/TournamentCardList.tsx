@@ -18,19 +18,7 @@ import CardFilterControls from './CardFilterControls';
 
 import { useStateManager } from '#/lib/api/sharedState';
 
-interface TournamentData {
-  tournamentNonce: number;
-  numberOfPlayers: number;
-  players: string[];
-  numberOfGames: number;
-  token: string;
-  tokenAmount: number;
-  isInProgress: boolean;
-  startTime: number;
-  timeLimit: number;
-  isComplete: boolean;
-  isTournament: boolean;
-}
+import { TournamentData } from '#/lib/api/form';
 
 interface Props {
   cards: TournamentData[];

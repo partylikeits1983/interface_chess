@@ -12,30 +12,13 @@ import {
   Switch,
 } from '@chakra-ui/react';
 
-const { GetPendingTournaments } = require('../../lib/api/form');
+const { GetPendingTournaments  } = require('../../lib/api/form');
 const { GetTournamentDataDB } = require('lib/api/db-api');
+import { TournamentData } from '../../lib/api/form';
 
 import TournamentCard from './TournamentCard';
 import CardFilterControls from './CardFilterControls';
 import { useStateManager } from '#/lib/api/sharedState';
-
-interface TournamentData {
-  tournamentNonce: number;
-  numberOfPlayers: number;
-  players: string[];
-  numberOfGames: number;
-  token: string;
-  tokenAmount: number;
-  isInProgress: boolean;
-  startTime: number;
-  timeLimit: number;
-  isComplete: boolean;
-  isTournament: boolean;
-}
-
-interface Props {
-  cards: TournamentData[];
-}
 
 interface TournamentListProps {
   useAPI: boolean;

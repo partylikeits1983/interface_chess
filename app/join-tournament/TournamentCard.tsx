@@ -37,22 +37,11 @@ import {
   StartTournament,
   GetIsUserInTournament,
   GetCanTournamentBegin,
+  TournamentData
 } from '#/lib/api/form';
 
 import { useStateManager } from '#/lib/api/sharedState';
 
-interface TournamentData {
-  tournamentNonce: number;
-  numberOfPlayers: number;
-  players: string[];
-  numberOfGames: number;
-  token: string;
-  tokenAmount: number;
-  isInProgress: boolean;
-  startTime: number;
-  timeLimit: number;
-  isComplete: boolean;
-}
 
 interface CardAccordionProps {
   card: TournamentData;
@@ -239,7 +228,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     },
     {
       label: 'Tournament Pool Size',
-      value: (card.tokenAmount * card.players.length).toString(), // convert to string
+      value: (card.tokenAmount * card.joined_players.length + card.prizePool).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
     {
@@ -318,7 +307,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
             <Flex justify="space-between" alignItems="center" w="full">
               <HStack spacing="1.5rem">
                 <Identicon
-                  account={card.players[0]}
+                  account={card.joined_players[0]}
                   account2={card.tournamentNonce.toString()}
                 />
                 <Text fontSize="md">{`Tournament # ${card.tournamentNonce}`}</Text>
@@ -371,7 +360,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {card.players.map((playerAddress, index) => (
+                          {card.joined_players.map((playerAddress, index) => (
                             <Tr key={index}>
                               <Td color="white">{playerAddress}</Td>
                             </Tr>

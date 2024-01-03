@@ -1626,6 +1626,8 @@ export const CreateTournamentAuthed = async (
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
+  const accounts = await provider.send('eth_requestAccounts', []);
+
   const tournament = new ethers.Contract(
     Tournament.toString(),
     tournamentABI,
@@ -1645,7 +1647,7 @@ export const CreateTournamentAuthed = async (
       'Amount must be greater than 0 for authenticated tournaments',
     );
   }
-
+  
   try {
     await tournament.createTournamentWithSpecificPlayers(
       params.specificPlayers,
@@ -1658,8 +1660,13 @@ export const CreateTournamentAuthed = async (
 
     alertSuccessFeedback('Tournament Created!');
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+
+    alertWarningFeedback(
+      "Approve tokens first",
+    );
+    
     return false;
   }
 };
@@ -1730,13 +1737,33 @@ export const ApproveTournament = async (
   }
 };
 
-interface TournamentData {
+/* 
+	struct Tournament {
+		uint numberOfPlayers; // number of players in tournament
+		address[] authed_players; // authenticated players
+		address[] joined_players; // joined players
+		bool isByInvite; // is tournament by invite only
+		uint numberOfGames; // number of games per match
+		address token; // wager token address
+		uint tokenAmount; // token amount
+		uint prizePool; // size of prize pool
+		bool isInProgress; // is tournament in progress
+		uint startTime; // unix timestamp start time
+		uint timeLimit; // timeLimit for tournament
+		bool isComplete; // is tournament complete
+	}
+*/
+
+export interface TournamentData {
   tournamentNonce: number;
   numberOfPlayers: number;
-  players: string[];
+  authed_players: string[];
+  joined_players: string[];
+  isByInvite: boolean;
   numberOfGames: number;
   token: string;
   tokenAmount: number;
+  prizePool: number;
   isInProgress: boolean;
   startTime: number;
   timeLimit: number;
@@ -1771,14 +1798,21 @@ export const GetPendingTournaments = async () => {
           data.tokenAmount,
           tokenDecimals,
         );
+        const prizePool = ethers.utils.formatUnits(
+          data.prizePool,
+          tokenDecimals,
+        );
 
         const tournamentData: TournamentData = {
           tournamentNonce: i,
           numberOfPlayers: data.numberOfPlayers,
-          players: data.players,
+          authed_players: data.authed_players,
+          joined_players: data.joined_players,
+          isByInvite: data.isByInvite,
           numberOfGames: data.numberOfGames,
           token: data.token,
           tokenAmount: tokenAmount,
+          prizePool: prizePool,
           isInProgress: data.isInProgress,
           startTime: Number(data.startTime),
           timeLimit: Number(data.timeLimit),
@@ -1786,8 +1820,10 @@ export const GetPendingTournaments = async () => {
           isTournament: true,
         };
 
+        /*         
         const players = await tournament.getTournamentPlayers(i);
-        tournamentData.players = players;
+        tournamentData.players = players; 
+        */
 
         tournamentsData.push(tournamentData);
       }
@@ -1821,13 +1857,21 @@ export const GetInProgressTournaments = async () => {
         data.tokenAmount,
         tokenDecimals,
       );
+      const prizePool = ethers.utils.formatUnits(
+        data.prizePool,
+        tokenDecimals,
+      );
+
       const tournamentData: TournamentData = {
         tournamentNonce: i,
         numberOfPlayers: data.numberOfPlayers,
-        players: data.players,
+        authed_players: data.authed_players,
+        joined_players: data.joined_players,
+        isByInvite: data.isByInvite,
         numberOfGames: data.numberOfGames,
         token: data.token,
         tokenAmount: tokenAmount,
+        prizePool: prizePool,
         isInProgress: data.isInProgress,
         startTime: Number(data.startTime),
         timeLimit: Number(data.timeLimit),
@@ -1836,11 +1880,11 @@ export const GetInProgressTournaments = async () => {
       };
 
       const players = await tournament.getTournamentPlayers(i);
-      tournamentData.players = players;
+      tournamentData.joined_players = players;
 
       if (tournamentData.isInProgress === true) {
         const players = await tournament.getTournamentPlayers(i);
-        tournamentData.players = players;
+        tournamentData.joined_players = players;
         tournamentsData.push(tournamentData);
       }
     }
@@ -1858,23 +1902,26 @@ export const GetTournament = async (tournamentID: number) => {
   const signer = provider.getSigner();
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
 
-  let tournamentData: TournamentData | null = null; // Initialize it to null or some default value
+  let tournamentData: TournamentData; // Initialize it to null or some default value
 
   try {
     const data = await tournament.tournaments(tournamentID);
 
     const token = new ethers.Contract(data[2], ERC20ABI, signer);
     const tokenDecimals = await token.decimals();
-    const tokenAmount = ethers.utils.formatUnits(data[3], tokenDecimals);
+    const tokenAmount = ethers.utils.formatUnits(data.tokenAmount, tokenDecimals);
+    const prizePool = ethers.utils.formatUnits(data.prizePool, tokenDecimals);
 
-    if (Boolean(data[4]) == false) {
       tournamentData = {
         tournamentNonce: tournamentID,
         numberOfPlayers: Number(data[0]),
-        players: [],
+        authed_players: data.authed_players,
+        joined_players: data.joined_players,
+        isByInvite: data.isByInvite,
         numberOfGames: Number(data[1]),
         token: data[2],
         tokenAmount: Number(tokenAmount),
+        prizePool: Number(prizePool),
         isInProgress: Boolean(data[4]),
         startTime: Number(data[5]),
         timeLimit: Number(data[6]),
@@ -1882,16 +1929,11 @@ export const GetTournament = async (tournamentID: number) => {
         isTournament: Boolean(data[8]),
       };
 
-      const players = await tournament.getTournamentPlayers(tournamentID);
-      tournamentData.players = players;
-    }
+    return tournamentData;
   } catch (error) {
-    // Handle error if needed
     console.error('Error fetching tournament data:', error);
-    // You could also consider setting tournamentData to some error state here
+    return null;
   }
-
-  return tournamentData;
 };
 
 export const ExitTournament = async (tounamentId: number) => {

@@ -25,18 +25,7 @@ import TournamentCard from './TournamentCard';
 
 import { getChainId, GetTournament, GetTournamentScore } from '#/lib/api/form';
 
-interface TournamentData {
-  tournamentNonce: number;
-  numberOfPlayers: number;
-  players: string[];
-  numberOfGames: number;
-  token: string;
-  tokenAmount: number;
-  isInProgress: boolean;
-  startTime: number;
-  timeLimit: number;
-  isComplete: boolean;
-}
+import { TournamentData } from '#/lib/api/form';
 
 interface CardAccordionProps {
   card: TournamentData;
