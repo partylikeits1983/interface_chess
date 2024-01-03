@@ -48,6 +48,8 @@ interface CardAccordionProps {
 }
 
 const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
+
+
   const [token, setToken] = useState('');
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 

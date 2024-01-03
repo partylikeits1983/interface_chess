@@ -49,6 +49,8 @@ const TournamentList = () => {
         try {
           const data = await GetInProgressTournaments();
 
+          console.log("data", data);
+
           if (Array.isArray(data)) {
             setCards(data.reverse()); // reverse to show newest first
           } else {

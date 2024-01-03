@@ -51,6 +51,8 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
         try {
           const data = await GetPendingTournaments();
 
+          console.log(data);
+
           if (Array.isArray(data)) {
             setCards(data.reverse()); // reverse to show newest first
           } else {

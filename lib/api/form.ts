@@ -1820,10 +1820,8 @@ export const GetPendingTournaments = async () => {
           isTournament: true,
         };
 
-        /*         
-        const players = await tournament.getTournamentPlayers(i);
-        tournamentData.players = players; 
-        */
+        const joined_players = await tournament.getTournamentPlayers(i);
+        tournamentData.joined_players = joined_players;      
 
         tournamentsData.push(tournamentData);
       }
@@ -1866,7 +1864,7 @@ export const GetInProgressTournaments = async () => {
         tournamentNonce: i,
         numberOfPlayers: data.numberOfPlayers,
         authed_players: data.authed_players,
-        joined_players: data.joined_players,
+        joined_players: [],
         isByInvite: data.isByInvite,
         numberOfGames: data.numberOfGames,
         token: data.token,

@@ -53,6 +53,7 @@ type PlayerScores = {
 };
 
 const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
+  
   const [token, setToken] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
