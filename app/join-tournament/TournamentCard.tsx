@@ -37,11 +37,10 @@ import {
   StartTournament,
   GetIsUserInTournament,
   GetCanTournamentBegin,
-  TournamentData
+  TournamentData,
 } from '#/lib/api/form';
 
 import { useStateManager } from '#/lib/api/sharedState';
-
 
 interface CardAccordionProps {
   card: TournamentData;
@@ -228,7 +227,10 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     },
     {
       label: 'Tournament Pool Size',
-      value: (card.tokenAmount * card.joined_players.length + card.prizePool).toString(), // convert to string
+      value: (
+        card.tokenAmount * card.joined_players.length +
+        card.prizePool
+      ).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
     {
@@ -367,58 +369,42 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                           ))}
                         </Tbody>
                       </Table>
-
-
-
                     </Box>
-
-
- 
-
-
                   </Box>
 
-        
                   {card.isByInvite && (
-                      
-                      <Box width={['100%', '100%']} px={2}>
-                        <Box
-                          bg="black"
-                          p={3}
-                          rounded="md"
-                          my={3}
-                          border="1px solid white"
-                          maxHeight="150px"
-                          overflowY="auto"
-                        >
-    
-    
-    
-                          <Text fontWeight="bold" color="white" fontSize="sm">
-                            Authenticated Player Adddresses
-                          </Text>
-                          <Table variant="simple" size="xs">
-                            <Thead>
-                              <Tr>
-                                <Td color="white" fontWeight="bold">
-                                  Address
-                                </Td>
+                    <Box width={['100%', '100%']} px={2}>
+                      <Box
+                        bg="black"
+                        p={3}
+                        rounded="md"
+                        my={3}
+                        border="1px solid white"
+                        maxHeight="150px"
+                        overflowY="auto"
+                      >
+                        <Text fontWeight="bold" color="white" fontSize="sm">
+                          Authenticated Player Adddresses
+                        </Text>
+                        <Table variant="simple" size="xs">
+                          <Thead>
+                            <Tr>
+                              <Td color="white" fontWeight="bold">
+                                Address
+                              </Td>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {card.authed_players.map((playerAddress, index) => (
+                              <Tr key={index}>
+                                <Td color="white">{playerAddress}</Td>
                               </Tr>
-                            </Thead>
-                            <Tbody>
-                              {card.authed_players.map((playerAddress, index) => (
-                                <Tr key={index}>
-                                  <Td color="white">{playerAddress}</Td>
-                                </Tr>
-                              ))}
-                            </Tbody>
-                          </Table>
-                         </Box>
-                         </Box>
-                        
-                         
-                        )}
-
+                            ))}
+                          </Tbody>
+                        </Table>
+                      </Box>
+                    </Box>
+                  )}
                 </Flex>
               </>
             )}

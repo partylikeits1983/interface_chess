@@ -53,7 +53,6 @@ type PlayerScores = {
 };
 
 const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
-  
   const [token, setToken] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
@@ -194,7 +193,10 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     },
     {
       label: 'Tournament Pool Size',
-      value: (card.tokenAmount * card.joined_players.length + card.prizePool).toString(), // convert to string
+      value: (
+        card.tokenAmount * card.joined_players.length +
+        card.prizePool
+      ).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
     {

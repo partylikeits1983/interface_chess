@@ -12,7 +12,7 @@ import {
   Switch,
 } from '@chakra-ui/react';
 
-const { GetPendingTournaments  } = require('../../lib/api/form');
+const { GetPendingTournaments } = require('../../lib/api/form');
 const { GetTournamentDataDB } = require('lib/api/db-api');
 import { TournamentData } from '../../lib/api/form';
 
