@@ -193,7 +193,7 @@ function CrowdSale() {
           )}
           <Flex justifyContent="center" mt={3}>
             <Link
-              href="https://sepolia.arbiscan.io/address/0xE2976A66E8CEF3932CDAEb935E114dCd5ce20F20"
+              href="https://arbiscan.io/address/0xE2976A66E8CEF3932CDAEb935E114dCd5ce20F20"
               isExternal
               color="green.500"
             >
