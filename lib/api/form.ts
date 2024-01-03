@@ -1647,7 +1647,7 @@ export const CreateTournamentAuthed = async (
       'Amount must be greater than 0 for authenticated tournaments',
     );
   }
-  
+
   try {
     await tournament.createTournamentWithSpecificPlayers(
       params.specificPlayers,
@@ -1663,10 +1663,8 @@ export const CreateTournamentAuthed = async (
   } catch (error: any) {
     console.log(error);
 
-    alertWarningFeedback(
-      "Approve tokens first",
-    );
-    
+    alertWarningFeedback('Approve tokens first');
+
     return false;
   }
 };
@@ -1822,16 +1820,15 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
         };
 
         const joined_players = await tournament.getTournamentPlayers(i);
-        tournamentData.joined_players = joined_players;    
-        
+        tournamentData.joined_players = joined_players;
+
         if (data.isByInvite) {
           const authed_players = await tournament.getAuthorizedPlayers(i);
           tournamentData.authed_players = authed_players;
-
         }
 
-        console.log("JOINED", joined_players)
-        console.log("AUTHED", tournamentData.authed_players)
+        console.log('JOINED', joined_players);
+        console.log('AUTHED', tournamentData.authed_players);
 
         tournamentsData.push(tournamentData);
       }
@@ -1865,10 +1862,7 @@ export const GetInProgressTournaments = async () => {
         data.tokenAmount,
         tokenDecimals,
       );
-      const prizePool = ethers.utils.formatUnits(
-        data.prizePool,
-        tokenDecimals,
-      );
+      const prizePool = ethers.utils.formatUnits(data.prizePool, tokenDecimals);
 
       const tournamentData: TournamentData = {
         tournamentNonce: i,
@@ -1917,25 +1911,28 @@ export const GetTournament = async (tournamentID: number) => {
 
     const token = new ethers.Contract(data[2], ERC20ABI, signer);
     const tokenDecimals = await token.decimals();
-    const tokenAmount = ethers.utils.formatUnits(data.tokenAmount, tokenDecimals);
+    const tokenAmount = ethers.utils.formatUnits(
+      data.tokenAmount,
+      tokenDecimals,
+    );
     const prizePool = ethers.utils.formatUnits(data.prizePool, tokenDecimals);
 
-      tournamentData = {
-        tournamentNonce: tournamentID,
-        numberOfPlayers: Number(data[0]),
-        authed_players: data.authed_players,
-        joined_players: data.joined_players,
-        isByInvite: data.isByInvite,
-        numberOfGames: Number(data[1]),
-        token: data[2],
-        tokenAmount: Number(tokenAmount),
-        prizePool: Number(prizePool),
-        isInProgress: Boolean(data[4]),
-        startTime: Number(data[5]),
-        timeLimit: Number(data[6]),
-        isComplete: Boolean(data[7]),
-        isTournament: Boolean(data[8]),
-      };
+    tournamentData = {
+      tournamentNonce: tournamentID,
+      numberOfPlayers: Number(data[0]),
+      authed_players: data.authed_players,
+      joined_players: data.joined_players,
+      isByInvite: data.isByInvite,
+      numberOfGames: Number(data[1]),
+      token: data[2],
+      tokenAmount: Number(tokenAmount),
+      prizePool: Number(prizePool),
+      isInProgress: Boolean(data[4]),
+      startTime: Number(data[5]),
+      timeLimit: Number(data[6]),
+      isComplete: Boolean(data[7]),
+      isTournament: Boolean(data[8]),
+    };
 
     return tournamentData;
   } catch (error) {
