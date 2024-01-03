@@ -49,12 +49,10 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
         }
       } else {
         try {
-          const data = await GetPendingTournaments();
+          const tournaments = await GetPendingTournaments();
 
-          console.log(data);
-
-          if (Array.isArray(data)) {
-            setCards(data.reverse()); // reverse to show newest first
+          if (Array.isArray(tournaments)) {
+            setCards(tournaments.reverse()); // reverse to show newest first
           } else {
             // console.error('GetAllWagers returned invalid data:', cards);
           }

@@ -1775,7 +1775,7 @@ interface Tournaments {
   tournamentData: TournamentData;
 }
 
-export const GetPendingTournaments = async () => {
+export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -1783,13 +1783,14 @@ export const GetPendingTournaments = async () => {
 
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
   const tournamentsData: TournamentData[] = [];
-
   try {
     let tournamentNonce = await tournament.tournamentNonce();
 
     // First loop to get the basic tournament data
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
+
+      console.log(data);
 
       if (data.isInProgress === false) {
         const token = new ethers.Contract(data.token, ERC20ABI, signer);
@@ -1806,8 +1807,8 @@ export const GetPendingTournaments = async () => {
         const tournamentData: TournamentData = {
           tournamentNonce: i,
           numberOfPlayers: data.numberOfPlayers,
-          authed_players: data.authed_players,
-          joined_players: data.joined_players,
+          authed_players: [],
+          joined_players: [],
           isByInvite: data.isByInvite,
           numberOfGames: data.numberOfGames,
           token: data.token,
@@ -1821,7 +1822,16 @@ export const GetPendingTournaments = async () => {
         };
 
         const joined_players = await tournament.getTournamentPlayers(i);
-        tournamentData.joined_players = joined_players;      
+        tournamentData.joined_players = joined_players;    
+        
+        if (data.isByInvite) {
+          const authed_players = await tournament.getAuthorizedPlayers(i);
+          tournamentData.authed_players = authed_players;
+
+        }
+
+        console.log("JOINED", joined_players)
+        console.log("AUTHED", tournamentData.authed_players)
 
         tournamentsData.push(tournamentData);
       }

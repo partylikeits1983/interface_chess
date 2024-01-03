@@ -48,8 +48,6 @@ interface CardAccordionProps {
 }
 
 const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
-
-
   const [token, setToken] = useState('');
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
 
@@ -351,7 +349,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                       overflowY="auto"
                     >
                       <Text fontWeight="bold" color="white" fontSize="sm">
-                        Player Addresses
+                        Joined Player Addresses
                       </Text>
                       <Table variant="simple" size="xs">
                         <Thead>
@@ -369,8 +367,58 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                           ))}
                         </Tbody>
                       </Table>
+
+
+
                     </Box>
+
+
+ 
+
+
                   </Box>
+
+        
+                  {card.isByInvite && (
+                      
+                      <Box width={['100%', '100%']} px={2}>
+                        <Box
+                          bg="black"
+                          p={3}
+                          rounded="md"
+                          my={3}
+                          border="1px solid white"
+                          maxHeight="150px"
+                          overflowY="auto"
+                        >
+    
+    
+    
+                          <Text fontWeight="bold" color="white" fontSize="sm">
+                            Authenticated Player Adddresses
+                          </Text>
+                          <Table variant="simple" size="xs">
+                            <Thead>
+                              <Tr>
+                                <Td color="white" fontWeight="bold">
+                                  Address
+                                </Td>
+                              </Tr>
+                            </Thead>
+                            <Tbody>
+                              {card.authed_players.map((playerAddress, index) => (
+                                <Tr key={index}>
+                                  <Td color="white">{playerAddress}</Td>
+                                </Tr>
+                              ))}
+                            </Tbody>
+                          </Table>
+                         </Box>
+                         </Box>
+                        
+                         
+                        )}
+
                 </Flex>
               </>
             )}
