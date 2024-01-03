@@ -281,7 +281,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </Button>
         </Link>
 
-        {!isInProgress && !isTournament && (
+        {!isInProgress && !isTournament && !isPendingApproval && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}
