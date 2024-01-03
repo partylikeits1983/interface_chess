@@ -91,22 +91,6 @@ function CrowdSale() {
     fetchBalances();
   }, []);
 
-  // Handlers
-  /*   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
-      setTokenAmount(inputValue);
-      const valueAsNumber = parseFloat(inputValue) || 0;
-
-      // Calculate the maximum number of tokens that can be received
-      const maxTokensAvailable = Number(CFSHbalance) / 2.718;
-      const requestedTokens = Number((valueAsNumber * (1 / 2.718)).toFixed(5));
-      const actualTokensToReceive = requestedTokens < maxTokensAvailable ? requestedTokens : maxTokensAvailable;
-
-      setReceivedTokens(actualTokensToReceive); // Use the actual tokens to receive
-    }
-  }; */
-
   const handleTokenAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     if (inputValue === '' || /^\d*\.?\d{0,5}$/.test(inputValue)) {
@@ -209,7 +193,7 @@ function CrowdSale() {
           )}
           <Flex justifyContent="center" mt={3}>
             <Link
-              href="https://sepolia.arbiscan.io/address/0xfc7d5f236428a14a6bd5424331c925285e6336c9"
+              href="https://sepolia.arbiscan.io/address/0xE2976A66E8CEF3932CDAEb935E114dCd5ce20F20"
               isExternal
               color="green.500"
             >

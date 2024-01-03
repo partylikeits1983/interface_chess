@@ -204,8 +204,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     setNumberOfGames(Number(gameNumberData[1]));
     setNumberOfGamesInfo(gameNumber);
 
-    const isWagerComplete = await GetIsWagerComplete(wagerAddress);
-    setIsWagercomplete(isWagerComplete);
+    if (wagerAddress) {
+      const isWagerComplete = await GetIsWagerComplete(wagerAddress);
+      setIsWagercomplete(isWagerComplete);
+    }
+
   }
 
   // Initialize board
@@ -368,6 +371,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       timeRemainingPlayer1,
       timeLastUpdated,
       actualTimeRemainingSC,
+      isGasless,
     } = gameSocketData;
 
     // Initialize game state
@@ -386,6 +390,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     }
 
     let isNewGame = false;
+
+
+    
 
     // Check for checkmate
     if (currentGame.isCheckmate()) {

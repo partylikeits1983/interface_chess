@@ -130,17 +130,16 @@ export default function NetworkButton(): JSX.Element {
         <div style={{ position: 'relative', zIndex: 100 }}>
           <MenuList>
             <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
-              Ethereum Mainnet (coming soon)
+              Ethereum Mainnet
             </MenuItem>
             <MenuItem onClick={() => handleNetworkChange('Arbitrum')}>
-              Arbitrum (coming soon)
+              Arbitrum
             </MenuItem>
             <MenuDivider />
 
             <MenuItem onClick={() => handleNetworkChange('Sepolia Testnet')}>
               Sepolia Testnet
             </MenuItem>
-
             <MenuItem
               onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}
             >

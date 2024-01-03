@@ -737,6 +737,7 @@ export const GetIsWagerComplete = async (
       return false;
     }
   } catch (error) {
+    console.log(wagerAddress)
     console.log(error);
     return false;
   }
