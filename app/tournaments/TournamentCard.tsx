@@ -214,7 +214,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     { label: 'Player Limit', value: card.numberOfPlayers.toString() }, // convert to string
     {
       label: 'Ends In',
-      value: timeUntilEndTime(card.startTime + card.timeLimit),
+      value: timeUntilEndTime(card.startTime + card.timeLimit + 86400),
     },
   ];
 
