@@ -1,16 +1,5 @@
 [
   {
-    "network": "unknown",
-    "currency": "ETH",
-    "chainID": 31337,
-    "WBTC": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
-    "WETH": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
-    "USDT": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
-    "USDC": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
-    "DAI": "0x9A78C513938Bfe1a5f6d98d849C6ed1F9A4C1d5c",
-    "CFSH": "0x659920A3eBD59f188232ceDBd8c3Da3835d83D92"
-  },
-  {
     "network": "Arbitrum",
     "currency": "ETH",
     "chainID": 31337,
