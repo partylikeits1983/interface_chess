@@ -1541,6 +1541,8 @@ export const GetChessFishTokens = async (amountIn: string) => {
     const tx1 = await usdc.approve(CrowdSale, amount);
     await tx1.wait();
 
+    alertSuccessFeedback("Tokens approved await second transaction");
+
     await crowdSale.getChessFishTokens(amount);
   } catch (error) {
     console.log(error);
