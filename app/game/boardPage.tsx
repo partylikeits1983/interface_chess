@@ -526,7 +526,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     let isMounted = true;
 
     // WebSocket connection is established when isGameGasless is true
-    if (isGameGasless === true) {
+    // if (isGameGasless === true) {
       const socket = io('https://api.chess.fish', {
         transports: ['websocket'],
         path: '/socket.io/',
@@ -554,7 +554,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       socket.on('disconnect', () => {
         console.log('Disconnected from server');
       });
-    }
+    // } // isGameGasless is true 
 
     return () => {
       isMounted = false;
