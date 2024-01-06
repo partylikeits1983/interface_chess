@@ -1278,40 +1278,29 @@ export const IsPlayerAddressWhite = async (
 };
 
 export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
-  let { signer, accounts, isWalletConnected } = await setupProvider();
+  const { signer, accounts, isWalletConnected } = await setupProvider();
+  if (!isWalletConnected) return false;
 
   await updateContractAddresses();
-
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
 
-  if (isWalletConnected) {
-    try {
-      let isGameGasless = await checkIfGasless(wagerAddress);
+  try {
+    const isGameGasless = await checkIfGasless(wagerAddress);
+    let playerTurn = isGameGasless ? await getPlayerTurnAPI(wagerAddress) : await chess.getPlayerMove(wagerAddress);
 
-      let playerTurn;
-      if (isGameGasless) {
-        playerTurn = await getPlayerTurnAPI(wagerAddress);
-      } else {
-        playerTurn = await chess.getPlayerMove(wagerAddress);
-      }
-
-      let isPlayerTurn;
-      if (Number(playerTurn) == Number(accounts[0])) {
-        isPlayerTurn = true;
-      } else {
-        isPlayerTurn = false;
-      }
-
-      return isPlayerTurn;
-    } catch (error) {
-      console.log(`in player turn function: invalid address ${wagerAddress}`);
-      console.log(error);
-      return false;
+    // Fallback for gasless game with empty player turn
+    if (isGameGasless && playerTurn === '') {
+      playerTurn = await chess.getPlayerMove(wagerAddress);
     }
-  } else {
+
+    console.log("PlayerTurn", playerTurn);
+    return Number(playerTurn) === Number(accounts[0]);
+  } catch (error) {
+    console.error(`Error in GetPlayerTurn function with address ${wagerAddress}:`, error);
     return false;
   }
 };
+
 
 export const GetPlayerTurnSC = async (
   wagerAddress: string,
