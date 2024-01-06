@@ -1293,7 +1293,6 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
       playerTurn = await chess.getPlayerMove(wagerAddress);
     }
 
-    console.log("PlayerTurn", playerTurn);
     return Number(playerTurn) === Number(accounts[0]);
   } catch (error) {
     console.error(`Error in GetPlayerTurn function with address ${wagerAddress}:`, error);

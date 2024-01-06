@@ -199,7 +199,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
       gameNumberData[1]
     }`;
-    console.log("gameID 202", Number(gameNumberData[0]));
     setGameID(Number(gameNumberData[0]));
     setNumberOfGames(Number(gameNumberData[1]));
     setNumberOfGamesInfo(gameNumber);
@@ -311,7 +310,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setGame(newGame);
 
           let newGameID = gameID + 1;
-          console.log("gameID 311", newGameID);
           setGameID(newGameID);
 
           const isPlayerTurn = await GetPlayerTurnSC(wager);
@@ -348,10 +346,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     if (isWalletConnected) {
       updateGameInfo(wager);
     }
-
-    // let newGameID = gameID + 1;
-    // console.log("gameID 350", newGameID);
-    // setGameID(newGameID);
   }
 
   const handleUpdateUI = async (gameSocketData: IGameSocketData) => {
@@ -539,8 +533,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       });
 
       socket.on('updateGameFen', async (data) => {
-        // alert("RECIEVE DATA")
-        console.log('Received game data:', data);
+        console.log('websocket:', data);
         if (isMounted) {
           const gameSocketData: IGameSocketData = data;
           await handleUpdateUI(gameSocketData);
@@ -636,7 +629,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   ) => {
     console.log('updateState', source, currentGame.isCheckmate(), _gameID, gameID);
     
-    console.log("gameID 632", _gameID);
     setGameID(_gameID);
 
     if (currentGame.isCheckmate()) {
