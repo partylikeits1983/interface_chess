@@ -737,7 +737,7 @@ export const GetIsWagerComplete = async (
       return false;
     }
   } catch (error) {
-    console.log(wagerAddress)
+    console.log(wagerAddress);
     console.log(error);
     return false;
   }
@@ -1286,7 +1286,9 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 
   try {
     const isGameGasless = await checkIfGasless(wagerAddress);
-    let playerTurn = isGameGasless ? await getPlayerTurnAPI(wagerAddress) : await chess.getPlayerMove(wagerAddress);
+    let playerTurn = isGameGasless
+      ? await getPlayerTurnAPI(wagerAddress)
+      : await chess.getPlayerMove(wagerAddress);
 
     // Fallback for gasless game with empty player turn
     if (isGameGasless && playerTurn === '') {
@@ -1295,11 +1297,13 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 
     return Number(playerTurn) === Number(accounts[0]);
   } catch (error) {
-    console.error(`Error in GetPlayerTurn function with address ${wagerAddress}:`, error);
+    console.error(
+      `Error in GetPlayerTurn function with address ${wagerAddress}:`,
+      error,
+    );
     return false;
   }
 };
-
 
 export const GetPlayerTurnSC = async (
   wagerAddress: string,
@@ -1529,7 +1533,7 @@ export const GetChessFishTokens = async (amountIn: string) => {
     const tx1 = await usdc.approve(CrowdSale, amount);
     await tx1.wait();
 
-    alertSuccessFeedback("Tokens approved await second transaction");
+    alertSuccessFeedback('Tokens approved await second transaction');
 
     await crowdSale.getChessFishTokens(amount);
   } catch (error) {
