@@ -1,4 +1,4 @@
-import {updateContractAddresses} from "./form";
+import { updateContractAddresses } from './form';
 
 const apiURL = 'https://api.chess.fish';
 
@@ -63,8 +63,8 @@ export async function GetWagersDB(chainId: number): Promise<string[]> {
 export async function GetAnalyticsDB(chainId: number) {
   const url = apiURL + getAnalyticsMethod + '/' + chainId;
   try {
-    console.log("chainID", chainId);
-    
+    console.log('chainID', chainId);
+
     const response = await fetch(url, { mode: 'cors' });
     if (!response.ok) {
       throw new Error(`Request failed with status code ${response.status}`);
@@ -74,7 +74,7 @@ export async function GetAnalyticsDB(chainId: number) {
     if (data.numberOfGames !== undefined && data.numberOfGames !== null) {
       return [data.numberOfGames, data.numberOfWagers];
     } else {
-      return [0,0];
+      return [0, 0];
     }
   } catch (error) {
     throw new Error(`Error fetching wagers data: ${error}`);
@@ -84,9 +84,9 @@ export async function GetAnalyticsDB(chainId: number) {
 export async function GetLeaderboardDataDB(chainId: number) {
   const url = apiURL + getLeaderboardMethod + '/' + chainId;
   try {
-    console.log("chainID", chainId);
+    console.log('chainID', chainId);
     const response = await fetch(url, { mode: 'cors' });
-    
+
     if (!response.ok) {
       console.log('GET LEADERBOARD DATA', response.status);
       throw new Error(`Request failed with status code ${response.status}`);

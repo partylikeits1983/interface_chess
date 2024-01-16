@@ -74,29 +74,22 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
       console.log('globstat', globalState.useAPI);
 
       setIsLoading(true);
-      if (!globalState.useAPI) {
-        const resultIsInTournament = await GetIsUserInTournament(
-          card.tournamentNonce,
-        );
-        const resultCanBegin = await GetCanTournamentBegin(
-          card.tournamentNonce,
-        );
-        const chainData = await getChainId();
 
+      const resultIsInTournament = await GetIsUserInTournament(
+        card.tournamentNonce,
+      );
+      const resultCanBegin = await GetCanTournamentBegin(card.tournamentNonce);
+      const chainData = await getChainId();
 
+      setIsUserInTournament(Boolean(resultIsInTournament));
+      setCanTournamentBegin(Boolean(resultCanBegin));
 
-        setIsUserInTournament(Boolean(resultIsInTournament));
-        setCanTournamentBegin(Boolean(resultCanBegin));
+      setChainID(Number(chainData));
 
-        setChainID(Number(chainData));
+      const detail = getTokenDetails(chainData, card.token);
+      setTokenDetail(detail);
+      setIsLoading(false);
 
-        const detail = getTokenDetails(chainData, card.token);
-        setTokenDetail(detail);
-        setIsLoading(false);
-      } else {
-        setIsUserInTournament(false);
-        setCanTournamentBegin(false);
-      }
       setIsLoading(false);
     }
     getUserIsInTournament();
@@ -230,8 +223,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     {
       label: 'Tournament Pool Size',
       value: (
-        ((card.tokenAmount * card.joined_players.length) +
-        card.prizePool)
+        card.tokenAmount * card.joined_players.length +
+        card.prizePool
       ).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },

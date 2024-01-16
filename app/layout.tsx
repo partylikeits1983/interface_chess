@@ -28,10 +28,10 @@ export default function RootLayout({
         <div className="lg:pl-72">
           <div className="mx-auto max-w-4xl space-y-8 px-2 pt-20 lg:px-8 lg:py-8">
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <div className="flex flex-col sm:flex-row justify-end space-y-1 sm:space-y-0 sm:space-x-2">
-              <SelectNetworkButton />
-              <ConnectWalletButton />
-            </div>
+              <div className="flex flex-col justify-end space-y-1 sm:flex-row sm:space-x-2 sm:space-y-0">
+                <SelectNetworkButton />
+                <ConnectWalletButton />
+              </div>
             </div>
 
             <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">

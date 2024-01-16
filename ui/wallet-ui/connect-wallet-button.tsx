@@ -14,7 +14,7 @@ function ConnectWalletButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { connect, accounts } = useMetamask();
-  
+
   const handleGetBalance = async () => {
     await connect();
     getBalance(accounts[0]);

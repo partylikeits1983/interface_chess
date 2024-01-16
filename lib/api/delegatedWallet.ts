@@ -225,6 +225,8 @@ export const getDelegation = async (
   const localStorageKey = `${LOCAL_STORAGE_KEY_PREFIX}${wagerAddress}`;
   const encryptedDelegationData = localStorage.getItem(localStorageKey);
 
+  console.log('HERE');
+
   // Step 2: Decrypt if data exists, else create new
   if (encryptedDelegationData) {
     const encryptedDelegation: EthEncryptedData = JSON.parse(

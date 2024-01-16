@@ -17,7 +17,7 @@ import {
   Th,
   Td,
   Link,
-  Text
+  Text,
 } from '@chakra-ui/react';
 
 import { QuestionOutlineIcon } from '@chakra-ui/icons';

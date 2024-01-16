@@ -9,7 +9,6 @@ import CurrentGames from './currentGames';
 
 import { useStateManager } from '#/lib/api/sharedState';
 
-
 const PageData: React.FC = () => {
   const [globalState, setGlobalState] = useStateManager();
 
@@ -19,7 +18,7 @@ const PageData: React.FC = () => {
   return (
     <ChakraProvider>
       <Stack spacing={8}>
-      <Analytics useAPI={globalState.useAPI} handleToggle={handleToggle} />
+        <Analytics useAPI={globalState.useAPI} handleToggle={handleToggle} />
         <CurrentGames useAPI={globalState.useAPI} />
       </Stack>
     </ChakraProvider>

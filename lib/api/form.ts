@@ -1797,8 +1797,8 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
           tokenDecimals,
         );
 
-        console.log("Prize pool", prizePool);
-        console.log("tokenAmount", data.tokenAmount);
+        console.log('Prize pool', prizePool);
+        console.log('tokenAmount', data.tokenAmount);
 
         const tournamentData: TournamentData = {
           tournamentNonce: i,

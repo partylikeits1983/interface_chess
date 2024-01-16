@@ -345,7 +345,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                                 </a>
                               </Td>
                               <Td color="white">
-                                {playerScores[playerAddress] || 'N/A'}
+                                {playerScores[playerAddress] || '0'}
                               </Td>
                             </Tr>
                           ))}

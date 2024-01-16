@@ -20,6 +20,8 @@ import {
   IsSignerInWagerAddress,
 } from '#/lib/api/form';
 
+import { LOCAL_STORAGE_KEY_PREFIX } from '#/lib/api/delegatedWallet';
+
 // Define the type for your props
 interface SignatureModalProps {
   isOpen: boolean;
@@ -38,32 +40,45 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
   const [delegationCompleted, setDelegationCompleted] = useState(false); // New state for tracking delegation completion
   const [initialOpen, setInitialOpen] = useState(isOpen);
 
+  const [encryptedDelegationData, setEncryptedDelegationData] = useState(null); // State for tracking encrypted delegation data
+
   useEffect(() => {
     const checkAvailability = async () => {
       const isSignerInWagerAddress = await IsSignerInWagerAddress(gameWager);
 
-      if (isSignerInWagerAddress) {
-        const encryptionKeyAvailable = await IsEncryptionKeyAvailable();
-        setIsEncryptionKeyAvailable(encryptionKeyAvailable);
-
-        if (!encryptionKeyAvailable) {
-          await GetEncryptionKey();
-        }
-
-        const delegationAvailable = await IsDelegationAvailable(gameWager);
-        setIsDelegationAvailable(delegationAvailable);
-
-        if (!delegationAvailable) {
-          try {
-            await GetDelegation(gameWager);
-            setDelegationCompleted(true); // Set to true after GetDelegation call
-            handleModalClose();
-          } catch (error) {
-            setDelegationCompleted(false); // Set to true after GetDelegation call
-          }
-        }
-      } else {
+      if (!isSignerInWagerAddress) {
         console.log('Signer not in game');
+        return;
+      }
+
+      const encryptionKeyAvailable = await IsEncryptionKeyAvailable();
+      setIsEncryptionKeyAvailable(encryptionKeyAvailable);
+      if (!encryptionKeyAvailable) {
+        await GetEncryptionKey();
+      }
+
+      const delegationAvailable = await IsDelegationAvailable(gameWager);
+      setIsDelegationAvailable(delegationAvailable);
+
+      console.log('Is Delegation Available', delegationAvailable);
+      if (!delegationAvailable) {
+        try {
+          await GetDelegation(gameWager);
+          setDelegationCompleted(true);
+          handleModalClose();
+        } catch (error) {
+          setDelegationCompleted(false);
+        }
+        return;
+      }
+
+      const localStorageKey = `${LOCAL_STORAGE_KEY_PREFIX}${gameWager}`;
+      const encryptedData = localStorage.getItem(localStorageKey);
+      if (encryptedData) {
+        const encryptedDelegation = JSON.parse(encryptedData);
+        setEncryptedDelegationData(encryptedDelegation);
+        await GetDelegation(gameWager);
+        handleModalClose();
       }
     };
 
@@ -78,9 +93,12 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
   }, [delegationCompleted, onClose]);
 
   // Logic to determine if the modal should be open
-  const shouldModalBeOpen =
-    initialOpen && (!isEncryptionKeyAvailable || !isDelegationAvailable);
-
+  const shouldModalBeOpen = !!(
+    initialOpen &&
+    (!isEncryptionKeyAvailable ||
+      !isDelegationAvailable ||
+      encryptedDelegationData)
+  );
   // Logic to handle closing the modal
   const handleModalClose = () => {
     onClose();
@@ -134,6 +152,19 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
               </>
             )}
           </VStack>
+          {encryptedDelegationData && (
+            <Box>
+              <Text fontSize="xl" width="full">
+                {isEncryptionKeyAvailable && isDelegationAvailable
+                  ? '1.'
+                  : '3.'}{' '}
+                Decrypt your delegation data. 🔓
+              </Text>
+              <Text fontSize="md" width="full" fontStyle="italic">
+                Decrypt the game delegation data to continue
+              </Text>
+            </Box>
+          )}
         </ModalBody>
         <ModalFooter>{/* Your modal footer content goes here */}</ModalFooter>
       </ModalContent>
