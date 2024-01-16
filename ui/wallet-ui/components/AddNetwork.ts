@@ -1,13 +1,14 @@
 export const addArbitrumOne = async () => {
   const provider = (window as any).ethereum;
 
+  console.log("HERE")
   if (provider) {
     try {
       await provider.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
-            chainId: '0x66eed',
+            chainId: '0xa4b1',
             chainName: 'Arbitrum One',
             rpcUrls: ['https://arb1.arbitrum.io/rpc'],
             nativeCurrency: {

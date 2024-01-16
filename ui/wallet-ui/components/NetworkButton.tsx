@@ -25,10 +25,11 @@ export default function NetworkButton(): JSX.Element {
   const [selectedNetwork, setSelectedNetwork] =
     useState<string>('Select Network');
 
-  const initialChainID = { chainID: 421614 };
+  const initialChainID = { chainID: 42161 };
   const [globalState, setGlobalState] = useStateManager(initialChainID);
 
   const handleNetworkChange = async (network: string): Promise<void> => {
+    console.log("HERE network change")
     // Define chainId based on selected network
     let chainId: string;
     switch (network) {
@@ -59,6 +60,7 @@ export default function NetworkButton(): JSX.Element {
     }
 
     if (typeof window.ethereum !== 'undefined') {
+      console.log("NETWORK CHANGE")
       try {
         // Call Metamask API to change the network
         if (window.ethereum) {
@@ -81,6 +83,7 @@ export default function NetworkButton(): JSX.Element {
           await addArbitrumOne();
           window.location.reload();
         } else {
+          console.log("HERE ERROR")
           console.error(error);
         }
       }
