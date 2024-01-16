@@ -45,7 +45,6 @@ async function checkMetaMaskConnection() {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const network = await provider.getNetwork();
-      console.log("setting state", network.chainId);
       setState({ chainID: network.chainId, useAPI: true }); // Update chain ID based on Metamask network
     } catch (error) {
       console.error('Error connecting to MetaMask:', error);
