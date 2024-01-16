@@ -14,6 +14,7 @@ function ConnectWalletButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { connect, accounts } = useMetamask();
+  
   const handleGetBalance = async () => {
     await connect();
     getBalance(accounts[0]);
@@ -21,8 +22,10 @@ function ConnectWalletButton() {
 
   return (
     <ChakraProvider theme={theme}>
-      <ConnectButton handleOpenModal={onOpen} />
-      <AccountModal isOpen={isOpen} onClose={onClose} />
+      <Stack direction={'column'} spacing={4} align="center">
+        <ConnectButton handleOpenModal={onOpen} />
+        <AccountModal isOpen={isOpen} onClose={onClose} />
+      </Stack>
     </ChakraProvider>
   );
 }
