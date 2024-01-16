@@ -43,6 +43,7 @@ const TournamentList = () => {
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
         } else {
+          setCards([])
           // console.error('GetAllWagers returned invalid data:', cards);
         }
       } else {
@@ -54,6 +55,7 @@ const TournamentList = () => {
           if (Array.isArray(data)) {
             setCards(data.reverse()); // reverse to show newest first
           } else {
+            setCards([])
             // console.error('GetAllWagers returned invalid data:', cards);
           }
           setIsLoading(false);

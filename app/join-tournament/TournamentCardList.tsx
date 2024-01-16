@@ -45,6 +45,7 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first
         } else {
+          setCards([])
           // console.error('GetAllWagers returned invalid data:', cards);
         }
       } else {
@@ -54,6 +55,7 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
           if (Array.isArray(tournaments)) {
             setCards(tournaments.reverse()); // reverse to show newest first
           } else {
+            setCards([])
             // console.error('GetAllWagers returned invalid data:', cards);
           }
         } catch (error) {

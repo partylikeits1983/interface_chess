@@ -83,6 +83,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         );
         const chainData = await getChainId();
 
+
+
         setIsUserInTournament(Boolean(resultIsInTournament));
         setCanTournamentBegin(Boolean(resultCanBegin));
 
@@ -228,8 +230,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     {
       label: 'Tournament Pool Size',
       value: (
-        card.tokenAmount * card.joined_players.length +
-        card.prizePool
+        ((card.tokenAmount * card.joined_players.length) +
+        card.prizePool)
       ).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },

@@ -1797,6 +1797,9 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
           tokenDecimals,
         );
 
+        console.log("Prize pool", prizePool);
+        console.log("tokenAmount", data.tokenAmount);
+
         const tournamentData: TournamentData = {
           tournamentNonce: i,
           numberOfPlayers: data.numberOfPlayers,
@@ -1805,8 +1808,8 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
           isByInvite: data.isByInvite,
           numberOfGames: data.numberOfGames,
           token: data.token,
-          tokenAmount: tokenAmount,
-          prizePool: prizePool,
+          tokenAmount: Number(tokenAmount),
+          prizePool: Number(prizePool),
           isInProgress: data.isInProgress,
           startTime: Number(data.startTime),
           timeLimit: Number(data.timeLimit),
@@ -1816,6 +1819,8 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
 
         const joined_players = await tournament.getTournamentPlayers(i);
         tournamentData.joined_players = joined_players;
+
+        console.log(tournamentData);
 
         if (data.isByInvite) {
           const authed_players = await tournament.getAuthorizedPlayers(i);
