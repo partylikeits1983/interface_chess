@@ -64,6 +64,7 @@ const SubmitMovesModal: React.FC<SubmitMovesModalProps> = ({
   useEffect(() => {
     const checkWagerCompletion = async () => {
       const isWagerComplete = await GetIsWagerComplete(gameWager);
+
       if (isWagerComplete) {
         const [winsPlayer0, winsPlayer1] = await GetWagerStatus(gameWager);
         setWagerStatus({ winsPlayer0, winsPlayer1 });

@@ -18,6 +18,7 @@ import {
   GetDelegation,
   GetEncryptionKey,
   IsSignerInWagerAddress,
+  GetIsWagerComplete
 } from '#/lib/api/form';
 
 import { LOCAL_STORAGE_KEY_PREFIX } from '#/lib/api/delegatedWallet';
@@ -77,7 +78,12 @@ const SignatureModal: React.FC<SignatureModalProps> = ({
       if (encryptedData) {
         const encryptedDelegation = JSON.parse(encryptedData);
         setEncryptedDelegationData(encryptedDelegation);
-        await GetDelegation(gameWager);
+
+        const isComplete = await GetIsWagerComplete(gameWager);
+        if (!isComplete) {
+          await GetDelegation(gameWager);
+        }
+
         handleModalClose();
       }
     };

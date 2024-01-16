@@ -67,9 +67,6 @@ import {
 } from '@chakra-ui/react';
 
 import { BoardUtils } from './boardUtils/boardUtils';
-import { useStateManager } from '#/lib/api/sharedState';
-import { match } from 'assert';
-import { current } from 'tailwindcss/colors';
 
 export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
@@ -111,9 +108,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
   const [arePiecesDraggable, setArePiecesDraggable] = useState(false);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenSubmitMoves, onOpen: onOpenSubmitMoves, onClose: onCloseSubmitMoves } = useDisclosure();
+  const { isOpen: isOpenSignature, onOpen: onOpenSignature, onClose: onCloseSignature } = useDisclosure();
   const [wereMovesSubmitted, setWereMovesSubmitted] = useState(false);
-  // const [doesDele]
 
   useCheckValidMove(moves, CheckValidMove);
   useUpdateTime(isWagerComplete, isPlayer0Turn, setTimePlayer0, setTimePlayer1);
@@ -171,6 +168,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       try {
         const isGameGasless: boolean = await checkIfGasless(wager);
         setIsGameGasless(isGameGasless);
+        console.log("isgamegasless", isGameGasless);
 
         let { isWalletConnected } = await setupProvider();
         setIsWalletConnected(isWalletConnected);
@@ -206,6 +204,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
     if (wagerAddress) {
       const isWagerComplete = await GetIsWagerComplete(wagerAddress);
       setIsWagercomplete(isWagerComplete);
+      if (isWagerComplete) {
+        onOpenSubmitMoves();
+      }
     }
   }
 
@@ -225,7 +226,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         } catch (err) {
           console.log(err);
         }
-        // }
+      // }
       }
     };
     // Call both functions
@@ -251,19 +252,22 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         let newGame = new Chess();
 
         let gameNumber = await GetGameNumber(wager);
-
+        
+        console.log("HERE", gameNumber !== undefined);
         if (gameNumber !== undefined) {
-          movesArray = await GetGameMoves(wager, gameNumber);
+          movesArray = await GetGameMoves(wager, gameNumber-1 < 0 ? 0 : gameNumber -1 );
           for (let i = 0; i < movesArray.length; i++) {
             const from = movesArray[i].slice(0, 2);
             const to = movesArray[i].slice(2, 4);
             const promotion = 'q';
             const move = { from: from, to: to, promotion: promotion };
             newGame.move(move);
-            console.log('move', move);
+            // console.log('move', move);
           }
         }
 
+        console.log("IS GASLESS", isGameGasless === false && movesArray.length === 0)
+        
         if (isGameGasless === false && movesArray.length === 0) {
           const [timePlayer0, timePlayer1, isPlayer0Turn] =
             await GetTimeRemaining(wager);
@@ -273,6 +277,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           setIsPlayer0Turn(isPlayer0Turn);
         }
 
+        console.log("HERE", isGameGasless === false);
         if (isGameGasless === false) {
           const isPlayer0White = await IsPlayerAddressWhite(
             wager,
@@ -285,7 +290,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           console.log('263', isPlayerTurn);
           setArePiecesDraggable(isPlayerTurn);
 
-          newGame.fen();
+          console.log("FEN", newGame.fen());
 
           // const isPlayer0Turn = await setMoves(movesArray);
           updateState('222', true, newGame, gameNumber);
@@ -403,13 +408,13 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       // if not submitted on chain
       if (!isSubmittedOnChain) {
         // Play checkmate sound
-        const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
+ /*         const checkmateSound = new Audio('/sounds/GenericNotify.mp3');
         checkmateSound.load();
-        checkmateSound.play();
+        checkmateSound.play(); */
 
         // Wallet connected actions
         if (isWalletConnected === true) {
-          onOpen();
+          onOpenSubmitMoves();
         }
         setMoveNumber(0);
       } else {
@@ -482,7 +487,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           currentGame.history().length,
           moves[gameNumber].length,
         );
-        onClose();
+        onCloseSubmitMoves();
       }
 
       updateState('333', isPlayer0Turn, currentGame, moves.length);
@@ -531,7 +536,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
       console.log('websocket:', data);
       if (isMounted) {
         const gameSocketData: IGameSocketData = data;
-        await handleUpdateUI(gameSocketData);
+        if (gameSocketData.isGasless === true) {
+          await handleUpdateUI(gameSocketData);
+        }
       }
     });
 
@@ -849,8 +856,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         </>
       )}
       <SubmitMovesModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isOpenSubmitMoves}
+        onClose={onCloseSubmitMoves}
         onSubmitMoves={submitMoves}
         gameWager={wager}
         gameID={gameID}
@@ -858,7 +865,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setWereMovesSubmitted={setWereMovesSubmitted}
       />
 
-      <SignatureModal isOpen={true} onClose={onClose} gameWager={wager} />
+      <SignatureModal isOpen={true} onClose={onCloseSignature} gameWager={wager} />
     </ChakraProvider>
   );
 };

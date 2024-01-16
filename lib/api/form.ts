@@ -671,6 +671,7 @@ export const GetGameMoves = async (
 
   try {
     console.log('GET GAME MOVES');
+    console.log(gameID);
     const data = await chess.getGameMoves(wagerAddress, gameID);
     const hexMoves = data.moves;
 
@@ -681,6 +682,7 @@ export const GetGameMoves = async (
       algebraeicMoves.push(algebraeicMove);
     }
 
+    console.log(algebraeicMoves);
     return algebraeicMoves;
   } catch (error) {
     // alert(`Get game moves: ${wagerAddress} not found`);
@@ -1017,11 +1019,6 @@ export const PlayMove = async (
   const signer = provider.getSigner();
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
-  const gaslessGame = new ethers.Contract(
-    GaslessGameAddress,
-    gaslessGameABI,
-    signer,
-  );
 
   try {
     // const hex_move = await chess.moveToHex(move);
