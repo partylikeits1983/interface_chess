@@ -1,7 +1,7 @@
 export const addArbitrumOne = async () => {
   const provider = (window as any).ethereum;
 
-  console.log("HERE")
+  console.log('HERE');
   if (provider) {
     try {
       await provider.request({
