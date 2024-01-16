@@ -17,6 +17,7 @@ import {
   Th,
   Td,
   Link,
+  Text
 } from '@chakra-ui/react';
 
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
@@ -100,6 +101,10 @@ const Leaderboard: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           <>
             <Spinner />
           </>
+        ) : sortedData.length === 0 ? (
+          <Text color="white" mt={4}>
+            No players on chain yet
+          </Text>
         ) : (
           <Table variant="simple" mt={4} size="sm">
             <thead>

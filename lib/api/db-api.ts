@@ -80,7 +80,9 @@ export async function GetAnalyticsDB(chainId: number) {
 export async function GetLeaderboardDataDB(chainId: number) {
   const url = apiURL + getLeaderboardMethod + '/' + chainId;
   try {
+    console.log("chainID", chainId)
     const response = await fetch(url, { mode: 'cors' });
+    
     if (!response.ok) {
       console.log('GET LEADERBOARD DATA', response.status);
       throw new Error(`Request failed with status code ${response.status}`);
