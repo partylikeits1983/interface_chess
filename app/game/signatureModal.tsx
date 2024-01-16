@@ -18,7 +18,7 @@ import {
   GetDelegation,
   GetEncryptionKey,
   IsSignerInWagerAddress,
-  GetIsWagerComplete
+  GetIsWagerComplete,
 } from '#/lib/api/form';
 
 import { LOCAL_STORAGE_KEY_PREFIX } from '#/lib/api/delegatedWallet';
