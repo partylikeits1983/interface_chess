@@ -7,14 +7,20 @@ import { Stack, Divider, Heading, ChakraProvider } from '@chakra-ui/react';
 import Analytics from './analytics';
 import CurrentGames from './currentGames';
 
-const PageData: React.FC = () => {
-  const [useAPI, setUseAPI] = useState(true);
+import { useStateManager } from '#/lib/api/sharedState';
 
+
+const PageData: React.FC = () => {
+  const [globalState, setGlobalState] = useStateManager();
+
+  const handleToggle = () => {
+    setGlobalState({ ...globalState, useAPI: !globalState.useAPI });
+  };
   return (
     <ChakraProvider>
       <Stack spacing={8}>
-        <Analytics useAPI={useAPI} handleToggle={() => setUseAPI(!useAPI)} />
-        <CurrentGames useAPI={useAPI} />
+      <Analytics useAPI={globalState.useAPI} handleToggle={handleToggle} />
+        <CurrentGames useAPI={globalState.useAPI} />
       </Stack>
     </ChakraProvider>
   );

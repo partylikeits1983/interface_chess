@@ -66,7 +66,6 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
           setWagerAddresses(fetchedWagerAddresses);
-
           setTotalGames(totalGames);
           setTotalWagers(fetchedWagerAddresses.length.toString());
 
@@ -77,7 +76,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       }
     };
     fetchData();
-  }, [useAPI]);
+  }, [useAPI, globalState.chainID]);
 
   return (
     <ChakraProvider>

@@ -1,3 +1,5 @@
+import {updateContractAddresses} from "./form";
+
 const apiURL = 'https://api.chess.fish';
 
 const getWagersFenMethod = '/wagersfen';
@@ -61,6 +63,8 @@ export async function GetWagersDB(chainId: number): Promise<string[]> {
 export async function GetAnalyticsDB(chainId: number) {
   const url = apiURL + getAnalyticsMethod + '/' + chainId;
   try {
+    console.log("chainID", chainId);
+    
     const response = await fetch(url, { mode: 'cors' });
     if (!response.ok) {
       throw new Error(`Request failed with status code ${response.status}`);
@@ -80,7 +84,7 @@ export async function GetAnalyticsDB(chainId: number) {
 export async function GetLeaderboardDataDB(chainId: number) {
   const url = apiURL + getLeaderboardMethod + '/' + chainId;
   try {
-    console.log("chainID", chainId)
+    console.log("chainID", chainId);
     const response = await fetch(url, { mode: 'cors' });
     
     if (!response.ok) {

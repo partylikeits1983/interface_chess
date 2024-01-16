@@ -106,7 +106,7 @@ const ERC20ABI = [
   'error InsufficientBalance(account owner, uint balance)',
 ];
 
-const updateContractAddresses = async (): Promise<void> => {
+export const updateContractAddresses = async (): Promise<void> => {
   let { provider, isWalletConnected } = await setupProvider();
 
   const network = await provider.getNetwork();

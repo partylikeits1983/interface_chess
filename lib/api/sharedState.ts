@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 const ethers = require('ethers');
 
 import alertWarningFeedbackConnectMetamask from '#/ui/alertWarningConnectMetamask';
-import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 
 type State = {
   chainID: number;
@@ -40,27 +39,21 @@ function setState(newState: Partial<State>) {
   }
 }
 
-// Helper function to check the API connection
-/* async function checkAPIConnection(): Promise<boolean> {
-  try {
-    const response = await fetch('https://api.chess.fish');
-    return response.status === 200;
-  } catch (error) {
-    console.error('API connection error:', error);
-    return false;
-  }
-} */
-
 // Helper function to check Metamask connection
 async function checkMetaMaskConnection() {
-  let useAPI = false;
-  if (typeof window.ethereum !== 'undefined') {
-    useAPI = false;
+  if (window.ethereum) {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const network = await provider.getNetwork();
+      console.log("setting state", network.chainId);
+      setState({ chainID: network.chainId, useAPI: true }); // Update chain ID based on Metamask network
+    } catch (error) {
+      console.error('Error connecting to MetaMask:', error);
+    }
   } else {
-    useAPI = true;
+    setState({ useAPI: true });
     alertWarningFeedbackConnectMetamask(
       'Connect Metamask to unlock all features',
     );
   }
-  setState({ useAPI: useAPI });
 }
