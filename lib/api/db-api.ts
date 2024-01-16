@@ -74,7 +74,7 @@ export async function GetAnalyticsDB(chainId: number) {
     if (data.numberOfGames !== undefined && data.numberOfGames !== null) {
       return [data.numberOfGames, data.numberOfWagers];
     } else {
-      return [];
+      return [0,0];
     }
   } catch (error) {
     throw new Error(`Error fetching wagers data: ${error}`);
