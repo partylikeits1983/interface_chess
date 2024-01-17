@@ -26,8 +26,8 @@ const NETWORK_NAMES: { [key: string]: string } = {
 const NETWORK_LOGOS: { [key: string]: string } = {
   0x1: '/chains/homestead.png',
   0xa4b1: '/chains/arbitrum.png',
-  0xaa36a7: '',
-  0x66eee: '',
+  0xaa36a7: '/chains/testnet.png',
+  0x66eee: '/chains/testnet.png',
 };
 
 export default function NetworkButton(): JSX.Element {
@@ -140,10 +140,10 @@ export default function NetworkButton(): JSX.Element {
             borderColor: 'gray.700',
           }}
         >
-  <Flex align="center" justify="flex-start">
-    <Image src={networkLogoPath} boxSize="20px" marginRight="12px" />
-    {selectedNetwork}
-  </Flex>
+          <Flex align="center" justify="flex-start">
+            <Image src={networkLogoPath} boxSize="20px" marginRight="12px" />
+            {selectedNetwork}
+          </Flex>
         </MenuButton>
         <div style={{ position: 'relative', zIndex: 100, textAlign: 'center' }}>
           <MenuList
