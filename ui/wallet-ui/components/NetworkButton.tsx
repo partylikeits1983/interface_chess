@@ -6,6 +6,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Flex,
   Image,
 } from '@chakra-ui/react';
 
@@ -15,16 +16,27 @@ import { useStateManager } from '../../../lib/api/sharedState';
 import { addArbitrumOne, addArbitrumSepolia } from './AddNetwork';
 
 const NETWORK_NAMES: { [key: string]: string } = {
-  0x1: 'Ethereum Mainnet',
-  0xa4b1: 'Arbitrum',
+  0x1: 'Ethereum',
+  0xa4b1: 'Arbitrum One',
   0x38: 'BSC',
   0xaa36a7: 'Sepolia Testnet',
   0x66eee: 'Arbitrum Sepolia Testnet',
 };
 
+const NETWORK_LOGOS: { [key: string]: string } = {
+  0x1: '/chains/homestead.png',
+  0xa4b1: '/chains/arbitrum.png',
+  0xaa36a7: '',
+  0x66eee: '',
+};
+
 export default function NetworkButton(): JSX.Element {
   const [selectedNetwork, setSelectedNetwork] =
     useState<string>('Select Network');
+
+  const [networkLogoPath, setNetworkLogoPath] = useState<string>(
+    '/chains/arbitrum.png',
+  );
 
   const initialChainID = { chainID: 42161 };
   const [globalState, setGlobalState] = useStateManager(initialChainID);
@@ -97,12 +109,14 @@ export default function NetworkButton(): JSX.Element {
         const network = await provider.getNetwork();
 
         setSelectedNetwork(NETWORK_NAMES[network.chainId]);
+        setNetworkLogoPath(NETWORK_LOGOS[network.chainId]);
         setGlobalState({ chainID: network.chainId });
       };
       getConnectedNetwork();
     } else {
       // default to arbitrum
       setSelectedNetwork(NETWORK_NAMES[0xa4b1]);
+      setNetworkLogoPath(NETWORK_LOGOS[0xa4b1]);
     }
   }, []);
 
@@ -126,7 +140,10 @@ export default function NetworkButton(): JSX.Element {
             borderColor: 'gray.700',
           }}
         >
-          {selectedNetwork}
+  <Flex align="center" justify="flex-start">
+    <Image src={networkLogoPath} boxSize="20px" marginRight="12px" />
+    {selectedNetwork}
+  </Flex>
         </MenuButton>
         <div style={{ position: 'relative', zIndex: 100, textAlign: 'center' }}>
           <MenuList
@@ -169,7 +186,7 @@ export default function NetworkButton(): JSX.Element {
               />
               Arbitrum One
             </MenuItem>
-            <MenuDivider bg="gray.600"/>
+            <MenuDivider bg="gray.600" />
             <MenuItem
               bg="gray.800"
               color="white"

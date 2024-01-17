@@ -15,6 +15,11 @@ import {
 
 import { ChevronRightIcon } from '@chakra-ui/icons';
 
+import {
+  addArbitrumOne,
+  addArbitrumSepolia,
+} from '#/ui/wallet-ui/components/AddNetwork';
+
 export default function Docs() {
   const [loaded, setLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -29,74 +34,6 @@ export default function Docs() {
       handleImageLoad();
     }
   }, []); // Run only once after initial render
-
-  const addPolygon = async () => {
-    const provider = (window as any).ethereum;
-
-    if (provider) {
-      try {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: '0x89',
-              chainName: 'Polygon Mumbai',
-              rpcUrls: ['https://polygon.llamarpc.com'],
-              nativeCurrency: {
-                name: 'Matic',
-                symbol: 'MATIC',
-                decimals: 18,
-              },
-              blockExplorerUrls: ['https://polygonscan.com/'],
-            },
-          ],
-        });
-      } catch (error) {
-        console.error(
-          'An error occurred while trying to switch to the Polygon network:',
-          error,
-        );
-      }
-    } else {
-      console.log(
-        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
-      );
-    }
-  };
-
-  const addArbitrumSepolia = async () => {
-    const provider = (window as any).ethereum;
-
-    if (provider) {
-      try {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: '0x66eed',
-              chainName: 'Arbitrum addArbitrumSepolia',
-              rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
-              nativeCurrency: {
-                name: 'AGOR',
-                symbol: 'AGOR',
-                decimals: 18,
-              },
-              blockExplorerUrls: ['https://sepolia.arbiscan.io'],
-            },
-          ],
-        });
-      } catch (error) {
-        console.error(
-          'An error occurred while trying to switch to the Arbitrum Sepolia network:',
-          error,
-        );
-      }
-    } else {
-      console.log(
-        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
-      );
-    }
-  };
 
   return (
     <ChakraProvider>
@@ -160,7 +97,7 @@ export default function Docs() {
               borderColor: 'white',
             }}
             onClick={() => {
-              addPolygon();
+              addArbitrumOne();
             }}
           >
             <Flex justify="space-between" align="center">

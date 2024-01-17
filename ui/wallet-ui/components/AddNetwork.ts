@@ -46,8 +46,8 @@ export const addArbitrumSepolia = async () => {
             chainName: 'Arbitrum Sepolia',
             rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
             nativeCurrency: {
-              name: 'AETH',
-              symbol: 'AETH',
+              name: 'SepoliaETH',
+              symbol: 'ETH',
               decimals: 18,
             },
             blockExplorerUrls: ['https://sepolia.arbiscan.io'],
