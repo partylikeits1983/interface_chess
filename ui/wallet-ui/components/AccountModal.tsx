@@ -20,6 +20,14 @@ import Identicon from './Identicon';
 import { useMetamask } from './Metamask';
 
 import { useState, useEffect } from 'react';
+import { useStateManager } from '../../../lib/api/sharedState';
+
+const NETWORK_EXPLORER_URLS: { [key: string]: string } = {
+  0x1: 'https://etherscan.io',
+  0xa4b1: 'https://arbiscan.io',
+  0xaa36a7: 'https://sepolia.etherscan.io',
+  0x66eee: 'https://sepolia.arbiscan.io',
+};
 
 type Props = {
   isOpen: any;
@@ -30,6 +38,10 @@ export default function AccountModal({ isOpen, onClose }: Props) {
   const [account, setAccount] = useState<string>('');
 
   const { connect, deactivate, accounts } = useMetamask();
+
+  const initialChainID = { chainID: 42161 };
+  const [globalState, setGlobalState] = useStateManager(initialChainID);
+
 
   useEffect(() => {
     if (account == undefined && isOpen) {
@@ -140,7 +152,7 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 fontSize="sm"
                 display="flex"
                 alignItems="center"
-                href={`https://sepolia.arbiscan.io/address/${account}`}
+                href={`${NETWORK_EXPLORER_URLS[globalState.chainID]}/address/${account}`}
                 isExternal
                 color="gray.400"
                 ml={6}
