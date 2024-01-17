@@ -6,6 +6,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Image,
 } from '@chakra-ui/react';
 
 import { ethers } from 'ethers';
@@ -118,7 +119,7 @@ export default function NetworkButton(): JSX.Element {
           border="1px solid transparent"
           _hover={{
             borderColor: 'gray.700',
-            color: 'gray.400',
+            color: 'green.500',
           }}
           _active={{
             backgroundColor: 'gray.800',
@@ -127,24 +128,64 @@ export default function NetworkButton(): JSX.Element {
         >
           {selectedNetwork}
         </MenuButton>
-        <div style={{ position: 'relative', zIndex: 100 }}>
-          <MenuList>
-            <MenuItem onClick={() => handleNetworkChange('Mainnet')}>
-              Ethereum Mainnet
+        <div style={{ position: 'relative', zIndex: 100, textAlign: 'center' }}>
+          <MenuList
+            bg="gray.800"
+            border="1px solid transparent"
+            _active={{
+              backgroundColor: 'gray.800',
+              borderColor: 'gray.700',
+            }}
+            style={{
+              position: 'absolute', // Ensures the menu is positioned relative to its parent
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 'max-content', // Optional, ensures the width of MenuList is based on its content
+            }}
+          >
+            <MenuItem
+              bg="gray.800"
+              color="white"
+              _hover={{ bg: 'gray.700' }}
+              onClick={() => handleNetworkChange('Mainnet')}
+            >
+              <Image
+                src="/chains/homestead.png"
+                boxSize="25px"
+                marginRight="12px"
+              />
+              Ethereum
             </MenuItem>
-            <MenuItem onClick={() => handleNetworkChange('Arbitrum')}>
-              Arbitrum
+            <MenuItem
+              bg="gray.800"
+              color="white"
+              _hover={{ bg: 'gray.700' }} // Apply the same for each MenuItem
+              onClick={() => handleNetworkChange('Arbitrum')}
+            >
+              <Image
+                src="/chains/arbitrum.png"
+                boxSize="25px"
+                marginRight="12px"
+              />
+              Arbitrum One
             </MenuItem>
-            <MenuDivider />
-
-            <MenuItem onClick={() => handleNetworkChange('Sepolia Testnet')}>
+            <MenuDivider bg="gray.600"/>
+            <MenuItem
+              bg="gray.800"
+              color="white"
+              _hover={{ bg: 'gray.700' }}
+              onClick={() => handleNetworkChange('Sepolia Testnet')}
+            >
               Sepolia Testnet
             </MenuItem>
             <MenuItem
+              bg="gray.800"
+              color="white"
+              _hover={{ bg: 'gray.700' }}
               onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}
             >
               Arbitrum Sepolia Testnet
-            </MenuItem>
+            </MenuItem>{' '}
           </MenuList>
         </div>
       </Menu>
