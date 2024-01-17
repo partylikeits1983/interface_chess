@@ -42,7 +42,6 @@ export default function AccountModal({ isOpen, onClose }: Props) {
   const initialChainID = { chainID: 42161 };
   const [globalState, setGlobalState] = useStateManager(initialChainID);
 
-
   useEffect(() => {
     if (account == undefined && isOpen) {
       connect();
@@ -152,7 +151,9 @@ export default function AccountModal({ isOpen, onClose }: Props) {
                 fontSize="sm"
                 display="flex"
                 alignItems="center"
-                href={`${NETWORK_EXPLORER_URLS[globalState.chainID]}/address/${account}`}
+                href={`${
+                  NETWORK_EXPLORER_URLS[globalState.chainID]
+                }/address/${account}`}
                 isExternal
                 color="gray.400"
                 ml={6}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const { ethers } = require('ethers');
 
@@ -15,7 +15,10 @@ import {
   HStack,
 } from '@chakra-ui/react';
 
+import { useStateManager } from '#/lib/api/sharedState';
+
 import copyIconFeedback from 'ui/copyIconFeedback';
+import { getTokenDetails } from '#/lib/api/token-information';
 
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
@@ -23,7 +26,6 @@ import { CopyIcon } from '@chakra-ui/icons';
 import SidePanel from './sidePanel';
 
 import { Card } from '../types';
-import { handleClientScriptLoad } from 'next/script';
 
 interface Props {
   cards: Card[];
@@ -34,7 +36,23 @@ interface CardAccordionProps {
   account: string | null;
 }
 
+type TokenDetail = {
+  label: string;
+  image: string;
+};
+
 const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
+  const [globalState, setGlobalState] = useStateManager();
+  const [tokenDetail, setTokenDetail] = useState<TokenDetail | null>(null);
+
+  useEffect(() => {
+    async function getScoreData() {
+      const detail = getTokenDetails(globalState.chainID, card.wagerToken);
+      setTokenDetail(detail);
+    }
+    getScoreData();
+  }, []);
+
   function formatDuration(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -154,7 +172,24 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                   Wager Token
                 </Text>
                 <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.wagerToken)}</Text>
+                  {tokenDetail ? (
+                    <>
+                      <img
+                        src={tokenDetail.image}
+                        alt="token icon"
+                        style={{
+                          marginLeft: '0px',
+                          marginRight: '6px',
+                          height: '24px',
+                          width: '24px',
+                        }}
+                      />
+                      <Text fontSize="md">{tokenDetail.label}</Text>
+                    </>
+                  ) : (
+                    <Text fontSize="md">{formatAddress(card.wagerToken)}</Text>
+                  )}
+
                   <CopyIcon
                     ml={2}
                     cursor="pointer"
@@ -162,18 +197,12 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                   />
                 </Flex>
               </Stack>
+
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">
                   Wager Amount
                 </Text>
-                <Text fontSize="md">
-                  {ethers.utils.formatUnits(
-                    ethers.BigNumber.from(
-                      fromScientificNotation(card.wagerAmount.toString()),
-                    ),
-                    18,
-                  )}
-                </Text>
+                <Text fontSize="md">{card.wagerAmount.toString()}</Text>
               </Stack>
               <Stack spacing={0}>
                 <Text fontSize="sm" fontWeight="bold" color="gray.500">

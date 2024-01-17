@@ -536,48 +536,54 @@ export const GetAllWagersForPairing = async () => {
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
-
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
   try {
-    // const totalWagerCount = Number(await chess.getAllWagersCount());
-
     const wagers = await chess.getAllWagerAddresses();
+    const pairingRoomWagers: any = [];
 
-    const pairingRoomWagers = [];
+    await Promise.all(
+      wagers.map(async (wagerAddress: string) => {
+        const wagerParams = await chess.gameWagers(wagerAddress);
 
-    for (let i = 0; i < wagers.length; i++) {
-      const wagerParams = await chess.gameWagers(wagers[i]);
+        if (wagerParams.player1 === ethers.constants.AddressZero) {
+          const token = new ethers.Contract(
+            wagerParams.wagerToken.toString(),
+            ERC20ABI,
+            signer,
+          );
 
-      if (
-        wagerParams.player1 === '0x0000000000000000000000000000000000000000'
-      ) {
-        const wagerParams = await chess.gameWagers(wagers[i]);
+          const decimals = await token.decimals();
+          const amountAdjusted = ethers.utils.formatUnits(
+            wagerParams.wager.toString(),
+            decimals,
+          );
 
-        const card: Card = {
-          matchAddress: wagers[i],
-          player0Address: wagerParams[0],
-          player1Address: wagerParams[1],
-          wagerToken: wagerParams[2],
-          wagerAmount: parseInt(wagerParams[3]),
-          numberOfGames: parseInt(wagerParams[4]),
-          isInProgress: wagerParams[5],
-          timeLimit: parseInt(wagerParams[6]),
-          timeLastMove: parseInt(wagerParams[7]),
-          timePlayer0: parseInt(wagerParams[8]),
-          timePlayer1: parseInt(wagerParams[9]),
-          isPlayerTurn: false,
-          isTournament: Boolean(wagerParams.isTournament),
-          isComplete: Boolean(wagerParams.isComplete),
-        };
+          const card = {
+            matchAddress: wagerAddress,
+            player0Address: wagerParams[0],
+            player1Address: wagerParams[1],
+            wagerToken: wagerParams[2],
+            wagerAmount: amountAdjusted,
+            numberOfGames: parseInt(wagerParams[4]),
+            isInProgress: wagerParams[5],
+            timeLimit: parseInt(wagerParams[6]),
+            timeLastMove: parseInt(wagerParams[7]),
+            timePlayer0: parseInt(wagerParams[8]),
+            timePlayer1: parseInt(wagerParams[9]),
+            isPlayerTurn: false,
+            isTournament: Boolean(wagerParams.isTournament),
+            isComplete: Boolean(wagerParams.isComplete),
+          };
 
-        pairingRoomWagers.push(card);
-      }
-    }
+          pairingRoomWagers.push(card);
+        }
+      }),
+    );
 
     return pairingRoomWagers;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    // Handle or propagate error appropriately
     return [];
   }
 };
@@ -1725,6 +1731,21 @@ export const ApproveTournament = async (
       status: '😥 Something went wrong: ' + error.message,
     };
   }
+};
+
+export const GetTokenAmount = async (
+  tokenAddress: string,
+  rawAmount: number,
+) => {
+  await updateContractAddresses();
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+  const tokenDecimals = await token.decimals();
+  const tokenAmount = ethers.utils.formatUnits(rawAmount, tokenDecimals);
+
+  return tokenAmount;
 };
 
 /* 
