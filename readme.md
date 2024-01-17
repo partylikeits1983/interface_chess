@@ -1,3 +1,7 @@
+## ChessFish Interface
+
+### Pull Requests welcome :)
+
 ```
 pnpm dev
 ```
