@@ -19,6 +19,11 @@ const GameTimer: React.FC<GameTimerProps> = ({
   isPlayer0Turn,
 }) => {
   function formatSecondsToTime(seconds: number): string {
+    // Check if the input seconds is a negative number
+    if (seconds < 0) {
+      return '00:00:00';
+    }
+
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
@@ -26,6 +31,7 @@ const GameTimer: React.FC<GameTimerProps> = ({
     const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(
       remainingSeconds,
     )}`;
+
     return formattedTime;
   }
 
