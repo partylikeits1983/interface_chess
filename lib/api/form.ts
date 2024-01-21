@@ -12,6 +12,7 @@ const tournamentABI = require('./contract-abi/TournamentABI').abi;
 import { signTxPushToDB } from './gaslessAPI';
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
+import alertSuccessNoConfetti from '#/ui/alertSuccessNoConfetti';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 import alertSuccessSubmitMoves from '#/ui/alertSuccessSubmitMoves';
 
@@ -1520,7 +1521,7 @@ export const GetDividendPayoutData = async (tokenAddress: string) => {
   }
 };
 
-export const GetChessFishTokens = async (amountIn: string) => {
+export const GetChessFishTokens = async (amountIn: String) => {
   await updateContractAddresses();
 
   const amount = ethers.utils.parseUnits(amountIn, 6);
@@ -1529,21 +1530,38 @@ export const GetChessFishTokens = async (amountIn: string) => {
   const signer = provider.getSigner();
 
   const crowdSale = new ethers.Contract(CrowdSale, crowdSaleABI, signer);
-
   const usdc = new ethers.Contract(USDC, ERC20ABI, signer);
 
   try {
-    const tx1 = await usdc.approve(CrowdSale, amount);
-    await tx1.wait();
+      // Check the current allowance
+      const allowance = await usdc.allowance(signer.getAddress(), CrowdSale);
 
-    alertSuccessFeedback('Tokens approved await second transaction');
-
-    await crowdSale.getChessFishTokens(amount);
+      if (allowance.lt(amount)) {
+          try {
+              const tx = await usdc.approve(CrowdSale, amount);
+              await tx.wait();
+              alertSuccessNoConfetti('Tokens approved, await second transaction');
+          } catch (error) {
+              console.error(error);
+              alertSuccessNoConfetti('Approval of USDC rejected');
+              return false; // Exit the function if approval fails
+          }
+      }
   } catch (error) {
-    console.log(error);
-    return false;
+      console.error(error);
+      return false; // Exit the function if checking allowance fails
+  }
+
+  try {
+      let tx = await crowdSale.getChessFishTokens(amount);
+      await tx.wait();
+      alertSuccessFeedback('Success! ChessFish Tokens transfered!');
+  } catch (error) {
+      console.error(error);
+      alertWarningFeedback('Get CFSH tokens failed');
   }
 };
+
 
 export const getCrowdSaleBalance = async () => {
   await updateContractAddresses();
