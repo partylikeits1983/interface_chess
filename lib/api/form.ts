@@ -1533,35 +1533,34 @@ export const GetChessFishTokens = async (amountIn: String) => {
   const usdc = new ethers.Contract(USDC, ERC20ABI, signer);
 
   try {
-      // Check the current allowance
-      const allowance = await usdc.allowance(signer.getAddress(), CrowdSale);
+    // Check the current allowance
+    const allowance = await usdc.allowance(signer.getAddress(), CrowdSale);
 
-      if (allowance.lt(amount)) {
-          try {
-              const tx = await usdc.approve(CrowdSale, amount);
-              await tx.wait();
-              alertSuccessNoConfetti('Tokens approved, await second transaction');
-          } catch (error) {
-              console.error(error);
-              alertSuccessNoConfetti('Approval of USDC rejected');
-              return false; // Exit the function if approval fails
-          }
+    if (allowance.lt(amount)) {
+      try {
+        const tx = await usdc.approve(CrowdSale, amount);
+        await tx.wait();
+        alertSuccessNoConfetti('Tokens approved, await second transaction');
+      } catch (error) {
+        console.error(error);
+        alertSuccessNoConfetti('Approval of USDC rejected');
+        return false; // Exit the function if approval fails
       }
+    }
   } catch (error) {
-      console.error(error);
-      return false; // Exit the function if checking allowance fails
+    console.error(error);
+    return false; // Exit the function if checking allowance fails
   }
 
   try {
-      let tx = await crowdSale.getChessFishTokens(amount);
-      await tx.wait();
-      alertSuccessFeedback('Success! ChessFish Tokens transfered!');
+    let tx = await crowdSale.getChessFishTokens(amount);
+    await tx.wait();
+    alertSuccessFeedback('Success! ChessFish Tokens transfered!');
   } catch (error) {
-      console.error(error);
-      alertWarningFeedback('Get CFSH tokens failed');
+    console.error(error);
+    alertWarningFeedback('Get CFSH tokens failed');
   }
 };
-
 
 export const getCrowdSaleBalance = async () => {
   await updateContractAddresses();
@@ -1691,20 +1690,22 @@ export const JoinTournament = async (
   tournamentID: number,
 ) => {
   await updateContractAddresses();
-
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
 
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
   const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
-
   try {
     const decimals = await token.decimals();
     const amountAdjusted = ethers.utils.parseUnits(amount.toString(), decimals);
-    const tx1 = await token.approve(Tournament, amountAdjusted);
-    alertSuccessFeedback('Success! Allowance set, wait for join tx');
-    await tx1.wait();
+
+    const allowance = await token.allowance(signer.getAddress(), Tournament);
+
+    if (allowance.lt(amountAdjusted)) {
+      const tx1 = await token.approve(Tournament, amountAdjusted);
+      alertSuccessFeedback('Success! Allowance set, wait for join tx');
+      await tx1.wait();
+    }
 
     await tournament.joinTournament(tournamentID);
 
@@ -1729,11 +1730,15 @@ export const ApproveTournament = async (
   try {
     const decimals = await token.decimals();
     const amountAdjusted = ethers.utils.parseUnits(amount.toString(), decimals);
-    const value = await token.approve(Tournament, amountAdjusted);
     const allowance = await token.allowance(accounts[0], Tournament);
 
-    const readableAmount = ethers.utils.formatUnits(allowance, decimals);
+    let value;
+    if (allowance.lt(amountAdjusted)) {
+      value = await token.approve(Tournament, amountAdjusted);
+      await value.wait();
+    }
 
+    const readableAmount = ethers.utils.formatUnits(allowance, decimals);
     alertSuccessFeedback('Success! allowance set: ' + readableAmount);
 
     return {
