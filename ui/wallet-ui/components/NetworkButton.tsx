@@ -191,14 +191,6 @@ export default function NetworkButton(): JSX.Element {
               bg="gray.800"
               color="white"
               _hover={{ bg: 'gray.700' }}
-              onClick={() => handleNetworkChange('Sepolia Testnet')}
-            >
-              Sepolia Testnet
-            </MenuItem>
-            <MenuItem
-              bg="gray.800"
-              color="white"
-              _hover={{ bg: 'gray.700' }}
               onClick={() => handleNetworkChange('Arbitrum Sepolia Testnet')}
             >
               Arbitrum Sepolia Testnet
