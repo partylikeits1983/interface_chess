@@ -2118,17 +2118,21 @@ export const GetPlayerAddresses = async () => {
 export const GetWagerAddressTournament = async (tournamentNonce: number) => {
   await updateContractAddresses();
 
+  alert("HERE");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
   const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
 
   try {
-    const players = await tournament.getTournamentWagerAddresses(
+    const wagerAddresses = await tournament.getTournamentWagerAddresses(
       tournamentNonce,
     );
 
-    return players;
+    console.log("NONCE", tournamentNonce);
+    console.log(wagerAddresses);
+
+    return wagerAddresses;
   } catch (error) {
     // Handle error if needed
   }

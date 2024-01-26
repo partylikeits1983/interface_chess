@@ -62,6 +62,9 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   // State to store scores
   const [playerScores, setPlayerScores] = useState<PlayerScores>({});
 
+  
+  const [playerAddresses, setAddresses] = useState<string[]>([]);
+
   const [wagerAddress, setWagerAddresses] = useState<string[]>([]);
 
   type TokenDetail = {
@@ -76,6 +79,10 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
   useEffect(() => {
     async function getScoreData() {
       setIsLoading(true);
+
+      // alert()
+
+      console.log("HERE", !globalState.useAPI);
       if (!globalState.useAPI) {
         const data = await GetTournamentScore(card.tournamentNonce);
 
