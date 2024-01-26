@@ -32,9 +32,7 @@ const PageData: React.FC = () => {
     checkConnection();
   }, []);
 
-  if (!isConnected) {
-    return <div>Loading...</div>; // or any other loading indicator you prefer
-  }
+
 
   return (
     <ChakraProvider>
