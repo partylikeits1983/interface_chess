@@ -2118,7 +2118,6 @@ export const GetPlayerAddresses = async () => {
 export const GetWagerAddressTournament = async (tournamentNonce: number) => {
   await updateContractAddresses();
 
-  alert("HERE");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
@@ -2129,7 +2128,7 @@ export const GetWagerAddressTournament = async (tournamentNonce: number) => {
       tournamentNonce,
     );
 
-    console.log("NONCE", tournamentNonce);
+    console.log('NONCE', tournamentNonce);
     console.log(wagerAddresses);
 
     return wagerAddresses;

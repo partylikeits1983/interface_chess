@@ -45,7 +45,9 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (useAPI) {
+      // setting true to always ping API (hotfix)
+      // need to ping API and check if it is up
+      if (true) {
         try {
           // trying to ping the GCP API
           const chainId = globalState.chainID;

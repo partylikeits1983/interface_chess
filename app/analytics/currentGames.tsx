@@ -9,14 +9,17 @@ import { useRouter } from 'next/navigation';
 
 import { Box, Flex, Skeleton, Text } from '@chakra-ui/react';
 
-import { GetWagersDB, GetWagersFenDB, GetAnalyticsDB } from '#/lib/api/db-api';
+import { GetWagersFenDB, GetAnalyticsDB } from '#/lib/api/db-api';
 import {
   GetAnalyticsData,
   GetGameMoves,
   GetNumberOfGames,
 } from '#/lib/api/form';
 
-import { useStateManager } from '#/lib/api/sharedState';
+import {
+  useStateManager,
+  checkMetaMaskConnection,
+} from '#/lib/api/sharedState';
 
 interface CurrentGamesProps {
   useAPI: boolean;
@@ -25,47 +28,32 @@ interface CurrentGamesProps {
 const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
   const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
   const [Games, setGames] = useState<string[]>([]);
+  const [moveSquares, setMoveSquare] = useState({});
+  const startingFen =
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
   const [totalGames, setTotalGames] = useState('');
   const [totalWagers, setTotalWagers] = useState('');
 
   const [globalState, setGlobalState] = useStateManager();
 
-  // Board state
-  const [moveSquares, setMoveSquare] = useState({});
-
-  const startingFen =
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (useAPI) {
+        // setting true to always ping API (hotfix)
+        // need to ping API and check if it is up
+        if (true) {
           // trying to ping GCP chess fish api
+          console.log('ChainID', globalState.chainID);
           const gameData = await GetWagersFenDB(globalState.chainID);
 
-          // Extract wagerAddresses and fenStrings from gameData
-
-          // Filter out items where the fenString is the starting position
           const filteredGameData = gameData.filter(
             (item) => item.fenString !== startingFen,
           );
 
-          // Extract wagerAddresses and fenStrings from the filtered data
-          const wagerAddresses = filteredGameData.map(
-            (item) => item.wagerAddress,
-          );
           const fenStrings = filteredGameData.map((item) => item.fenString);
 
-          const [numberOfGames, numberOfWagers] = await GetAnalyticsDB(
-            globalState.chainID,
-          );
-
-          setWagerAddresses(wagerAddresses);
           setGames(fenStrings);
-
-          setTotalGames(numberOfGames);
-          setTotalWagers(numberOfWagers);
         } else {
           // if useAPI is false, then use the Smart Contract via RPC link
           console.log('Getting all games via RPC-LINK');
@@ -91,8 +79,6 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
             }
             GamesFen.push(game.fen());
           }
-          setGames(GamesFen.reverse()); // reverse to show newest first
-          setWagerAddresses(fetchedWagerAddresses.reverse()); // same here
         }
 
         // setLoading(false);

@@ -40,12 +40,13 @@ function setState(newState: Partial<State>) {
 }
 
 // Helper function to check Metamask connection
-async function checkMetaMaskConnection() {
+export async function checkMetaMaskConnection() {
   if (window.ethereum) {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const network = await provider.getNetwork();
-      setState({ chainID: network.chainId, useAPI: true }); // Update chain ID based on Metamask network
+      setState({ chainID: network.chainId, useAPI: false }); // Update chain ID based on Metamask network
+      return true;
     } catch (error) {
       console.error('Error connecting to MetaMask:', error);
     }
@@ -54,5 +55,6 @@ async function checkMetaMaskConnection() {
     alertWarningFeedbackConnectMetamask(
       'Connect Metamask to unlock all features',
     );
+    return false;
   }
 }

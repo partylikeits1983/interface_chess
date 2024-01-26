@@ -40,7 +40,10 @@ import {
 } from '#/lib/api/form';
 
 import { getTokenDetails } from '#/lib/api/token-information';
-import { useStateManager } from '#/lib/api/sharedState';
+import {
+  useStateManager,
+  checkMetaMaskConnection,
+} from '#/lib/api/sharedState';
 
 import { TournamentData } from '#/lib/api/form';
 
@@ -61,10 +64,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
 
   // State to store scores
   const [playerScores, setPlayerScores] = useState<PlayerScores>({});
-
-  
-  const [playerAddresses, setAddresses] = useState<string[]>([]);
-
   const [wagerAddress, setWagerAddresses] = useState<string[]>([]);
 
   type TokenDetail = {
@@ -80,9 +79,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     async function getScoreData() {
       setIsLoading(true);
 
-      // alert()
-
-      console.log("HERE", !globalState.useAPI);
+      // let useAPI = checkMetaMaskConnection();
       if (!globalState.useAPI) {
         const data = await GetTournamentScore(card.tournamentNonce);
 

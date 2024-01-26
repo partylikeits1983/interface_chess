@@ -113,7 +113,6 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       try {
         const id = String(await getChainId());
         setChainID(id);
-        console.log('CHAIN ID', id);
       } catch (error) {
         console.error('Failed to fetch chainID:', error);
       }
