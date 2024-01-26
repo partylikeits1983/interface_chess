@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
-const { ethers } = require('ethers');
-
 import {
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-  Stack,
   Text,
   Flex,
   Box,
   HStack,
-  useBreakpointValue,
   Button,
   Table,
-  Th,
   Thead,
   Tr,
   Td,
@@ -31,9 +26,6 @@ import copyIconFeedback from 'ui/copyIconFeedback';
 import {
   getChainId,
   GetWagerAddressTournament,
-  JoinTournament,
-  StartTournament,
-  HaveAllGamesBeenPlayedInTournament,
   GetTournamentScore,
   GetIsTournamentEnded,
   PayoutTournament,
@@ -45,7 +37,6 @@ import {
 import { getTokenDetails } from '#/lib/api/token-information';
 import {
   useStateManager,
-  checkMetaMaskConnection,
 } from '#/lib/api/sharedState';
 
 import { TournamentData } from '#/lib/api/form';

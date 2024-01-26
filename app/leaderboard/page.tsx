@@ -1,20 +1,8 @@
-import { ExternalLink } from '#/ui/external-link';
-import Link from 'next/link';
-
 import PageData from './pageData';
-import { Stack, Divider, Heading, ChakraProvider } from '@chakra-ui/react';
 
 export const metadata = {
   title: 'Leaderboard',
 };
-
-const items = [
-  {
-    name: 'Leaderboard',
-    slug: 'search-params',
-    description: 'leaderboard',
-  },
-];
 
 export default function Page() {
   return (

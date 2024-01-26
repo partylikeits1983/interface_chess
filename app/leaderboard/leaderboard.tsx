@@ -16,7 +16,6 @@ import {
   Tr,
   Th,
   Td,
-  Link,
   Text,
 } from '@chakra-ui/react';
 

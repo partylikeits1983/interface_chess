@@ -11,26 +11,17 @@ import {
 } from '@chakra-ui/react';
 
 const { GetInProgressTournaments, GetInProgressTournaments_NOMETAMASK } = require('../../lib/api/form');
-const { GetTournamentDataDB } = require('lib/api/db-api');
 
 import TournamentCard from './TournamentCard'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
-
 import { useStateManager } from '#/lib/api/sharedState';
-
 import { TournamentData } from '#/lib/api/form';
-
-interface Props {
-  cards: TournamentData[];
-}
 
 const TournamentList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [cards, setCards] = useState<TournamentData[]>([]);
-
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
-
   const [globalState, setGlobalState] = useStateManager();
 
   useEffect(() => {

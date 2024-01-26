@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Stack, Divider, Heading, ChakraProvider } from '@chakra-ui/react';
+import { Stack, ChakraProvider } from '@chakra-ui/react';
 
 import Leaderboard from './leaderboard';
 
