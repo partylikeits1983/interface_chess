@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-const { ethers } = require('ethers');
-
 import {
   Accordion,
   AccordionItem,

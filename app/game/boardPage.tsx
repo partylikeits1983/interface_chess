@@ -13,15 +13,13 @@ import GameInfo from './game-info';
 import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
 import ForwardBackButtons from './forward-back-buttons';
-import opponentMoveNotification from 'ui/opponentMoveNotification';
 import {
   checkIfGasless,
   submitMoves,
-  DownloadMoves,
 } from '../../lib/api/gaslessAPI';
 
 import BackAndForwardGameControls from './boardUtils/gameControls';
-import { moveExists, numberToString } from './boardUtils/chessUtils'; // Utility functions
+import { numberToString } from './boardUtils/chessUtils'; // Utility functions
 
 import useCheckValidMove from './boardUtils/useCheckValidMove';
 import useUpdateTime from './boardUtils/useUpdateTime';
@@ -44,7 +42,6 @@ const {
   GetWagerData,
   GetTimeRemaining,
   IsPlayerAddressWhite,
-  GetConnectedAccount,
   GetGameNumber,
   GetIsWagerComplete,
   IsPlayer0White,

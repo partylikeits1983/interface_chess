@@ -8,7 +8,6 @@ import {
   Link,
   Image,
   Text,
-  Heading,
   ChakraProvider,
   Spinner,
 } from '@chakra-ui/react';

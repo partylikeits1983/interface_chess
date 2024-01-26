@@ -1,6 +1,3 @@
-import { ExternalLink } from '#/ui/external-link';
-import Link from 'next/link';
-
 import Docs from './docs';
 
 export const metadata = {

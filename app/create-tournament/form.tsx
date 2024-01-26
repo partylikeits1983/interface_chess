@@ -14,7 +14,6 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  VStack,
   Tooltip,
   extendTheme,
 } from '@chakra-ui/react';

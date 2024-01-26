@@ -4,12 +4,11 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { Box, Flex, Skeleton, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 
-import { GetWagersFenDB, GetAnalyticsDB } from '#/lib/api/db-api';
+import { GetWagersFenDB } from '#/lib/api/db-api';
 import {
   GetAnalyticsData,
   GetGameMoves,
@@ -18,7 +17,6 @@ import {
 
 import {
   useStateManager,
-  checkMetaMaskConnection,
 } from '#/lib/api/sharedState';
 
 interface CurrentGamesProps {

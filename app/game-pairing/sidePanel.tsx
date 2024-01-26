@@ -8,7 +8,7 @@ import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
 
-import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
+import { checkMetaMaskConnection } from '#/lib/api/sharedState';
 
 const {
   AcceptWagerAndApprove,
@@ -16,11 +16,7 @@ const {
 } = require('../../lib/api/form');
 
 const {
-  GetGameMoves,
   GetNumberOfGames,
-  IsPlayerWhite,
-  PayoutWager,
-  CancelWager,
   GetNumberOfGames_NOMETAMASK
 } = require('../../lib/api/form');
 
@@ -30,7 +26,6 @@ interface CardSidePanelProps {
 }
 
 const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
-  const { matchAddress, player0Address, player1Address, wagerToken } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
 
   const [game, setGame] = useState(new Chess());
