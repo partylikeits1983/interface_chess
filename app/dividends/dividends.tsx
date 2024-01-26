@@ -88,9 +88,7 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       setLoading(true);
       if (!useAPI) {
         try {
-
           const hasMetamask = await checkMetaMaskConnection();
-
           if (hasMetamask) {
             const [dividendAmount, totalSupply] = await GetDividendData();
             setDividendAmount(dividendAmount);

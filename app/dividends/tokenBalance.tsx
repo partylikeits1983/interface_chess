@@ -3,7 +3,7 @@ import { Flex, Text, Spinner } from '@chakra-ui/react';
 
 import { GetDividendBalances, GetDividendBalances_NOMETAMASK } from '#/lib/api/form';
 
-import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
+import { checkMetaMaskConnection } from '#/lib/api/sharedState';
 
 const TokenIcons = [
   { symbol: 'DAI', iconSrc: 'tokens/dai.png' },

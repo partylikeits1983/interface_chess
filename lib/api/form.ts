@@ -1,10 +1,9 @@
 const ethers = require('ethers');
-const { parseUnits } = require('ethers/lib/utils');
 import { CreateMatchType } from './types';
 
 const chessWagerABI = require('./contract-abi/ChessWagerABI').abi;
 const moveVerificationABI = require('./contract-abi/MoveVerificationABI').abi;
-const gaslessGameABI = require('./contract-abi/GaslessGameABI').abi;
+// const gaslessGameABI = require('./contract-abi/GaslessGameABI').abi;
 const splitterABI = require('./contract-abi/SplitterABI').abi;
 const crowdSaleABI = require('./contract-abi/CrowdSaleABI').abi;
 const tournamentABI = require('./contract-abi/TournamentABI').abi;
@@ -22,10 +21,9 @@ import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
 import { ARB_RPC_URL } from './constants';
 
-import { DelegationAndWallet, GaslessMove, DelegationData } from './types';
-import { domain, moveTypes, delegationTypes } from './signatureConstants';
+import { GaslessMove } from './types';
+// import { domain, moveTypes, delegationTypes } from './signatureConstants';
 import {
-  createDelegation,
   getDelegation,
   getOrAskForEncryptionKey,
   LOCAL_STORAGE_KEY_PREFIX,
@@ -110,6 +108,9 @@ const ERC20ABI = [
 ];
 
 export const updateContractAddresses = async (): Promise<any> => {
+  let t1 = new Date();
+
+
   let { provider, isWalletConnected } = await setupProvider();
 
   const network = await provider.getNetwork();
@@ -147,6 +148,11 @@ export const updateContractAddresses = async (): Promise<any> => {
     USDC = matchingChainTokens.USDC;
     DAI = matchingChainTokens.DAI;
   }
+
+  let t2 = new Date();
+  let timeDiff = (t2.getTime() - t1.getTime() ) / 1000;
+  console.log("Time elapsed: " + timeDiff + " seconds");
+
   return provider;
 };
 
@@ -253,8 +259,6 @@ export const GetDividendBalances = async () => {
   const usdt = new ethers.Contract(USDT, ERC20ABI, signer);
   const usdc = new ethers.Contract(USDC, ERC20ABI, signer);
   const dai = new ethers.Contract(DAI, ERC20ABI, signer);
-
-  console.log(DividendSplitter);
 
   try {
     let wbtc_bal = await wbtc.balanceOf(DividendSplitter);
@@ -680,8 +684,6 @@ export const GetGameMoves = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    console.log('GET GAME MOVES');
-    console.log(gameID);
     const data = await chess.getGameMoves(wagerAddress, gameID);
     const hexMoves = data.moves;
 
@@ -1827,8 +1829,6 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
     for (let i = 0; i < tournamentNonce; i++) {
       const data = await tournament.tournaments(i);
 
-      console.log(data);
-
       if (data.isInProgress === false) {
         const token = new ethers.Contract(data.token, ERC20ABI, signer);
         const tokenDecimals = await token.decimals();
@@ -1840,9 +1840,6 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
           data.prizePool,
           tokenDecimals,
         );
-
-        console.log('Prize pool', prizePool);
-        console.log('tokenAmount', data.tokenAmount);
 
         const tournamentData: TournamentData = {
           tournamentNonce: i,
@@ -1864,15 +1861,10 @@ export const GetPendingTournaments = async (): Promise<TournamentData[]> => {
         const joined_players = await tournament.getTournamentPlayers(i);
         tournamentData.joined_players = joined_players;
 
-        console.log(tournamentData);
-
         if (data.isByInvite) {
           const authed_players = await tournament.getAuthorizedPlayers(i);
           tournamentData.authed_players = authed_players;
         }
-
-        console.log('JOINED', joined_players);
-        console.log('AUTHED', tournamentData.authed_players);
 
         tournamentsData.push(tournamentData);
       }
@@ -1950,8 +1942,6 @@ export const GetDividendBalances_NOMETAMASK = async () => {
   const usdt = new ethers.Contract(USDT, ERC20ABI, provider);
   const usdc = new ethers.Contract(USDC, ERC20ABI, provider);
   const dai = new ethers.Contract(DAI, ERC20ABI, provider);
-
-  console.log(DividendSplitter);
 
   try {
     let wbtc_bal = await wbtc.balanceOf(DividendSplitter);
@@ -2035,8 +2025,6 @@ export const GetGameMoves_NOMETAMASK = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    console.log('GET GAME MOVES');
-    console.log(gameID);
     const data = await chess.getGameMoves(wagerAddress, gameID);
     const hexMoves = data.moves;
 
@@ -2047,7 +2035,6 @@ export const GetGameMoves_NOMETAMASK = async (
       algebraeicMoves.push(algebraeicMove);
     }
 
-    console.log(algebraeicMoves);
     return algebraeicMoves;
   } catch (error) {
     // alert(`Get game moves: ${wagerAddress} not found`);
@@ -2152,9 +2139,6 @@ export const GetPendingTournaments_NOMETAMASK = async (): Promise<TournamentData
           tokenDecimals,
         );
 
-        console.log('Prize pool', prizePool);
-        console.log('tokenAmount', data.tokenAmount);
-
         const tournamentData: TournamentData = {
           tournamentNonce: i,
           numberOfPlayers: data.numberOfPlayers,
@@ -2175,16 +2159,10 @@ export const GetPendingTournaments_NOMETAMASK = async (): Promise<TournamentData
         const joined_players = await tournament.getTournamentPlayers(i);
         tournamentData.joined_players = joined_players;
 
-        console.log(tournamentData);
-
         if (data.isByInvite) {
           const authed_players = await tournament.getAuthorizedPlayers(i);
           tournamentData.authed_players = authed_players;
         }
-
-        console.log('JOINED', joined_players);
-        console.log('AUTHED', tournamentData.authed_players);
-
         tournamentsData.push(tournamentData);
       }
     }
@@ -2243,7 +2221,6 @@ export const GetInProgressTournaments_NOMETAMASK = async () => {
   } catch (error) {
    console.log("ERROR GETTING TOURNAMENTS PUBLIC RPC") 
   }
-  console.log(tournamentsData);
   return tournamentsData;
 };
 
@@ -2255,9 +2232,6 @@ export const GetTournamentScore_NOMETAMASK = async (tournamentId: number) => {
 
     // Create a new array and populate it with the converted values
     const newData = [...data[1].map((item: any) => item.toString())];
-
-    console.log("SCORE", newData);
-
 
     return [data[0], newData];
   } catch (error) {
@@ -2280,7 +2254,6 @@ export const GetIsTournamentEnded_NOMETAMASK = async (tournamentId: number) => {
     // Get current unix timestamp
     const currentTimestamp = Math.floor(Date.now() / 1000) + 86400; // Divided by 1000 to convert from ms to s
 
-    console.log(currentTimestamp);
     return currentTimestamp > endTime; // Return true if currentTimestamp is greater, else false
   } catch (error) {
     // Handle error if needed
@@ -2296,9 +2269,6 @@ export const GetWagerAddressTournament_NOMETAMASK = async (tournamentNonce: numb
     const wagerAddresses = await tournament.getTournamentWagerAddresses(
       tournamentNonce,
     );
-
-    console.log('NONCE', tournamentNonce);
-    console.log(wagerAddresses);
 
     return wagerAddresses;
   } catch (error) {
@@ -2496,9 +2466,6 @@ export const GetWagerAddressTournament = async (tournamentNonce: number) => {
       tournamentNonce,
     );
 
-    console.log('NONCE', tournamentNonce);
-    console.log(wagerAddresses);
-
     return wagerAddresses;
   } catch (error) {
     // Handle error if needed
@@ -2597,12 +2564,6 @@ export const SubmitVerifyMoves = async (data: any, wager: string) => {
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
 
-    /*     console.log('arrays');
-    console.log(onChainMoves);
-    console.log(moves);
-    console.log(messages);
-    console.log(signedMessages); */
-
     // Remove elements from moves that match with onChainMoves
     onChainMoves.forEach((onChainMove) => {
       const index = moves.indexOf(onChainMove);
@@ -2652,13 +2613,6 @@ export const SubmitVerifyMovesDelegated = async (data: any, wager: string) => {
     let moves = data.moves[gameNumber];
     let messages = data.messages[gameNumber];
     let signedMessages = data.signedMessages[gameNumber];
-
-    //  console.log('arrays');
-    /*     console.log(onChainMoves);
-    console.log(moves);
-    console.log(messages);
-    console.log(signedMessages); */
-    // console.log(delegations);
 
     // Remove elements from moves that match with onChainMoves
     onChainMoves.forEach((onChainMove) => {

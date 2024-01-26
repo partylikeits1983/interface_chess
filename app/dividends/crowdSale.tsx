@@ -7,10 +7,6 @@ import 'chart.js/auto';
 import { getCrowdSaleBalance, GetChessFishTokens, getCrowdSaleBalance_NOMETAMASK } from '#/lib/api/form';
 
 import {
-  ChakraProvider,
-  Stat,
-  StatLabel,
-  StatNumber,
   Flex,
   Text,
   Button,
@@ -20,10 +16,9 @@ import {
   Spinner,
   Link,
 } from '@chakra-ui/react';
-import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
-import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
+import { checkMetaMaskConnection } from '#/lib/api/sharedState';
 
 function CrowdSale() {
   // State Declarations
