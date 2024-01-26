@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 
-import { getCrowdSaleBalance, GetChessFishTokens } from '#/lib/api/form';
+import { getCrowdSaleBalance, GetChessFishTokens, getCrowdSaleBalance_NOMETAMASK } from '#/lib/api/form';
 
 import {
   ChakraProvider,
@@ -22,6 +22,8 @@ import {
 } from '@chakra-ui/react';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
+
+import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
 
 function CrowdSale() {
   // State Declarations
@@ -84,9 +86,15 @@ function CrowdSale() {
 
   useEffect(() => {
     async function fetchBalances() {
-      const balanceCFSH = await getCrowdSaleBalance();
+      const hasMetamask = await checkMetaMaskConnection();
+      let balanceCFSH; 
+      if (hasMetamask) {
+      balanceCFSH = await getCrowdSaleBalance();
+      } else {
+balanceCFSH = await getCrowdSaleBalance_NOMETAMASK();
+      }
       setCFSHBalance(balanceCFSH);
-      setIsLoading(false);
+     setIsLoading(false);
     }
     fetchBalances();
   }, []);

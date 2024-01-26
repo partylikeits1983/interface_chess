@@ -1941,6 +1941,63 @@ export const GetInProgressTournaments = async () => {
   return tournamentsData;
 };
 
+
+export const GetDividendBalances_NOMETAMASK = async () => {
+  const provider = await updateContractAddresses();
+
+  const wbtc = new ethers.Contract(WBTC, ERC20ABI, provider);
+  const weth = new ethers.Contract(WETH, ERC20ABI, provider);
+  const usdt = new ethers.Contract(USDT, ERC20ABI, provider);
+  const usdc = new ethers.Contract(USDC, ERC20ABI, provider);
+  const dai = new ethers.Contract(DAI, ERC20ABI, provider);
+
+  console.log(DividendSplitter);
+
+  try {
+    let wbtc_bal = await wbtc.balanceOf(DividendSplitter);
+    let weth_bal = await weth.balanceOf(DividendSplitter);
+    let usdt_bal = await usdt.balanceOf(DividendSplitter);
+    let usdc_bal = await usdc.balanceOf(DividendSplitter);
+    let dai_bal = await dai.balanceOf(DividendSplitter);
+
+    wbtc_bal = ethers.utils.formatEther(wbtc_bal);
+    weth_bal = ethers.utils.formatEther(weth_bal);
+    usdt_bal = ethers.utils.formatUnits(usdt_bal, 6);
+    usdc_bal = ethers.utils.formatUnits(usdc_bal, 6);
+    dai_bal = ethers.utils.formatEther(dai_bal);
+
+    return [dai_bal, usdc_bal, usdt_bal, wbtc_bal, weth_bal];
+  } catch (error) {
+    return [0, 0, 0, 0, 0];
+  }
+};
+
+export const GetDividendData_NOMETAMASK = async () => {
+  const provider =  await updateContractAddresses();
+  const token = new ethers.Contract(ChessToken, ERC20ABI, provider);
+  try {
+    const totalSupply = ethers.utils.formatEther(await token.totalSupply(), 18);
+    const userPercent = 0;
+    return [userPercent, totalSupply];
+  } catch (error) {
+    console.log(error);
+    return [0, 0];
+  }
+};
+
+export const getCrowdSaleBalance_NOMETAMASK = async () => {
+  const provider = await updateContractAddresses();
+  const token = new ethers.Contract(ChessToken, ERC20ABI, provider);
+  try {
+    const value = await token.balanceOf(CrowdSale);
+    const balance = ethers.utils.formatEther(value);
+
+    return balance;
+  } catch (error) {
+    return 0;
+  }
+};
+
 export const GetNumberOfGames_NOMETAMASK = async (
   wagerAddress: string,
 ): Promise<number[]> => {
@@ -2048,7 +2105,6 @@ export const GetAllWagersForPairing_NOMETAMASK = async () => {
     return pairingRoomWagers;
   } catch (error) {
     console.error(error);
-    // Handle or propagate error appropriately
     return [];
   }
 };
@@ -2058,12 +2114,9 @@ export const GetCanTournamentBegin_NOMETAMASK = async (tournamentId: number) => 
   const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
   try {
     const data = await tournament.tournaments(tournamentId);
-
-    const startTime = Number(data.startTime) * 1000; // Assuming the startTime is in seconds. Convert it to milliseconds for JavaScript.
-
-    const timeNow = Date.now(); // Get current time in milliseconds.
-
-    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+    const startTime = Number(data.startTime) * 1000; 
+    const timeNow = Date.now(); 
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; 
 
     if (timeNow - startTime > oneDayInMilliseconds) {
       return true;

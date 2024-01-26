@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Text, Spinner } from '@chakra-ui/react';
 
-import { GetDividendBalances } from '#/lib/api/form';
+import { GetDividendBalances, GetDividendBalances_NOMETAMASK } from '#/lib/api/form';
+
+import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
 
 const TokenIcons = [
   { symbol: 'DAI', iconSrc: 'tokens/dai.png' },
@@ -53,8 +55,16 @@ function TokenBalances() {
 
   useEffect(() => {
     async function fetchBalances() {
-      const fetchedBalances = await GetDividendBalances();
-      setBalances(fetchedBalances);
+      const hasMetamask = await checkMetaMaskConnection();
+
+      if (hasMetamask) {
+        const fetchedBalances = await GetDividendBalances();
+        setBalances(fetchedBalances);
+      } else {
+        const fetchedBalances = await GetDividendBalances_NOMETAMASK();
+        setBalances(fetchedBalances);
+      }
+
       setIsLoading(false); // Set loading state to false once balances are fetched
     }
 

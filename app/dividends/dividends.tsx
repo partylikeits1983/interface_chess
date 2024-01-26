@@ -9,6 +9,7 @@ import {
   getCrowdSaleBalance,
   GetDividendBalances,
   GetChessFishTokens,
+  GetDividendData_NOMETAMASK
 } from '#/lib/api/form';
 
 import {
@@ -26,6 +27,8 @@ import {
 } from '@chakra-ui/react';
 
 import { ExternalLinkIcon } from '@chakra-ui/icons';
+
+import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
 
 import AutocompleteToken from './autocomplete-token';
 import {
@@ -85,12 +88,19 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       setLoading(true);
       if (!useAPI) {
         try {
-          const [dividendAmount, totalSupply] = await GetDividendData();
-          setDividendAmount(dividendAmount);
-          setTotalSupply(totalSupply);
 
-          const balanceCFSH = await getCrowdSaleBalance();
-          setCFSHBalance(balanceCFSH);
+          const hasMetamask = await checkMetaMaskConnection();
+
+          if (hasMetamask) {
+            const [dividendAmount, totalSupply] = await GetDividendData();
+            setDividendAmount(dividendAmount);
+            setTotalSupply(totalSupply);
+          } else {
+            const [dividendAmount, totalSupply] = await GetDividendData_NOMETAMASK();
+            setDividendAmount(dividendAmount);
+            setTotalSupply(totalSupply);
+          }
+
         } catch (error) {
           console.log(error);
         }
