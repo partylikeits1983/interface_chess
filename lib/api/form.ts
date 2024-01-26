@@ -1941,18 +1941,99 @@ export const GetInProgressTournaments = async () => {
   return tournamentsData;
 };
 
-
-export const GetInProgressTournaments_NOMETAMASK = async () => {
-  await updateContractAddresses();
-
+export const GetCanTournamentBegin_NOMETAMASK = async (tournamentId: number) => {
   const provider = await updateContractAddresses();
+  const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
+  try {
+    const data = await tournament.tournaments(tournamentId);
 
-  // The rest of your code remains the same
+    const startTime = Number(data.startTime) * 1000; // Assuming the startTime is in seconds. Convert it to milliseconds for JavaScript.
+
+    const timeNow = Date.now(); // Get current time in milliseconds.
+
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+
+    if (timeNow - startTime > oneDayInMilliseconds) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+};
+
+
+export const GetPendingTournaments_NOMETAMASK = async (): Promise<TournamentData[]> => {
+  const provider = await updateContractAddresses();
   const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
   const tournamentsData: TournamentData[] = [];
+  try {
+    let tournamentNonce = await tournament.tournamentNonce();
 
-  let tournamentNonce = await tournament.tournamentNonce();
-  console.log(tournamentNonce);
+    // First loop to get the basic tournament data
+    for (let i = 0; i < tournamentNonce; i++) {
+      const data = await tournament.tournaments(i);
+
+      if (data.isInProgress === false) {
+        const token = new ethers.Contract(data.token, ERC20ABI, provider);
+        const tokenDecimals = await token.decimals();
+        const tokenAmount = ethers.utils.formatUnits(
+          data.tokenAmount,
+          tokenDecimals,
+        );
+        const prizePool = ethers.utils.formatUnits(
+          data.prizePool,
+          tokenDecimals,
+        );
+
+        console.log('Prize pool', prizePool);
+        console.log('tokenAmount', data.tokenAmount);
+
+        const tournamentData: TournamentData = {
+          tournamentNonce: i,
+          numberOfPlayers: data.numberOfPlayers,
+          authed_players: [],
+          joined_players: [],
+          isByInvite: data.isByInvite,
+          numberOfGames: data.numberOfGames,
+          token: data.token,
+          tokenAmount: Number(tokenAmount),
+          prizePool: Number(prizePool),
+          isInProgress: data.isInProgress,
+          startTime: Number(data.startTime),
+          timeLimit: Number(data.timeLimit),
+          isComplete: Boolean(data.isComplete),
+          isTournament: true,
+        };
+
+        const joined_players = await tournament.getTournamentPlayers(i);
+        tournamentData.joined_players = joined_players;
+
+        console.log(tournamentData);
+
+        if (data.isByInvite) {
+          const authed_players = await tournament.getAuthorizedPlayers(i);
+          tournamentData.authed_players = authed_players;
+        }
+
+        console.log('JOINED', joined_players);
+        console.log('AUTHED', tournamentData.authed_players);
+
+        tournamentsData.push(tournamentData);
+      }
+    }
+  } catch (error) {
+    // Handle error if needed
+  }
+
+  return tournamentsData;
+};
+
+export const GetInProgressTournaments_NOMETAMASK = async () => {
+  const provider = await updateContractAddresses();
+  const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
+  const tournamentsData: TournamentData[] = [];
   try {
     let tournamentNonce = await tournament.tournamentNonce();
 
@@ -2005,7 +2086,6 @@ export const GetTournamentScore_NOMETAMASK = async (tournamentId: number) => {
   const provider = await updateContractAddresses();
   const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
   try {
-    console.log("SCORE");
     const data = await tournament.viewTournamentScore(tournamentId);
 
     // Create a new array and populate it with the converted values

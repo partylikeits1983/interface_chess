@@ -12,8 +12,8 @@ import {
   Switch,
 } from '@chakra-ui/react';
 
-const { GetPendingTournaments } = require('../../lib/api/form');
-const { GetTournamentDataDB } = require('lib/api/db-api');
+const { GetPendingTournaments, GetPendingTournaments_NOMETAMASK } = require('../../lib/api/form');
+// const { GetTournamentDataDB } = require('lib/api/db-api');
 import { TournamentData } from '../../lib/api/form';
 
 import TournamentCard from './TournamentCard';
@@ -40,10 +40,10 @@ const TournamentList: FC<TournamentListProps> = ({ useAPI }) => {
       console.log('globstat', globalState.useAPI);
 
       if (globalState.useAPI) {
-        const data = await GetTournamentDataDB(globalState.chainID);
+        const tournaments = await GetPendingTournaments_NOMETAMASK();
 
-        if (Array.isArray(data)) {
-          setCards(data.reverse()); // reverse to show newest first
+        if (Array.isArray(tournaments)) {
+          setCards(tournaments.reverse()); // reverse to show newest first
         } else {
           setCards([]);
           // console.error('GetAllWagers returned invalid data:', cards);

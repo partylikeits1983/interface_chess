@@ -19,5 +19,5 @@ export default function alertWarningFeedbackConnectMetamask(message: string) {
     setTimeout(() => {
       document.body.removeChild(toast);
     }, 500);
-  }, 1500);
+  }, 3000);
 }
