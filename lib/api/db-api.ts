@@ -1,5 +1,3 @@
-import { updateContractAddresses } from './form';
-
 const apiURL = 'https://api.chess.fish';
 
 const getWagersFenMethod = '/wagersfen';

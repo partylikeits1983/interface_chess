@@ -130,3 +130,5 @@ export const bitCoordinates_array = [
   '57',
   '56',
 ];
+
+export const ARB_RPC_URL = 'https://sepolia-rollup.arbitrum.io/rpc'

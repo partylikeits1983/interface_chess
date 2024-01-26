@@ -44,7 +44,6 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
         // need to ping API and check if it is up
         if (true) {
           // trying to ping GCP chess fish api
-          console.log('ChainID', globalState.chainID);
           const gameData = await GetWagersFenDB(globalState.chainID);
 
           const filteredGameData = gameData.filter(

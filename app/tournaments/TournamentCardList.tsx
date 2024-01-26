@@ -10,7 +10,7 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetInProgressTournaments } = require('../../lib/api/form');
+const { GetInProgressTournaments, GetInProgressTournaments_NOMETAMASK } = require('../../lib/api/form');
 const { GetTournamentDataDB } = require('lib/api/db-api');
 
 import TournamentCard from './TournamentCard'; // Import the CardAccordion component
@@ -38,7 +38,7 @@ const TournamentList = () => {
       setIsLoading(true);
 
       if (globalState.useAPI) {
-        const data = await GetTournamentDataDB(globalState.chainID);
+        const data = await GetInProgressTournaments_NOMETAMASK();
         console.log(data);
         if (Array.isArray(data)) {
           setCards(data.reverse()); // reverse to show newest first

@@ -37,6 +37,9 @@ import {
   GetTournamentScore,
   GetIsTournamentEnded,
   PayoutTournament,
+  GetTournamentScore_NOMETAMASK,
+  GetIsTournamentEnded_NOMETAMASK,
+  GetWagerAddressTournament_NOMETAMASK
 } from '#/lib/api/form';
 
 import { getTokenDetails } from '#/lib/api/token-information';
@@ -82,7 +85,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
       // let useAPI = checkMetaMaskConnection();
       if (!globalState.useAPI) {
         const data = await GetTournamentScore(card.tournamentNonce);
-
         const isEnded = await GetIsTournamentEnded(card.tournamentNonce);
 
         if (isEnded) {
@@ -108,10 +110,31 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         const detail = getTokenDetails(chainData, card.token);
         setTokenDetail(detail);
       } else {
-        setIsTournamentEnded(false);
-        const detail = getTokenDetails(421614, card.token);
+        const data = await GetTournamentScore_NOMETAMASK(card.tournamentNonce);
+        const isEnded = await GetIsTournamentEnded_NOMETAMASK(card.tournamentNonce);
+
+        if (isEnded) {
+          setIsTournamentEnded(true);
+        }
+        // Process data to map player addresses to their scores
+        const scoresObj: PlayerScores = {};
+        for (let i = 0; i < data[0].length; i++) {
+          scoresObj[data[0][i]] = data[1][i];
+        }
+
+        setPlayerScores(scoresObj);
+
+        const wagerAddresses = await GetWagerAddressTournament_NOMETAMASK(
+          card.tournamentNonce,
+        );
+        setWagerAddresses(wagerAddresses);
+
+        // pass chainData not chainId... sigh
+        const detail = getTokenDetails(globalState.chainID, card.token);
         setTokenDetail(detail);
+
       }
+      console.log("FALSE");
       setIsLoading(false);
     }
     getScoreData();

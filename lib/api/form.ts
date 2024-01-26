@@ -20,6 +20,8 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { submitMoves, getPlayerTurnAPI, checkIfGasless } from './gaslessAPI';
 
+import { ARB_RPC_URL } from './constants';
+
 import { DelegationAndWallet, GaslessMove, DelegationData } from './types';
 import { domain, moveTypes, delegationTypes } from './signatureConstants';
 import {
@@ -107,7 +109,7 @@ const ERC20ABI = [
   'error InsufficientBalance(account owner, uint balance)',
 ];
 
-export const updateContractAddresses = async (): Promise<void> => {
+export const updateContractAddresses = async (): Promise<any> => {
   let { provider, isWalletConnected } = await setupProvider();
 
   const network = await provider.getNetwork();
@@ -145,6 +147,7 @@ export const updateContractAddresses = async (): Promise<void> => {
     USDC = matchingChainTokens.USDC;
     DAI = matchingChainTokens.DAI;
   }
+  return provider;
 };
 
 export const setupProvider = async () => {
@@ -172,7 +175,7 @@ export const setupProvider = async () => {
   // If provider is not set (either window.ethereum is not available or user rejected the connection)
   // then use the custom JSON-RPC provider
   if (!detectedProvider) {
-    const customRpcUrl = 'https://sepolia-rollup.arbitrum.io/rpc';
+    const customRpcUrl = ARB_RPC_URL;
     provider = new ethers.providers.JsonRpcProvider(customRpcUrl);
     signer = provider;
     accounts = undefined;
@@ -1936,6 +1939,126 @@ export const GetInProgressTournaments = async () => {
   }
 
   return tournamentsData;
+};
+
+
+export const GetInProgressTournaments_NOMETAMASK = async () => {
+  await updateContractAddresses();
+
+  const provider = await updateContractAddresses();
+
+  // The rest of your code remains the same
+  const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
+  const tournamentsData: TournamentData[] = [];
+
+  let tournamentNonce = await tournament.tournamentNonce();
+  console.log(tournamentNonce);
+  try {
+    let tournamentNonce = await tournament.tournamentNonce();
+
+    // First loop to get the basic tournament data
+    for (let i = 0; i < tournamentNonce; i++) {
+      const data = await tournament.tournaments(i);
+
+      const token = new ethers.Contract(data.token, ERC20ABI, provider);
+      const tokenDecimals = await token.decimals();
+      const tokenAmount = ethers.utils.formatUnits(
+        data.tokenAmount,
+        tokenDecimals,
+      );
+      const prizePool = ethers.utils.formatUnits(data.prizePool, tokenDecimals);
+
+      const tournamentData: TournamentData = {
+        tournamentNonce: i,
+        numberOfPlayers: data.numberOfPlayers,
+        authed_players: data.authed_players,
+        joined_players: [],
+        isByInvite: data.isByInvite,
+        numberOfGames: data.numberOfGames,
+        token: data.token,
+        tokenAmount: tokenAmount,
+        prizePool: prizePool,
+        isInProgress: data.isInProgress,
+        startTime: Number(data.startTime),
+        timeLimit: Number(data.timeLimit),
+        isComplete: Boolean(data.isComplete),
+        isTournament: true,
+      };
+
+      const players = await tournament.getTournamentPlayers(i);
+      tournamentData.joined_players = players;
+
+      if (tournamentData.isInProgress === true) {
+        const players = await tournament.getTournamentPlayers(i);
+        tournamentData.joined_players = players;
+        tournamentsData.push(tournamentData);
+      }
+    }
+  } catch (error) {
+   console.log("ERROR GETTING TOURNAMENTS PUBLIC RPC") 
+  }
+  console.log(tournamentsData);
+  return tournamentsData;
+};
+
+export const GetTournamentScore_NOMETAMASK = async (tournamentId: number) => {
+  const provider = await updateContractAddresses();
+  const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
+  try {
+    console.log("SCORE");
+    const data = await tournament.viewTournamentScore(tournamentId);
+
+    // Create a new array and populate it with the converted values
+    const newData = [...data[1].map((item: any) => item.toString())];
+
+    console.log("SCORE", newData);
+
+
+    return [data[0], newData];
+  } catch (error) {
+    console.log(error);
+  }
+  return [[], []];
+};
+
+export const GetIsTournamentEnded_NOMETAMASK = async (tournamentId: number) => {
+  const provider = await updateContractAddresses();
+  const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
+  try {
+    const data = await tournament.tournaments(tournamentId);
+
+    const startTime = Number(data.startTime);
+    const timeLimit = Number(data.timeLimit);
+
+    const endTime = startTime + timeLimit;
+
+    // Get current unix timestamp
+    const currentTimestamp = Math.floor(Date.now() / 1000) + 86400; // Divided by 1000 to convert from ms to s
+
+    console.log(currentTimestamp);
+    return currentTimestamp > endTime; // Return true if currentTimestamp is greater, else false
+  } catch (error) {
+    // Handle error if needed
+    console.error(error); // Optionally log the error
+    return false; // Fallback return value in case of error
+  }
+};
+
+export const GetWagerAddressTournament_NOMETAMASK = async (tournamentNonce: number) => {
+  const provider = await updateContractAddresses();
+  const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
+  try {
+    const wagerAddresses = await tournament.getTournamentWagerAddresses(
+      tournamentNonce,
+    );
+
+    console.log('NONCE', tournamentNonce);
+    console.log(wagerAddresses);
+
+    return wagerAddresses;
+  } catch (error) {
+    // Handle error if needed
+  }
 };
 
 export const GetTournament = async (tournamentID: number) => {
