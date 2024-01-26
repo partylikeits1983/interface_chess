@@ -32,8 +32,6 @@ const PageData: React.FC = () => {
     checkConnection();
   }, []);
 
-
-
   return (
     <ChakraProvider>
       <Stack spacing={8}>

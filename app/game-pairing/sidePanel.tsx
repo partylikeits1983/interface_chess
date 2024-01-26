@@ -8,6 +8,8 @@ import { Button, Stack, Box, Spinner } from '@chakra-ui/react';
 
 import { Chess } from 'chess.js';
 
+import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
+
 const {
   AcceptWagerAndApprove,
   AcceptWagerConditions,
@@ -19,6 +21,7 @@ const {
   IsPlayerWhite,
   PayoutWager,
   CancelWager,
+  GetNumberOfGames_NOMETAMASK
 } = require('../../lib/api/form');
 
 interface CardSidePanelProps {
@@ -47,23 +50,28 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
       if (card.matchAddress != '') {
         setIsChessboardLoading(true);
 
-        const movesArray = await GetGameMoves(card.matchAddress);
         const game = new Chess();
-
-        for (let i = 0; i < movesArray.length; i++) {
-          console.log(movesArray[i]);
-          game.move(movesArray[i]);
-        }
         setGame(game);
 
-        const isPlayerWhite = await IsPlayerWhite(card.matchAddress);
-        setPlayerColor(isPlayerWhite);
+        const hasMetamask = await checkMetaMaskConnection();
+        if (hasMetamask) {
+          setPlayerColor('white');
 
-        const gameNumberData: Array<Number> = await GetNumberOfGames(
-          card.matchAddress,
-        );
-        const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
-        setNumberOfGames(gameNumber);
+          const gameNumberData: Array<Number> = await GetNumberOfGames(
+            card.matchAddress,
+          );
+          const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
+          setNumberOfGames(gameNumber);
+
+        } else {
+          setPlayerColor('white');
+
+          const gameNumberData: Array<Number> = await GetNumberOfGames_NOMETAMASK(
+            card.matchAddress,
+          );
+          const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
+          setNumberOfGames(gameNumber);
+        }
 
         setIsChessboardLoading(false);
       } else {
@@ -73,27 +81,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
     getGameMoves();
   }, [card]);
 
-  function handleSubmitCancelWager() {
-    try {
-      // adding await fails to build
-      // using useEffect makes everything glitchy
-      CancelWager(matchAddress);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
-  async function handleSubmitPayoutWager() {
-    try {
-      // adding await fails to build
-      // using useEffect makes everything glitchy
-      console.log('handle payout wager');
-      console.log(matchAddress);
-      await PayoutWager(matchAddress);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const handleClickApprove = async (
     wagerAddress: string,

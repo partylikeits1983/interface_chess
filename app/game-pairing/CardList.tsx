@@ -14,9 +14,12 @@ const {
   GetAllWagersForPairing,
   AcceptWagerAndApprove,
   AcceptWagerConditions,
+  GetAllWagersForPairing_NOMETAMASK,
 } = require('../../lib/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
+
+import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
 
 import CardAccordion from './CardAccordion'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
@@ -43,6 +46,8 @@ interface Props {
 }
 
 const CardList = () => {
+  const [globalState, setGlobalState] = useStateManager();
+
   const [account, setAccount] = useState<string | null>(null);
   const { connect, accounts } = useMetamask();
 
@@ -90,14 +95,30 @@ const CardList = () => {
       try {
         setIsLoading(true);
 
-        const data = await GetAllWagersForPairing();
+        // console.log("API", globalState.useAPI);
+        const hasMetamask = await checkMetaMaskConnection();
+        if (hasMetamask) {
+          console.log("PINGING ")
+          const data = await GetAllWagersForPairing();
 
-        if (Array.isArray(data)) {
-          setCards(data.reverse()); // reverse to show newest first
+          if (Array.isArray(data)) {
+            setCards(data.reverse()); // reverse to show newest first
+          } else {
+            console.error('GetAllWagers returned invalid data:', cards);
+          }
+          setIsLoading(false);
+
         } else {
-          console.error('GetAllWagers returned invalid data:', cards);
+          const data = await GetAllWagersForPairing_NOMETAMASK();
+
+          if (Array.isArray(data)) {
+            setCards(data.reverse()); // reverse to show newest first
+          } else {
+            console.error('GetAllWagers returned invalid data:', cards);
+          }
+          setIsLoading(false);
         }
-        setIsLoading(false);
+  
       } catch (error) {
         console.error('Error fetching wagers:', error);
       }

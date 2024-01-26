@@ -1941,6 +1941,118 @@ export const GetInProgressTournaments = async () => {
   return tournamentsData;
 };
 
+export const GetNumberOfGames_NOMETAMASK = async (
+  wagerAddress: string,
+): Promise<number[]> => {
+  const provider = await updateContractAddresses();
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+  try {
+    const wagerParams = await chess.gameWagers(wagerAddress);
+    const numberOfGames = Number(parseInt(wagerParams[4]));
+    const gameNumber = Number(await chess.getGameLength(wagerAddress));
+
+    let data: number[] = [];
+
+    if (Number(gameNumber) === Number(numberOfGames)) {
+      data.push(Number(gameNumber) - 1);
+      data.push(Number(numberOfGames));
+    } else {
+      data.push(Number(gameNumber));
+      data.push(Number(numberOfGames));
+    }
+
+    return data;
+  } catch (error) {
+    console.log(`getNumberOfGames function: invalid address ${wagerAddress}`);
+    console.log(error);
+    return [];
+  }
+};
+
+
+export const GetGameMoves_NOMETAMASK = async (
+  wagerAddress: string,
+  gameID: number,
+): Promise<string[]> => {
+  const provider = await updateContractAddresses();
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+
+  try {
+    console.log('GET GAME MOVES');
+    console.log(gameID);
+    const data = await chess.getGameMoves(wagerAddress, gameID);
+    const hexMoves = data.moves;
+
+    const algebraeicMoves = [];
+    for (let i = 0; i < hexMoves.length; i++) {
+      const algebraeicMove = hexToMove(hexMoves[i]);
+
+      algebraeicMoves.push(algebraeicMove);
+    }
+
+    console.log(algebraeicMoves);
+    return algebraeicMoves;
+  } catch (error) {
+    // alert(`Get game moves: ${wagerAddress} not found`);
+    console.log('GetGameMoves error', error);
+    return [];
+  }
+};
+
+export const GetAllWagersForPairing_NOMETAMASK = async () => {
+  const provider = await updateContractAddresses();
+  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+  try {
+    const wagers = await chess.getAllWagerAddresses();
+    const pairingRoomWagers: any = [];
+
+    await Promise.all(
+      wagers.map(async (wagerAddress: string) => {
+        const wagerParams = await chess.gameWagers(wagerAddress);
+
+        if (wagerParams.player1 === ethers.constants.AddressZero) {
+          const token = new ethers.Contract(
+            wagerParams.wagerToken.toString(),
+            ERC20ABI,
+            provider,
+          );
+
+          const decimals = await token.decimals();
+          const amountAdjusted = ethers.utils.formatUnits(
+            wagerParams.wager.toString(),
+            decimals,
+          );
+
+          const card = {
+            matchAddress: wagerAddress,
+            player0Address: wagerParams[0],
+            player1Address: wagerParams[1],
+            wagerToken: wagerParams[2],
+            wagerAmount: amountAdjusted,
+            numberOfGames: parseInt(wagerParams[4]),
+            isInProgress: wagerParams[5],
+            timeLimit: parseInt(wagerParams[6]),
+            timeLastMove: parseInt(wagerParams[7]),
+            timePlayer0: parseInt(wagerParams[8]),
+            timePlayer1: parseInt(wagerParams[9]),
+            isPlayerTurn: false,
+            isTournament: Boolean(wagerParams.isTournament),
+            isComplete: Boolean(wagerParams.isComplete),
+          };
+
+          pairingRoomWagers.push(card);
+        }
+      }),
+    );
+
+    return pairingRoomWagers;
+  } catch (error) {
+    console.error(error);
+    // Handle or propagate error appropriately
+    return [];
+  }
+};
+
 export const GetCanTournamentBegin_NOMETAMASK = async (tournamentId: number) => {
   const provider = await updateContractAddresses();
   const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
