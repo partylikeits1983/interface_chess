@@ -35,7 +35,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     player0Address,
     player1Address,
     wagerToken,
-    isInProgress,
+    hasPlayerAccepted,
     isComplete,
   } = card;
   const [isChessboardLoading, setIsChessboardLoading] = useState(false);
@@ -281,7 +281,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </Button>
         </Link>
 
-        {!isInProgress && !isTournament && !isPendingApproval && (
+        {!hasPlayerAccepted && !isTournament && !isPendingApproval && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}
@@ -328,7 +328,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </>
         )}
 
-        {!isPendingApproval && isInProgress && !isTournament && (
+        {!isPendingApproval && hasPlayerAccepted && !isTournament && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}
@@ -375,7 +375,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </>
         )}
 
-        {IsWagerGameTimeEnded && !isInProgress && !isComplete && (
+        {IsWagerGameTimeEnded && !hasPlayerAccepted && !isComplete && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}

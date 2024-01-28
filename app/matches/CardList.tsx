@@ -19,22 +19,7 @@ import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 import CardAccordion from './CardAccordion'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
-  numberOfGames: number;
-  isInProgress: boolean;
-  timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
-  isTournament: boolean;
-  isComplete: boolean;
-}
+import { Card } from '../types';
 
 interface Props {
   cards: Card[];
@@ -94,7 +79,11 @@ const CardList = () => {
     console.log(sortValue);
     switch (sortValue) {
       case 'isPending':
-        return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;
+        return a.hasPlayerAccepted === b.hasPlayerAccepted
+          ? 0
+          : a.hasPlayerAccepted
+          ? -1
+          : 1;
       case 'isTournament':
         return a.isTournament === b.isTournament ? 0 : a.isTournament ? -1 : 1;
       case 'wagerAmountAsc':
@@ -108,7 +97,7 @@ const CardList = () => {
 
   const filteredAndSortedCards = sortedCards.filter(
     (card) =>
-      (!filterValue || card.isInProgress) &&
+      (!filterValue || card.hasPlayerAccepted) &&
       (!showOnlyTournaments || card.isTournament),
   );
 

@@ -2,11 +2,7 @@
 
 import { useState } from 'react';
 
-import {
-  FormControl,
-  FormLabel,
-  ChakraProvider,
-} from '@chakra-ui/react';
+import { FormControl, FormLabel, ChakraProvider } from '@chakra-ui/react';
 
 import GameInfo from './game-info';
 

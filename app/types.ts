@@ -5,12 +5,13 @@ export interface Card {
   wagerToken: string;
   wagerAmount: number;
   numberOfGames: number;
-  isInProgress: boolean;
+  hasPlayerAccepted: boolean;
   timeLimit: number;
   timeLastMove: number;
   timePlayer0: number;
   timePlayer1: number;
-  isPlayerTurn: boolean;
   isTournament: boolean;
+  isTournamentInProgress: boolean;
+  isPlayerTurn: boolean;
   isComplete: boolean;
 }

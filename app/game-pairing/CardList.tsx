@@ -19,27 +19,15 @@ const {
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
-import { useStateManager, checkMetaMaskConnection } from '#/lib/api/sharedState';
+import {
+  useStateManager,
+  checkMetaMaskConnection,
+} from '#/lib/api/sharedState';
 
 import CardAccordion from './CardAccordion'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
-  numberOfGames: number;
-  isInProgress: boolean;
-  timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
-  isTournament: boolean;
-  isComplete: boolean;
-}
+import { Card } from '../../app/types';
 
 interface Props {
   cards: Card[];
@@ -98,7 +86,7 @@ const CardList = () => {
         // console.log("API", globalState.useAPI);
         const hasMetamask = await checkMetaMaskConnection();
         if (hasMetamask) {
-          console.log("PINGING ")
+          console.log('PINGING ');
           const data = await GetAllWagersForPairing();
 
           if (Array.isArray(data)) {
@@ -107,7 +95,6 @@ const CardList = () => {
             console.error('GetAllWagers returned invalid data:', cards);
           }
           setIsLoading(false);
-
         } else {
           const data = await GetAllWagersForPairing_NOMETAMASK();
 
@@ -118,7 +105,6 @@ const CardList = () => {
           }
           setIsLoading(false);
         }
-  
       } catch (error) {
         console.error('Error fetching wagers:', error);
       }

@@ -38,7 +38,7 @@ import {
   GetIsUserInTournament,
   GetCanTournamentBegin,
   TournamentData,
-  GetCanTournamentBegin_NOMETAMASK
+  GetCanTournamentBegin_NOMETAMASK,
 } from '#/lib/api/form';
 
 import { useStateManager } from '#/lib/api/sharedState';
@@ -79,22 +79,26 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         const resultIsInTournament = await GetIsUserInTournament(
           card.tournamentNonce,
         );
-        const resultCanBegin = await GetCanTournamentBegin(card.tournamentNonce);
+        const resultCanBegin = await GetCanTournamentBegin(
+          card.tournamentNonce,
+        );
         const chainData = await getChainId();
-  
+
         setIsUserInTournament(Boolean(resultIsInTournament));
         setCanTournamentBegin(Boolean(resultCanBegin));
-  
+
         setChainID(Number(chainData));
-  
+
         const detail = getTokenDetails(chainData, card.token);
         setTokenDetail(detail);
       } else {
-        const resultCanBegin = await GetCanTournamentBegin_NOMETAMASK(card.tournamentNonce);
-  
+        const resultCanBegin = await GetCanTournamentBegin_NOMETAMASK(
+          card.tournamentNonce,
+        );
+
         setIsUserInTournament(Boolean(false));
         setCanTournamentBegin(Boolean(resultCanBegin));
-  
+
         const detail = getTokenDetails(globalState.chainID, card.token);
         setTokenDetail(detail);
       }
@@ -333,14 +337,15 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
           >
             {isLoading ? (
               <>
-                    <Spinner
-                          thickness="2px"
-                          speed="0.85s"
-                          emptyColor="gray.800"
-                          color="gray.400"
-                          size="lg"
-                         mb={4} 
-                        />              </>
+                <Spinner
+                  thickness="2px"
+                  speed="0.85s"
+                  emptyColor="gray.800"
+                  color="gray.400"
+                  size="lg"
+                  mb={4}
+                />{' '}
+              </>
             ) : (
               <>
                 <Flex width="100%" maxW="800px" mx="auto" wrap="wrap" mb={4}>

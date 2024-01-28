@@ -17,7 +17,7 @@ const {
 
 const {
   GetNumberOfGames,
-  GetNumberOfGames_NOMETAMASK
+  GetNumberOfGames_NOMETAMASK,
 } = require('../../lib/api/form');
 
 interface CardSidePanelProps {
@@ -57,13 +57,11 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
           );
           const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
           setNumberOfGames(gameNumber);
-
         } else {
           setPlayerColor('white');
 
-          const gameNumberData: Array<Number> = await GetNumberOfGames_NOMETAMASK(
-            card.matchAddress,
-          );
+          const gameNumberData: Array<Number> =
+            await GetNumberOfGames_NOMETAMASK(card.matchAddress);
           const gameNumber = `${gameNumberData[0]} of ${gameNumberData[1]}`;
           setNumberOfGames(gameNumber);
         }
@@ -75,8 +73,6 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
     };
     getGameMoves();
   }, [card]);
-
-
 
   const handleClickApprove = async (
     wagerAddress: string,
@@ -119,7 +115,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
         )}
       </Box>
       <Stack spacing={4} mt={8}>
-        {!card.isInProgress &&
+        {!card.hasPlayerAccepted &&
           Number(card.player0Address) !== Number(account) && (
             <>
               <Button
@@ -186,7 +182,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, account }) => {
           </Button>
         </Link>
       </Stack>
-      {!card.isInProgress &&
+      {!card.hasPlayerAccepted &&
         Number(card.player0Address) !== Number(account) && (
           <Box
             marginTop="50px"

@@ -52,12 +52,13 @@ interface Card {
   wagerToken: string;
   wagerAmount: number;
   numberOfGames: number;
-  isInProgress: boolean;
+  hasPlayerAccepted: boolean;
   timeLimit: number;
   timeLastMove: number;
   timePlayer0: number;
   timePlayer1: number;
   isTournament: boolean;
+  isTournamentInProgress: boolean;
   isPlayerTurn: boolean;
   isComplete: boolean;
 }
@@ -110,7 +111,6 @@ const ERC20ABI = [
 export const updateContractAddresses = async (): Promise<any> => {
   let t1 = new Date();
 
-
   let { provider, isWalletConnected } = await setupProvider();
 
   const network = await provider.getNetwork();
@@ -150,8 +150,8 @@ export const updateContractAddresses = async (): Promise<any> => {
   }
 
   let t2 = new Date();
-  let timeDiff = (t2.getTime() - t1.getTime() ) / 1000;
-  console.log("Time elapsed: " + timeDiff + " seconds");
+  let timeDiff = (t2.getTime() - t1.getTime()) / 1000;
+  console.log('Time elapsed: ' + timeDiff + ' seconds');
 
   return provider;
 };
@@ -363,17 +363,18 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
 
     const data: Card = {
       matchAddress: wagerAddress,
-      player0Address: wagerParams[0],
-      player1Address: wagerParams[1],
-      wagerToken: wagerParams[2],
-      wagerAmount: parseInt(wagerParams[3]),
-      numberOfGames: parseInt(wagerParams[4]),
-      isInProgress: wagerParams[5],
-      timeLimit: parseInt(wagerParams[6]),
-      timeLastMove: parseInt(wagerParams[7]),
-      timePlayer0: parseInt(wagerParams[8]),
-      timePlayer1: parseInt(wagerParams[9]),
+      player0Address: wagerParams.player0,
+      player1Address: wagerParams.player1,
+      wagerToken: wagerParams.wagerToken,
+      wagerAmount: parseInt(wagerParams.wager),
+      numberOfGames: parseInt(wagerParams.numberOfGames),
+      hasPlayerAccepted: wagerParams.hasPlayerAccepted,
+      timeLimit: parseInt(wagerParams.timeLimit),
+      timeLastMove: parseInt(wagerParams.timeLastMove),
+      timePlayer0: parseInt(wagerParams.timePlayer0),
+      timePlayer1: parseInt(wagerParams.timePlayer1),
       isTournament: Boolean(wagerParams.isTournament),
+      isTournamentInProgress: false, //
       isPlayerTurn: false,
       isComplete: Boolean(wagerParams.isComplete),
     };
@@ -510,16 +511,25 @@ export const GetAllWagers = async (): Promise<Card[]> => {
       const token = new ethers.Contract(wagerParams[2], ERC20ABI, signer);
       const decimals = await token.decimals();
 
+      const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+
       // checking if wager is in tournament and if is in progress
-      let isInProgress = false;
+      let isTournamentInProgress = false;
       if (wagerParams.isTournament === true) {
-        const tournament = new ethers.Contract(Tournament, tournamentABI, signer); 
         const tournamentNonce = await tournament.tournamentNonce();
-        for (let i = 0; i <= tournamentNonce; i++) {
-          const playersInTournament = await tournament.getTournamentPlayers(i);
-          const isPlayerInTournament = playersInTournament.includes(accounts[0]);
+        for (let j = 0; j < tournamentNonce; j++) {
+          console.log('IN LOOP');
+          const tournamentAddresses =
+            await tournament.getTournamentWagerAddresses(j);
+
+          console.log(tournamentAddresses.includes(wagers[i]));
+
+          const isPlayerInTournament = tournamentAddresses.includes(wagers[i]);
+
           if (isPlayerInTournament) {
-            isInProgress = await tournament.tournaments(i);
+            const data = await tournament.tournaments(j);
+            isTournamentInProgress = data.isInProgress;
+            console.log('IS IN PROGRESS', isTournamentInProgress, wagers[i]);
           }
         }
       }
@@ -531,15 +541,31 @@ export const GetAllWagers = async (): Promise<Card[]> => {
         wagerToken: wagerParams.wagerToken,
         wagerAmount: ethers.utils.formatUnits(wagerParams.wager, decimals),
         numberOfGames: parseInt(wagerParams.numberOfGames),
-        // isInProgress: wagerParams[5],
+        hasPlayerAccepted: Boolean(wagerParams.hasPlayerAccepted),
         timeLimit: parseInt(wagerParams.timeLimit),
         timeLastMove: parseInt(wagerParams.timeLastMove),
         timePlayer0: parseInt(wagerParams.timePlayer0),
         timePlayer1: parseInt(wagerParams.timePlayer1),
         isPlayerTurn: isPlayerTurn,
         isTournament: Boolean(wagerParams.isTournament),
+        isTournamentInProgress: Boolean(isTournamentInProgress),
         isComplete: Boolean(wagerParams.isComplete),
       };
+
+      if (wagers[i] == '0xE141Ca12EA4f75d846fbC9862f67e510b0774099') {
+        console.log('CARD D');
+        console.log(card);
+
+        const addresses = await tournament.getTournamentWagerAddresses('1');
+        console.log(addresses);
+
+        console.log(addresses.includes(wagers[i]));
+
+        const data = await tournament.tournaments('1');
+
+        console.log(data);
+        // console.log(data.isInProgress);
+      }
 
       allWagerParams.push(card);
     }
@@ -918,18 +944,19 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
       const wagerParams = await chess.gameWagers(wagerAddresses[i]);
       const card: Card = {
         matchAddress: wagerAddresses[i],
-        player0Address: wagerParams[0],
-        player1Address: wagerParams[1],
-        wagerToken: wagerParams[2],
-        wagerAmount: parseInt(wagerParams[3]),
-        numberOfGames: parseInt(wagerParams[4]),
-        isInProgress: wagerParams[5],
-        timeLimit: parseInt(wagerParams[6]),
-        timeLastMove: parseInt(wagerParams[7]),
-        timePlayer0: parseInt(wagerParams[8]),
-        timePlayer1: parseInt(wagerParams[9]),
+        player0Address: wagerParams.player0,
+        player1Address: wagerParams.player1,
+        wagerToken: wagerParams.wagerToken,
+        wagerAmount: parseInt(wagerParams.wager),
+        numberOfGames: parseInt(wagerParams.numberOfGames),
+        hasPlayerAccepted: wagerParams.hasPlayerAccepted,
+        timeLimit: parseInt(wagerParams.timeLimit),
+        timeLastMove: parseInt(wagerParams.timeLastMove),
+        timePlayer0: parseInt(wagerParams.timePlayer0),
+        timePlayer1: parseInt(wagerParams.timePlayer1),
         isPlayerTurn: false,
         isTournament: Boolean(wagerParams.isTournament),
+        isTournamentInProgress: false,
         isComplete: Boolean(wagerParams.isComplete),
       };
       allWagerParams.push(card);
@@ -952,25 +979,44 @@ export const GetAnalyticsData = async (): Promise<[string[], string]> => {
 export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   await updateContractAddresses();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const accounts = await provider.send('eth_requestAccounts', []);
 
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
+
+    let isTournamentInProgress = false;
+    if (wagerParams.isTournament === true) {
+      const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
+      const tournamentNonce = await tournament.tournamentNonce();
+      for (let i = 0; i <= tournamentNonce; i++) {
+        const playersInTournament = await tournament.getTournamentPlayers(i);
+        const isPlayerInTournament = playersInTournament.includes(accounts[0]);
+        if (isPlayerInTournament) {
+          isTournamentInProgress = await tournament.tournaments(i);
+        }
+      }
+    }
+
+    let isPlayerTurn = await GetPlayerTurn(wagerAddress);
+
     const card: Card = {
       matchAddress: wagerAddress,
-      player0Address: wagerParams[0],
-      player1Address: wagerParams[1],
-      wagerToken: wagerParams[2],
-      wagerAmount: parseInt(wagerParams[3]),
-      numberOfGames: parseInt(wagerParams[4]),
-      isInProgress: wagerParams[5],
-      timeLimit: parseInt(wagerParams[6]),
-      timeLastMove: parseInt(wagerParams[7]),
-      timePlayer0: parseInt(wagerParams[8]),
-      timePlayer1: parseInt(wagerParams[9]),
+      player0Address: wagerParams.player0,
+      player1Address: wagerParams.player1,
+      wagerToken: wagerParams.wagerToken,
+      wagerAmount: parseInt(wagerParams.wager),
+      numberOfGames: parseInt(wagerParams.numberOfGames),
+      hasPlayerAccepted: wagerParams.hasPlayerAccepted,
+      timeLimit: parseInt(wagerParams.timeLimit),
+      timeLastMove: parseInt(wagerParams.timeLastMove),
+      timePlayer0: parseInt(wagerParams.timePlayer0),
+      timePlayer1: parseInt(wagerParams.timePlayer1),
       isTournament: Boolean(wagerParams.isTournament),
-      isPlayerTurn: false,
+      isTournamentInProgress: isTournamentInProgress,
+      isPlayerTurn: isPlayerTurn,
       isComplete: Boolean(wagerParams.isComplete),
     };
 
@@ -1947,7 +1993,6 @@ export const GetInProgressTournaments = async () => {
   return tournamentsData;
 };
 
-
 export const GetDividendBalances_NOMETAMASK = async () => {
   const provider = await updateContractAddresses();
 
@@ -1977,7 +2022,7 @@ export const GetDividendBalances_NOMETAMASK = async () => {
 };
 
 export const GetDividendData_NOMETAMASK = async () => {
-  const provider =  await updateContractAddresses();
+  const provider = await updateContractAddresses();
   const token = new ethers.Contract(ChessToken, ERC20ABI, provider);
   try {
     const totalSupply = ethers.utils.formatEther(await token.totalSupply(), 18);
@@ -2029,7 +2074,6 @@ export const GetNumberOfGames_NOMETAMASK = async (
     return [];
   }
 };
-
 
 export const GetGameMoves_NOMETAMASK = async (
   wagerAddress: string,
@@ -2110,14 +2154,16 @@ export const GetAllWagersForPairing_NOMETAMASK = async () => {
   }
 };
 
-export const GetCanTournamentBegin_NOMETAMASK = async (tournamentId: number) => {
+export const GetCanTournamentBegin_NOMETAMASK = async (
+  tournamentId: number,
+) => {
   const provider = await updateContractAddresses();
   const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
   try {
     const data = await tournament.tournaments(tournamentId);
-    const startTime = Number(data.startTime) * 1000; 
-    const timeNow = Date.now(); 
-    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; 
+    const startTime = Number(data.startTime) * 1000;
+    const timeNow = Date.now();
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
 
     if (timeNow - startTime > oneDayInMilliseconds) {
       return true;
@@ -2129,8 +2175,9 @@ export const GetCanTournamentBegin_NOMETAMASK = async (tournamentId: number) => 
   }
 };
 
-
-export const GetPendingTournaments_NOMETAMASK = async (): Promise<TournamentData[]> => {
+export const GetPendingTournaments_NOMETAMASK = async (): Promise<
+  TournamentData[]
+> => {
   const provider = await updateContractAddresses();
   const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
   const tournamentsData: TournamentData[] = [];
@@ -2233,7 +2280,7 @@ export const GetInProgressTournaments_NOMETAMASK = async () => {
       }
     }
   } catch (error) {
-   console.log("ERROR GETTING TOURNAMENTS PUBLIC RPC") 
+    console.log('ERROR GETTING TOURNAMENTS PUBLIC RPC');
   }
   return tournamentsData;
 };
@@ -2276,7 +2323,9 @@ export const GetIsTournamentEnded_NOMETAMASK = async (tournamentId: number) => {
   }
 };
 
-export const GetWagerAddressTournament_NOMETAMASK = async (tournamentNonce: number) => {
+export const GetWagerAddressTournament_NOMETAMASK = async (
+  tournamentNonce: number,
+) => {
   const provider = await updateContractAddresses();
   const tournament = new ethers.Contract(Tournament, tournamentABI, provider);
   try {
@@ -2713,3 +2762,38 @@ export const GetCurrentBlock = async () => {
     throw error; // Rethrow the error for handling upstream
   }
 };
+
+/*     
+let isTournamentInProgress = false;
+    if (wagerParams.isTournament === true) {
+      const tournament = new ethers.Contract(Tournament, tournamentABI, signer); 
+      const tournamentNonce = await tournament.tournamentNonce();
+      for (let i = 0; i <= tournamentNonce; i++) {
+        const playersInTournament = await tournament.getTournamentPlayers(i);
+        const isPlayerInTournament = playersInTournament.includes(accounts[0]);
+        if (isPlayerInTournament) {
+          isTournamentInProgress = await tournament.tournaments(i);
+        }
+      }
+    }
+
+    let isPlayerTurn = await GetPlayerTurn(wagerAddress);
+
+    const card: Card = {
+      matchAddress: wagerAddress,
+      player0Address: wagerParams.player0,
+      player1Address: wagerParams.player1,
+      wagerToken: wagerParams.wagerToken,
+      wagerAmount: parseInt(wagerParams.wager),
+      numberOfGames: parseInt(wagerParams.numberOfGames),
+      hasPlayerAccepted: wagerParams.hasPlayerAccepted,
+      timeLimit: parseInt(wagerParams.timeLimit),
+      timeLastMove: parseInt(wagerParams.timeLastMove),
+      timePlayer0: parseInt(wagerParams.timePlayer0),
+      timePlayer1: parseInt(wagerParams.timePlayer1),
+      isTournament: Boolean(wagerParams.isTournament),
+      isTournamentInProgress: isTournamentInProgress,
+      isPlayerTurn: isPlayerTurn,
+      isComplete: Boolean(wagerParams.isComplete),
+    };
+ */

@@ -10,7 +10,10 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetInProgressTournaments, GetInProgressTournaments_NOMETAMASK } = require('../../lib/api/form');
+const {
+  GetInProgressTournaments,
+  GetInProgressTournaments_NOMETAMASK,
+} = require('../../lib/api/form');
 
 import TournamentCard from './TournamentCard'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';

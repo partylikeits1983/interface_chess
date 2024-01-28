@@ -13,10 +13,7 @@ import GameInfo from './game-info';
 import GameTimer from './game-timer';
 import ScoreBoard from './score-board';
 import ForwardBackButtons from './forward-back-buttons';
-import {
-  checkIfGasless,
-  submitMoves,
-} from '../../lib/api/gaslessAPI';
+import { checkIfGasless, submitMoves } from '../../lib/api/gaslessAPI';
 
 import BackAndForwardGameControls from './boardUtils/gameControls';
 import { numberToString } from './boardUtils/chessUtils'; // Utility functions

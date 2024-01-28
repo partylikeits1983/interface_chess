@@ -15,9 +15,7 @@ import {
   GetNumberOfGames,
 } from '#/lib/api/form';
 
-import {
-  useStateManager,
-} from '#/lib/api/sharedState';
+import { useStateManager } from '#/lib/api/sharedState';
 
 interface CurrentGamesProps {
   useAPI: boolean;

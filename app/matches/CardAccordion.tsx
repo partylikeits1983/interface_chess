@@ -117,22 +117,21 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
               </HStack>
 
               <HStack spacing="1.5rem">
-  <Text fontSize="md">
-    {card.isTournament && !card.isInProgress
-      ? 'Waiting for tournament to start 🕒'
-      : card.isComplete
-        ? 'Wager completed ✅'
-        : card.isInProgress
-          ? card.isPlayerTurn
-            ? 'Your turn 🟢'
-            : 'Waiting for opponent to move 🔴'
-          : Number(card.player1Address) === Number(account)
-            ? 'Pending Your Approval 🔵'
-            : 'Waiting for opponent to accept wager 🔵'}
-  </Text>
-  <AccordionIcon />
-</HStack>
-
+                <Text fontSize="md">
+                  {card.isTournament && !card.isTournamentInProgress
+                    ? 'Waiting for tournament to start 🕒'
+                    : card.isComplete
+                    ? 'Wager completed ✅'
+                    : card.hasPlayerAccepted
+                    ? card.isPlayerTurn
+                      ? 'Your turn 🟢'
+                      : 'Waiting for opponent to move 🔴'
+                    : Number(card.player1Address) === Number(account)
+                    ? 'Pending Your Approval 🔵'
+                    : 'Waiting for opponent to accept wager 🔵'}
+                </Text>
+                <AccordionIcon />
+              </HStack>
             </Flex>
           </AccordionButton>
         </h2>
@@ -195,7 +194,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
                 { label: 'Number of Games', value: card.numberOfGames },
                 {
                   label: 'Status',
-                  value: card.isInProgress
+                  value: card.hasPlayerAccepted
                     ? card.isPlayerTurn
                       ? 'Your turn'
                       : 'Waiting for opponent to move'
@@ -269,7 +268,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
               <SidePanel
                 card={card}
                 isPendingApproval={
-                  !card.isInProgress &&
+                  !card.hasPlayerAccepted &&
                   Number(card.player1Address) === Number(account)
                 }
               ></SidePanel>

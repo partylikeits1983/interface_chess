@@ -4,7 +4,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 
-import { getCrowdSaleBalance, GetChessFishTokens, getCrowdSaleBalance_NOMETAMASK } from '#/lib/api/form';
+import {
+  getCrowdSaleBalance,
+  GetChessFishTokens,
+  getCrowdSaleBalance_NOMETAMASK,
+} from '#/lib/api/form';
 
 import {
   Flex,
@@ -82,14 +86,14 @@ function CrowdSale() {
   useEffect(() => {
     async function fetchBalances() {
       const hasMetamask = await checkMetaMaskConnection();
-      let balanceCFSH; 
+      let balanceCFSH;
       if (hasMetamask) {
-      balanceCFSH = await getCrowdSaleBalance();
+        balanceCFSH = await getCrowdSaleBalance();
       } else {
-balanceCFSH = await getCrowdSaleBalance_NOMETAMASK();
+        balanceCFSH = await getCrowdSaleBalance_NOMETAMASK();
       }
       setCFSHBalance(balanceCFSH);
-     setIsLoading(false);
+      setIsLoading(false);
     }
     fetchBalances();
   }, []);

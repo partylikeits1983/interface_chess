@@ -31,13 +31,11 @@ import {
   PayoutTournament,
   GetTournamentScore_NOMETAMASK,
   GetIsTournamentEnded_NOMETAMASK,
-  GetWagerAddressTournament_NOMETAMASK
+  GetWagerAddressTournament_NOMETAMASK,
 } from '#/lib/api/form';
 
 import { getTokenDetails } from '#/lib/api/token-information';
-import {
-  useStateManager,
-} from '#/lib/api/sharedState';
+import { useStateManager } from '#/lib/api/sharedState';
 
 import { TournamentData } from '#/lib/api/form';
 
@@ -102,7 +100,9 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         setTokenDetail(detail);
       } else {
         const data = await GetTournamentScore_NOMETAMASK(card.tournamentNonce);
-        const isEnded = await GetIsTournamentEnded_NOMETAMASK(card.tournamentNonce);
+        const isEnded = await GetIsTournamentEnded_NOMETAMASK(
+          card.tournamentNonce,
+        );
 
         if (isEnded) {
           setIsTournamentEnded(true);
@@ -123,9 +123,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         // pass chainData not chainId... sigh
         const detail = getTokenDetails(globalState.chainID, card.token);
         setTokenDetail(detail);
-
       }
-      console.log("FALSE");
+      console.log('FALSE');
       setIsLoading(false);
     }
     getScoreData();

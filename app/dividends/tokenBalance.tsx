@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Text, Spinner } from '@chakra-ui/react';
 
-import { GetDividendBalances, GetDividendBalances_NOMETAMASK } from '#/lib/api/form';
+import {
+  GetDividendBalances,
+  GetDividendBalances_NOMETAMASK,
+} from '#/lib/api/form';
 
 import { checkMetaMaskConnection } from '#/lib/api/sharedState';
 
