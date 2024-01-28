@@ -510,20 +510,34 @@ export const GetAllWagers = async (): Promise<Card[]> => {
       const token = new ethers.Contract(wagerParams[2], ERC20ABI, signer);
       const decimals = await token.decimals();
 
+      // checking if wager is in tournament and if is in progress
+      let isInProgress = false;
+      if (wagerParams.isTournament === true) {
+        const tournament = new ethers.Contract(Tournament, tournamentABI, signer); 
+        const tournamentNonce = await tournament.tournamentNonce();
+        for (let i = 0; i <= tournamentNonce; i++) {
+          const playersInTournament = await tournament.getTournamentPlayers(i);
+          const isPlayerInTournament = playersInTournament.includes(accounts[0]);
+          if (isPlayerInTournament) {
+            isInProgress = await tournament.tournaments(i);
+          }
+        }
+      }
+
       const card: Card = {
         matchAddress: wagers[i],
-        player0Address: wagerParams[0],
-        player1Address: wagerParams[1],
-        wagerToken: wagerParams[2],
-        wagerAmount: ethers.utils.formatUnits(wagerParams[3], decimals),
-        numberOfGames: parseInt(wagerParams[4]),
-        isInProgress: wagerParams[5],
-        timeLimit: parseInt(wagerParams[6]),
-        timeLastMove: parseInt(wagerParams[7]),
-        timePlayer0: parseInt(wagerParams[8]),
-        timePlayer1: parseInt(wagerParams[9]),
+        player0Address: wagerParams.player0,
+        player1Address: wagerParams.player1,
+        wagerToken: wagerParams.wagerToken,
+        wagerAmount: ethers.utils.formatUnits(wagerParams.wager, decimals),
+        numberOfGames: parseInt(wagerParams.numberOfGames),
+        // isInProgress: wagerParams[5],
+        timeLimit: parseInt(wagerParams.timeLimit),
+        timeLastMove: parseInt(wagerParams.timeLastMove),
+        timePlayer0: parseInt(wagerParams.timePlayer0),
+        timePlayer1: parseInt(wagerParams.timePlayer1),
         isPlayerTurn: isPlayerTurn,
-        isTournament: Boolean(wagerParams[10]),
+        isTournament: Boolean(wagerParams.isTournament),
         isComplete: Boolean(wagerParams.isComplete),
       };
 

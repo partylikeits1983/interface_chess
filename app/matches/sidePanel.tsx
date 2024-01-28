@@ -375,7 +375,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
           </>
         )}
 
-        {IsWagerGameTimeEnded && isInProgress && !isComplete && (
+        {IsWagerGameTimeEnded && !isInProgress && !isComplete && (
           <>
             <Button
               style={{ width: '250px', position: 'relative' }}
