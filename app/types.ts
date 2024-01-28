@@ -14,4 +14,5 @@ export interface Card {
   isTournamentInProgress: boolean;
   isPlayerTurn: boolean;
   isComplete: boolean;
+  hasBeenPaid: boolean;
 }

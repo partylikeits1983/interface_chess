@@ -1,4 +1,6 @@
 const ethers = require('ethers');
+// import { ethers, providers } from 'ethers';
+
 import { CreateMatchType } from './types';
 
 const chessWagerABI = require('./contract-abi/ChessWagerABI').abi;
@@ -151,7 +153,7 @@ export const updateContractAddresses = async (): Promise<any> => {
 
   let t2 = new Date();
   let timeDiff = (t2.getTime() - t1.getTime()) / 1000;
-  console.log('Time elapsed: ' + timeDiff + ' seconds');
+  // console.log('Time elapsed: ' + timeDiff + ' seconds');
 
   return provider;
 };
@@ -511,25 +513,27 @@ export const GetAllWagers = async (): Promise<Card[]> => {
       const token = new ethers.Contract(wagerParams[2], ERC20ABI, signer);
       const decimals = await token.decimals();
 
-      const tournament = new ethers.Contract(Tournament, tournamentABI, signer);
-
       // checking if wager is in tournament and if is in progress
       let isTournamentInProgress = false;
       if (wagerParams.isTournament === true) {
+        const tournament = new ethers.Contract(
+          Tournament,
+          tournamentABI,
+          signer,
+        );
+
         const tournamentNonce = await tournament.tournamentNonce();
-        for (let j = 0; j < tournamentNonce; j++) {
-          console.log('IN LOOP');
+
+        // edit this so that
+        for (let j = tournamentNonce - 1; j >= 0; j--) {
           const tournamentAddresses =
             await tournament.getTournamentWagerAddresses(j);
-
-          console.log(tournamentAddresses.includes(wagers[i]));
 
           const isPlayerInTournament = tournamentAddresses.includes(wagers[i]);
 
           if (isPlayerInTournament) {
             const data = await tournament.tournaments(j);
             isTournamentInProgress = data.isInProgress;
-            console.log('IS IN PROGRESS', isTournamentInProgress, wagers[i]);
           }
         }
       }
@@ -551,21 +555,6 @@ export const GetAllWagers = async (): Promise<Card[]> => {
         isTournamentInProgress: Boolean(isTournamentInProgress),
         isComplete: Boolean(wagerParams.isComplete),
       };
-
-      if (wagers[i] == '0xE141Ca12EA4f75d846fbC9862f67e510b0774099') {
-        console.log('CARD D');
-        console.log(card);
-
-        const addresses = await tournament.getTournamentWagerAddresses('1');
-        console.log(addresses);
-
-        console.log(addresses.includes(wagers[i]));
-
-        const data = await tournament.tournaments('1');
-
-        console.log(data);
-        // console.log(data.isInProgress);
-      }
 
       allWagerParams.push(card);
     }
