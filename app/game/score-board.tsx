@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-import { GetWagerPlayers, GetWagerStatus, setupProvider } from '#/lib/api/form';
+import { GetWagerPlayers, GetWagerStatus, setupProvider, IsPlayer0White } from '#/lib/api/form';
 
 interface ScoreBoardProps {
   wager: string;
   numberOfGames: string;
-  isPlayer0White: boolean;
+  // isPlayer0White: boolean;
   gameNumber: number;
 }
 
@@ -13,7 +13,7 @@ import { Box, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 
 const ScoreBoard: React.FC<ScoreBoardProps> = ({
   wager,
-  isPlayer0White,
+  
   gameNumber,
 }) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
@@ -22,6 +22,8 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
 
   const [winsPlayer0, setWinsPlayer0] = useState(0);
   const [winsPlayer1, setWinsPlayer1] = useState(0);
+
+  const [isPlayer0White, setIsPlayer0White] = useState(false);
 
   useEffect(() => {
     const fetchWins = async () => {
@@ -36,6 +38,9 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
         const [_player0Address, _player1Address] = await GetWagerPlayers(wager);
         setPlayer0Address(_player0Address);
         setPlayer1Address(_player1Address);
+
+        const _isPlayer0White = await IsPlayer0White(wager);
+        setIsPlayer0White(_isPlayer0White);
       }
     };
 

@@ -800,7 +800,7 @@ export const GetWagerPlayers = async (
   const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
 
   try {
-    const wagerPlayerData = await chess.gameWagers(wagerAddress);
+    const wagerPlayerData = await chess.getWagerPlayers(wagerAddress);
 
     const wagerStatus: WagerPlayerAddresses = {
       player0Address: wagerPlayerData[0],
