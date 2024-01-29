@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-import { GetWagerPlayers, GetWagerStatus, setupProvider, IsPlayer0White } from '#/lib/api/form';
+import {
+  GetWagerPlayers,
+  GetWagerStatus,
+  setupProvider,
+  IsPlayer0White,
+} from '#/lib/api/form';
 
 interface ScoreBoardProps {
   wager: string;
@@ -13,7 +18,7 @@ import { Box, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 
 const ScoreBoard: React.FC<ScoreBoardProps> = ({
   wager,
-  
+
   gameNumber,
 }) => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
