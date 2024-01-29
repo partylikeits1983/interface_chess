@@ -211,8 +211,8 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     {
       label: 'Tournament Pool Size',
       value: (
-        card.tokenAmount * card.joined_players.length +
-        card.prizePool
+        Number(card.tokenAmount * card.joined_players.length) +
+        Number(card.prizePool)
       ).toString(), // convert to string
     },
     { label: 'Tournament Entry Fee', value: card.tokenAmount.toString() },
