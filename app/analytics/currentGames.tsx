@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
-import { GetWagersFenDB } from '#/lib/api/db-api';
+import { GetWagersFenDB, GetWagersDB } from '#/lib/api/db-api';
 import {
   GetAnalyticsData,
   GetGameMoves,
@@ -40,18 +40,36 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
         // need to ping API and check if it is up
         if (true) {
           // trying to ping GCP chess fish api
+          // const gameAddresses = await GetWagersDB(globalState.chainID);
+          // setWagerAddresses(gameAddresses);
           const gameData = await GetWagersFenDB(globalState.chainID);
 
+          // Filter out items with the starting FEN string and empty fenString
           const filteredGameData = gameData.filter(
-            (item) => item.fenString !== startingFen,
+            (item) => item.fenString !== startingFen && item.fenString !== "",
           );
-
-          const fenStrings = filteredGameData.map((item) => item.fenString);
-
+          
+          // Deduplicate wager addresses (case-insensitive)
+          const uniqueWagerAddresses = new Set<string>(); // Specify the type here
+          const fenStrings: string[] = [];
+          
+          for (const item of filteredGameData) {
+            const lowerCaseAddress = item.wagerAddress.toLowerCase();
+            if (!uniqueWagerAddresses.has(lowerCaseAddress)) {
+              uniqueWagerAddresses.add(lowerCaseAddress);
+              fenStrings.push(item.fenString);
+            }
+          }
+          
+          console.log("Unique Data", Array.from(uniqueWagerAddresses));
           setGames(fenStrings);
+          
+          // Set the unique wager addresses
+          setWagerAddresses(Array.from(uniqueWagerAddresses)); // TypeScript knows this is string[]
+          
         } else {
           // if useAPI is false, then use the Smart Contract via RPC link
-          console.log('Getting all games via RPC-LINK');
+/*           console.log('Getting all games via RPC-LINK');
           const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
           setTotalGames(totalGames);
@@ -73,7 +91,7 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
               game.move(movesArray[i]);
             }
             GamesFen.push(game.fen());
-          }
+          } */
         }
 
         // setLoading(false);
