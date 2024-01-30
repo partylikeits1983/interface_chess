@@ -78,8 +78,10 @@ export default function Docs() {
         <Flex
           justifyContent="center"
           mt={4}
-          flexDirection={'row'}
+          mb={2}
+          flexDirection="column" // Always use column layout
           align="center"
+          width="100%"
         >
           <Box
             p={6}
@@ -89,8 +91,8 @@ export default function Docs() {
             cursor="pointer"
             borderColor="white"
             borderWidth={0.5}
-            mr={5}
-            width="390px" // Set the width to 200 pixels
+            width="70%" // Set width to 100%
+            mb={4} // Add margin bottom
             _hover={{
               bgColor: 'gray.700',
               borderColor: 'white',
@@ -120,7 +122,8 @@ export default function Docs() {
             cursor="pointer"
             borderColor="white"
             borderWidth={0.5}
-            width="250px" // Set the width to 200 pixels
+            width="70%" // Set width to 100%
+            mb={4} // Add margin bottom
             _hover={{
               bgColor: 'gray.700',
               borderColor: 'white',
@@ -139,8 +142,10 @@ export default function Docs() {
         <Flex
           justifyContent="center"
           mt={4}
-          flexDirection={'row'}
+          mb={2}
+          flexDirection="column" // Always use column layout
           align="center"
+          width="100%"
         >
           <Box
             p={6}
@@ -150,8 +155,8 @@ export default function Docs() {
             cursor="pointer"
             borderColor="white"
             borderWidth={0.5}
-            width="390px"
-            mr={5}
+            width="70%" 
+            mb={4} // Add margin bottom
             _hover={{
               bgColor: 'gray.700',
               borderColor: 'white',
@@ -181,7 +186,8 @@ export default function Docs() {
             cursor="pointer"
             borderColor="white"
             borderWidth={0.5}
-            width="250px"
+            width="70%" // Set width to 100%
+            mb={4} // Add margin bottom
             _hover={{
               bgColor: 'gray.700',
               borderColor: 'white',
@@ -204,7 +210,6 @@ export default function Docs() {
           <Link
             isExternal
             color="green.500"
-            // fontWeight="bold"
             onClick={() => {
               window.open(
                 'https://support.metamask.io/hc/en-us/articles/360015489531-Getting-started-with-MetaMask',

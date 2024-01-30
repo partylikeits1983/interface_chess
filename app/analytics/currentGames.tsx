@@ -46,13 +46,13 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
 
           // Filter out items with the starting FEN string and empty fenString
           const filteredGameData = gameData.filter(
-            (item) => item.fenString !== startingFen && item.fenString !== "",
+            (item) => item.fenString !== startingFen && item.fenString !== '',
           );
-          
+
           // Deduplicate wager addresses (case-insensitive)
           const uniqueWagerAddresses = new Set<string>(); // Specify the type here
           const fenStrings: string[] = [];
-          
+
           for (const item of filteredGameData) {
             const lowerCaseAddress = item.wagerAddress.toLowerCase();
             if (!uniqueWagerAddresses.has(lowerCaseAddress)) {
@@ -60,16 +60,15 @@ const CurrentGames: React.FC<CurrentGamesProps> = ({ useAPI }) => {
               fenStrings.push(item.fenString);
             }
           }
-          
-          console.log("Unique Data", Array.from(uniqueWagerAddresses));
+
+          console.log('Unique Data', Array.from(uniqueWagerAddresses));
           setGames(fenStrings);
-          
+
           // Set the unique wager addresses
           setWagerAddresses(Array.from(uniqueWagerAddresses)); // TypeScript knows this is string[]
-          
         } else {
           // if useAPI is false, then use the Smart Contract via RPC link
-/*           console.log('Getting all games via RPC-LINK');
+          /*           console.log('Getting all games via RPC-LINK');
           const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
 
           setTotalGames(totalGames);
