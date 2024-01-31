@@ -44,6 +44,7 @@ const {
   IsPlayer0White,
   setupProvider,
   IsPlayerWhite,
+  GetPlayerAddress,
 } = require('../../lib/api/form');
 
 import {
@@ -77,6 +78,7 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   const [moves, setMoves] = useState<string[]>([]);
   const [moveNumber, setMoveNumber] = useState(0);
 
+  const [playerAddress, setPlayerAddress] = useState('');
   const [isPlayerWhite, setPlayerColorWhite] = useState(true);
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isPlayerTurnSC, setPlayerTurnSC] = useState(false);
@@ -194,6 +196,9 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
 
     let isPlayer0White = await IsPlayer0White(wager);
     setIsPlayer0White(isPlayer0White);
+
+    let playerAddress = await GetPlayerAddress();
+    setPlayerAddress(playerAddress);
 
     const gameNumberData: Array<number> = await GetNumberOfGames(wager);
     const gameNumber = `${Number(gameNumberData[0]) + 1} of ${
@@ -529,38 +534,42 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
   useEffect(() => {
     let isMounted = true;
 
-    // WebSocket connection is established when isGameGasless is true
-    // if (isGameGasless === true) {
-    const socket = io('https://api.chess.fish', {
-      transports: ['websocket'],
-      path: '/socket.io/',
-    });
-
-    socket.on('connect', () => {
-      console.log('Connected to websocket');
-      socket.emit('getGameFen', wager.toLowerCase());
-      socket.emit('subscribeToGame', wager.toLowerCase());
-    });
-
-    socket.on('updateGameFen', async (data) => {
-      console.log('websocket:', data);
-      if (isMounted) {
-        const gameSocketData: IGameSocketData = data;
-        if (gameSocketData.isGasless === true) {
-          await handleUpdateUI(gameSocketData);
+    const setupSocket = async () => {
+      const playerAddress = await GetPlayerAddress(); // Assuming GetPlayerAddress is an asynchronous function
+      const socket = io('https://api.chess.fish', {
+        transports: ['websocket'],
+        path: '/socket.io/',
+        query: {
+          playerAddress: playerAddress,
+          wagerAddress: wagerAddress,
         }
-      }
-    });
-
-    socket.on('error', (errMsg) => {
-      console.error('Error:', errMsg);
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Disconnected from server');
-    });
-    // } // isGameGasless is true
-
+      });
+  
+      socket.on('connect', () => {
+        console.log('Connected to websocket');
+        socket.emit('getGameFen', wager.toLowerCase());
+        socket.emit('subscribeToGame', wager.toLowerCase());
+      });
+  
+      socket.on('updateGameFen', async (data) => {
+        console.log('websocket:', data);
+        if (isMounted) {
+          const gameSocketData: IGameSocketData = data;
+          if (gameSocketData.isGasless === true) {
+            await handleUpdateUI(gameSocketData);
+          }
+        }
+      });
+  
+      socket.on('error', (errMsg) => {
+        console.error('Error:', errMsg);
+      });
+  
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      });
+    };
+    setupSocket();
     return () => {
       isMounted = false;
     };

@@ -209,17 +209,14 @@ export const getChainId = async () => {
   }
 };
 
-export const getPlayerAddress = async () => {
+export const GetPlayerAddress = async () => {
   let accounts;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-
   try {
     accounts = await provider.listAccounts();
     await provider.send('eth_requestAccounts', []);
     return accounts[0];
   } catch (error) {
-    console.log('could not get wallet address');
-    console.log(error);
     return '';
   }
 };
