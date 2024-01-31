@@ -542,15 +542,15 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         query: {
           playerAddress: playerAddress,
           wagerAddress: wagerAddress,
-        }
+        },
       });
-  
+
       socket.on('connect', () => {
         console.log('Connected to websocket');
         socket.emit('getGameFen', wager.toLowerCase());
         socket.emit('subscribeToGame', wager.toLowerCase());
       });
-  
+
       socket.on('updateGameFen', async (data) => {
         console.log('websocket:', data);
         if (isMounted) {
@@ -560,11 +560,11 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
           }
         }
       });
-  
+
       socket.on('error', (errMsg) => {
         console.error('Error:', errMsg);
       });
-  
+
       socket.on('disconnect', () => {
         console.log('Disconnected from server');
       });

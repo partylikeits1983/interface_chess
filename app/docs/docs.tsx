@@ -155,7 +155,7 @@ export default function Docs() {
             cursor="pointer"
             borderColor="white"
             borderWidth={0.5}
-            width="70%" 
+            width="70%"
             mb={4} // Add margin bottom
             _hover={{
               bgColor: 'gray.700',
