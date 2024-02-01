@@ -2537,7 +2537,7 @@ export const GetIsTournamentEnded = async (tournamentId: number) => {
     const endTime = startTime + timeLimit;
 
     // Get current unix timestamp
-    const currentTimestamp = Math.floor(Date.now() / 1000) + 86400; // Divided by 1000 to convert from ms to s
+    const currentTimestamp = Math.floor(Date.now() / 1000) + 86400 * 4; // Divided by 1000 to convert from ms to s
 
     console.log(currentTimestamp);
     return currentTimestamp > endTime; // Return true if currentTimestamp is greater, else false
