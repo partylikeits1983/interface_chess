@@ -23,6 +23,8 @@ import { CopyIcon } from '@chakra-ui/icons';
 
 import copyIconFeedback from 'ui/copyIconFeedback';
 
+import { convertAddressToUsername } from 'eth-username-generator';
+
 import {
   getChainId,
   GetWagerAddressTournament,
@@ -168,6 +170,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     await PayoutTournament(card.tournamentNonce);
     setIsLoading(false);
   };
+
 
   function timeUntilEndTime(endTime: number): string {
     // Get current unix timestamp
@@ -358,7 +361,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                                   rel="noopener noreferrer"
                                   style={{ color: '#42ff72' }}
                                 >
-                                  {playerAddress}
+                                  {convertAddressToUsername(playerAddress)}
                                 </a>
                               </Td>
                               <Td color="white">
