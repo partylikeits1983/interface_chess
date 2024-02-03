@@ -96,6 +96,7 @@ let WBTC = tokenAddresses[0].WBTC;
 let WETH = tokenAddresses[0].WETH;
 let USDT = tokenAddresses[0].USDT;
 let USDC = tokenAddresses[0].USDC;
+let USDCE = tokenAddresses[0].USDCE;
 let DAI = tokenAddresses[0].DAI;
 
 const ERC20ABI = [
@@ -257,13 +258,14 @@ export const GetDividendBalances = async () => {
   const weth = new ethers.Contract(WETH, ERC20ABI, signer);
   const usdt = new ethers.Contract(USDT, ERC20ABI, signer);
   const usdc = new ethers.Contract(USDC, ERC20ABI, signer);
+  const usdce = new ethers.Contract(USDCE, ERC20ABI, signer);
   const dai = new ethers.Contract(DAI, ERC20ABI, signer);
 
   try {
     let wbtc_bal = await wbtc.balanceOf(DividendSplitter);
     let weth_bal = await weth.balanceOf(DividendSplitter);
     let usdt_bal = await usdt.balanceOf(DividendSplitter);
-    let usdc_bal = await usdc.balanceOf(DividendSplitter);
+    let usdc_bal = await usdc.balanceOf(DividendSplitter) + await usdce.balanceOf(DividendSplitter);
     let dai_bal = await dai.balanceOf(DividendSplitter);
 
     wbtc_bal = ethers.utils.formatEther(wbtc_bal);
@@ -1988,13 +1990,14 @@ export const GetDividendBalances_NOMETAMASK = async () => {
   const weth = new ethers.Contract(WETH, ERC20ABI, provider);
   const usdt = new ethers.Contract(USDT, ERC20ABI, provider);
   const usdc = new ethers.Contract(USDC, ERC20ABI, provider);
+  const usdce = new ethers.Contract(USDCE, ERC20ABI, provider);
   const dai = new ethers.Contract(DAI, ERC20ABI, provider);
 
   try {
     let wbtc_bal = await wbtc.balanceOf(DividendSplitter);
     let weth_bal = await weth.balanceOf(DividendSplitter);
     let usdt_bal = await usdt.balanceOf(DividendSplitter);
-    let usdc_bal = await usdc.balanceOf(DividendSplitter);
+    let usdc_bal = await usdc.balanceOf(DividendSplitter) + await usdce.balanceOf(DividendSplitter);
     let dai_bal = await dai.balanceOf(DividendSplitter);
 
     wbtc_bal = ethers.utils.formatEther(wbtc_bal);
