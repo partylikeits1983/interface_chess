@@ -1006,6 +1006,8 @@ export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
       isComplete: Boolean(wagerParams.isComplete),
     };
 
+    console.log('Wager token', card.wagerToken);
+
     return card;
   } catch (error) {
     // alert(`Error fetching wager data: ${error}`);

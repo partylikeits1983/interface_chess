@@ -171,7 +171,6 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
     setIsLoading(false);
   };
 
-
   function timeUntilEndTime(endTime: number): string {
     // Get current unix timestamp
     const currentTimestamp = Math.floor(Date.now() / 1000); // Divided by 1000 to convert from ms to s
@@ -263,7 +262,7 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
         display="flex"
         alignItems="center"
       >
-        <Text fontWeight="bold" color="white" fontSize="sm" mr={3}>
+        <Text fontWeight="bold" color="white" fontSize="md" mr={3}>
           {label}
         </Text>
         <Flex alignItems="center" flex="1">
@@ -334,17 +333,14 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                       rounded="md"
                       my={3}
                       border="1px solid white"
-                      maxHeight="150px"
+                      maxHeight="300px" // Increase the maxHeight value to make the table taller
                       overflowY="auto"
                     >
-                      <Text fontWeight="bold" color="white" fontSize="sm">
-                        Player Addresses
-                      </Text>
-                      <Table variant="simple" size="xs">
+                      <Table variant="simple" size="sm">
                         <Thead>
                           <Tr>
                             <Td color="white" fontWeight="bold">
-                              Address
+                              Player Username
                             </Td>
                             <Td color="white" fontWeight="bold">
                               Score
@@ -380,17 +376,14 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                       rounded="md"
                       my={3}
                       border="1px solid white"
-                      maxHeight="150px"
+                      maxHeight="200px"
                       overflowY="auto"
                     >
-                      <Text fontWeight="bold" color="white" fontSize="sm">
-                        Game Addresses
-                      </Text>
-                      <Table variant="simple" size="xs">
+                      <Table variant="simple" size="md">
                         <Thead>
                           <Tr>
                             <Td color="white" fontWeight="bold">
-                              Address
+                              Game Address
                             </Td>
                           </Tr>
                         </Thead>

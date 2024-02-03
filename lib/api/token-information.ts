@@ -38,6 +38,10 @@ const options = [
     image: '/tokens/usdc.png',
   },
   {
+    label: 'USDC.e',
+    image: '/tokens/usdc.png',
+  },
+  {
     label: 'DAI',
     image: '/tokens/dai.png',
   },

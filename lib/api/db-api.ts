@@ -5,6 +5,7 @@ const getWagersMethod = '/wageraddresses';
 const getAnalyticsMethod = '/analytics';
 const getLeaderboardMethod = '/leaderboard';
 const getTournamentMethod = '/tournaments';
+const getLastOnlineMethod = '/lastonline';
 
 export async function GetWagersFenDB(
   chainId: number,
@@ -104,6 +105,25 @@ export async function GetTournamentDataDB(chainId: number) {
     const data = await response.json();
 
     return data;
+  } catch (error) {
+    throw new Error(`Error fetching wagers data: ${error}`);
+  }
+}
+
+export async function GetLastOnline(playerAddress: string) {
+  const url = apiURL + getLastOnlineMethod + '/' + playerAddress;
+  try {
+    console.log("last online", playerAddress);
+    console.log(url);
+    const response = await fetch(url, { mode: 'cors' });
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`);
+    }
+    const data = await response.json();
+
+    console.log("TIME DATA 1", data);
+
+    return data.time;
   } catch (error) {
     throw new Error(`Error fetching wagers data: ${error}`);
   }

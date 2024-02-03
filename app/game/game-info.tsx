@@ -33,11 +33,17 @@ const GameInfo: React.FC<GameInfoProps> = ({
   const [tokenDetail, setTokenDetail] = useState<TokenDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [timeLastOnlinePlayer0, setTimeLastOnlinePlayer0] = useState('');
+  const [timeLastOnlinePlayer1, setTimeLastOnlinePlayer1] = useState('');
+
   useEffect(() => {
     async function getScoreData() {
       setIsLoading(true);
 
       const detail = getTokenDetails(globalState.chainID, wagerToken);
+
+      console.log('matchtoken', wagerToken);
+      console.log('token detail', detail?.label);
       setTokenDetail(detail);
 
       setIsLoading(false);

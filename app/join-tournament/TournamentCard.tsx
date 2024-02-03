@@ -29,6 +29,8 @@ import { CopyIcon } from '@chakra-ui/icons';
 import copyIconFeedback from 'ui/copyIconFeedback';
 import { getTokenDetails } from '#/lib/api/token-information';
 
+import { convertAddressToUsername } from 'eth-username-generator';
+
 import {
   getChainId,
   GetWagerAddressTournament,
@@ -361,24 +363,23 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                       rounded="md"
                       my={3}
                       border="1px solid white"
-                      maxHeight="150px"
+                      maxHeight="200px"
                       overflowY="auto"
                     >
-                      <Text fontWeight="bold" color="white" fontSize="sm">
-                        Joined Player Addresses
-                      </Text>
-                      <Table variant="simple" size="xs">
+                      <Table variant="simple" size="md">
                         <Thead>
                           <Tr>
                             <Td color="white" fontWeight="bold">
-                              Address
+                              Joined Players
                             </Td>
                           </Tr>
                         </Thead>
                         <Tbody>
                           {card.joined_players.map((playerAddress, index) => (
                             <Tr key={index}>
-                              <Td color="white">{playerAddress}</Td>
+                              <Td color="white">
+                                {convertAddressToUsername(playerAddress)}
+                              </Td>
                             </Tr>
                           ))}
                         </Tbody>
@@ -397,21 +398,20 @@ const TournamentCard: React.FC<CardAccordionProps> = ({ card }) => {
                         maxHeight="150px"
                         overflowY="auto"
                       >
-                        <Text fontWeight="bold" color="white" fontSize="sm">
-                          Authenticated Player Adddresses
-                        </Text>
-                        <Table variant="simple" size="xs">
+                        <Table variant="simple" size="md">
                           <Thead>
                             <Tr>
                               <Td color="white" fontWeight="bold">
-                                Address
+                                Authenticated Players
                               </Td>
                             </Tr>
                           </Thead>
                           <Tbody>
                             {card.authed_players.map((playerAddress, index) => (
                               <Tr key={index}>
-                                <Td color="white">{playerAddress}</Td>
+                                <Td color="white">
+                                  {convertAddressToUsername(playerAddress)}
+                                </Td>
                               </Tr>
                             ))}
                           </Tbody>

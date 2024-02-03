@@ -252,6 +252,8 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
         setWagerAmount(
           ethers.utils.formatUnits(numberToString(matchData.wagerAmount), 18),
         );
+
+        console.log('matchtoken', matchData.wagerToken);
         setWagerToken(matchData.wagerToken);
         setTimeLimit(matchData.timeLimit);
 
@@ -275,11 +277,6 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
             // console.log('move', move);
           }
         }
-
-        console.log(
-          'IS GASLESS',
-          isGameGasless === false && movesArray.length === 0,
-        );
 
         if (isGameGasless === false && movesArray.length === 0) {
           const [timePlayer0, timePlayer1, isPlayer0Turn] =
@@ -830,38 +827,39 @@ export const Board: React.FC<IBoardProps> = ({ wager }) => {
                 {wager && <DownloadMovesButton wager={wager} />}
               </Box>
               <div style={{ marginTop: '10px' }}></div>
-              <Box p={3} border="0.5px solid white">
-                <Flex
-                  direction={{ base: 'column', md: 'row' }}
-                  alignItems="center"
-                  justifyContent="center" // To center the items horizontally
-                  width="100%" // To ensure the flex container takes the full width
-                >
-                  <Flex
-                    alignItems="center" // This ensures that the GameTimer is vertically centered
-                    justifyContent="center" // This ensures that the GameTimer is horizontally centered
-                    mr={{ md: 4 }} // Optional margin to separate the GameTimer and ScoreBoard on larger screens
-                  >
-                    <GameTimer
-                      wager={wager}
-                      timeLimit={timeLimit}
-                      timePlayer0={timePlayer0}
-                      timePlayer1={timePlayer1}
-                      isPlayer0White={isPlayer0White}
-                      isPlayer0Turn={isPlayer0Turn}
-                    />
-                  </Flex>
+              <Box p={0} border="0.5px solid white">
+              <Flex
+  direction={{ base: 'column', md: 'row' }}
+  alignItems={{ base: 'stretch', md: 'stretch' }} // Centers items vertically on medium and up
+  justifyContent={{ base: 'center', md: 'space-between' }} // Centers items in column mode, spaces them on the sides in row mode
+  width="100%" // Ensures the Flex container takes the full width
+>
+  <ScoreBoard
+    wager={wager}
+    numberOfGames={numberOfGamesInfo}
+    gameNumber={gameID}
+  />
+  {/* Vertical Line */}
+  <Box
+    display={{ base: 'none', md: 'block' }} // Only display the line in md size and up
+    height="auto" // Adjust the height as needed
+    width="1px" // Line thickness
+    bgColor="black" // Line color
+    mx={2} // Margin on the sides to separate it from the ScoreBoard and GameTimer
+  />
+  <GameTimer
+    wager={wager}
+    timeLimit={timeLimit}
+    timePlayer0={timePlayer0}
+    timePlayer1={timePlayer1}
+    isPlayer0White={isPlayer0White}
+    isPlayer0Turn={isPlayer0Turn}
+  />
+</Flex>
 
-                  <ScoreBoard
-                    wager={wager}
-                    numberOfGames={numberOfGamesInfo}
-                    // isPlayer0White={isPlayer0White}
-                    gameNumber={gameID}
-                  />
-                </Flex>
-              </Box>
+</Box>
               <div style={{ marginTop: '10px' }}></div>
-              {!isGameInfoLoading && (
+              {!isGameInfoLoading && wagerToken !== '' && (
                 <GameInfo
                   wager={wager}
                   wagerToken={wagerToken}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Progress } from '@chakra-ui/react';
+import { Text, Progress, Box } from '@chakra-ui/react';
 
 interface GameTimerProps {
   wager: string;
@@ -45,44 +45,44 @@ const GameTimer: React.FC<GameTimerProps> = ({
 
   // console.log("GAME TIMER", isPlayer0White, isPlayer0Turn );
   return (
-    <div>
-      {wager !== '' && (
-        <div>
-          <Text>
-            Time White ⚪{' '}
-            <Text
-              as="span"
-              fontWeight="bold"
-              style={{ width: '150px', display: 'inline-block' }}
-            >
-              {formatSecondsToTime(whiteTime)}
-            </Text>
-          </Text>
-          <Progress
-            size="sm"
-            colorScheme="green"
-            bg="gray"
-            value={(whiteTime / timeLimit) * 100}
-          />
-          <Text>
-            Time Black ⚫{' '}
-            <Text
-              as="span"
-              fontWeight="bold"
-              style={{ width: '150px', display: 'inline-block' }}
-            >
-              {formatSecondsToTime(blackTime)}
-            </Text>
-          </Text>
-          <Progress
-            size="sm"
-            colorScheme="green"
-            bg="gray"
-            value={(blackTime / timeLimit) * 100}
-          />
-        </div>
-      )}
-    </div>
+<div>
+  {wager !== '' && (
+    <Box border="0.1px solid" borderColor="white" p={6}>
+      <Text>
+        Time White ⚪{' '}
+        <Text
+          as="span"
+          fontWeight="bold"
+          style={{ width: '150px', display: 'inline-block' }}
+        >
+          {formatSecondsToTime(whiteTime)}
+        </Text>
+      </Text>
+      <Progress
+        size="sm"
+        colorScheme="green"
+        bg="gray"
+        value={(whiteTime / timeLimit) * 100}
+      />
+      <Text>
+        Time Black ⚫{' '}
+        <Text
+          as="span"
+          fontWeight="bold"
+          style={{ width: '150px', display: 'inline-block' }}
+        >
+          {formatSecondsToTime(blackTime)}
+        </Text>
+      </Text>
+      <Progress
+        size="sm"
+        colorScheme="green"
+        bg="gray"
+        value={(blackTime / timeLimit) * 100}
+      />
+    </Box>
+  )}
+</div>
   );
 };
 

@@ -14,6 +14,8 @@ let state: State = {
   useAPI: false,
 };
 
+const localStorageKey = 'lastClearTime';
+
 export function useStateManager(
   initialState?: Partial<State>,
 ): [State, typeof setState] {
@@ -24,8 +26,25 @@ export function useStateManager(
     listeners.push(newSetState);
     checkMetaMaskConnection();
 
+    const interval = setInterval(() => {
+      const lastClearTime = localStorage.getItem(localStorageKey);
+      if (lastClearTime) {
+        const currentTime = new Date().getTime();
+        if (
+          currentTime - parseInt(lastClearTime, 10) >
+          3 * 24 * 60 * 60 * 1000
+        ) {
+          localStorage.clear();
+          localStorage.setItem(localStorageKey, currentTime.toString());
+        }
+      } else {
+        localStorage.setItem(localStorageKey, new Date().getTime().toString());
+      }
+    }, 24 * 60 * 60 * 1000); // Check every 24 hours
+
     return () => {
       listeners = listeners.filter((listener) => listener !== newSetState);
+      clearInterval(interval);
     };
   }, [newSetState]);
 
