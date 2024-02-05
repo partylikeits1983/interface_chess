@@ -225,7 +225,6 @@ const Dividends: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
 
       {/* Section to get chess fish tokens */}
 
-      <CrowdSale />
     </ChakraProvider>
   );
 };
